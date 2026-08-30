@@ -53,3 +53,8 @@ CLAUDE.md
 PRODUCT.md
 DESIGN.md
 DESIGN.json
+
+backups/
+dist.bak-*/
+dist/
+node_modules/
