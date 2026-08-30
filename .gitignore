@@ -54,7 +54,7 @@ PRODUCT.md
 DESIGN.md
 DESIGN.json
 
+# Локальные архивы исходников — не для репозитория
+*.zip
 backups/
 dist.bak-*/
-dist/
-node_modules/

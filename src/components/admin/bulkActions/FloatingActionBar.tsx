@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
-import { TrashIcon } from '@/components/icons';
 import { ChevronDownIcon } from './DropdownSelect';
 import { isSubscriptionLevelAction } from './actionTargets';
 import type { BulkActionType } from '../../../api/adminBulkActions';
@@ -109,12 +108,6 @@ export function FloatingActionBar({
         </svg>
       ),
       colorClass: 'text-accent-400 hover:bg-accent-500/10',
-    },
-    {
-      type: 'delete_subscription',
-      labelKey: 'admin.bulkActions.actions.deleteSubscription',
-      icon: <TrashIcon className="h-3.5 w-3.5" />,
-      colorClass: 'text-error-400 hover:bg-error-500/10',
     },
     {
       type: 'add_balance',
