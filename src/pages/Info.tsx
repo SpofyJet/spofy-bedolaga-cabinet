@@ -7,9 +7,8 @@ import DOMPurify from 'dompurify';
 import { infoApi, type FaqPage, type InfoVisibility } from '../api/info';
 import { formatContent } from '../utils/legalContent';
 import { infoPagesApi } from '../api/infoPages';
-import { promoApi, type LoyaltyTierInfo } from '../api/promo';
 import type { FaqItem, ReplacesTab } from '../api/infoPages';
-import { DocumentIcon, InfoIcon, QuestionIcon, ShieldIcon, StarIcon } from '@/components/icons';
+import { DocumentIcon, InfoIcon, QuestionIcon, ShieldIcon } from '@/components/icons';
 import { Skeleton, SkeletonGroup } from '@/components/ui/skeleton';
 
 const ChevronIcon = ({ expanded }: { expanded: boolean }) => (
@@ -317,14 +316,6 @@ export default function Info() {
     refetchOnMount: 'always',
   });
 
-  const { data: rules, isLoading: rulesLoading } = useQuery({
-    queryKey: ['rules'],
-    queryFn: infoApi.getRules,
-    enabled: activeTab === 'rules' && !currentTabSlug && replacementsLoaded,
-    staleTime: 0,
-    refetchOnMount: 'always',
-  });
-
   const { data: privacy, isLoading: privacyLoading } = useQuery({
     queryKey: ['privacy-policy'],
     queryFn: infoApi.getPrivacyPolicy,
@@ -341,25 +332,14 @@ export default function Info() {
     refetchOnMount: 'always',
   });
 
-  const { data: loyaltyData, isLoading: loyaltyLoading } = useQuery({
-    queryKey: ['loyalty-tiers'],
-    queryFn: promoApi.getLoyaltyTiers,
-    enabled: activeTab === 'loyalty',
-    staleTime: 0,
-    refetchOnMount: 'always',
-  });
-
   const tabs = useMemo(() => {
     const builtinTabs: Array<{ id: string; label: string; icon: React.FC; emoji?: string }> = [
       { id: 'faq', label: t('info.faq'), icon: QuestionIcon },
-      { id: 'rules', label: t('info.rules'), icon: DocumentIcon },
       { id: 'privacy', label: t('info.privacy'), icon: ShieldIcon },
       { id: 'offer', label: t('info.offer'), icon: DocumentIcon },
-      { id: 'loyalty', label: t('info.loyalty'), icon: StarIcon },
     ];
 
     const visibleBuiltinTabs = builtinTabs.filter((tab) => {
-      if (tab.id === 'loyalty') return true;
       if (tabReplacements?.[tab.id as ReplacesTab]) return true;
       if (!visibility) return true;
       return visibility[tab.id as keyof InfoVisibility];
@@ -470,34 +450,6 @@ export default function Info() {
       );
     }
 
-    if (activeTab === 'rules') {
-      if (rulesLoading) {
-        return (
-          <SkeletonGroup className="space-y-3">
-            <Skeleton variant="card" count={3} className="h-16" />
-          </SkeletonGroup>
-        );
-      }
-
-      if (!rules?.content) {
-        return <div className="py-8 text-center text-dark-400">{t('info.noContent')}</div>;
-      }
-
-      return (
-        <div className="bento-card prose prose-invert max-w-none">
-          <div
-            className="overflow-x-auto"
-            dangerouslySetInnerHTML={{ __html: formatContent(rules.content) }}
-          />
-          {rules.updated_at && (
-            <p className="mt-6 border-t border-dark-700 pt-4 text-sm text-dark-400">
-              {t('info.updatedAt')}: {new Date(rules.updated_at).toLocaleDateString(uiLocale())}
-            </p>
-          )}
-        </div>
-      );
-    }
-
     if (activeTab === 'privacy') {
       if (privacyLoading) {
         return (
@@ -550,190 +502,6 @@ export default function Info() {
               {t('info.updatedAt')}: {new Date(offer.updated_at).toLocaleDateString(uiLocale())}
             </p>
           )}
-        </div>
-      );
-    }
-
-    if (activeTab === 'loyalty') {
-      if (loyaltyLoading) {
-        return (
-          <SkeletonGroup className="space-y-3">
-            <Skeleton variant="card" count={3} className="h-16" />
-          </SkeletonGroup>
-        );
-      }
-
-      if (!loyaltyData || loyaltyData.tiers.length === 0) {
-        return <div className="py-8 text-center text-dark-400">{t('info.noLoyaltyTiers')}</div>;
-      }
-
-      const formatCurrency = (amount: number) => {
-        return new Intl.NumberFormat(uiLocale(), {
-          style: 'currency',
-          currency: 'RUB',
-          minimumFractionDigits: 0,
-          maximumFractionDigits: 0,
-        }).format(amount);
-      };
-
-      const getStatusBadge = (tier: LoyaltyTierInfo) => {
-        if (tier.is_current) {
-          return (
-            <span className="rounded-full bg-accent-500/20 px-2 py-1 text-xs font-medium text-accent-400">
-              {t('info.statusCurrent')}
-            </span>
-          );
-        }
-        if (tier.is_achieved) {
-          return (
-            <span className="rounded-full bg-success-500/20 px-2 py-1 text-xs font-medium text-success-400">
-              {t('info.statusAchieved')}
-            </span>
-          );
-        }
-        return (
-          <span className="rounded-full bg-dark-600 px-2 py-1 text-xs font-medium text-dark-400">
-            {t('info.statusLocked')}
-          </span>
-        );
-      };
-
-      const hasAnyDiscount = (tier: LoyaltyTierInfo) => {
-        return (
-          tier.server_discount_percent > 0 ||
-          tier.traffic_discount_percent > 0 ||
-          tier.device_discount_percent > 0 ||
-          Object.keys(tier.period_discounts).length > 0
-        );
-      };
-
-      return (
-        <div className="space-y-6">
-          {/* Progress Card */}
-          <div className="bento-card p-5">
-            <h3 className="mb-4 text-lg font-semibold text-dark-50">{t('info.yourProgress')}</h3>
-
-            <div className="mb-4 grid grid-cols-2 gap-4">
-              <div className="rounded-xl bg-dark-800/50 p-3">
-                <div className="mb-1 text-xs text-dark-400">{t('info.totalSpent')}</div>
-                <div className="truncate text-base font-bold text-dark-50 sm:text-lg">
-                  {formatCurrency(loyaltyData.current_spent_rubles)}
-                </div>
-              </div>
-              <div className="rounded-xl bg-dark-800/50 p-3">
-                <div className="mb-1 text-xs text-dark-400">{t('info.currentStatus')}</div>
-                <div className="truncate text-base font-bold text-accent-400 sm:text-lg">
-                  {loyaltyData.current_tier_name || '-'}
-                </div>
-              </div>
-            </div>
-
-            {/* Progress bar to next tier */}
-            {loyaltyData.next_tier_name && loyaltyData.next_tier_threshold_rubles ? (
-              <div>
-                <div className="mb-2 flex flex-col gap-1 text-xs text-dark-400 sm:flex-row sm:justify-between">
-                  <span>
-                    {t('info.nextStatus')}: {loyaltyData.next_tier_name}
-                  </span>
-                  <span>
-                    {t('info.toNextStatus')}:{' '}
-                    {formatCurrency(
-                      Math.max(
-                        0,
-                        loyaltyData.next_tier_threshold_rubles - loyaltyData.current_spent_rubles,
-                      ),
-                    )}
-                  </span>
-                </div>
-                <div className="h-3 overflow-hidden rounded-full bg-dark-700">
-                  <div
-                    className="h-full rounded-full bg-gradient-to-r from-accent-500 to-accent-400 transition-all duration-500"
-                    style={{ width: `${Math.min(100, loyaltyData.progress_percent)}%` }}
-                  />
-                </div>
-                <div className="mt-1 text-right text-xs text-dark-400">
-                  {loyaltyData.progress_percent.toFixed(1)}%
-                </div>
-              </div>
-            ) : (
-              <div className="py-2 text-center font-medium text-success-400">
-                {t('info.allStatusesAchieved')}
-              </div>
-            )}
-          </div>
-
-          {/* Tiers List */}
-          <div className="space-y-3">
-            {loyaltyData.tiers.map((tier) => (
-              <div
-                key={tier.id}
-                className={`bento-card p-4 transition-all ${
-                  tier.is_current
-                    ? 'bg-accent-500/5 ring-2 ring-accent-500/50'
-                    : tier.is_achieved
-                      ? 'bg-success-500/5'
-                      : 'opacity-70'
-                }`}
-              >
-                <div className="mb-3 flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div
-                      className={`flex h-10 w-10 items-center justify-center rounded-xl ${
-                        tier.is_current
-                          ? 'bg-accent-500/20 text-accent-400'
-                          : tier.is_achieved
-                            ? 'bg-success-500/20 text-success-400'
-                            : 'bg-dark-700 text-dark-400'
-                      }`}
-                    >
-                      <StarIcon />
-                    </div>
-                    <div className="min-w-0">
-                      <h4 className="truncate font-semibold text-dark-50">{tier.name}</h4>
-                      <p className="text-xs text-dark-400">
-                        {t('info.threshold')}: {formatCurrency(tier.threshold_rubles)}
-                      </p>
-                    </div>
-                  </div>
-                  <span className="shrink-0">{getStatusBadge(tier)}</span>
-                </div>
-
-                {/* Discounts */}
-                {hasAnyDiscount(tier) ? (
-                  <div className="rounded-xl bg-dark-800/50 p-3">
-                    <div className="mb-2 text-xs text-dark-400">{t('info.discounts')}:</div>
-                    <div className="flex flex-wrap gap-2">
-                      {tier.server_discount_percent > 0 && (
-                        <span className="rounded-lg bg-dark-700 px-2 py-1 text-xs text-dark-200">
-                          {t('info.serverDiscount')}: -{tier.server_discount_percent}%
-                        </span>
-                      )}
-                      {tier.traffic_discount_percent > 0 && (
-                        <span className="rounded-lg bg-dark-700 px-2 py-1 text-xs text-dark-200">
-                          {t('info.trafficDiscount')}: -{tier.traffic_discount_percent}%
-                        </span>
-                      )}
-                      {tier.device_discount_percent > 0 && (
-                        <span className="rounded-lg bg-dark-700 px-2 py-1 text-xs text-dark-200">
-                          {t('info.deviceDiscount')}: -{tier.device_discount_percent}%
-                        </span>
-                      )}
-                      {Object.entries(tier.period_discounts).map(([days, percent]) => (
-                        <span
-                          key={days}
-                          className="rounded-lg bg-dark-700 px-2 py-1 text-xs text-dark-200"
-                        >
-                          {t('info.periodDiscount', { days })}: -{percent}%
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                ) : (
-                  <div className="text-xs italic text-dark-500">{t('info.noDiscounts')}</div>
-                )}
-              </div>
-            ))}
-          </div>
         </div>
       );
     }
