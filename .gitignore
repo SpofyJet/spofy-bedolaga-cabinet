@@ -1,4 +1,5 @@
 # Dependencies
+node_modules
 node_modules/
 
 # Claude local settings
@@ -56,5 +57,3 @@ DESIGN.json
 
 # Локальные архивы исходников — не для репозитория
 *.zip
-backups/
-dist.bak-*/
