@@ -428,7 +428,9 @@ export default function TopUpAmount() {
         <div className="flex-1">
           <h3 className="text-lg font-bold text-dark-100">{methodName}</h3>
           <p className="text-sm text-dark-400">
-            {formatAmount(minRubles, 0)} – {formatAmount(maxRubles, 0)} {currencySymbol}
+            {formatAmount(minRubles, 0)} – {formatAmount(maxRubles, 0)}
+            {'\u00A0'}
+            {currencySymbol}
           </p>
         </div>
       </motion.div>
@@ -550,7 +552,7 @@ export default function TopUpAmount() {
                   {formatAmount(a, 0)}
                 </span>
                 <span
-                  className={`mt-0.5 text-xs ${isSelected ? 'text-accent-400/70' : 'text-dark-500'}`}
+                  className={`mt-0.5 text-xs ${isSelected ? 'text-accent-400' : 'text-dark-500'}`}
                 >
                   {currencySymbol}
                 </span>

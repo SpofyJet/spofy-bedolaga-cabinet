@@ -1,4 +1,4 @@
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
@@ -37,6 +37,8 @@ const SUB_SCREEN_SUFFIXES = [
   '/revoke',
   '/review',
   '/campaigns',
+  '/history',
+  '/other',
 ];
 
 function isSubScreen(route: string): boolean {
@@ -55,16 +57,38 @@ function menuTargets(): string[] {
 }
 
 describe('главное меню админки', () => {
-  it('содержит страницу уровней реферальных наград', () => {
-    expect(menuTargets()).toContain('/admin/partners/referral-levels');
-  });
+  /**
+   * Страница из меню возвращает в меню.
+   *
+   * Кнопка «назад» ведёт в объявленного родителя, а родитель у страницы один.
+   * Когда экран вешают ещё и в меню, объявленный родитель становится ложью для
+   * этого входа: «Уровни наград» открывали из меню, а «назад» уводило в
+   * Настройки партнёрской программы → Партнёры → Админка — через два экрана,
+   * которых админ не открывал. Вход, у которого свой обратный путь, передаёт его
+   * через backTo; для остальных верным остаётся корень админки.
+   */
+  it('возвращает из пункта меню сразу в админку', () => {
+    const componentByRoute = (route: string): string | null => {
+      const at = appSource.indexOf(`path="${route}"`);
+      if (at < 0) return null;
+      const element = appSource.slice(at, at + 900);
+      const match = element.match(/<(Admin[A-Za-z]*)\s*\/>/);
+      return match ? match[1] : null;
+    };
 
-  it('требует для неё то же право, что и маршрут с эндпоинтами', () => {
-    // Пункт с более слабым правом привёл бы админа на экран, который сразу
-    // падает в ошибку загрузки, — это хуже отсутствующего пункта.
-    const entry = panelSource.slice(panelSource.indexOf("'/admin/partners/referral-levels'"));
-    expect(entry.slice(0, 200)).toContain("permission: 'partners:settings'");
-    expect(appSource).toContain('path="/admin/partners/referral-levels"');
+    const wrongTargets = menuTargets().flatMap((route) => {
+      const component = componentByRoute(route);
+      if (!component) return [];
+      const file = join(SRC, `pages/${component}.tsx`);
+      if (!existsSync(file)) return [];
+      const source = readFileSync(file, 'utf-8');
+      return [...source.matchAll(/<AdminBackButton[^>]*?\sto=(?:"([^"]*)"|\{`([^`]*)`\})/g)]
+        .map((m) => m[1] ?? m[2])
+        .filter((target) => target !== '/admin')
+        .map((target) => `${route} → ${target}`);
+    });
+
+    expect(wrongTargets).toEqual([]);
   });
 
   it('не оставляет админских страниц без входа', () => {
