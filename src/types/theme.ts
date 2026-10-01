@@ -39,21 +39,21 @@ export const DEFAULT_ENABLED_THEMES: EnabledThemes = {
 
 // Default theme colors
 export const DEFAULT_THEME_COLORS: ThemeColors = {
-  accent: '#3b82f6',
+  accent: '#2B63F5',
 
-  darkBackground: '#0a0f1a',
-  darkSurface: '#0f172a',
-  darkText: '#f1f5f9',
-  darkTextSecondary: '#94a3b8',
+  darkBackground: '#070B13',
+  darkSurface: '#0E1420',
+  darkText: '#E9EEF6',
+  darkTextSecondary: '#8B95A7',
 
-  lightBackground: '#F7E7CE',
-  lightSurface: '#FEF9F0',
-  lightText: '#1F1A12',
-  lightTextSecondary: '#7D6B48',
+  lightBackground: '#F3F5F9',
+  lightSurface: '#FFFFFF',
+  lightText: '#0B1220',
+  lightTextSecondary: '#5B6475',
 
-  success: '#22c55e',
-  warning: '#f59e0b',
-  error: '#ef4444',
+  success: '#22B573',
+  warning: '#F0A33A',
+  error: '#E5484D',
 };
 
 // Color shade levels for palette generation

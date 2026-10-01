@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
 import { HIDDEN_UNDER_KEYBOARD, useVirtualKeyboard } from '@/hooks/useVirtualKeyboard';
-import { PhoneIcon, UserMinusIcon } from '@/components/icons';
+import { PhoneIcon, TrashIcon, UserMinusIcon } from '@/components/icons';
 import { ChevronDownIcon } from './DropdownSelect';
 import { isSubscriptionLevelAction } from './actionTargets';
 import type { BulkActionType } from '../../../api/adminBulkActions';
@@ -97,6 +97,12 @@ export function FloatingActionBar({
       labelKey: 'admin.bulkActions.actions.setDevices',
       icon: <PhoneIcon className="h-3.5 w-3.5" />,
       colorClass: 'text-accent-400 hover:bg-accent-500/10',
+    },
+    {
+      type: 'delete_subscription',
+      labelKey: 'admin.bulkActions.actions.deleteSubscription',
+      icon: <TrashIcon className="h-3.5 w-3.5" />,
+      colorClass: 'text-error-400 hover:bg-error-500/10',
     },
     {
       type: 'add_balance',

@@ -63,6 +63,7 @@ export interface SubscriptionTabProps {
   busy: boolean;
   actions: SubscriptionTabActions;
   reachabilityLink: string | null;
+  dpicheckerLink?: string | null;
   mode: SalesMode;
 }
 
@@ -188,6 +189,7 @@ export function SubscriptionTab(props: SubscriptionTabProps) {
             panelInfo={props.panelInfo}
             remnawaveId={user.remnawave_id}
             reachabilityLink={props.reachabilityLink}
+            dpicheckerLink={props.dpicheckerLink ?? null}
           />
         </>
       )}
@@ -219,6 +221,11 @@ export function SubscriptionTab(props: SubscriptionTabProps) {
           busy={busy}
           canCancel={selectedSub.is_active}
           onCancel={actions.cancelSubscription}
+          onDelete={async () => {
+            const deleted = await actions.deleteSubscription();
+            if (deleted) setDetailView(false);
+            return deleted;
+          }}
         />
       )}
     </div>

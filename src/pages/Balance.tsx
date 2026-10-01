@@ -190,6 +190,58 @@ export default function Balance() {
         </Card>
       </motion.div>
 
+      {/* Payment Methods — self-animated: mounts after its query resolves, when
+          the parent stagger orchestration has already finished and would leave
+          it stuck at opacity 0 */}
+      {paymentMethods && paymentMethods.length > 0 && (
+        <motion.div variants={staggerItem} initial="initial" animate="animate">
+          <Card>
+            <h2 className="mb-4 text-lg font-semibold text-dark-100">
+              {t('balance.topUpBalance')}
+            </h2>
+            <div className="-mx-1 grid grid-cols-1 gap-1 lg:grid-cols-2">
+              {paymentMethods.map((method) => {
+                const methodKey = method.id.toLowerCase().replace(/-/g, '_');
+                const translatedName = t(`balance.paymentMethods.${methodKey}.name`, {
+                  defaultValue: '',
+                });
+                const translatedDesc = t(`balance.paymentMethods.${methodKey}.description`, {
+                  defaultValue: '',
+                });
+                const description = method.description || translatedDesc;
+
+                return (
+                  <button
+                    type="button"
+                    key={method.id}
+                    disabled={!method.is_available}
+                    onClick={() => method.is_available && navigate(`/balance/top-up/${method.id}`)}
+                    className="group flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left transition-colors hover:bg-dark-50/[0.04] disabled:cursor-not-allowed disabled:opacity-50"
+                  >
+                    <span className="min-w-0 flex-1">
+                      <span className="block font-semibold text-dark-100">
+                        {method.name || translatedName}
+                      </span>
+                      <span className="mt-0.5 block text-[13px] text-dark-400">
+                        {description && <>{description} · </>}
+                        <span className="whitespace-nowrap">
+                          {formatAmount(method.min_amount_kopeks / 100, 0)}
+                          {'\u00A0–\u00A0'}
+                          {formatAmount(method.max_amount_kopeks / 100, 0)}
+                          {'\u00A0'}
+                          {currencySymbol}
+                        </span>
+                      </span>
+                    </span>
+                    <ChevronRightIcon className="h-4 w-4 shrink-0 text-dark-500 transition-transform group-hover:translate-x-0.5" />
+                  </button>
+                );
+              })}
+            </div>
+          </Card>
+        </motion.div>
+      )}
+
       {/* Promo Code Section */}
       <motion.div variants={staggerItem}>
         <Card>
@@ -280,54 +332,6 @@ export default function Balance() {
           )}
         </Card>
       </motion.div>
-
-      {/* Payment Methods — self-animated: mounts after its query resolves, when
-          the parent stagger orchestration has already finished and would leave
-          it stuck at opacity 0 */}
-      {paymentMethods && paymentMethods.length > 0 && (
-        <motion.div variants={staggerItem} initial="initial" animate="animate">
-          <Card>
-            <h2 className="mb-4 text-lg font-semibold text-dark-100">
-              {t('balance.topUpBalance')}
-            </h2>
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-              {paymentMethods.map((method) => {
-                const methodKey = method.id.toLowerCase().replace(/-/g, '_');
-                const translatedName = t(`balance.paymentMethods.${methodKey}.name`, {
-                  defaultValue: '',
-                });
-                const translatedDesc = t(`balance.paymentMethods.${methodKey}.description`, {
-                  defaultValue: '',
-                });
-
-                return (
-                  <Card
-                    key={method.id}
-                    interactive={method.is_available}
-                    className={!method.is_available ? 'cursor-not-allowed opacity-50' : ''}
-                    onClick={() => method.is_available && navigate(`/balance/top-up/${method.id}`)}
-                  >
-                    <div className="font-semibold text-dark-100">
-                      {method.name || translatedName}
-                    </div>
-                    {(method.description || translatedDesc) && (
-                      <div className="mt-1 text-sm text-dark-500">
-                        {method.description || translatedDesc}
-                      </div>
-                    )}
-                    <div className="mt-3 text-xs text-dark-400">
-                      {formatAmount(method.min_amount_kopeks / 100, 0)} {t('common.rangeTo', 'to')}{' '}
-                      {formatAmount(method.max_amount_kopeks / 100, 0)}
-                      {'\u00A0'}
-                      {currencySymbol}
-                    </div>
-                  </Card>
-                );
-              })}
-            </div>
-          </Card>
-        </motion.div>
-      )}
 
       {/* Transaction History */}
       <motion.div variants={staggerItem}>

@@ -57,6 +57,18 @@ function menuTargets(): string[] {
 }
 
 describe('главное меню админки', () => {
+  it('содержит страницу уровней реферальных наград', () => {
+    expect(menuTargets()).toContain('/admin/partners/referral-levels');
+  });
+
+  it('требует для неё то же право, что и маршрут с эндпоинтами', () => {
+    // Пункт с более слабым правом привёл бы админа на экран, который сразу
+    // падает в ошибку загрузки, — это хуже отсутствующего пункта.
+    const entry = panelSource.slice(panelSource.indexOf("'/admin/partners/referral-levels'"));
+    expect(entry.slice(0, 200)).toContain("permission: 'partners:settings'");
+    expect(appSource).toContain('path="/admin/partners/referral-levels"');
+  });
+
   /**
    * Страница из меню возвращает в меню.
    *

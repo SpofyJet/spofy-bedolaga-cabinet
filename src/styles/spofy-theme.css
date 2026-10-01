@@ -1,0 +1,260 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   Spofy theme layer.
+
+   Loaded after globals.css and overrides only the shared surface primitives
+   (cards, buttons, inputs, glows, type). Upstream's stylesheet stays untouched,
+   so cabinet updates merge without conflicts here.
+
+   Principles:
+   • One flat surface per level — no glass gradients, inset highlights or
+     glows. Depth comes from a hairline border and the surface tone.
+   • One radius scale: 16 cards · 12 inner tiles · 10 controls.
+   • Motion confirms an action; it never decorates. No lifts, spotlights or
+     rotating borders.
+   • Numbers are tabular so balances, dates and counters don't jitter.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+:root {
+  --spofy-radius-card: 16px;
+  --spofy-radius-tile: 12px;
+  --spofy-radius-control: 10px;
+  --spofy-border: rgba(255, 255, 255, 0.07);
+  --spofy-border-strong: rgba(255, 255, 255, 0.12);
+  --spofy-card-bg: rgb(var(--color-dark-800));
+  --spofy-tile-bg: rgba(255, 255, 255, 0.035);
+  --spofy-shadow: none;
+
+  /* Upstream card tokens follow the same scale. */
+  --bento-radius: var(--spofy-radius-card);
+  --bento-radius-lg: var(--spofy-radius-card);
+}
+
+.light {
+  --spofy-border: rgba(11, 18, 32, 0.08);
+  --spofy-border-strong: rgba(11, 18, 32, 0.14);
+  --spofy-card-bg: rgb(var(--color-champagne-50));
+  --spofy-tile-bg: rgba(11, 18, 32, 0.035);
+  --spofy-shadow: 0 1px 2px rgba(11, 18, 32, 0.04), 0 1px 1px rgba(11, 18, 32, 0.02);
+}
+
+/* ── Палитра Spofy до загрузки JS ─────────────────────────────────────────
+   Те же значения, что computeThemeCssVars(DEFAULT_THEME_COLORS) выставит
+   в рантайме: первая отрисовка не «перекрашивается» после загрузки скрипта.
+   Сгенерировано из src/types/theme.ts — при смене палитры перегенерировать. */
+:root {
+  --color-dark-50: 233, 238, 246;
+  --color-dark-100: 233, 238, 246;
+  --color-dark-200: 202, 209, 220;
+  --color-dark-300: 171, 179, 194;
+  --color-dark-400: 139, 149, 167;
+  --color-dark-500: 132, 139, 153;
+  --color-dark-600: 64, 72, 86;
+  --color-dark-700: 39, 46, 59;
+  --color-dark-800: 14, 20, 32;
+  --color-dark-850: 11, 16, 26;
+  --color-dark-900: 9, 14, 23;
+  --color-dark-950: 7, 11, 19;
+  --color-champagne-50: 255, 255, 255;
+  --color-champagne-100: 251, 252, 253;
+  --color-champagne-200: 243, 245, 249;
+  --color-champagne-300: 213, 216, 223;
+  --color-champagne-400: 182, 187, 196;
+  --color-champagne-500: 96, 102, 115;
+  --color-champagne-600: 91, 100, 117;
+  --color-champagne-700: 65, 73, 89;
+  --color-champagne-800: 38, 46, 61;
+  --color-champagne-900: 11, 18, 32;
+  --color-champagne-950: 11, 18, 32;
+  --color-accent-50: 242, 245, 252;
+  --color-success-50: 244, 251, 248;
+  --color-warning-50: 252, 248, 243;
+  --color-error-50: 251, 243, 244;
+  --color-accent-100: 232, 237, 250;
+  --color-success-100: 230, 246, 239;
+  --color-warning-100: 249, 242, 233;
+  --color-error-100: 248, 234, 234;
+  --color-accent-200: 194, 210, 252;
+  --color-success-200: 187, 242, 217;
+  --color-warning-200: 251, 229, 197;
+  --color-error-200: 247, 202, 203;
+  --color-accent-300: 151, 179, 250;
+  --color-success-300: 137, 232, 189;
+  --color-warning-300: 248, 210, 158;
+  --color-error-300: 242, 166, 168;
+  --color-accent-400: 100, 142, 248;
+  --color-success-400: 77, 221, 156;
+  --color-warning-400: 244, 189, 111;
+  --color-error-400: 236, 123, 126;
+  --color-accent-500: 43, 99, 245;
+  --color-success-500: 34, 181, 115;
+  --color-warning-500: 240, 163, 58;
+  --color-error-500: 229, 72, 77;
+  --color-accent-600: 11, 72, 228;
+  --color-success-600: 29, 153, 97;
+  --color-warning-600: 230, 141, 17;
+  --color-error-600: 220, 31, 38;
+  --color-accent-700: 9, 58, 183;
+  --color-success-700: 23, 114, 75;
+  --color-warning-700: 132, 85, 19;
+  --color-error-700: 176, 25, 30;
+  --color-accent-800: 7, 44, 138;
+  --color-success-800: 19, 98, 62;
+  --color-warning-800: 138, 85, 10;
+  --color-error-800: 132, 19, 23;
+  --color-accent-900: 13, 34, 85;
+  --color-success-900: 19, 65, 44;
+  --color-warning-900: 84, 56, 16;
+  --color-error-900: 81, 20, 22;
+  --color-accent-950: 7, 17, 44;
+  --color-success-950: 12, 39, 27;
+  --color-warning-950: 43, 28, 8;
+  --color-error-950: 41, 10, 11;
+  --color-on-accent: 255, 255, 255;
+  --color-on-success: 15, 23, 42;
+  --color-on-warning: 15, 23, 42;
+  --color-on-error: 15, 23, 42;
+  --color-dark-bg: #070b13;
+  --color-dark-surface: #0e1420;
+  --color-dark-text: #e9eef6;
+  --color-dark-text-secondary: #8b95a7;
+  --color-light-bg: #f3f5f9;
+  --color-light-surface: #ffffff;
+  --color-light-text: #0b1220;
+  --color-light-text-secondary: #5b6475;
+}
+
+/* ── Type ─────────────────────────────────────────────────────────────────── */
+
+body {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings:
+    "tnum" 1,
+    "cv11" 1;
+  letter-spacing: -0.005em;
+}
+
+/* One family for headings and text: the second display face (Outfit) added
+   visual noise without adding hierarchy. */
+.font-display {
+  font-family: "Twemoji Country Flags", "Manrope", system-ui, -apple-system, "Segoe UI", sans-serif;
+  letter-spacing: -0.02em;
+}
+
+h1,
+h2,
+h3 {
+  letter-spacing: -0.02em;
+}
+
+/* ── Cards ────────────────────────────────────────────────────────────────── */
+
+.bento-card,
+.card,
+.light .bento-card,
+.light .card {
+  background: var(--spofy-card-bg);
+  border: 1px solid var(--spofy-border);
+  border-radius: var(--spofy-radius-card);
+  box-shadow: var(--spofy-shadow);
+}
+
+@media (min-width: 1024px) {
+  .bento-card,
+  .card,
+  .light .bento-card,
+  .light .card {
+    background: var(--spofy-card-bg);
+  }
+}
+
+.bento-card-hover,
+.bento-card-glow,
+.card-hover,
+.card-glow {
+  transition:
+    border-color 0.15s ease,
+    background-color 0.15s ease;
+}
+
+.bento-card-hover:hover,
+.light .bento-card-hover:hover,
+.card-hover:hover {
+  background: var(--spofy-card-bg);
+  border-color: var(--spofy-border-strong);
+  box-shadow: var(--spofy-shadow);
+  transform: none;
+}
+
+.bento-card-glow:hover,
+.light .bento-card-glow:hover,
+.card-glow:hover {
+  border-color: rgba(var(--color-accent-500), 0.45);
+  box-shadow: var(--spofy-shadow);
+  transform: none;
+}
+
+.bento-card-hover::after,
+.light .bento-card-hover::after {
+  content: none;
+}
+
+.bento-card-hover:active,
+.bento-card-glow:active,
+.card-hover:active {
+  transform: scale(0.99);
+}
+
+/* Rotating conic border → a calm static accent outline. */
+.hover-border-gradient,
+.light .hover-border-gradient {
+  animation: none;
+  border: 1px solid rgba(var(--color-accent-500), 0.35);
+  background: var(--border-inner-bg, var(--spofy-card-bg));
+}
+
+.hover-border-gradient:hover,
+.hover-border-gradient:active {
+  box-shadow: none;
+  border-color: rgba(var(--color-accent-500), 0.6);
+}
+
+/* Tailwind glow utilities used across pages: a hairline ring, not a halo. */
+.shadow-glow,
+.shadow-glow-lg,
+.hover\:shadow-glow:hover,
+.hover\:shadow-glow-lg:hover {
+  box-shadow: 0 0 0 1px rgba(var(--color-accent-500), 0.3);
+}
+
+/* ── Controls ─────────────────────────────────────────────────────────────── */
+
+.btn,
+.btn-icon {
+  border-radius: var(--spofy-radius-control);
+}
+
+.btn {
+  font-weight: 600;
+  letter-spacing: -0.005em;
+}
+
+.btn-primary,
+.btn-primary:hover {
+  box-shadow: none;
+}
+
+.btn-secondary {
+  background: var(--spofy-tile-bg);
+  border-color: var(--spofy-border-strong);
+}
+
+.input,
+.input-error {
+  border-radius: var(--spofy-radius-control);
+}
+
+/* ── Content details ──────────────────────────────────────────────────────── */
+
+::selection {
+  background: rgba(var(--color-accent-500), 0.28);
+}

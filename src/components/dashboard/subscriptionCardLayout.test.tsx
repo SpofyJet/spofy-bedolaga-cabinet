@@ -99,43 +99,46 @@ async function renderCard(sub: Subscription, connectedDevices = 0) {
   return container;
 }
 
-describe('ряд «Тариф» + «Осталось»', () => {
-  it('обе плитки умеют сжиматься — длинное имя тарифа не выталкивает соседа', async () => {
-    const container = await renderCard(subscription());
-
-    const row = container.querySelector('.mb-5.flex.gap-2\\.5');
-    expect(row).toBeTruthy();
-    const plates = [...(row?.children ?? [])];
-    expect(plates).toHaveLength(2);
-    for (const plate of plates) {
-      expect(plate.className).toContain('min-w-0');
-      expect(plate.className).toContain('flex-1');
-    }
-  });
-
-  it('имя тарифа переносится, а не обрезается в одну строку', async () => {
+describe('заголовок карточки', () => {
+  it('имя тарифа переносится в две строки, а не обрезается в одну', async () => {
     await renderCard(subscription());
 
     const name = screen.getByText('🟡 Компания - 10 устройств');
     expect(name.className).toContain('line-clamp-2');
+    expect(name.className).toContain('min-w-0');
     expect(name.className).not.toContain('truncate');
+  });
+
+  it('безлимит не рисует полосу прогресса — показывает только расход', async () => {
+    const container = await renderCard(
+      subscription({ traffic_limit_gb: 0, traffic_used_percent: 0 }),
+    );
+
+    expect(container.querySelector('[role="progressbar"]')).toBeNull();
+    expect(screen.getByText('dashboard.unlimited')).toBeTruthy();
+  });
+
+  it('лимитный трафик показывает полосу с долей расхода', async () => {
+    const container = await renderCard(subscription());
+
+    const bar = container.querySelector('[role="progressbar"]');
+    expect(bar?.getAttribute('aria-valuenow')).toBe('9');
   });
 });
 
-describe('индикатор устройств', () => {
-  const dots = (container: Element) =>
-    container.querySelectorAll('.h-\\[7px\\].w-\\[7px\\].rounded-full');
-
-  it('до пяти устройств показывает точки', async () => {
+describe('плитка подключения', () => {
+  it('счётчик устройств — текстом, без точек и полосок', async () => {
     const container = await renderCard(subscription({ device_limit: 5 }), 2);
 
-    expect(dots(container)).toHaveLength(5);
+    expect(screen.getByText('dashboard.devicesOfMax')).toBeTruthy();
+    expect(container.querySelectorAll('.h-\\[7px\\].w-\\[7px\\].rounded-full')).toHaveLength(0);
   });
 
-  it('свыше пяти — полоску: десять точек не оставляли места заголовку', async () => {
-    const container = await renderCard(subscription({ device_limit: 10 }), 10);
+  it('при исчерпанном лимите плитка помечена недоступной', async () => {
+    await renderCard(subscription({ device_limit: 2 }), 2);
 
-    expect(dots(container)).toHaveLength(0);
-    expect(container.querySelector('.w-16 .rounded-full')).toBeTruthy();
+    const tile = screen.getByText('dashboard.connectDevice').closest('button');
+    expect(tile?.getAttribute('aria-disabled')).toBe('true');
+    expect(screen.getByText('dashboard.deviceLimitReached')).toBeTruthy();
   });
 });
