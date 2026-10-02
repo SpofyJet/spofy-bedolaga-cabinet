@@ -348,12 +348,12 @@
     "usageLast14Days": "مصرف ۱۴ روز اخیر",
     "usedSuffix": "مصرف شده",
     "validUntil": "معتبر تا {{date}}",
-    "untilWithDays": "فعال تا {{date}} · {{days}} روز باقی‌مانده",
-    "untilWithHours": "فعال تا {{date}} · {{hours}} ساعت باقی‌مانده",
     "trafficOfTotal": "{{used}} از {{total}}",
     "trafficLeftPercent": "{{percent}}٪ ترافیک باقی‌مانده",
     "daysUnit_one": "روز",
-    "daysUnit_other": "روز"
+    "daysUnit_other": "روز",
+    "yearsUnit_one": "سال",
+    "yearsUnit_other": "سال"
   },
   "subscription": {
     "title": "اشتراک",

@@ -377,12 +377,12 @@
     "manageAll": "Manage all",
     "showAll": "Show all",
     "subscriptions": "Subscriptions",
-    "untilWithDays": "Active until {{date}} · {{days}} days left",
-    "untilWithHours": "Active until {{date}} · {{hours}} h left",
     "trafficOfTotal": "{{used}} of {{total}}",
     "trafficLeftPercent": "{{percent}}% traffic left",
     "daysUnit_one": "day",
-    "daysUnit_other": "days"
+    "daysUnit_other": "days",
+    "yearsUnit_one": "year",
+    "yearsUnit_other": "years"
   },
   "subscription": {
     "title": "Subscription",

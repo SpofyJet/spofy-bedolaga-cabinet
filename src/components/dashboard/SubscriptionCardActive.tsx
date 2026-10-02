@@ -5,7 +5,7 @@ import type { UseMutationResult } from '@tanstack/react-query';
 import ConnectDeviceTile from './ConnectDeviceTile';
 import { useTrafficZone } from '../../hooks/useTrafficZone';
 import { formatTraffic } from '../../utils/formatTraffic';
-import { ChevronRightIcon, RefreshIcon } from '@/components/icons';
+import { CalendarIcon, ChevronRightIcon, RefreshIcon } from '@/components/icons';
 import type { Subscription } from '../../types';
 
 interface SubscriptionCardActiveProps {
@@ -23,8 +23,9 @@ interface SubscriptionCardActiveProps {
 /**
  * Карточка активной подписки на главной.
  *
- * Отвечает на три вопроса в порядке важности: работает ли доступ и до какого
- * числа, сколько осталось трафика, как подключить ещё одно устройство. Всё,
+ * Отвечает на три вопроса в порядке важности: какой тариф и сколько он ещё
+ * действует (две отдельные плитки), сколько осталось трафика, как подключить
+ * ещё одно устройство. Всё,
  * что не отвечает ни на один из них (декоративные полосы, счётчики секунд,
  * подписи капслоком), убрано.
  */
@@ -42,23 +43,25 @@ export default function SubscriptionCardActive({
   const isUnlimited = trafficData?.is_unlimited ?? subscription.traffic_limit_gb === 0;
   const zone = useTrafficZone(usedPercent);
 
+  // Короткий месяц в плитке: «до 4 октября 2026 г.» на 360 px рвало «г.» на новую строку.
   const endDate = new Date(subscription.end_date).toLocaleDateString(uiLocale(), {
     day: 'numeric',
-    month: 'long',
+    month: 'short',
     year: 'numeric',
   });
   const daysLeft = subscription.days_left;
   const isEndingSoon = daysLeft <= 3;
-  // Крупный счётчик дней — когда срок и правда главное: пробный период или
-  // последняя неделя. На многолетней подписке хватает строки с датой.
-  const showBigTerm = subscription.is_trial || daysLeft <= 7;
-  const term =
-    daysLeft > 0
-      ? t('dashboard.untilWithDays', { date: endDate, days: daysLeft })
-      : t('dashboard.untilWithHours', {
-          date: endDate,
-          hours: Math.max(1, subscription.hours_left),
-        });
+  // Многолетние подписки (до 2044 г.) в днях читаются как ошибка — «6593 дня»;
+  // от двух лет показываем годы, точная дата стоит строкой ниже.
+  const termValue =
+    daysLeft >= 730
+      ? {
+          amount: Math.floor(daysLeft / 365),
+          unit: t('dashboard.yearsUnit', { count: Math.floor(daysLeft / 365) }),
+        }
+      : daysLeft > 0
+        ? { amount: daysLeft, unit: t('dashboard.daysUnit', { count: daysLeft }) }
+        : { amount: Math.max(1, subscription.hours_left), unit: t('subscription.hours') };
 
   // Трафик на исходе окрашивает статус так же, как полосу: это информация, а не декор.
   const trafficStressed = !isUnlimited && zone.zone !== 'normal';
@@ -82,51 +85,61 @@ export default function SubscriptionCardActive({
 
   return (
     <section className="bento-card !p-5 sm:!p-6" aria-labelledby="subscription-card-title">
-      {/* ─── Срок ─── */}
-      <div className="min-w-0">
+      {/* ─── Статус ─── */}
+      <div
+        className="mb-3 inline-flex items-center gap-1.5 text-xs font-semibold"
+        style={{ color: statusTone }}
+      >
+        <span
+          className="h-1.5 w-1.5 rounded-full"
+          style={{ background: statusTone }}
+          aria-hidden="true"
+        />
+        {statusLabel}
+      </div>
+
+      {/* ─── Тариф + срок: две отдельные плитки ─── */}
+      {/* `min-w-0` обеим: иначе длинное имя тарифа выпихивает плитку срока за край. */}
+      <div className="grid grid-cols-2 gap-2.5">
+        <Link
+          to={`/subscriptions/${subscription.id}`}
+          className="spofy-tile group flex min-w-0 flex-col p-3.5"
+        >
+          <span className="flex items-center justify-between gap-1 text-xs font-medium text-dark-400">
+            {t('dashboard.tariff')}
+            <ChevronRightIcon className="h-3.5 w-3.5 shrink-0 text-dark-500 transition-transform group-hover:translate-x-0.5" />
+          </span>
+          {/* Две строки вместо обрезки: «🟡 Компания - 10 устройств» на телефоне
+              иначе превращалось в «🟡 Компани…». */}
+          <h2
+            id="subscription-card-title"
+            className="mt-1.5 line-clamp-2 min-w-0 break-words text-base font-bold leading-tight text-dark-50"
+          >
+            {subscription.tariff_name || t('subscription.currentPlan')}
+          </h2>
+        </Link>
+
         <div
-          className="mb-2 inline-flex items-center gap-1.5 text-xs font-semibold"
-          style={{ color: statusTone }}
+          className={`spofy-tile flex min-w-0 flex-col p-3.5 ${isEndingSoon ? 'spofy-tile-warning' : ''}`}
         >
-          <span
-            className="h-1.5 w-1.5 rounded-full"
-            style={{ background: statusTone }}
-            aria-hidden="true"
-          />
-          {statusLabel}
+          <span className="flex items-center gap-1.5 text-xs font-medium text-dark-400">
+            <CalendarIcon className="h-3.5 w-3.5 shrink-0" />
+            {t('dashboard.remaining')}
+          </span>
+          <span className="mt-1 flex items-baseline gap-1" style={{ color: termTone }}>
+            <span className="text-[26px] font-bold leading-none tabular-nums">
+              {termValue.amount}
+            </span>
+            <span className="text-sm font-semibold">{termValue.unit}</span>
+          </span>
+          <span className="mt-1.5 text-xs text-dark-400">
+            {t('dashboard.validUntil', { date: endDate })}
+          </span>
         </div>
-        {/* Две строки вместо обрезки: «🟡 Компания - 10 устройств» на телефоне
-            иначе превращалось в «🟡 Компани…». */}
-        <h2
-          id="subscription-card-title"
-          className="line-clamp-2 min-w-0 break-words text-xl font-bold leading-tight text-dark-50"
-        >
-          {subscription.tariff_name || t('subscription.currentPlan')}
-        </h2>
-        {showBigTerm ? (
-          <div className="mt-4">
-            <div className="text-sm text-dark-400">{t('dashboard.remaining')}</div>
-            <div className="mt-0.5 flex items-baseline gap-1.5" style={{ color: termTone }}>
-              <span className="text-[34px] font-bold leading-none">
-                {daysLeft > 0 ? daysLeft : Math.max(1, subscription.hours_left)}
-              </span>
-              <span className="text-lg font-semibold">
-                {daysLeft > 0
-                  ? t('dashboard.daysUnit', { count: daysLeft })
-                  : t('subscription.hours')}
-              </span>
-            </div>
-            <div className="mt-1 text-sm text-dark-400">
-              {t('dashboard.validUntil', { date: endDate })}
-            </div>
-          </div>
-        ) : (
-          <p className="mt-1 text-sm text-dark-400">{term}</p>
-        )}
       </div>
 
       {/* ─── Трафик ─── */}
-      <div className="mt-5 rounded-xl px-4 py-3.5" style={{ background: 'var(--spofy-tile-bg)' }}>
+      <div className="spofy-tile mt-2.5 px-4 py-3.5">
         <div className="flex items-center justify-between gap-3">
           <div className="min-w-0">
             <div className="flex items-center gap-1">
@@ -185,7 +198,7 @@ export default function SubscriptionCardActive({
       </div>
 
       {/* ─── Подключение ─── */}
-      <div className="mt-3">
+      <div className="mt-2.5">
         <ConnectDeviceTile
           subscription={subscription}
           connectedDevices={connectedDevices}

@@ -167,6 +167,22 @@ h3 {
   }
 }
 
+/* Framed tile inside a card (tariff / days left / traffic on the dashboard). */
+.spofy-tile {
+  background: var(--spofy-tile-bg);
+  border: 1px solid var(--spofy-border);
+  border-radius: var(--spofy-radius-tile);
+  transition: border-color 0.15s ease;
+}
+
+a.spofy-tile:hover {
+  border-color: var(--spofy-border-strong);
+}
+
+.spofy-tile-warning {
+  border-color: rgba(var(--color-warning-400), 0.3);
+}
+
 .bento-card-hover,
 .bento-card-glow,
 .card-hover,

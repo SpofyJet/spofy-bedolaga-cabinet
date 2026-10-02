@@ -155,21 +155,43 @@ describe('плитка подключения', () => {
 });
 
 describe('срок и навигация', () => {
-  it('на длинной подписке срок — строкой, без крупного счётчика', async () => {
-    await renderCard(subscription({ days_left: 400 }));
+  it('тариф и срок — две отдельные плитки', async () => {
+    await renderCard(subscription({ days_left: 30 }));
 
-    expect(screen.getByText('dashboard.untilWithDays')).toBeTruthy();
-    expect(screen.queryByText('dashboard.remaining')).toBeNull();
+    const tariffTile = screen.getByText('🟡 Компания - 10 устройств').closest('a');
+    expect(tariffTile?.className).toContain('spofy-tile');
+    expect(tariffTile?.getAttribute('href')).toBe('/subscriptions/42');
+    expect(tariffTile?.textContent).toContain('dashboard.tariff');
+
+    const daysTile = screen.getByText('dashboard.remaining').closest('.spofy-tile');
+    expect(daysTile).not.toBeNull();
+    expect(daysTile).not.toBe(tariffTile);
+    expect(daysTile?.textContent).toContain('30');
+    expect(daysTile?.textContent).toContain('dashboard.daysUnit');
+    expect(daysTile?.className).not.toContain('spofy-tile-warning');
   });
 
-  it('в последнюю неделю и на триале — крупный счётчик дней', async () => {
-    await renderCard(subscription({ days_left: 5 }));
-    expect(screen.getByText('dashboard.remaining')).toBeTruthy();
-    expect(screen.getByText('5')).toBeTruthy();
-    cleanup();
+  it('последние три дня — плитка срока предупреждает', async () => {
+    await renderCard(subscription({ days_left: 2 }));
 
-    await renderCard(subscription({ days_left: 30, is_trial: true }));
-    expect(screen.getByText('dashboard.remaining')).toBeTruthy();
+    const daysTile = screen.getByText('dashboard.remaining').closest('.spofy-tile');
+    expect(daysTile?.className).toContain('spofy-tile-warning');
+  });
+
+  it('многолетняя подписка — в годах, а не «6593 дня»', async () => {
+    await renderCard(subscription({ days_left: 6593 }));
+
+    const daysTile = screen.getByText('dashboard.remaining').closest('.spofy-tile');
+    expect(daysTile?.textContent).toContain('18');
+    expect(daysTile?.textContent).toContain('dashboard.yearsUnit');
+  });
+
+  it('последние сутки — в часах', async () => {
+    await renderCard(subscription({ days_left: 0, hours_left: 5 }));
+
+    const daysTile = screen.getByText('dashboard.remaining').closest('.spofy-tile');
+    expect(daysTile?.textContent).toContain('5');
+    expect(daysTile?.textContent).toContain('subscription.hours');
   });
 
   it('ссылка на управление подпиской подписана текстом', async () => {
