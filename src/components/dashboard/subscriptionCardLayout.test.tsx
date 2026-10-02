@@ -154,6 +154,6 @@ describe('Spofy: обходы отключены за трафик', () => {
     const banner = screen.getByTestId('bypass-suspended-banner');
     expect(banner.textContent).toContain('subscription.bypassSuspended.title');
     const links = Array.from(banner.querySelectorAll('a')).map((a) => a.getAttribute('href'));
-    expect(links).toEqual(['/subscription?topup=traffic', '/subscription/purchase']);
+    expect(links).toEqual(['/subscriptions/42?topup=traffic', '/subscription/purchase']);
   });
 });

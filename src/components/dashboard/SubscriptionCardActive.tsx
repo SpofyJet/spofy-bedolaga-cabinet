@@ -142,7 +142,11 @@ export default function SubscriptionCardActive({
 
       {/* ─── Spofy: обходы отключены за трафик, обычные серверы работают ─── */}
       {subscription.bypass_suspended && (
-        <BypassSuspendedBanner className="mb-4" renewTo="/subscription/purchase" />
+        <BypassSuspendedBanner
+          className="mb-4"
+          trafficTo={`/subscriptions/${subscription.id}?topup=traffic`}
+          renewTo="/subscription/purchase"
+        />
       )}
 
       {/* ─── Connect Device Button ─── */}

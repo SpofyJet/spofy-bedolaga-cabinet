@@ -6,7 +6,9 @@ interface BypassSuspendedBannerProps {
   renewTo: string;
   /** On the subscription page the traffic sheet opens in place. */
   onBuyTraffic?: () => void;
-  /** Elsewhere «Докупить трафик» is a link that opens that sheet. */
+  /** Elsewhere «Докупить трафик» is a link that opens that sheet: the subscription
+   *  page's own route, /subscriptions/:id?topup=traffic — /subscription redirects and
+   *  drops the query. */
   trafficTo?: string;
   className?: string;
 }
@@ -19,7 +21,7 @@ interface BypassSuspendedBannerProps {
 export default function BypassSuspendedBanner({
   renewTo,
   onBuyTraffic,
-  trafficTo = '/subscription?topup=traffic',
+  trafficTo,
   className = '',
 }: BypassSuspendedBannerProps) {
   const { t } = useTranslation();
@@ -50,7 +52,7 @@ export default function BypassSuspendedBanner({
             {t('subscription.bypassSuspended.buyTraffic')}
           </button>
         ) : (
-          <Link to={trafficTo} className={primary}>
+          <Link to={trafficTo ?? '/subscriptions'} className={primary}>
             {t('subscription.bypassSuspended.buyTraffic')}
           </Link>
         )}
