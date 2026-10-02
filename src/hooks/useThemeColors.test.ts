@@ -2,15 +2,6 @@
 import { afterEach, describe, expect, it } from 'vitest';
 import { applyThemeColors, computeThemeCssVars } from './useThemeColors';
 import { DEFAULT_THEME_COLORS, SHADE_LEVELS } from '../types/theme';
-
-/** Палитра апстрима — на ней сторожатся пороги выбора надписи на заливке. */
-const UPSTREAM_PALETTE = {
-  ...DEFAULT_THEME_COLORS,
-  accent: '#3b82f6',
-  success: '#22c55e',
-  warning: '#f59e0b',
-  error: '#ef4444',
-};
 import { readThemeColorsHint } from '../utils/themeColorsHint';
 
 /**
@@ -75,14 +66,14 @@ describe('applyThemeColors: статусные палитры', () => {
     expect(readVar('--color-error-500')).toBe(hexToTriplet('#dc2626'));
   });
 
-  it('дефолтная палитра в рантайме совпадает со статикой spofy-theme.css', () => {
+  it('дефолтная палитра в рантайме совпадает со статикой globals.css', () => {
     // Иначе после загрузки JS цвета «уезжают» относительно первой отрисовки.
     applyThemeColors(DEFAULT_THEME_COLORS);
 
-    expect(readVar('--color-accent-500')).toBe('43, 99, 245');
-    expect(readVar('--color-success-500')).toBe('34, 181, 115');
-    expect(readVar('--color-warning-500')).toBe('240, 163, 58');
-    expect(readVar('--color-error-500')).toBe('229, 72, 77');
+    expect(readVar('--color-accent-500')).toBe('59, 130, 246');
+    expect(readVar('--color-success-500')).toBe('34, 197, 94');
+    expect(readVar('--color-warning-500')).toBe('245, 158, 11');
+    expect(readVar('--color-error-500')).toBe('239, 68, 68');
   });
 
   it.each([
@@ -127,11 +118,11 @@ describe('applyThemeColors: статусные палитры', () => {
     applyThemeColors({ ...DEFAULT_THEME_COLORS, accent: NAVY_ACCENT });
     expect(readVar('--color-on-accent')).toBe('255, 255, 255');
 
-    // Апстримная палитра (синий #3b82f6): белый даёт 3.68 — ниже AA для текста,
-    // поэтому берётся тёмная надпись (4.85). Прежнее правило («белый пока ≥3:1»)
-    // оставляло кнопку на грани, и это же правило роняло надписи операторских
-    // палитр: розовый #ec4899 держал белый на 3.4 против тёмного 5.2.
-    applyThemeColors(UPSTREAM_PALETTE);
+    // Дефолтный синий: белый даёт 3.68 — ниже AA для текста, поэтому берётся
+    // тёмная надпись (4.85). Прежнее правило («белый пока ≥3:1») оставляло
+    // кнопку на грани, и это же правило роняло надписи операторских палитр:
+    // розовый #ec4899 держал белый на 3.4 против тёмного 5.2.
+    applyThemeColors(DEFAULT_THEME_COLORS);
     expect(readVar('--color-on-accent')).toBe('15, 23, 42');
     expect(readVar('--color-on-error')).toBe('15, 23, 42');
     expect(readVar('--color-on-success')).toBe('15, 23, 42');

@@ -6,6 +6,7 @@ import { Navigate, useNavigate, useParams } from 'react-router';
 import { subscriptionApi } from '../api/subscription';
 import { WebBackButton } from '../components/WebBackButton';
 import TrafficProgressBar from '../components/dashboard/TrafficProgressBar';
+import { HoverBorderGradient } from '../components/ui/hover-border-gradient';
 import { useTrafficZone } from '../hooks/useTrafficZone';
 import { formatTraffic } from '../utils/formatTraffic';
 import { getGlassColors } from '../utils/glassTheme';
@@ -19,14 +20,14 @@ import {
   CheckIcon,
   ClockIcon,
   CopyIcon,
+  DevicesIcon,
   DownloadIcon,
   RefreshIcon,
   TrashIcon,
   WarningIcon,
 } from '../components/icons';
+import { useHaptic } from '../platform';
 import { resolveConnectionUrlForUi } from '../utils/connectionLink';
-import { getFlagEmoji } from '../utils/subscriptionHelpers';
-import Twemoji from '@/lib/twemoji';
 import { AutopayToggle } from '../components/subscription/manage/AutopayToggle';
 import { DailyPausePanel } from '../components/subscription/manage/DailyPausePanel';
 import {
@@ -34,7 +35,6 @@ import {
   ReissueLinkButton,
 } from '../components/subscription/manage/ReissueLinkButton';
 import { DevicesPanel } from '../components/subscription/manage/DevicesPanel';
-import ConnectDeviceTile from '../components/dashboard/ConnectDeviceTile';
 import { RecurringPanels } from '../components/subscription/manage/RecurringPanels';
 import { DeviceTopupSheet } from '../components/subscription/sheets/DeviceTopupSheet';
 import { DeviceReductionSheet } from '../components/subscription/sheets/DeviceReductionSheet';
@@ -44,75 +44,145 @@ import { DeleteSubscriptionSheet } from '../components/subscription/sheets/Delet
 import { PageSkeleton, Skeleton } from '@/components/ui/skeleton';
 import { safeLocal } from '../utils/safeStorage';
 
-/**
- * Срок подписки. Пока впереди больше суток — дни и дата окончания: секундный
- * счётчик на многолетней подписке только нервирует. В последние сутки — живой
- * обратный отсчёт часов и минут (обновление раз в 30 с — своё, не всей страницы).
- */
+/** Isolated countdown so 1s interval doesn't re-render the whole page */
 const CountdownTimer = memo(function CountdownTimer({
   endDate,
   isActive,
+  glassColors: g,
 }: {
   endDate: string;
   isActive: boolean;
-  glassColors?: ReturnType<typeof getGlassColors>;
+  glassColors: ReturnType<typeof getGlassColors>;
 }) {
   const { t } = useTranslation();
-  const [now, setNow] = useState(() => Date.now());
-
-  const endTime = new Date(endDate).getTime();
-  const diff = Math.max(0, endTime - now);
-  const days = Math.floor(diff / 86_400_000);
-  const hours = Math.floor((diff % 86_400_000) / 3_600_000);
-  const minutes = Math.floor((diff % 3_600_000) / 60_000);
-  const isLastDay = isActive && days === 0;
+  const [countdown, setCountdown] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
 
   useEffect(() => {
-    if (!isLastDay) return;
-    const id = setInterval(() => setNow(Date.now()), 30_000);
+    const endTime = new Date(endDate).getTime();
+    const tick = () => {
+      const diff = Math.max(0, endTime - Date.now());
+      setCountdown({
+        days: Math.floor(diff / 86_400_000),
+        hours: Math.floor((diff % 86_400_000) / 3_600_000),
+        minutes: Math.floor((diff % 3_600_000) / 60_000),
+        seconds: Math.floor((diff % 60_000) / 1_000),
+      });
+    };
+    tick();
+    const id = setInterval(tick, 1000);
     return () => clearInterval(id);
-  }, [isLastDay]);
+  }, [endDate]);
 
   const isExpired = !isActive;
-  const isUrgent = days < 3;
-  const tone = isExpired
-    ? 'rgb(var(--color-critical-500))'
-    : isUrgent
-      ? 'rgb(var(--color-urgent-400))'
-      : 'rgb(var(--color-dark-50))';
+  const isUrgent = countdown.days <= 3;
 
   const formattedDate = new Date(endDate).toLocaleDateString(uiLocale(), {
     day: 'numeric',
-    month: 'long',
+    month: 'short',
     year: 'numeric',
   });
 
   return (
-    <div className="min-w-0 rounded-xl px-4 py-3.5" style={{ background: 'var(--spofy-tile-bg)' }}>
-      <div className="flex items-start gap-3">
-        <span
-          className="mt-0.5 shrink-0"
-          style={{ color: isExpired || isUrgent ? tone : undefined }}
+    <div
+      className="min-w-0 overflow-hidden rounded-[14px] p-3.5"
+      style={{
+        background: isExpired
+          ? 'rgba(255,59,92,0.06)'
+          : isUrgent
+            ? 'rgba(255,184,0,0.06)'
+            : g.innerBg,
+        border: isExpired
+          ? '1px solid rgba(255,59,92,0.15)'
+          : isUrgent
+            ? '1px solid rgba(255,184,0,0.15)'
+            : `1px solid ${g.innerBorder}`,
+      }}
+    >
+      <div className="mb-2 flex items-center gap-1.5 text-[10px] font-medium uppercase tracking-wider text-dark-400">
+        <div
+          className="flex h-6 w-6 items-center justify-center rounded-[7px]"
+          style={{
+            background: isExpired
+              ? 'rgba(255,59,92,0.1)'
+              : isUrgent
+                ? 'rgba(255,184,0,0.1)'
+                : g.hoverBg,
+          }}
         >
-          <CalendarIcon className="h-5 w-5 text-dark-400" />
-        </span>
-        <div className="min-w-0 flex-1">
-          {isExpired ? (
-            <div className="text-[17px] font-bold" style={{ color: tone }}>
-              {t('subscription.expired')}
-            </div>
-          ) : (
-            <div className="text-[17px] font-bold" style={{ color: tone }}>
-              {isLastDay
-                ? `${hours}\u00A0${t('subscription.hours')} ${minutes}\u00A0${t('subscription.minutes')}`
-                : `${days}\u00A0${t('subscription.daysShort')}`}
-            </div>
-          )}
-          <div className="mt-0.5 text-[13px] text-dark-400">
-            {t('subscription.expiresAt')} {formattedDate}
+          <span
+            style={{
+              color: isExpired
+                ? 'rgb(var(--color-critical-500))'
+                : isUrgent
+                  ? 'rgb(var(--color-urgent-400))'
+                  : g.textSecondary,
+            }}
+          >
+            <CalendarIcon className="h-[13px] w-[13px]" />
+          </span>
+        </div>
+        {t('dashboard.remaining')}
+      </div>
+      {isExpired ? (
+        <div
+          className="text-[18px] font-bold tracking-tight"
+          style={{ color: 'rgb(var(--color-critical-500))' }}
+        >
+          {t('subscription.expired')}
+        </div>
+      ) : (
+        <div className="flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between">
+          {/* На телефоне дата уходит на свою строку: рядом с таймером ей не хватало места, и она ломалась посреди «23 сент. / 2026 г.» */}
+          <div className="flex items-baseline gap-1 font-mono tabular-nums">
+            {countdown.days > 0 && (
+              <>
+                <span
+                  className="text-[20px] font-bold tracking-tight"
+                  style={{ color: isUrgent ? 'rgb(var(--color-urgent-400))' : g.text }}
+                >
+                  {countdown.days}
+                </span>
+                <span className="mr-1 text-[10px] font-medium text-dark-400">
+                  {t('subscription.daysShort')}
+                </span>
+              </>
+            )}
+            <span
+              className="text-[20px] font-bold tracking-tight"
+              style={{ color: isUrgent ? 'rgb(var(--color-urgent-400))' : g.text }}
+            >
+              {String(countdown.hours).padStart(2, '0')}
+            </span>
+            <span
+              className="mx-[-1px] text-[16px] font-bold opacity-30"
+              style={{ color: isUrgent ? 'rgb(var(--color-urgent-400))' : g.text }}
+            >
+              :
+            </span>
+            <span
+              className="text-[20px] font-bold tracking-tight"
+              style={{ color: isUrgent ? 'rgb(var(--color-urgent-400))' : g.text }}
+            >
+              {String(countdown.minutes).padStart(2, '0')}
+            </span>
+            <span
+              className="mx-[-1px] text-[16px] font-bold opacity-30"
+              style={{ color: isUrgent ? 'rgb(var(--color-urgent-400))' : g.text }}
+            >
+              :
+            </span>
+            <span
+              className="text-[20px] font-bold tracking-tight"
+              style={{ color: isUrgent ? 'rgb(var(--color-urgent-400))' : g.text }}
+            >
+              {String(countdown.seconds).padStart(2, '0')}
+            </span>
+          </div>
+          <div className="text-[10px] font-medium text-dark-400">
+            {t('subscription.expiresAt')}: {formattedDate}
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 });
@@ -125,6 +195,7 @@ export default function Subscription() {
   const subscriptionId = subIdParam ? parseInt(subIdParam, 10) : undefined;
   const { isDark } = useTheme();
   const g = getGlassColors(isDark);
+  const haptic = useHaptic();
   const [copied, setCopied] = useState(false);
   const [showDeleteSheet, setShowDeleteSheet] = useState(false);
 
@@ -361,9 +432,25 @@ export default function Subscription() {
           const isUnlimited =
             (trafficData?.is_unlimited ?? false) || subscription.traffic_limit_gb === 0;
           const connectedDevices = devicesData?.total ?? 0;
+          const isAtDeviceLimit =
+            subscription.device_limit > 0 && connectedDevices >= subscription.device_limit;
 
           return (
-            <div className="bento-card !p-5 sm:!p-6">
+            <div
+              className="relative overflow-hidden rounded-3xl lg:backdrop-blur-xl"
+              style={{
+                background: g.cardBg,
+                border: subscription.is_trial
+                  ? '1px solid rgba(var(--color-accent-400), 0.15)'
+                  : isDark
+                    ? `1px solid ${g.cardBorder}`
+                    : `1px solid ${zone.mainHex}25`,
+                boxShadow: isDark
+                  ? g.shadow
+                  : `0 2px 16px ${zone.mainHex}12, 0 0 0 1px ${zone.mainHex}08`,
+                padding: '28px 28px 24px',
+              }}
+            >
               {/* Decorative ambient radial + trial shimmer border were
                   removed: they carried no information, leaked zone/accent
                   hue into pure decoration (violates DESIGN.md
@@ -373,42 +460,65 @@ export default function Subscription() {
                   header badge. */}
 
               {/* ─── Header ─── */}
-              {(() => {
-                const statusColor = subscription.is_active
-                  ? subscription.is_trial
-                    ? 'rgb(var(--color-accent-400))'
-                    : 'rgb(var(--color-success-400))'
-                  : subscription.is_limited
-                    ? 'rgb(var(--color-urgent-400))'
-                    : 'rgb(var(--color-critical-500))';
-                const statusLabel = subscription.is_active
-                  ? subscription.is_trial
-                    ? t('subscription.trialStatus')
-                    : t('subscription.active')
-                  : subscription.is_limited
-                    ? t('subscription.trafficLimited')
-                    : subscription.status === 'disabled'
-                      ? t('subscription.pause.suspended')
-                      : t('subscription.expired');
-                return (
-                  <div className="mb-5 min-w-0">
+              <div className="mb-6 flex items-start justify-between">
+                <div>
+                  {/* Zone indicator */}
+                  <div className="mb-1 flex items-center gap-2">
                     <div
-                      className="mb-2 inline-flex items-center gap-1.5 text-xs font-semibold"
-                      style={{ color: statusColor }}
+                      className="h-2 w-2 rounded-full"
+                      style={{
+                        background: zone.mainHex,
+                        boxShadow: `0 0 8px ${zone.mainHex}80`,
+                        transition: 'all 0.6s ease',
+                      }}
+                      aria-hidden="true"
+                    />
+                    <span
+                      className="font-mono text-[11px] font-semibold uppercase tracking-widest"
+                      style={{ color: zone.mainHex, transition: 'color 0.6s ease' }}
                     >
-                      <span
-                        className="h-1.5 w-1.5 rounded-full"
-                        style={{ background: statusColor }}
-                        aria-hidden="true"
-                      />
-                      {statusLabel}
-                    </div>
-                    <h2 className="line-clamp-2 break-words text-xl font-bold leading-tight text-dark-50">
-                      {planTitle(subscription, t)}
-                    </h2>
+                      {isUnlimited ? t('dashboard.unlimited') : t(zone.labelKey)}
+                    </span>
                   </div>
-                );
-              })()}
+
+                  {/* Plan name */}
+                  <h2 className="text-lg font-bold tracking-tight text-dark-50">
+                    {planTitle(subscription, t)}
+                  </h2>
+                </div>
+
+                {/* Status badge */}
+                <span
+                  className="max-w-[55%] shrink-0 rounded-full px-3 py-1 text-center font-mono text-[10px] font-semibold uppercase tracking-wider"
+                  style={{
+                    background: subscription.is_active
+                      ? `${zone.mainHex}15`
+                      : subscription.is_limited
+                        ? 'rgba(255,184,0,0.12)'
+                        : 'rgba(255,59,92,0.12)',
+                    border: subscription.is_active
+                      ? `1px solid ${zone.mainHex}30`
+                      : subscription.is_limited
+                        ? '1px solid rgba(255,184,0,0.25)'
+                        : '1px solid rgba(255,59,92,0.25)',
+                    color: subscription.is_active
+                      ? zone.mainHex
+                      : subscription.is_limited
+                        ? 'rgb(var(--color-urgent-400))'
+                        : 'rgb(var(--color-critical-500))',
+                  }}
+                >
+                  {subscription.is_active
+                    ? subscription.is_trial
+                      ? t('subscription.trialStatus')
+                      : t('subscription.active')
+                    : subscription.is_limited
+                      ? t('subscription.trafficLimited')
+                      : subscription.status === 'disabled'
+                        ? t('subscription.pause.suspended')
+                        : t('subscription.expired')}
+                </span>
+              </div>
 
               {/* ─── Traffic Limited Banner ─── */}
               {subscription.is_limited && (
@@ -515,69 +625,145 @@ export default function Subscription() {
                 </div>
               )}
 
-              {/* ─── Traffic ─── */}
-              <div
-                className="mb-3 rounded-xl px-4 py-3.5"
-                style={{ background: 'var(--spofy-tile-bg)' }}
-              >
-                <div className="flex items-center justify-between gap-3">
-                  <div className="min-w-0">
-                    <div className="flex items-center gap-1">
-                      <span className="text-sm font-medium text-dark-200">
-                        {t('subscription.traffic')}
-                      </span>
-                      <button
-                        type="button"
-                        onClick={() => refreshTrafficMutation.mutate()}
-                        disabled={refreshTrafficMutation.isPending || trafficRefreshCooldown > 0}
-                        className="-my-1 flex h-7 w-7 items-center justify-center rounded-lg text-dark-500 transition-colors hover:bg-dark-50/[0.06] hover:text-dark-200 disabled:cursor-default disabled:opacity-40 disabled:hover:bg-transparent"
-                        aria-label={t('common.refresh')}
-                        title={t('common.refresh')}
-                      >
-                        <RefreshIcon
-                          className="h-3.5 w-3.5"
-                          spinning={refreshTrafficMutation.isPending}
-                        />
-                      </button>
-                    </div>
-                    <div className="text-[13px] text-dark-400">
+              {/* ─── Traffic Progress ─── */}
+              <div className="mb-6">
+                <div className="mb-2.5 flex items-center justify-between">
+                  <span className="text-[11px] font-medium uppercase tracking-wider text-dark-400">
+                    {t('subscription.traffic')}
+                  </span>
+                  <div className="flex items-center gap-2">
+                    <span className="font-mono text-[11px] text-dark-400">
                       {isUnlimited
-                        ? t('dashboard.usedTraffic', { amount: formatTraffic(usedGb) })
-                        : subscription.traffic_reset_mode &&
-                            subscription.traffic_reset_mode !== 'NO_RESET'
-                          ? t(`subscription.trafficReset.${subscription.traffic_reset_mode}`)
-                          : null}
-                    </div>
-                  </div>
-                  <div className="shrink-0 text-right text-[15px] font-semibold text-dark-50">
-                    {isUnlimited
-                      ? t('dashboard.unlimited')
-                      : t('dashboard.trafficOfTotal', {
-                          used: formatTraffic(usedGb),
-                          total: formatTraffic(subscription.traffic_limit_gb),
-                        })}
+                        ? formatTraffic(usedGb)
+                        : `${formatTraffic(usedGb)} / ${formatTraffic(subscription.traffic_limit_gb)}`}
+                    </span>
+                    <button
+                      onClick={() => refreshTrafficMutation.mutate()}
+                      disabled={refreshTrafficMutation.isPending || trafficRefreshCooldown > 0}
+                      className="flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-medium text-dark-400 transition-colors hover:bg-dark-50/[0.05] hover:text-dark-50/50 disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                      <RefreshIcon
+                        className="h-3 w-3"
+                        spinning={refreshTrafficMutation.isPending}
+                      />
+                      {trafficRefreshCooldown > 0
+                        ? `${trafficRefreshCooldown}s`
+                        : t('common.refresh')}
+                    </button>
                   </div>
                 </div>
-                {!isUnlimited && (
-                  <div className="mt-3">
-                    <TrafficProgressBar
-                      usedGb={usedGb}
-                      limitGb={subscription.traffic_limit_gb}
-                      percent={usedPercent}
-                      isUnlimited={false}
-                      compact
-                    />
-                  </div>
-                )}
-              </div>
-
-              {/* ─── Connect Device ─── */}
-              <div className="mb-5">
-                <ConnectDeviceTile
-                  subscription={subscription}
-                  connectedDevices={connectedDevices}
+                {subscription.traffic_reset_mode &&
+                  subscription.traffic_reset_mode !== 'NO_RESET' && (
+                    <div className="mb-2 text-[10px] text-dark-400">
+                      {t(`subscription.trafficReset.${subscription.traffic_reset_mode}`)}
+                    </div>
+                  )}
+                <TrafficProgressBar
+                  usedGb={usedGb}
+                  limitGb={subscription.traffic_limit_gb}
+                  percent={usedPercent}
+                  isUnlimited={isUnlimited}
+                  compact
                 />
               </div>
+
+              {/* ─── Connect Device Button ─── */}
+              {subscription.subscription_url && (
+                <HoverBorderGradient
+                  as="button"
+                  accentColor={zone.mainHex}
+                  disabled={isAtDeviceLimit}
+                  onClick={() => {
+                    if (isAtDeviceLimit) {
+                      haptic.notification('error');
+                      return;
+                    }
+                    navigate(subscriptionId ? `/connection?sub=${subscriptionId}` : '/connection');
+                  }}
+                  className={`mb-5 flex w-full items-center gap-3.5 rounded-[14px] p-3.5 text-left transition-shadow duration-300${isAtDeviceLimit ? 'cursor-not-allowed opacity-50' : ''}`}
+                  style={{ fontFamily: 'inherit' }}
+                >
+                  <div
+                    className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-[10px] transition-colors duration-500"
+                    style={{ background: `${zone.mainHex}12`, color: zone.mainHex }}
+                  >
+                    <DevicesIcon className="h-4 w-4" />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <div className="text-sm font-semibold tracking-tight text-dark-50">
+                      {t('dashboard.connectDevice')}
+                    </div>
+                    <div className="mt-0.5 text-[11px] text-dark-400">
+                      {subscription.device_limit === 0
+                        ? t('dashboard.devicesConnectedUnlimited', { used: connectedDevices })
+                        : t('dashboard.devicesOfMax', {
+                            used: connectedDevices,
+                            max: subscription.device_limit,
+                          })}
+                    </div>
+                    {isAtDeviceLimit && (
+                      <div
+                        className="mt-1 text-[10px] font-medium"
+                        style={{ color: 'rgb(var(--color-warning-400))' }}
+                      >
+                        {t('dashboard.deviceLimitReached')}
+                      </div>
+                    )}
+                  </div>
+                  {subscription.device_limit === 0 ? (
+                    <div
+                      className="flex flex-shrink-0 items-center text-lg text-dark-400"
+                      aria-hidden="true"
+                    >
+                      ∞
+                    </div>
+                  ) : subscription.device_limit <= 10 ? (
+                    // Больше пяти точек — в два ряда по пять: десять в ряд занимали
+                    // 124 px, и текст кнопки на телефоне шёл в 5–7 строк.
+                    <div
+                      className={
+                        subscription.device_limit > 5
+                          ? 'grid flex-shrink-0 grid-cols-5 gap-1'
+                          : 'flex flex-shrink-0 gap-1.5'
+                      }
+                      aria-hidden="true"
+                    >
+                      {Array.from({ length: subscription.device_limit }, (_, i) => (
+                        <div
+                          key={i}
+                          className="h-[7px] w-[7px] rounded-full transition-[background-color,box-shadow] duration-300"
+                          style={{
+                            background: i < connectedDevices ? zone.mainHex : g.textGhost,
+                            boxShadow: i < connectedDevices ? `0 0 6px ${zone.mainHex}50` : 'none',
+                          }}
+                        />
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="flex w-16 flex-shrink-0 items-center" aria-hidden="true">
+                      <div
+                        className="h-[6px] w-full overflow-hidden rounded-full"
+                        style={{ background: g.textGhost }}
+                      >
+                        {/* scaleX (compositor) instead of width (layout-thrash).
+                            Track is 64px (w-16), so 0.0625 floor = 4px minimum,
+                            preserving the prior minWidth behaviour. */}
+                        <div
+                          className="h-full w-full origin-left rounded-full transition-transform duration-500"
+                          style={{
+                            transform: `scaleX(${(() => {
+                              const pct = connectedDevices / subscription.device_limit;
+                              return connectedDevices > 0 ? Math.max(pct, 0.0625) : 0;
+                            })()})`,
+                            background: zone.mainHex,
+                            boxShadow: `0 0 8px ${zone.mainHex}40`,
+                          }}
+                        />
+                      </div>
+                    </div>
+                  )}
+                </HoverBorderGradient>
+              )}
 
               {/* ─── Subscription URL ─── */}
               {displayedConnectionUrl && !shouldHideConnectionLink && (
@@ -619,41 +805,10 @@ export default function Subscription() {
                 />
               </div>
 
-              {/* ─── Locations ─── */}
-              {subscription.servers && subscription.servers.length > 0 && (
-                <div className="mb-5">
-                  <div className="mb-2 text-[13px] font-medium text-dark-400">
-                    {t('subscription.locationsLabel')}
-                  </div>
-                  <div className="flex flex-wrap gap-1.5">
-                    {subscription.servers.map((server) => (
-                      <span
-                        key={server.uuid}
-                        className="inline-flex items-center gap-1.5 rounded-[8px] px-2.5 py-1 text-[11px] font-medium text-dark-50/50"
-                        style={{
-                          background: g.innerBorder,
-                          border: `1px solid ${g.trackBg}`,
-                        }}
-                      >
-                        {server.country_code && (
-                          <span className="text-xs">{getFlagEmoji(server.country_code)}</span>
-                        )}
-                        <Twemoji
-                          tag="span"
-                          options={{ className: 'twemoji', folder: 'svg', ext: '.svg' }}
-                        >
-                          {server.name}
-                        </Twemoji>
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              )}
-
               {/* ─── Purchased Traffic Packages ─── */}
               {subscription.traffic_purchases && subscription.traffic_purchases.length > 0 && (
                 <div className="mb-5">
-                  <div className="mb-2 text-[13px] font-medium text-dark-400">
+                  <div className="mb-2 text-[10px] font-medium uppercase tracking-wider text-dark-400">
                     {t('subscription.purchasedTraffic')}
                   </div>
                   <div className="space-y-2">
@@ -758,7 +913,15 @@ export default function Subscription() {
 
       {/* Daily Subscription Pause */}
       {subscription && subscription.is_daily && !subscription.is_trial && (
-        <div className="bento-card !p-5 sm:!p-6">
+        <div
+          className="relative overflow-hidden rounded-3xl"
+          style={{
+            background: g.cardBg,
+            border: `1px solid ${g.cardBorder}`,
+            boxShadow: g.shadow,
+            padding: '24px 28px',
+          }}
+        >
           <DailyPausePanel subscription={subscription} subscriptionId={subscriptionId} />
         </div>
       )}
@@ -789,8 +952,16 @@ export default function Subscription() {
 
       {/* Additional Options (Buy Devices) */}
       {subscription && showsAddonOptions(subscription) && (
-        <div className="bento-card !p-5 sm:!p-6">
-          <h2 className="mb-3 text-base font-bold text-dark-50">
+        <div
+          className="relative overflow-hidden rounded-3xl"
+          style={{
+            background: g.cardBg,
+            border: `1px solid ${g.cardBorder}`,
+            boxShadow: g.shadow,
+            padding: '24px 28px',
+          }}
+        >
+          <h2 className="mb-4 text-base font-bold tracking-tight text-dark-50">
             {t('subscription.additionalOptions.title')}
           </h2>
 
@@ -808,7 +979,7 @@ export default function Subscription() {
           />
 
           {/* Reduce Devices */}
-          <div className="mt-2">
+          <div className="mt-4">
             <DeviceReductionSheet
               open={showDeviceReduction}
               onOpen={() => setShowDeviceReduction(true)}
@@ -823,7 +994,7 @@ export default function Subscription() {
 
           {/* Buy Traffic */}
           {subscription.traffic_limit_gb > 0 && (
-            <div className="mt-2">
+            <div className="mt-4">
               <TrafficTopupSheet
                 open={showTrafficTopup}
                 onOpen={() => setShowTrafficTopup(true)}
@@ -840,7 +1011,7 @@ export default function Subscription() {
 
           {/* Server Management - only in classic mode */}
           {!isTariffsMode && (
-            <div className="mt-2">
+            <div className="mt-4">
               <ServerManagementSheet
                 open={showServerManagement}
                 onOpen={() => setShowServerManagement(true)}
@@ -854,26 +1025,35 @@ export default function Subscription() {
               />
             </div>
           )}
-
-          {/* Перевыпуск ссылки — обычное действие обслуживания, в общем списке */}
-          {canReissueLink(subscription) && (
-            <div className="mt-2">
-              <ReissueLinkButton subscription={subscription} subscriptionId={subscriptionId} />
-            </div>
-          )}
         </div>
       )}
 
       {/* Reissue Subscription — standalone block, not dependent on device_limit */}
-      {subscription && canReissueLink(subscription) && !showsAddonOptions(subscription) && (
-        <div className="bento-card !p-4">
+      {subscription && canReissueLink(subscription) && (
+        <div
+          className="relative overflow-hidden rounded-3xl"
+          style={{
+            background: g.cardBg,
+            border: `1px solid ${g.cardBorder}`,
+            boxShadow: g.shadow,
+            padding: '16px 20px',
+          }}
+        >
           <ReissueLinkButton subscription={subscription} subscriptionId={subscriptionId} />
         </div>
       )}
 
       {/* My Devices Section */}
       {subscription && (
-        <div className="bento-card !p-5 sm:!p-6">
+        <div
+          className="relative overflow-hidden rounded-3xl"
+          style={{
+            background: g.cardBg,
+            border: `1px solid ${g.cardBorder}`,
+            boxShadow: g.shadow,
+            padding: '24px 28px',
+          }}
+        >
           <DevicesPanel subscription={subscription} subscriptionId={subscriptionId} />
         </div>
       )}

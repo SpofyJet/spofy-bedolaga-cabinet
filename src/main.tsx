@@ -33,7 +33,6 @@ import { applyThemeColors } from './hooks/useThemeColors';
 import { readThemeColorsHint } from './utils/themeColorsHint';
 import { UI } from './config/constants';
 import './styles/globals.css';
-import './styles/spofy-theme.css';
 
 // Harden the global encoders against lone UTF-16 surrogates (truncated emoji in
 // backend names/remarks) BEFORE anything renders or fetches — otherwise such a

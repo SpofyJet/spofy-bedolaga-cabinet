@@ -222,10 +222,10 @@ export default function TicketNotificationBell({ isAdmin = false }: TicketNotifi
       {/* Bell button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className={`relative flex h-10 w-10 items-center justify-center rounded-[10px] transition-colors duration-150 ${
+        className={`relative rounded-xl border p-2 transition-all duration-200 ${
           isOpen
-            ? 'bg-dark-50/[0.08] text-dark-50'
-            : 'text-dark-300 hover:bg-dark-50/[0.06] hover:text-dark-50'
+            ? 'border-dark-600 bg-dark-700 text-accent-400'
+            : 'border-dark-700/50 bg-dark-800/50 text-dark-400 hover:bg-dark-700 hover:text-accent-400'
         }`}
         title={t('notifications.ticketNotifications', 'Ticket notifications')}
       >

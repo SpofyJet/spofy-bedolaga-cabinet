@@ -485,7 +485,7 @@ export default function TopUpAmount() {
                 className={`relative rounded-xl px-4 py-3 text-sm font-semibold transition-colors duration-150 ${
                   selectedOption === opt.id
                     ? 'bg-accent-500/12 text-accent-400 ring-2 ring-accent-500/50'
-                    : 'bg-[var(--spofy-tile-bg)] text-dark-200 hover:bg-dark-50/[0.06]'
+                    : 'bg-dark-50/[0.04] text-dark-200 hover:bg-dark-50/[0.06]'
                 }`}
               >
                 {opt.name}
@@ -507,10 +507,8 @@ export default function TopUpAmount() {
         </label>
         <div
           className={`relative rounded-xl transition-shadow duration-150 ${
-            isInputFocused
-              ? 'ring-2 ring-accent-500/60'
-              : 'ring-1 ring-[var(--spofy-border-strong)]'
-          } bg-[var(--spofy-tile-bg)]`}
+            isInputFocused ? 'ring-2 ring-accent-500/60' : 'ring-1 ring-dark-50/[0.12]'
+          } bg-dark-50/[0.04]`}
         >
           <input
             id="topup-amount"
@@ -570,7 +568,7 @@ export default function TopUpAmount() {
                   className={`h-10 rounded-[10px] text-sm font-semibold transition-colors duration-150 ${
                     isSelected
                       ? 'bg-accent-500/15 text-accent-400 ring-1 ring-accent-500/50'
-                      : 'bg-[var(--spofy-tile-bg)] text-dark-200 hover:bg-dark-50/[0.06]'
+                      : 'bg-dark-50/[0.04] text-dark-200 hover:bg-dark-50/[0.06]'
                   }`}
                 >
                   {formatAmount(a, 0)}

@@ -99,105 +99,43 @@ async function renderCard(sub: Subscription, connectedDevices = 0) {
   return container;
 }
 
-describe('заголовок карточки', () => {
-  it('имя тарифа переносится в две строки, а не обрезается в одну', async () => {
+describe('ряд «Тариф» + «Осталось»', () => {
+  it('обе плитки умеют сжиматься — длинное имя тарифа не выталкивает соседа', async () => {
+    const container = await renderCard(subscription());
+
+    const row = container.querySelector('.mb-5.flex.gap-2\\.5');
+    expect(row).toBeTruthy();
+    const plates = [...(row?.children ?? [])];
+    expect(plates).toHaveLength(2);
+    for (const plate of plates) {
+      expect(plate.className).toContain('min-w-0');
+      expect(plate.className).toContain('flex-1');
+    }
+  });
+
+  it('имя тарифа переносится, а не обрезается в одну строку', async () => {
     await renderCard(subscription());
 
     const name = screen.getByText('🟡 Компания - 10 устройств');
     expect(name.className).toContain('line-clamp-2');
-    expect(name.className).toContain('min-w-0');
     expect(name.className).not.toContain('truncate');
-  });
-
-  it('безлимит не рисует полосу прогресса — показывает только расход', async () => {
-    const container = await renderCard(
-      subscription({ traffic_limit_gb: 0, traffic_used_percent: 0 }),
-    );
-
-    expect(container.querySelector('[role="progressbar"]')).toBeNull();
-    expect(screen.getByText('dashboard.unlimited')).toBeTruthy();
-  });
-
-  it('лимитный трафик показывает полосу с долей расхода', async () => {
-    const container = await renderCard(subscription());
-
-    const bar = container.querySelector('[role="progressbar"]');
-    expect(bar?.getAttribute('aria-valuenow')).toBe('9');
   });
 });
 
-describe('плитка подключения', () => {
+describe('индикатор устройств', () => {
   const dots = (container: Element) =>
     container.querySelectorAll('.h-\\[7px\\].w-\\[7px\\].rounded-full');
 
-  it('до пяти устройств — точки по числу мест, занятые подсвечены', async () => {
+  it('до пяти устройств показывает точки', async () => {
     const container = await renderCard(subscription({ device_limit: 5 }), 2);
 
     expect(dots(container)).toHaveLength(5);
-    expect(container.querySelectorAll('.h-\\[7px\\].bg-accent-400')).toHaveLength(2);
-    expect(screen.getByText('dashboard.devicesOfMax')).toBeTruthy();
   });
 
-  it('свыше пяти — только текст: точки не оставляли места заголовку', async () => {
-    const container = await renderCard(subscription({ device_limit: 10 }), 3);
+  it('свыше пяти — полоску: десять точек не оставляли места заголовку', async () => {
+    const container = await renderCard(subscription({ device_limit: 10 }), 10);
 
     expect(dots(container)).toHaveLength(0);
-    expect(screen.getByText('dashboard.devicesOfMax')).toBeTruthy();
-  });
-
-  it('при исчерпанном лимите плитка помечена недоступной', async () => {
-    await renderCard(subscription({ device_limit: 2 }), 2);
-
-    const tile = screen.getByText('dashboard.connectDevice').closest('button');
-    expect(tile?.getAttribute('aria-disabled')).toBe('true');
-    expect(screen.getByText('dashboard.deviceLimitReached')).toBeTruthy();
-  });
-});
-
-describe('срок и навигация', () => {
-  it('тариф и срок — две отдельные плитки', async () => {
-    await renderCard(subscription({ days_left: 30 }));
-
-    const tariffTile = screen.getByText('🟡 Компания - 10 устройств').closest('a');
-    expect(tariffTile?.className).toContain('spofy-tile');
-    expect(tariffTile?.getAttribute('href')).toBe('/subscriptions/42');
-    expect(tariffTile?.textContent).toContain('dashboard.tariff');
-
-    const daysTile = screen.getByText('dashboard.remaining').closest('.spofy-tile');
-    expect(daysTile).not.toBeNull();
-    expect(daysTile).not.toBe(tariffTile);
-    expect(daysTile?.textContent).toContain('30');
-    expect(daysTile?.textContent).toContain('dashboard.daysUnit');
-    expect(daysTile?.className).not.toContain('spofy-tile-warning');
-  });
-
-  it('последние три дня — плитка срока предупреждает', async () => {
-    await renderCard(subscription({ days_left: 2 }));
-
-    const daysTile = screen.getByText('dashboard.remaining').closest('.spofy-tile');
-    expect(daysTile?.className).toContain('spofy-tile-warning');
-  });
-
-  it('многолетняя подписка — в годах, а не «6593 дня»', async () => {
-    await renderCard(subscription({ days_left: 6593 }));
-
-    const daysTile = screen.getByText('dashboard.remaining').closest('.spofy-tile');
-    expect(daysTile?.textContent).toContain('18');
-    expect(daysTile?.textContent).toContain('dashboard.yearsUnit');
-  });
-
-  it('последние сутки — в часах', async () => {
-    await renderCard(subscription({ days_left: 0, hours_left: 5 }));
-
-    const daysTile = screen.getByText('dashboard.remaining').closest('.spofy-tile');
-    expect(daysTile?.textContent).toContain('5');
-    expect(daysTile?.textContent).toContain('subscription.hours');
-  });
-
-  it('ссылка на управление подпиской подписана текстом', async () => {
-    await renderCard(subscription());
-
-    const link = screen.getByText('dashboard.viewSubscription').closest('a');
-    expect(link?.getAttribute('href')).toBe('/subscriptions/42');
+    expect(container.querySelector('.w-16 .rounded-full')).toBeTruthy();
   });
 });

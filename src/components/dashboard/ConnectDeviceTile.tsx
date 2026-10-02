@@ -1,9 +1,20 @@
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router';
 import { useHaptic } from '../../platform';
-import { ChevronRightIcon, MonitorIcon } from '@/components/icons';
+import { useTheme } from '../../hooks/useTheme';
+import { useTrafficZone } from '../../hooks/useTrafficZone';
+import { getGlassColors } from '../../utils/glassTheme';
+import { HoverBorderGradient } from '../ui/hover-border-gradient';
+import { MonitorIcon } from '@/components/icons';
 
-/** До скольких устройств лимит показываем точками. */
+/**
+ * До скольких устройств лимит показываем точками.
+ *
+ * Точка занимает 13px вместе с зазором, поэтому десять точек съедали 124px из
+ * ~272px плитки — тексту оставалось 80px, и «Подключить устройство» ломалось
+ * на четыре строки. Полоска-индикатор занимает фиксированные 64px при любом
+ * лимите, так что выше этого порога показываем её.
+ */
 const DOTS_MAX = 5;
 
 interface ConnectDeviceTileProps {
@@ -13,40 +24,39 @@ interface ConnectDeviceTileProps {
     subscription_url?: string | null;
   };
   connectedDevices: number;
-  /** Оставлен для совместимости вызовов; цвет плитки от трафика больше не зависит. */
+  /** Процент израсходованного трафика — от него зависит акцентный цвет плитки. */
   usedPercent?: number;
 }
 
 /**
- * Плитка «Подключить устройство» — главное действие карточки подписки.
+ * Плитка «Подключить устройство».
  *
  * Живёт и в карточке активной подписки, и на главной: пользователь,
  * которому подписку выдал бонус рекламной кампании, попадает на главную
  * с готовым доступом — и без этой плитки не понимает, что делать дальше.
- * Счётчик устройств — текстом: точки и полоска дублировали подпись и
- * отнимали место у заголовка на узких экранах.
  */
 export default function ConnectDeviceTile({
   subscription,
   connectedDevices,
+  usedPercent = 0,
 }: ConnectDeviceTileProps) {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const haptic = useHaptic();
+  const { isDark } = useTheme();
+  const g = getGlassColors(isDark);
+  const zone = useTrafficZone(usedPercent);
 
   const isAtDeviceLimit =
     subscription.device_limit > 0 && connectedDevices >= subscription.device_limit;
 
   if (!subscription.subscription_url) return null;
 
-  const devicesLine =
-    subscription.device_limit === 0
-      ? t('dashboard.devicesConnectedUnlimited', { used: connectedDevices })
-      : t('dashboard.devicesOfMax', { used: connectedDevices, max: subscription.device_limit });
-
   return (
-    <button
-      type="button"
+    <HoverBorderGradient
+      as="button"
+      accentColor={zone.mainHex}
+      disabled={isAtDeviceLimit}
       onClick={() => {
         if (isAtDeviceLimit) {
           haptic.notification('error');
@@ -54,48 +64,77 @@ export default function ConnectDeviceTile({
         }
         navigate(`/connection?sub=${subscription.id}`);
       }}
-      aria-disabled={isAtDeviceLimit}
-      className={`group flex w-full items-center gap-3.5 rounded-xl border px-4 py-3.5 text-left transition-colors ${
-        isAtDeviceLimit
-          ? 'cursor-not-allowed border-transparent opacity-60'
-          : 'border-accent-500/25 bg-accent-500/[0.08] hover:border-accent-500/45 hover:bg-accent-500/[0.12]'
-      }`}
+      className={`mb-2.5 flex w-full items-center gap-3.5 rounded-[14px] p-3.5 text-left transition-shadow duration-300 ${isAtDeviceLimit ? 'cursor-not-allowed opacity-50' : ''}`}
       data-onboarding="connect-devices"
+      style={{ fontFamily: 'inherit' }}
     >
-      <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-[10px] bg-accent-500 text-on-accent">
-        <MonitorIcon className="h-[18px] w-[18px]" />
-      </span>
+      {/* Monitor icon */}
+      <div
+        className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-[10px] transition-colors duration-500"
+        style={{ background: `rgba(${zone.mainVarRaw}, 0.07)`, color: zone.mainVar }}
+      >
+        <MonitorIcon className="h-4 w-4" />
+      </div>
 
-      <span className="min-w-0 flex-1">
-        <span className="block text-[15px] font-semibold leading-snug text-dark-50">
+      {/* Text */}
+      <div className="min-w-0 flex-1">
+        <div className="text-sm font-semibold tracking-tight text-dark-50">
           {t('dashboard.connectDevice')}
-        </span>
-        <span className="mt-0.5 block text-[13px] text-dark-400">{devicesLine}</span>
+        </div>
+        <div className="mt-0.5 text-[11px] text-dark-400">
+          {subscription.device_limit === 0
+            ? t('dashboard.devicesConnectedUnlimited', { used: connectedDevices })
+            : t('dashboard.devicesOfMax', {
+                used: connectedDevices,
+                max: subscription.device_limit,
+              })}
+        </div>
         {isAtDeviceLimit && (
-          <span className="mt-1 block text-xs font-medium text-warning-400">
+          <div
+            className="mt-1 text-[10px] font-medium"
+            style={{ color: 'rgb(var(--color-warning-400))' }}
+          >
             {t('dashboard.deviceLimitReached')}
-          </span>
+          </div>
         )}
-      </span>
+      </div>
 
-      {/* До пяти мест — точками: свободные слоты видны быстрее, чем в «2 из 5».
-          Больше — только текст: точки съедали место у заголовка. */}
-      {subscription.device_limit > 0 && subscription.device_limit <= DOTS_MAX && (
-        <span className="flex flex-shrink-0 gap-1" aria-hidden="true">
+      {/* Device indicator */}
+      {subscription.device_limit === 0 ? (
+        <div className="flex flex-shrink-0 items-center text-lg text-dark-400" aria-hidden="true">
+          ∞
+        </div>
+      ) : subscription.device_limit <= DOTS_MAX ? (
+        <div className="flex flex-shrink-0 gap-1.5" aria-hidden="true">
           {Array.from({ length: subscription.device_limit }, (_, i) => (
-            <span
+            <div
               key={i}
-              className={`h-[7px] w-[7px] rounded-full ${
-                i < connectedDevices ? 'bg-accent-400' : 'bg-dark-50/15'
-              }`}
+              className="h-[7px] w-[7px] rounded-full transition-all duration-300"
+              style={{
+                background: i < connectedDevices ? zone.mainVar : g.textGhost,
+                boxShadow: i < connectedDevices ? `0 0 6px rgba(${zone.mainVarRaw}, 0.31)` : 'none',
+              }}
             />
           ))}
-        </span>
+        </div>
+      ) : (
+        <div className="flex w-16 flex-shrink-0 items-center" aria-hidden="true">
+          <div
+            className="h-[6px] w-full overflow-hidden rounded-full"
+            style={{ background: g.textGhost }}
+          >
+            <div
+              className="h-full rounded-full transition-all duration-500"
+              style={{
+                width: `${Math.round((connectedDevices / subscription.device_limit) * 100)}%`,
+                background: zone.mainVar,
+                boxShadow: `0 0 8px rgba(${zone.mainVarRaw}, 0.25)`,
+                minWidth: connectedDevices > 0 ? '4px' : '0px',
+              }}
+            />
+          </div>
+        </div>
       )}
-
-      {!isAtDeviceLimit && (
-        <ChevronRightIcon className="h-5 w-5 flex-shrink-0 text-accent-400 transition-transform group-hover:translate-x-0.5" />
-      )}
-    </button>
+    </HoverBorderGradient>
   );
 }

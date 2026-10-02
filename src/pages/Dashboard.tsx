@@ -290,28 +290,30 @@ export default function Dashboard() {
   };
 
   const userName = displayName(user);
-  const promoGroupHasPerks =
-    !!promoGroupData &&
-    (promoGroupData.server_discount_percent > 0 ||
-      promoGroupData.traffic_discount_percent > 0 ||
-      promoGroupData.device_discount_percent > 0 ||
-      Object.values(promoGroupData.period_discounts ?? {}).some((value) => value > 0));
 
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div data-onboarding="welcome" className="flex flex-wrap items-center gap-x-3 gap-y-1.5">
-        <h1 className="text-[22px] font-bold leading-tight text-dark-50 sm:text-2xl">
+      <div data-onboarding="welcome">
+        <h1 className="text-2xl font-bold text-dark-50 sm:text-3xl">
           {userName ? t('dashboard.welcome', { name: userName }) : t('dashboard.welcomeNoName')}
         </h1>
-        {/* Группа — только когда она что-то даёт: имя группы по умолчанию
-            («Пользователь») покупателю ничего не говорит. */}
-        {promoGroupData?.group_name && promoGroupHasPerks && (
-          <span className="inline-flex max-w-[180px] items-center gap-1 rounded-full bg-accent-500/10 px-2.5 py-1 text-xs font-semibold text-accent-400">
-            <StarIcon filled className="h-3 w-3 shrink-0" />
-            <span className="truncate">{promoGroupData.group_name}</span>
-          </span>
-        )}
+        <div className="mt-1 flex flex-wrap items-center gap-2">
+          <p className="text-dark-400">{t('dashboard.yourSubscription')}</p>
+          {promoGroupData?.group_name && (
+            <span
+              className="inline-flex max-w-[160px] items-center gap-1 rounded-full px-2.5 py-0.5 text-[11px] font-semibold"
+              style={{
+                background: 'rgba(var(--color-accent-400), 0.1)',
+                border: '1px solid rgba(var(--color-accent-400), 0.2)',
+                color: 'rgb(var(--color-accent-400))',
+              }}
+            >
+              <StarIcon filled className="h-2.5 w-2.5 shrink-0" />
+              <span className="truncate">{promoGroupData.group_name}</span>
+            </span>
+          )}
+        </div>
       </div>
 
       {/* Pending Gift Activations */}

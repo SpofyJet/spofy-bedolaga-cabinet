@@ -342,11 +342,7 @@
     "unlimited": "无限",
     "usageLast14Days": "近 14 天使用情况",
     "usedSuffix": "已用",
-    "validUntil": "有效期至 {{date}}",
-    "trafficOfTotal": "{{used}} / {{total}}",
-    "trafficLeftPercent": "剩余 {{percent}}% 流量",
-    "daysUnit_other": "天",
-    "yearsUnit_other": "年"
+    "validUntil": "有效期至 {{date}}"
   },
   "subscription": {
     "title": "订阅",

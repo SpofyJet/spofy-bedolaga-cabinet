@@ -112,8 +112,7 @@ export function AppHeader({
   const logoLetter = branding?.logo_letter || FALLBACK_LOGO;
   const hasCustomLogo = branding?.has_custom_logo || false;
   const logoBlobUrl = useLogoBlobUrl();
-  const logoUrl = branding?.has_custom_logo ? logoBlobUrl : null;
-  // Не раскодировалась — остаётся буква, а не битая картинка с alt-текстом.
+  const logoUrl = hasCustomLogo ? logoBlobUrl : null;
   const [failedLogoUrl, setFailedLogoUrl] = useState<string | null>(null);
 
   // Theme toggle visibility
@@ -172,7 +171,7 @@ export function AppHeader({
           режима задаёт .app-mobile-header в globals.css (display-mode: standalone),
           чтобы не было ни отдельного светлого блока, ни жёсткой границы. */}
       <header
-        className="glass app-mobile-header fixed left-0 right-0 top-0 z-50 lg:hidden"
+        className="glass app-mobile-header fixed left-0 right-0 top-0 z-50 shadow-lg shadow-black/10 lg:hidden"
         style={{
           paddingTop: isFullscreen
             ? `${Math.max(safeAreaInset.top, contentSafeAreaInset.top) + (telegramPlatform === 'android' ? 48 : 45)}px`
@@ -185,17 +184,17 @@ export function AppHeader({
           className="mx-auto w-full pl-[max(1rem,env(safe-area-inset-left,0px))] pr-[max(1rem,env(safe-area-inset-right,0px))]"
           onClick={() => mobileMenuOpen && setMobileMenuOpen(false)}
         >
-          <div className="flex h-14 items-center justify-between">
+          <div className="flex h-16 items-center justify-between">
             {/* Logo */}
             <Link
               to="/"
               onClick={() => setMobileMenuOpen(false)}
               className={cn('flex flex-shrink-0 items-center gap-2.5', !appName && 'mr-4')}
             >
-              <div className="relative flex h-9 w-9 flex-shrink-0 items-center justify-center overflow-hidden rounded-[10px] bg-accent-500">
+              <div className="relative flex h-10 w-10 flex-shrink-0 items-center justify-center overflow-hidden rounded-linear-lg border border-dark-700/50 bg-dark-800/80 shadow-md">
                 <span
                   className={cn(
-                    'absolute text-base font-bold text-on-accent transition-opacity duration-200',
+                    'absolute text-lg font-bold text-accent-400 transition-opacity duration-200',
                     hasCustomLogo && logoLoaded ? 'opacity-0' : 'opacity-100',
                   )}
                 >
@@ -206,7 +205,7 @@ export function AppHeader({
                     src={logoUrl}
                     alt={appName || 'Logo'}
                     className={cn(
-                      'absolute h-full w-full object-cover transition-opacity duration-200',
+                      'absolute h-full w-full object-contain transition-opacity duration-200',
                       logoLoaded ? 'opacity-100' : 'opacity-0',
                     )}
                     onLoad={() => setLogoLoaded(true)}
@@ -218,7 +217,7 @@ export function AppHeader({
                 )}
               </div>
               {appName && (
-                <span className="whitespace-nowrap text-[17px] font-bold text-dark-50">
+                <span className="whitespace-nowrap text-base font-semibold text-dark-100">
                   {appName}
                 </span>
               )}
@@ -240,8 +239,43 @@ export function AppHeader({
                 </button>
               )}
 
+              {/* Theme toggle */}
+              {canToggle && (
+                <button
+                  onClick={() => {
+                    haptic.impact('light');
+                    toggleTheme();
+                    setMobileMenuOpen(false);
+                  }}
+                  className="relative rounded-linear-lg border border-dark-700/50 bg-dark-800/50 p-2 text-dark-400 transition-all duration-200 hover:bg-dark-700 hover:text-accent-400"
+                  title={isDark ? t('theme.light') || 'Light mode' : t('theme.dark') || 'Dark mode'}
+                >
+                  <div className="relative h-5 w-5">
+                    <div
+                      className={cn(
+                        'absolute inset-0 transition-all duration-300',
+                        isDark ? 'rotate-0 opacity-100' : 'rotate-90 opacity-0',
+                      )}
+                    >
+                      <MoonIcon className="h-5 w-5" />
+                    </div>
+                    <div
+                      className={cn(
+                        'absolute inset-0 transition-all duration-300',
+                        isDark ? '-rotate-90 opacity-0' : 'rotate-0 opacity-100',
+                      )}
+                    >
+                      <SunIcon className="h-5 w-5" />
+                    </div>
+                  </div>
+                </button>
+              )}
+
               <div onClick={() => setMobileMenuOpen(false)}>
                 <TicketNotificationBell isAdmin={isAdminActive()} />
+              </div>
+              <div onClick={() => setMobileMenuOpen(false)}>
+                <LanguageSwitcher />
               </div>
 
               {/* Mobile menu button */}
@@ -251,12 +285,11 @@ export function AppHeader({
                   haptic.impact('light');
                   setMobileMenuOpen(!mobileMenuOpen);
                 }}
-                className={cn(
-                  'flex h-10 w-10 items-center justify-center rounded-[10px] transition-colors duration-150',
+                className={`rounded-xl p-2.5 transition-all duration-200 ${
                   mobileMenuOpen
-                    ? 'bg-dark-50/[0.08] text-dark-50'
-                    : 'text-dark-300 hover:bg-dark-50/[0.06] hover:text-dark-50',
-                )}
+                    ? 'bg-dark-700 text-dark-100'
+                    : 'text-dark-400 hover:bg-dark-800 hover:text-dark-100'
+                }`}
                 aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
                 aria-expanded={mobileMenuOpen}
               >
@@ -318,29 +351,6 @@ export function AppHeader({
                     </div>
                   </div>
                 </div>
-              </div>
-
-              {/* Оформление и язык — здесь, а не в шапке: в верхней панели остаются
-                  только бренд, уведомления и меню. */}
-              <div className="mb-4 flex items-center gap-2">
-                {canToggle && (
-                  <button
-                    type="button"
-                    onClick={() => {
-                      haptic.impact('light');
-                      toggleTheme();
-                    }}
-                    className="flex h-10 flex-1 items-center justify-center gap-2 rounded-[10px] bg-dark-50/[0.05] text-sm font-medium text-dark-200 transition-colors hover:bg-dark-50/[0.08]"
-                  >
-                    {isDark ? (
-                      <SunIcon className="h-[18px] w-[18px]" />
-                    ) : (
-                      <MoonIcon className="h-[18px] w-[18px]" />
-                    )}
-                    {isDark ? t('theme.light') || 'Light mode' : t('theme.dark') || 'Dark mode'}
-                  </button>
-                )}
-                <LanguageSwitcher />
               </div>
 
               {/* Nav items */}

@@ -384,17 +384,7 @@
     },
     "manageAll": "Управлять всеми",
     "showAll": "Показать все",
-    "subscriptions": "Подписки",
-    "trafficOfTotal": "{{used}} из {{total}}",
-    "trafficLeftPercent": "осталось {{percent}}% трафика",
-    "daysUnit_one": "день",
-    "daysUnit_few": "дня",
-    "daysUnit_many": "дней",
-    "daysUnit_other": "дня",
-    "yearsUnit_one": "год",
-    "yearsUnit_few": "года",
-    "yearsUnit_many": "лет",
-    "yearsUnit_other": "года"
+    "subscriptions": "Подписки"
   },
   "subscription": {
     "title": "Подписка",

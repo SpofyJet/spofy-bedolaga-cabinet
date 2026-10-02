@@ -376,13 +376,7 @@
     },
     "manageAll": "Manage all",
     "showAll": "Show all",
-    "subscriptions": "Subscriptions",
-    "trafficOfTotal": "{{used}} of {{total}}",
-    "trafficLeftPercent": "{{percent}}% traffic left",
-    "daysUnit_one": "day",
-    "daysUnit_other": "days",
-    "yearsUnit_one": "year",
-    "yearsUnit_other": "years"
+    "subscriptions": "Subscriptions"
   },
   "subscription": {
     "title": "Subscription",

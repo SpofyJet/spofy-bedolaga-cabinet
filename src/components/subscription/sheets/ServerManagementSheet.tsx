@@ -79,7 +79,7 @@ export function ServerManagementSheet({
     return (
       <button
         onClick={onOpen}
-        className="w-full rounded-xl bg-[var(--spofy-tile-bg)] p-4 text-left transition-colors hover:bg-dark-50/[0.06]"
+        className={`w-full rounded-xl border p-4 text-left transition-colors ${isDark ? 'border-dark-700/50 bg-dark-800/50 hover:border-dark-600' : 'border-champagne-300/60 bg-champagne-200/40 hover:border-champagne-400'}`}
       >
         <div className="flex items-center justify-between">
           <div>
