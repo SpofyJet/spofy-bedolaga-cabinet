@@ -130,4 +130,37 @@ describe('preloadLogo', () => {
     expect(fetch).toHaveBeenCalledTimes(2);
     expect(getLogoBlobUrl()).toBeNull();
   });
+
+  it('пустой ответ не превращается в битый логотип', async () => {
+    const fetch = vi.fn(
+      async () => ({ ok: true, blob: async () => new Blob([]) }) as unknown as Response,
+    );
+    vi.stubGlobal('fetch', fetch);
+    const { preloadLogo, getLogoBlobUrl } = await loadModule();
+
+    await preloadLogo(BRANDING);
+
+    expect(getLogoBlobUrl()).toBeNull();
+    expect(objectUrl.createObjectURL).not.toHaveBeenCalled();
+  });
+});
+
+describe('useLogoBlobUrl', () => {
+  it('компонент узнаёт о логотипе, загрузившемся после его отрисовки', async () => {
+    const { renderHook, act } = await import('@testing-library/react');
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () => okResponse()),
+    );
+    const { preloadLogo, useLogoBlobUrl } = await loadModule();
+
+    const { result } = renderHook(() => useLogoBlobUrl());
+    expect(result.current).toBeNull();
+
+    await act(async () => {
+      await preloadLogo(BRANDING);
+    });
+
+    expect(result.current).toBe('blob:logo');
+  });
 });

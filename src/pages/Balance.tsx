@@ -18,6 +18,52 @@ import { staggerContainer, staggerItem } from '@/components/motion/transitions';
 import { isPaidStatus, isFailedStatus } from '../utils/paymentStatus';
 import { transactionTypeBadge, transactionTypeLabelKey } from '../utils/transactionType';
 import { Skeleton, SkeletonGroup } from '@/components/ui/skeleton';
+import PaymentMethodIcon from '@/components/PaymentMethodIcon';
+
+/**
+ * Способы пополнения группами: человек сначала выбирает «чем платить»
+ * (карта, крипта, звёзды), а уже потом провайдера. Карты — первыми: ими
+ * платит большинство.
+ */
+type MethodGroup = 'card' | 'crypto' | 'telegram' | 'other';
+const METHOD_GROUP_ORDER: MethodGroup[] = ['card', 'crypto', 'telegram', 'other'];
+const CRYPTO_METHODS = new Set(['cryptobot', 'heleket', 'xrocket']);
+const TELEGRAM_METHODS = new Set(['telegram_stars', 'tribute']);
+const CARD_METHODS = new Set([
+  'yookassa',
+  'wata',
+  'pal24',
+  'mulenpay',
+  'cloudpayments',
+  'cashera',
+  'lava',
+]);
+
+function methodGroup(id: string): MethodGroup {
+  if (CRYPTO_METHODS.has(id)) return 'crypto';
+  if (TELEGRAM_METHODS.has(id)) return 'telegram';
+  if (id.startsWith('platega') || id.startsWith('freekassa') || CARD_METHODS.has(id)) return 'card';
+  return 'other';
+}
+
+const LEADING_EMOJI = /^(?:\p{Extended_Pictographic}|\uFE0F|\u200D|\s)+/u;
+
+/** Имя без эмодзи-префикса (рядом есть иконка); в группе крипты — без «Криптовалюта (…)». */
+function methodTitle(name: string, group: MethodGroup): string {
+  let title = name.replace(LEADING_EMOJI, '').trim();
+  if (group === 'crypto') {
+    const inner = title.match(/^крипто\S*\s*\((.+)\)$/i);
+    if (inner) title = inner[1];
+  }
+  return title;
+}
+
+/** Иконка способа: у Platega — по смыслу метода (карта/СБП или зарубежная карта), а не логотип провайдера. */
+function MethodIcon({ id }: { id: string }) {
+  const icon =
+    id === 'platega_m12' ? 'card_international' : id.startsWith('platega') ? 'card_sbp' : id;
+  return <PaymentMethodIcon method={icon} className="h-10 w-10 shrink-0" />;
+}
 
 export default function Balance() {
   const { t } = useTranslation();
@@ -181,13 +227,22 @@ export default function Balance() {
           decoration (DESIGN.md Tunable-but-Scarce Rule) and read as the
           SaaS hero-metric template. */}
       <motion.div variants={staggerItem}>
-        <Card>
-          <div className="mb-2 text-sm text-dark-400">{t('balance.currentBalance')}</div>
-          <div className="text-4xl font-bold text-dark-50 sm:text-5xl">
-            {formatAmount(balanceData?.balance_rubles || 0)}
-            <span className="ml-2 text-2xl text-dark-400">{currencySymbol}</span>
+        <div className="rounded-2xl border border-accent-500/20 bg-accent-500/[0.07] p-5 sm:p-6">
+          <div className="flex items-start justify-between gap-4">
+            <div className="min-w-0">
+              <div className="text-sm font-medium text-dark-300">{t('balance.currentBalance')}</div>
+              <div className="mt-1.5 text-[40px] font-bold leading-none text-dark-50 sm:text-5xl">
+                {formatAmount(balanceData?.balance_rubles || 0)}
+                <span className="ml-1.5 text-2xl font-semibold text-dark-400">
+                  {currencySymbol}
+                </span>
+              </div>
+            </div>
+            <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-accent-500 text-on-accent">
+              <WalletIcon className="h-[22px] w-[22px]" />
+            </span>
           </div>
-        </Card>
+        </div>
       </motion.div>
 
       {/* Payment Methods — self-animated: mounts after its query resolves, when
@@ -196,45 +251,63 @@ export default function Balance() {
       {paymentMethods && paymentMethods.length > 0 && (
         <motion.div variants={staggerItem} initial="initial" animate="animate">
           <Card>
-            <h2 className="mb-4 text-lg font-semibold text-dark-100">
-              {t('balance.topUpBalance')}
-            </h2>
-            <div className="-mx-1 grid grid-cols-1 gap-1 lg:grid-cols-2">
-              {paymentMethods.map((method) => {
-                const methodKey = method.id.toLowerCase().replace(/-/g, '_');
-                const translatedName = t(`balance.paymentMethods.${methodKey}.name`, {
-                  defaultValue: '',
-                });
-                const translatedDesc = t(`balance.paymentMethods.${methodKey}.description`, {
-                  defaultValue: '',
-                });
-                const description = method.description || translatedDesc;
-
+            <h2 className="text-lg font-bold text-dark-50">{t('balance.topUpBalance')}</h2>
+            <p className="mt-0.5 text-sm text-dark-400">{t('balance.topUpHint')}</p>
+            <div className="mt-4 space-y-5">
+              {METHOD_GROUP_ORDER.map((group) => {
+                const methods = paymentMethods.filter((m) => methodGroup(m.id) === group);
+                if (methods.length === 0) return null;
                 return (
-                  <button
-                    type="button"
-                    key={method.id}
-                    disabled={!method.is_available}
-                    onClick={() => method.is_available && navigate(`/balance/top-up/${method.id}`)}
-                    className="group flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left transition-colors hover:bg-dark-50/[0.04] disabled:cursor-not-allowed disabled:opacity-50"
-                  >
-                    <span className="min-w-0 flex-1">
-                      <span className="block font-semibold text-dark-100">
-                        {method.name || translatedName}
-                      </span>
-                      <span className="mt-0.5 block text-[13px] text-dark-400">
-                        {description && <>{description} · </>}
-                        <span className="whitespace-nowrap">
-                          {formatAmount(method.min_amount_kopeks / 100, 0)}
-                          {'\u00A0–\u00A0'}
-                          {formatAmount(method.max_amount_kopeks / 100, 0)}
-                          {'\u00A0'}
-                          {currencySymbol}
-                        </span>
-                      </span>
-                    </span>
-                    <ChevronRightIcon className="h-4 w-4 shrink-0 text-dark-500 transition-transform group-hover:translate-x-0.5" />
-                  </button>
+                  <section key={group}>
+                    <h3 className="mb-1 text-[13px] font-medium text-dark-400">
+                      {t(`balance.methodGroups.${group}`)}
+                    </h3>
+                    <div className="-mx-2 grid grid-cols-1 gap-0.5 lg:grid-cols-2">
+                      {methods.map((method) => {
+                        const methodKey = method.id.toLowerCase().replace(/-/g, '_');
+                        const translatedName = t(`balance.paymentMethods.${methodKey}.name`, {
+                          defaultValue: '',
+                        });
+                        const translatedDesc = t(
+                          `balance.paymentMethods.${methodKey}.description`,
+                          {
+                            defaultValue: '',
+                          },
+                        );
+                        const description = method.description || translatedDesc;
+
+                        return (
+                          <button
+                            type="button"
+                            key={method.id}
+                            disabled={!method.is_available}
+                            onClick={() =>
+                              method.is_available && navigate(`/balance/top-up/${method.id}`)
+                            }
+                            className="group flex w-full items-center gap-3 rounded-xl px-2 py-2.5 text-left transition-colors hover:bg-dark-50/[0.05] disabled:cursor-not-allowed disabled:opacity-50"
+                          >
+                            <MethodIcon id={method.id} />
+                            <span className="min-w-0 flex-1">
+                              <span className="block font-semibold leading-snug text-dark-50">
+                                {methodTitle(method.name || translatedName, group)}
+                              </span>
+                              <span className="mt-0.5 block text-[13px] leading-snug text-dark-400">
+                                {description && <>{description} · </>}
+                                <span className="whitespace-nowrap">
+                                  {formatAmount(method.min_amount_kopeks / 100, 0)}
+                                  {'\u00A0–\u00A0'}
+                                  {formatAmount(method.max_amount_kopeks / 100, 0)}
+                                  {'\u00A0'}
+                                  {currencySymbol}
+                                </span>
+                              </span>
+                            </span>
+                            <ChevronRightIcon className="h-4 w-4 shrink-0 text-dark-500 transition-transform group-hover:translate-x-0.5" />
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </section>
                 );
               })}
             </div>

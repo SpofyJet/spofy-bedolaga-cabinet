@@ -1,3 +1,4 @@
+import { useSyncExternalStore } from 'react';
 import apiClient from './client';
 import { isEndpointMissingError } from '../utils/api-error';
 import type { AnimationConfig } from '@/components/ui/backgrounds/types';
@@ -70,6 +71,38 @@ const LOGO_PRELOADED_KEY = 'cabinet_logo_preloaded';
 let _logoBlobUrl: string | null = null;
 // Идущая сейчас загрузка: параллельные вызовы preloadLogo делят её.
 let _logoInFlight: Promise<void> | null = null;
+
+/**
+ * Адрес логотипа — подписываемое состояние, а не голая переменная модуля.
+ * Запрос брендинга делят несколько компонентов, и тот, что вернул данные первым,
+ * логотип не ждёт: blob готов позже, а React об этом не узнавал — шапка и вход
+ * навсегда оставались с буквой вместо логотипа.
+ */
+const _logoListeners = new Set<() => void>();
+
+function setLogoBlobUrl(url: string | null): void {
+  if (_logoBlobUrl && _logoBlobUrl !== url) {
+    URL.revokeObjectURL(_logoBlobUrl);
+  }
+  _logoBlobUrl = url;
+  for (const listener of _logoListeners) listener();
+}
+
+function subscribeLogo(listener: () => void): () => void {
+  _logoListeners.add(listener);
+  return () => {
+    _logoListeners.delete(listener);
+  };
+}
+
+/** Blob-адрес логотипа; компонент перерисуется, когда логотип загрузится или сменится. */
+export function useLogoBlobUrl(): string | null {
+  return useSyncExternalStore(
+    subscribeLogo,
+    () => _logoBlobUrl,
+    () => null,
+  );
+}
 
 // Check if logo was already preloaded in this session
 export const isLogoPreloaded = (): boolean => {
@@ -162,7 +195,9 @@ async function loadLogoBlob(logoPath: string): Promise<void> {
     if (!response.ok) return;
 
     const blob = await response.blob();
-    _logoBlobUrl = URL.createObjectURL(blob);
+    // Пустой ответ не показываем: битая <img> хуже буквы-заглушки.
+    if (blob.size === 0) return;
+    setLogoBlobUrl(URL.createObjectURL(blob));
     safeSession.setItem(LOGO_PRELOADED_KEY, logoPath);
   } catch {
     // Fetch failed, logo will use letter fallback
@@ -204,10 +239,7 @@ export const brandingApi = {
     formData.append('file', file);
     const response = await apiClient.post<BrandingInfo>('/cabinet/branding/logo', formData);
     // Invalidate cached blob so it gets re-fetched
-    if (_logoBlobUrl) {
-      URL.revokeObjectURL(_logoBlobUrl);
-      _logoBlobUrl = null;
-    }
+    setLogoBlobUrl(null);
     safeSession.removeItem(LOGO_PRELOADED_KEY);
     return response.data;
   },
@@ -238,10 +270,7 @@ export const brandingApi = {
   // Delete custom logo (admin only)
   deleteLogo: async (): Promise<BrandingInfo> => {
     const response = await apiClient.delete<BrandingInfo>('/cabinet/branding/logo');
-    if (_logoBlobUrl) {
-      URL.revokeObjectURL(_logoBlobUrl);
-      _logoBlobUrl = null;
-    }
+    setLogoBlobUrl(null);
     safeSession.removeItem(LOGO_PRELOADED_KEY);
     return response.data;
   },

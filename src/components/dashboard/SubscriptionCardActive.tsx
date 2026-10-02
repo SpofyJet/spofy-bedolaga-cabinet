@@ -49,6 +49,9 @@ export default function SubscriptionCardActive({
   });
   const daysLeft = subscription.days_left;
   const isEndingSoon = daysLeft <= 3;
+  // Крупный счётчик дней — когда срок и правда главное: пробный период или
+  // последняя неделя. На многолетней подписке хватает строки с датой.
+  const showBigTerm = subscription.is_trial || daysLeft <= 7;
   const term =
     daysLeft > 0
       ? t('dashboard.untilWithDays', { date: endDate, days: daysLeft })
@@ -57,56 +60,69 @@ export default function SubscriptionCardActive({
           hours: Math.max(1, subscription.hours_left),
         });
 
+  // Трафик на исходе окрашивает статус так же, как полосу: это информация, а не декор.
+  const trafficStressed = !isUnlimited && zone.zone !== 'normal';
+  const trafficLeftPercent = Math.max(0, 100 - Math.round(usedPercent));
   const statusTone = isEndingSoon
     ? 'rgb(var(--color-warning-400))'
-    : subscription.is_trial
-      ? 'rgb(var(--color-accent-400))'
-      : 'rgb(var(--color-success-400))';
-  const statusLabel = subscription.is_trial
-    ? t('subscription.trialStatus')
-    : t('subscription.active');
+    : trafficStressed
+      ? zone.mainVar
+      : subscription.is_trial
+        ? 'rgb(var(--color-accent-400))'
+        : 'rgb(var(--color-success-400))';
+  const statusLabel = [
+    subscription.is_trial ? t('subscription.trialStatus') : t('subscription.active'),
+    trafficStressed ? t('dashboard.trafficLeftPercent', { percent: trafficLeftPercent }) : null,
+  ]
+    .filter(Boolean)
+    .join(' · ');
+  const termTone = isEndingSoon ? 'rgb(var(--color-warning-400))' : 'rgb(var(--color-dark-50))';
 
   const refreshDisabled = refreshTrafficMutation.isPending || trafficRefreshCooldown > 0;
 
   return (
     <section className="bento-card !p-5 sm:!p-6" aria-labelledby="subscription-card-title">
       {/* ─── Срок ─── */}
-      <div className="flex items-start justify-between gap-3">
-        <div className="min-w-0 flex-1">
-          <div
-            className="mb-2 inline-flex items-center gap-1.5 text-xs font-semibold"
-            style={{ color: statusTone }}
-          >
-            <span
-              className="h-1.5 w-1.5 rounded-full"
-              style={{ background: statusTone }}
-              aria-hidden="true"
-            />
-            {statusLabel}
-          </div>
-          {/* Две строки вместо обрезки: «🟡 Компания - 10 устройств» на телефоне
-              иначе превращалось в «🟡 Компани…». */}
-          <h2
-            id="subscription-card-title"
-            className="line-clamp-2 min-w-0 break-words text-xl font-bold leading-tight text-dark-50"
-          >
-            {subscription.tariff_name || t('subscription.currentPlan')}
-          </h2>
-          <p
-            className="mt-1 text-sm"
-            style={{ color: isEndingSoon ? 'rgb(var(--color-warning-400))' : undefined }}
-          >
-            <span className={isEndingSoon ? '' : 'text-dark-400'}>{term}</span>
-          </p>
-        </div>
-        <Link
-          to={`/subscriptions/${subscription.id}`}
-          className="btn-icon -mr-2 -mt-1 flex-shrink-0"
-          aria-label={t('dashboard.viewSubscription')}
-          title={t('dashboard.viewSubscription')}
+      <div className="min-w-0">
+        <div
+          className="mb-2 inline-flex items-center gap-1.5 text-xs font-semibold"
+          style={{ color: statusTone }}
         >
-          <ChevronRightIcon className="h-5 w-5" />
-        </Link>
+          <span
+            className="h-1.5 w-1.5 rounded-full"
+            style={{ background: statusTone }}
+            aria-hidden="true"
+          />
+          {statusLabel}
+        </div>
+        {/* Две строки вместо обрезки: «🟡 Компания - 10 устройств» на телефоне
+            иначе превращалось в «🟡 Компани…». */}
+        <h2
+          id="subscription-card-title"
+          className="line-clamp-2 min-w-0 break-words text-xl font-bold leading-tight text-dark-50"
+        >
+          {subscription.tariff_name || t('subscription.currentPlan')}
+        </h2>
+        {showBigTerm ? (
+          <div className="mt-4">
+            <div className="text-sm text-dark-400">{t('dashboard.remaining')}</div>
+            <div className="mt-0.5 flex items-baseline gap-1.5" style={{ color: termTone }}>
+              <span className="text-[34px] font-bold leading-none">
+                {daysLeft > 0 ? daysLeft : Math.max(1, subscription.hours_left)}
+              </span>
+              <span className="text-lg font-semibold">
+                {daysLeft > 0
+                  ? t('dashboard.daysUnit', { count: daysLeft })
+                  : t('subscription.hours')}
+              </span>
+            </div>
+            <div className="mt-1 text-sm text-dark-400">
+              {t('dashboard.validUntil', { date: endDate })}
+            </div>
+          </div>
+        ) : (
+          <p className="mt-1 text-sm text-dark-400">{term}</p>
+        )}
       </div>
 
       {/* ─── Трафик ─── */}
@@ -134,7 +150,10 @@ export default function SubscriptionCardActive({
               </div>
             )}
           </div>
-          <div className="shrink-0 text-right text-[15px] font-semibold text-dark-50">
+          <div
+            className="shrink-0 text-right text-[15px] font-semibold"
+            style={{ color: trafficStressed ? zone.mainVar : 'rgb(var(--color-dark-50))' }}
+          >
             {isUnlimited
               ? t('dashboard.unlimited')
               : t('dashboard.trafficOfTotal', {
@@ -172,6 +191,17 @@ export default function SubscriptionCardActive({
           connectedDevices={connectedDevices}
           usedPercent={usedPercent}
         />
+      </div>
+
+      {/* Подписанная ссылка находится легче голой стрелки */}
+      <div className="mt-4 flex justify-end">
+        <Link
+          to={`/subscriptions/${subscription.id}`}
+          className="inline-flex items-center gap-0.5 text-sm font-medium text-accent-400 transition-colors hover:text-accent-300"
+        >
+          {t('dashboard.viewSubscription')}
+          <ChevronRightIcon className="h-4 w-4" />
+        </Link>
       </div>
     </section>
   );

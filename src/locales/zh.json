@@ -345,7 +345,9 @@
     "validUntil": "有效期至 {{date}}",
     "untilWithDays": "有效期至 {{date}} · 剩余 {{days}} 天",
     "untilWithHours": "有效期至 {{date}} · 剩余 {{hours}} 小时",
-    "trafficOfTotal": "{{used}} / {{total}}"
+    "trafficOfTotal": "{{used}} / {{total}}",
+    "trafficLeftPercent": "剩余 {{percent}}% 流量",
+    "daysUnit_other": "天"
   },
   "subscription": {
     "title": "订阅",
@@ -915,7 +917,14 @@
       "tryAgain": "重试"
     },
     "top_up": "充值",
-    "scanQrToPay": "请在银行应用中扫描二维码，或打开支付页面"
+    "scanQrToPay": "请在银行应用中扫描二维码，或打开支付页面",
+    "methodGroups": {
+      "card": "银行卡和 SBP",
+      "crypto": "加密货币",
+      "telegram": "Telegram",
+      "other": "其他方式"
+    },
+    "topUpHint": "资金自动到账，通常在一分钟内"
   },
   "referral": {
     "title": "推荐计划",

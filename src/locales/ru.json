@@ -387,7 +387,12 @@
     "subscriptions": "Подписки",
     "untilWithDays": "Действует до {{date}} · ещё {{days}} дн.",
     "untilWithHours": "Действует до {{date}} · ещё {{hours}} ч",
-    "trafficOfTotal": "{{used}} из {{total}}"
+    "trafficOfTotal": "{{used}} из {{total}}",
+    "trafficLeftPercent": "осталось {{percent}}% трафика",
+    "daysUnit_one": "день",
+    "daysUnit_few": "дня",
+    "daysUnit_many": "дней",
+    "daysUnit_other": "дня"
   },
   "subscription": {
     "title": "Подписка",
@@ -1076,7 +1081,14 @@
       "tryAgain": "Попробовать снова"
     },
     "top_up": "Пополнить баланс",
-    "scanQrToPay": "Отсканируйте QR-код в приложении банка или откройте оплату"
+    "scanQrToPay": "Отсканируйте QR-код в приложении банка или откройте оплату",
+    "methodGroups": {
+      "card": "Карта и СБП",
+      "crypto": "Криптовалюта",
+      "telegram": "Telegram",
+      "other": "Другие способы"
+    },
+    "topUpHint": "Деньги зачисляются автоматически, обычно за минуту"
   },
   "referral": {
     "title": "Реферальная программа",

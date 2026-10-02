@@ -3,6 +3,9 @@ import { useNavigate } from 'react-router';
 import { useHaptic } from '../../platform';
 import { ChevronRightIcon, MonitorIcon } from '@/components/icons';
 
+/** До скольких устройств лимит показываем точками. */
+const DOTS_MAX = 5;
+
 interface ConnectDeviceTileProps {
   subscription: {
     id: number;
@@ -74,6 +77,21 @@ export default function ConnectDeviceTile({
           </span>
         )}
       </span>
+
+      {/* До пяти мест — точками: свободные слоты видны быстрее, чем в «2 из 5».
+          Больше — только текст: точки съедали место у заголовка. */}
+      {subscription.device_limit > 0 && subscription.device_limit <= DOTS_MAX && (
+        <span className="flex flex-shrink-0 gap-1" aria-hidden="true">
+          {Array.from({ length: subscription.device_limit }, (_, i) => (
+            <span
+              key={i}
+              className={`h-[7px] w-[7px] rounded-full ${
+                i < connectedDevices ? 'bg-accent-400' : 'bg-dark-50/15'
+              }`}
+            />
+          ))}
+        </span>
+      )}
 
       {!isAtDeviceLimit && (
         <ChevronRightIcon className="h-5 w-5 flex-shrink-0 text-accent-400 transition-transform group-hover:translate-x-0.5" />

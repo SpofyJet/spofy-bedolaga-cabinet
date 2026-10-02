@@ -127,11 +127,22 @@ describe('заголовок карточки', () => {
 });
 
 describe('плитка подключения', () => {
-  it('счётчик устройств — текстом, без точек и полосок', async () => {
+  const dots = (container: Element) =>
+    container.querySelectorAll('.h-\\[7px\\].w-\\[7px\\].rounded-full');
+
+  it('до пяти устройств — точки по числу мест, занятые подсвечены', async () => {
     const container = await renderCard(subscription({ device_limit: 5 }), 2);
 
+    expect(dots(container)).toHaveLength(5);
+    expect(container.querySelectorAll('.h-\\[7px\\].bg-accent-400')).toHaveLength(2);
     expect(screen.getByText('dashboard.devicesOfMax')).toBeTruthy();
-    expect(container.querySelectorAll('.h-\\[7px\\].w-\\[7px\\].rounded-full')).toHaveLength(0);
+  });
+
+  it('свыше пяти — только текст: точки не оставляли места заголовку', async () => {
+    const container = await renderCard(subscription({ device_limit: 10 }), 3);
+
+    expect(dots(container)).toHaveLength(0);
+    expect(screen.getByText('dashboard.devicesOfMax')).toBeTruthy();
   });
 
   it('при исчерпанном лимите плитка помечена недоступной', async () => {
@@ -140,5 +151,31 @@ describe('плитка подключения', () => {
     const tile = screen.getByText('dashboard.connectDevice').closest('button');
     expect(tile?.getAttribute('aria-disabled')).toBe('true');
     expect(screen.getByText('dashboard.deviceLimitReached')).toBeTruthy();
+  });
+});
+
+describe('срок и навигация', () => {
+  it('на длинной подписке срок — строкой, без крупного счётчика', async () => {
+    await renderCard(subscription({ days_left: 400 }));
+
+    expect(screen.getByText('dashboard.untilWithDays')).toBeTruthy();
+    expect(screen.queryByText('dashboard.remaining')).toBeNull();
+  });
+
+  it('в последнюю неделю и на триале — крупный счётчик дней', async () => {
+    await renderCard(subscription({ days_left: 5 }));
+    expect(screen.getByText('dashboard.remaining')).toBeTruthy();
+    expect(screen.getByText('5')).toBeTruthy();
+    cleanup();
+
+    await renderCard(subscription({ days_left: 30, is_trial: true }));
+    expect(screen.getByText('dashboard.remaining')).toBeTruthy();
+  });
+
+  it('ссылка на управление подпиской подписана текстом', async () => {
+    await renderCard(subscription());
+
+    const link = screen.getByText('dashboard.viewSubscription').closest('a');
+    expect(link?.getAttribute('href')).toBe('/subscriptions/42');
   });
 });

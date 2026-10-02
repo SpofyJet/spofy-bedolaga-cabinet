@@ -98,11 +98,11 @@ export function ReissueLinkButton({ subscription, subscriptionId }: ReissueLinkB
         type="button"
         onClick={handleRevoke}
         disabled={revokeMutation.isPending || cooldown > 0}
-        className="w-full rounded-xl border border-warning-500/30 bg-warning-500/10 p-4 text-left transition-colors hover:bg-warning-500/20 disabled:opacity-50"
+        className="w-full rounded-xl bg-[var(--spofy-tile-bg)] p-4 text-left transition-colors hover:bg-dark-50/[0.06] disabled:opacity-50"
       >
         <div className="flex items-center justify-between">
           <div>
-            <div className="font-medium text-warning-400">{t('subscription.revoke.button')}</div>
+            <div className="font-medium text-dark-100">{t('subscription.revoke.button')}</div>
             <div className="mt-1 text-sm text-dark-400">
               {cooldown > 0
                 ? t('subscription.revoke.cooldown', {
@@ -112,9 +112,9 @@ export function ReissueLinkButton({ subscription, subscriptionId }: ReissueLinkB
                 : t('subscription.revoke.description')}
             </div>
           </div>
-          <div className="text-warning-400">
+          <div className="text-dark-400">
             {revokeMutation.isPending ? (
-              <div className="h-5 w-5 animate-spin rounded-full border-2 border-warning-400/30 border-t-amber-400" />
+              <div className="h-5 w-5 animate-spin rounded-full border-2 border-dark-400/30 border-t-dark-200" />
             ) : (
               <ArrowPathIcon className="h-5 w-5" />
             )}

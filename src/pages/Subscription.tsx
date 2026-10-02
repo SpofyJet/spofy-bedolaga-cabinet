@@ -758,15 +758,7 @@ export default function Subscription() {
 
       {/* Daily Subscription Pause */}
       {subscription && subscription.is_daily && !subscription.is_trial && (
-        <div
-          className="relative overflow-hidden rounded-2xl"
-          style={{
-            background: g.cardBg,
-            border: `1px solid ${g.cardBorder}`,
-            boxShadow: g.shadow,
-            padding: '24px 28px',
-          }}
-        >
+        <div className="bento-card !p-5 sm:!p-6">
           <DailyPausePanel subscription={subscription} subscriptionId={subscriptionId} />
         </div>
       )}
@@ -797,16 +789,8 @@ export default function Subscription() {
 
       {/* Additional Options (Buy Devices) */}
       {subscription && showsAddonOptions(subscription) && (
-        <div
-          className="relative overflow-hidden rounded-2xl"
-          style={{
-            background: g.cardBg,
-            border: `1px solid ${g.cardBorder}`,
-            boxShadow: g.shadow,
-            padding: '24px 28px',
-          }}
-        >
-          <h2 className="mb-4 text-base font-bold tracking-tight text-dark-50">
+        <div className="bento-card !p-5 sm:!p-6">
+          <h2 className="mb-3 text-base font-bold text-dark-50">
             {t('subscription.additionalOptions.title')}
           </h2>
 
@@ -824,7 +808,7 @@ export default function Subscription() {
           />
 
           {/* Reduce Devices */}
-          <div className="mt-4">
+          <div className="mt-2">
             <DeviceReductionSheet
               open={showDeviceReduction}
               onOpen={() => setShowDeviceReduction(true)}
@@ -839,7 +823,7 @@ export default function Subscription() {
 
           {/* Buy Traffic */}
           {subscription.traffic_limit_gb > 0 && (
-            <div className="mt-4">
+            <div className="mt-2">
               <TrafficTopupSheet
                 open={showTrafficTopup}
                 onOpen={() => setShowTrafficTopup(true)}
@@ -856,7 +840,7 @@ export default function Subscription() {
 
           {/* Server Management - only in classic mode */}
           {!isTariffsMode && (
-            <div className="mt-4">
+            <div className="mt-2">
               <ServerManagementSheet
                 open={showServerManagement}
                 onOpen={() => setShowServerManagement(true)}
@@ -870,35 +854,26 @@ export default function Subscription() {
               />
             </div>
           )}
+
+          {/* Перевыпуск ссылки — обычное действие обслуживания, в общем списке */}
+          {canReissueLink(subscription) && (
+            <div className="mt-2">
+              <ReissueLinkButton subscription={subscription} subscriptionId={subscriptionId} />
+            </div>
+          )}
         </div>
       )}
 
       {/* Reissue Subscription — standalone block, not dependent on device_limit */}
-      {subscription && canReissueLink(subscription) && (
-        <div
-          className="relative overflow-hidden rounded-2xl"
-          style={{
-            background: g.cardBg,
-            border: `1px solid ${g.cardBorder}`,
-            boxShadow: g.shadow,
-            padding: '16px 20px',
-          }}
-        >
+      {subscription && canReissueLink(subscription) && !showsAddonOptions(subscription) && (
+        <div className="bento-card !p-4">
           <ReissueLinkButton subscription={subscription} subscriptionId={subscriptionId} />
         </div>
       )}
 
       {/* My Devices Section */}
       {subscription && (
-        <div
-          className="relative overflow-hidden rounded-2xl"
-          style={{
-            background: g.cardBg,
-            border: `1px solid ${g.cardBorder}`,
-            boxShadow: g.shadow,
-            padding: '24px 28px',
-          }}
-        >
+        <div className="bento-card !p-5 sm:!p-6">
           <DevicesPanel subscription={subscription} subscriptionId={subscriptionId} />
         </div>
       )}

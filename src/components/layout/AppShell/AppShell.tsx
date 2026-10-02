@@ -15,7 +15,6 @@ import { useLiteMode } from '@/hooks/useLiteMode';
 import { useScrollRestoration } from '@/hooks/useScrollRestoration';
 import { resetVirtualKeyboard } from '@/hooks/useVirtualKeyboard';
 import { themeColorsApi } from '@/api/themeColors';
-import { isLogoPreloaded } from '@/api/branding';
 import { cn } from '@/lib/utils';
 
 import WebSocketNotifications from '@/components/WebSocketNotifications';
@@ -32,7 +31,6 @@ import {
   ChatIcon,
   UserIcon,
   UsersIcon,
-  ShieldIcon,
   InfoIcon,
   SunIcon,
   MoonIcon,
@@ -80,6 +78,10 @@ export function AppShell({ children }: AppShellProps) {
   const isMobileFullscreen = isFullscreen && isMobile;
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  // Логотип виден только после настоящей загрузки; не раскодировался — остаётся буква.
+  const [loadedLogoUrl, setLoadedLogoUrl] = useState<string | null>(null);
+  const [failedLogoUrl, setFailedLogoUrl] = useState<string | null>(null);
+  const logoShown = !!logoUrl && loadedLogoUrl === logoUrl && failedLogoUrl !== logoUrl;
 
   // Смена экрана закрывает сигнал «клавиатура открыта» (useVirtualKeyboard):
   // поле с фокусом размонтировано, blur не приходит, и прижатые к низу элементы
@@ -115,14 +117,9 @@ export function AppShell({ children }: AppShellProps) {
     haptic.impact('light');
   };
 
-  // A single elegant nav link: icon + label always visible, with a shared
-  // framer-motion pill that slides to the active item on navigation.
-  const renderNavLink = (
-    path: string,
-    label: string,
-    Icon: React.ComponentType<{ className?: string }>,
-    admin = false,
-  ) => {
+  // Пункт навигации — только подпись; активный отмечен чертой у нижней
+  // границы шапки, черта переезжает за выбранным пунктом.
+  const renderNavLink = (path: string, label: string, admin = false) => {
     const active = admin ? location.pathname.startsWith('/admin') : isActive(path);
     return (
       <Link
@@ -131,30 +128,27 @@ export function AppShell({ children }: AppShellProps) {
         onClick={handleNavClick}
         aria-label={label}
         className={cn(
-          'relative flex shrink-0 items-center gap-1.5 rounded-full px-3 py-1.5 text-[13px] font-medium transition-colors duration-200',
+          'relative flex h-14 shrink-0 items-center px-3 text-[14px] font-medium transition-colors duration-150',
           active
             ? admin
               ? 'text-warning-300'
               : 'text-dark-50'
             : admin
-              ? 'text-warning-500 hover:bg-warning-500/10 hover:text-warning-300'
-              : 'text-dark-400 hover:bg-dark-800/60 hover:text-dark-100',
+              ? 'text-warning-500 hover:text-warning-300'
+              : 'text-dark-400 hover:text-dark-100',
         )}
       >
         {active && (
+          // Активный пункт — тонкая черта у нижней границы шапки
           <motion.span
             layoutId="desktop-nav-active"
             className={cn(
-              // Подсветка-пилюля активного пункта — «приподнята» над треком капсулы
-              'absolute inset-0 rounded-full shadow-sm',
-              admin
-                ? 'bg-warning-500/15 ring-1 ring-warning-500/20'
-                : 'bg-dark-700/80 ring-1 ring-dark-600/40',
+              'absolute inset-x-3 bottom-0 h-0.5 rounded-full',
+              admin ? 'bg-warning-400' : 'bg-accent-500',
             )}
-            transition={{ type: 'spring', stiffness: 500, damping: 35 }}
+            transition={{ type: 'spring', stiffness: 600, damping: 45 }}
           />
         )}
-        <Icon className="relative h-4 w-4 shrink-0" />
         <span className="relative whitespace-nowrap">{label}</span>
       </Link>
     );
@@ -175,7 +169,7 @@ export function AppShell({ children }: AppShellProps) {
           скроллбара, и капсула по центру прыгала бы на полширины скроллбара при
           переходах между страницами со скроллом и без. 100vw даёт ту же ось
           центрирования, что и у body (тоже 100vw). */}
-      <header className="fixed left-0 top-0 z-50 hidden w-screen border-b border-dark-800/50 bg-dark-950/95 lg:block">
+      <header className="fixed left-0 top-0 z-50 hidden w-screen border-b border-[var(--spofy-border)] bg-dark-950/90 backdrop-blur-md lg:block">
         {/* 3-зонный grid: лого | капсула | действия. Колонки 1fr_auto_1fr держат
             капсулу строго по центру вьюпорта НЕЗАВИСИМО от ширины лого/действий,
             а действия — у правого края. Поэтому ничего не «скачет» при переходах
@@ -187,38 +181,40 @@ export function AppShell({ children }: AppShellProps) {
             className="flex shrink-0 items-center gap-2.5 justify-self-start"
             onClick={handleNavClick}
           >
-            <div className="relative flex h-8 w-8 flex-shrink-0 items-center justify-center overflow-hidden rounded-lg bg-dark-800">
+            <div className="relative flex h-8 w-8 flex-shrink-0 items-center justify-center overflow-hidden rounded-[9px] bg-accent-500">
               <span
                 className={cn(
-                  'absolute text-sm font-bold text-accent-400 transition-opacity duration-200',
-                  hasCustomLogo && isLogoPreloaded() ? 'opacity-0' : 'opacity-100',
+                  'absolute text-sm font-bold text-on-accent transition-opacity duration-200',
+                  hasCustomLogo && logoShown ? 'opacity-0' : 'opacity-100',
                 )}
               >
                 {logoLetter}
               </span>
-              {hasCustomLogo && logoUrl && (
+              {hasCustomLogo && logoUrl && logoUrl !== failedLogoUrl && (
                 <img
                   src={logoUrl}
-                  alt={appName || 'Logo'}
+                  alt=""
+                  onLoad={() => setLoadedLogoUrl(logoUrl)}
+                  onError={() => setFailedLogoUrl(logoUrl)}
                   className={cn(
-                    'absolute h-full w-full object-contain transition-opacity duration-200',
-                    isLogoPreloaded() ? 'opacity-100' : 'opacity-0',
+                    'absolute h-full w-full object-cover transition-opacity duration-200',
+                    logoShown ? 'opacity-100' : 'opacity-0',
                   )}
                 />
               )}
             </div>
-            <span className="text-base font-semibold text-dark-100">{appName}</span>
+            <span className="text-base font-bold text-dark-50">{appName}</span>
           </Link>
 
           {/* Navigation — единая «капсула» (segmented control): все пункты видны
               всегда, без скролла/сжатия/сворачивания. Центрируется средней
               колонкой grid (justify-self-center), а не auto-margin'ами. */}
-          <nav className="flex items-center gap-0.5 justify-self-center rounded-full border border-dark-800/70 bg-dark-900/50 p-1 shadow-sm backdrop-blur-sm">
-            {desktopNav.map((item) => renderNavLink(item.path, item.label, item.icon))}
+          <nav className="flex items-center justify-self-center">
+            {desktopNav.map((item) => renderNavLink(item.path, item.label))}
             {isAdmin && (
               <>
-                <div className="mx-1 h-5 w-px shrink-0 bg-dark-700/60" />
-                {renderNavLink('/admin', t('admin.nav.title'), ShieldIcon, true)}
+                <div className="mx-2 h-5 w-px shrink-0 bg-dark-50/10" />
+                {renderNavLink('/admin', t('admin.nav.title'), true)}
               </>
             )}
           </nav>
@@ -231,7 +227,7 @@ export function AppShell({ children }: AppShellProps) {
                 toggleTheme();
               }}
               className={cn(
-                'rounded-xl border border-dark-700/50 bg-dark-800/50 p-2 text-dark-400 transition-colors duration-200 hover:bg-dark-700 hover:text-accent-400',
+                'flex h-10 w-10 items-center justify-center rounded-[10px] text-dark-300 transition-colors duration-150 hover:bg-dark-50/[0.06] hover:text-dark-50',
                 !canToggleTheme && 'hidden',
               )}
               aria-label={

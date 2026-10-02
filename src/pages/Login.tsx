@@ -12,6 +12,7 @@ import {
   setCachedBranding,
   preloadLogo,
   isLogoPreloaded,
+  useLogoBlobUrl,
   type BrandingInfo,
   type EmailAuthEnabled,
 } from '../api/branding';
@@ -181,7 +182,9 @@ export default function Login() {
 
   const appName = branding ? branding.name : import.meta.env.VITE_APP_NAME || 'VPN';
   const appLogo = branding?.logo_letter || import.meta.env.VITE_APP_LOGO || 'V';
-  const logoUrl = branding ? brandingApi.getLogoUrl(branding) : null;
+  const logoBlobUrl = useLogoBlobUrl();
+  const logoUrl = branding?.has_custom_logo ? logoBlobUrl : null;
+  const [failedLogoUrl, setFailedLogoUrl] = useState<string | null>(null);
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -401,12 +404,16 @@ export default function Login() {
               {appLogo}
             </span>
             {/* Logo image */}
-            {branding?.has_custom_logo && logoUrl && (
+            {branding?.has_custom_logo && logoUrl && logoUrl !== failedLogoUrl && (
               <img
                 src={logoUrl}
                 alt={appName || 'Logo'}
                 className={`absolute h-full w-full object-contain transition-opacity duration-200 ${logoLoaded ? 'opacity-100' : 'opacity-0'}`}
                 onLoad={() => setLogoLoaded(true)}
+                onError={() => {
+                  setLogoLoaded(false);
+                  setFailedLogoUrl(logoUrl);
+                }}
               />
             )}
           </div>

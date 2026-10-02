@@ -379,7 +379,10 @@
     "subscriptions": "Subscriptions",
     "untilWithDays": "Active until {{date}} · {{days}} days left",
     "untilWithHours": "Active until {{date}} · {{hours}} h left",
-    "trafficOfTotal": "{{used}} of {{total}}"
+    "trafficOfTotal": "{{used}} of {{total}}",
+    "trafficLeftPercent": "{{percent}}% traffic left",
+    "daysUnit_one": "day",
+    "daysUnit_other": "days"
   },
   "subscription": {
     "title": "Subscription",
@@ -1048,7 +1051,14 @@
       "tryAgain": "Try Again"
     },
     "top_up": "Top up balance",
-    "scanQrToPay": "Scan the QR code in your banking app or open the payment page"
+    "scanQrToPay": "Scan the QR code in your banking app or open the payment page",
+    "methodGroups": {
+      "card": "Card & SBP",
+      "crypto": "Crypto",
+      "telegram": "Telegram",
+      "other": "Other methods"
+    },
+    "topUpHint": "Funds are credited automatically, usually within a minute"
   },
   "referral": {
     "title": "Referral Program",

@@ -8,6 +8,7 @@ import {
   setCachedBranding,
   preloadLogo,
   isLogoPreloaded,
+  useLogoBlobUrl,
 } from '@/api/branding';
 
 const FALLBACK_NAME = import.meta.env.VITE_APP_NAME || 'Cabinet';
@@ -35,7 +36,8 @@ export function useBranding() {
   const appName = branding ? branding.name : FALLBACK_NAME;
   const logoLetter = branding?.logo_letter || FALLBACK_LOGO;
   const hasCustomLogo = branding?.has_custom_logo || false;
-  const logoUrl = branding ? brandingApi.getLogoUrl(branding) : null;
+  const logoBlobUrl = useLogoBlobUrl();
+  const logoUrl = hasCustomLogo ? logoBlobUrl : null;
 
   // Заголовок, фавикон и метатеги ведёт useDocumentBranding на уровне приложения.
 

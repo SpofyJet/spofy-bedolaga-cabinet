@@ -1,7 +1,7 @@
 import { useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { brandingApi, setCachedBranding } from '../../api/branding';
+import { brandingApi, setCachedBranding, useLogoBlobUrl } from '../../api/branding';
 import { setCachedFullscreenEnabled } from '../../hooks/useTelegramSDK';
 import { LITE_MODE_QUERY_KEY, writeLiteModeHint } from '../../hooks/useLiteMode';
 import { UploadIcon, TrashIcon, PencilIcon, CheckIcon, CloseIcon } from './icons';
@@ -13,6 +13,7 @@ interface BrandingTabProps {
 }
 
 export function BrandingTab({ accentColor = '#3b82f6' }: BrandingTabProps) {
+  const logoBlobUrl = useLogoBlobUrl();
   const { t } = useTranslation();
   const queryClient = useQueryClient();
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -172,7 +173,7 @@ export function BrandingTab({ accentColor = '#3b82f6' }: BrandingTabProps) {
             >
               {branding?.has_custom_logo ? (
                 <img
-                  src={brandingApi.getLogoUrl(branding) ?? undefined}
+                  src={logoBlobUrl ?? undefined}
                   alt="Logo"
                   loading="lazy"
                   className="h-full w-full object-cover"

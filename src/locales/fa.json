@@ -350,7 +350,10 @@
     "validUntil": "معتبر تا {{date}}",
     "untilWithDays": "فعال تا {{date}} · {{days}} روز باقی‌مانده",
     "untilWithHours": "فعال تا {{date}} · {{hours}} ساعت باقی‌مانده",
-    "trafficOfTotal": "{{used}} از {{total}}"
+    "trafficOfTotal": "{{used}} از {{total}}",
+    "trafficLeftPercent": "{{percent}}٪ ترافیک باقی‌مانده",
+    "daysUnit_one": "روز",
+    "daysUnit_other": "روز"
   },
   "subscription": {
     "title": "اشتراک",
@@ -921,7 +924,14 @@
       "tryAgain": "تلاش مجدد"
     },
     "top_up": "افزایش موجودی",
-    "scanQrToPay": "کد QR را در برنامه بانک اسکن کنید یا صفحه پرداخت را باز کنید"
+    "scanQrToPay": "کد QR را در برنامه بانک اسکن کنید یا صفحه پرداخت را باز کنید",
+    "methodGroups": {
+      "card": "کارت و SBP",
+      "crypto": "ارز دیجیتال",
+      "telegram": "Telegram",
+      "other": "روش‌های دیگر"
+    },
+    "topUpHint": "مبلغ به‌طور خودکار، معمولاً ظرف یک دقیقه واریز می‌شود"
   },
   "referral": {
     "title": "برنامه معرفی",
