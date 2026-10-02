@@ -211,6 +211,9 @@ export default function Subscription() {
     () => searchParams.get('topup') === 'traffic',
   );
   const [selectedTrafficPackage, setSelectedTrafficPackage] = useState<number | null>(null);
+  // Лист докупки раскрывается внизу страницы: открытый из баннера или по ссылке
+  // ?topup=traffic, он оказывался за экраном — подкручиваем к нему.
+  const trafficTopupRef = useRef<HTMLDivElement>(null);
   const [showServerManagement, setShowServerManagement] = useState(false);
   const [selectedServersToUpdate, setSelectedServersToUpdate] = useState<string[]>([]);
 
@@ -385,6 +388,16 @@ export default function Subscription() {
   };
 
   // In multi-tariff mode without a specific subscription ID, redirect to list
+  const hasTrafficSheet = (subscription?.traffic_limit_gb ?? 0) > 0;
+  useEffect(() => {
+    if (!showTrafficTopup || !hasTrafficSheet) return;
+    const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    trafficTopupRef.current?.scrollIntoView({
+      behavior: reduce ? 'auto' : 'smooth',
+      block: 'start',
+    });
+  }, [showTrafficTopup, hasTrafficSheet]);
+
   if (isMultiTariff && !subscriptionId && !isLoading) {
     return <Navigate to="/subscriptions" replace />;
   }
@@ -1012,7 +1025,7 @@ export default function Subscription() {
 
           {/* Buy Traffic */}
           {subscription.traffic_limit_gb > 0 && (
-            <div className="mt-4">
+            <div className="mt-4 scroll-mt-20" ref={trafficTopupRef}>
               <TrafficTopupSheet
                 open={showTrafficTopup}
                 onOpen={() => setShowTrafficTopup(true)}
