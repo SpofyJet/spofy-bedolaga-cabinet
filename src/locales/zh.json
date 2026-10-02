@@ -924,7 +924,9 @@
       "telegram": "Telegram",
       "other": "其他方式"
     },
-    "topUpHint": "资金自动到账，通常在一分钟内"
+    "topUpHint": "资金自动到账，通常在一分钟内",
+    "changeMethod": "更改",
+    "topUpFor": "充值 {{amount}}"
   },
   "referral": {
     "title": "推荐计划",

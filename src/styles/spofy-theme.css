@@ -259,20 +259,7 @@ h3 {
   background: rgba(var(--color-accent-500), 0.28);
 }
 
-/* ── Шапка и нижняя панель ─────────────────────────────────────────────── */
-
-:root {
-  /* Пристыкованная панель вкладок: 58px + безопасная зона iOS. Всё, что прижато
-     к низу (тосты, панели действий), встаёт над ней с зазором. */
-  --mobile-nav-clearance: calc(58px + env(safe-area-inset-bottom, 0px) + 12px);
-}
-
-.spofy-tabbar {
-  background: rgba(var(--color-dark-950), 0.92);
-  border-top: 1px solid var(--spofy-border);
-  backdrop-filter: blur(16px) saturate(140%);
-  -webkit-backdrop-filter: blur(16px) saturate(140%);
-}
+/* ── Шапка ─────────────────────────────────────────────────────────────── */
 
 .glass.app-mobile-header,
 .light .glass.app-mobile-header {

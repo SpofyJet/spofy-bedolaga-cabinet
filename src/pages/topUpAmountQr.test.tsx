@@ -6,6 +6,8 @@ import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 
 const openLink = vi.fn();
 const createTopUp = vi.fn();
+const backButton = { show: vi.fn(), hide: vi.fn() };
+const platformState = { platform: 'web', hasBackButton: false };
 
 vi.mock('react-i18next', () => ({
   useTranslation: () => ({
@@ -18,7 +20,9 @@ vi.mock('@/platform', () => ({
     openInvoice: vi.fn(),
     openTelegramLink: vi.fn(),
     openLink,
-    platform: 'web',
+    platform: platformState.platform,
+    capabilities: { hasBackButton: platformState.hasBackButton },
+    backButton,
   }),
   useHaptic: () => ({ notification: vi.fn(), impact: vi.fn(), selection: vi.fn() }),
 }));
@@ -114,4 +118,22 @@ it('без QR — прежнее поведение', async () => {
 
   await waitFor(() => expect(createTopUp).toHaveBeenCalled());
   expect(screen.queryByTestId('topup-qr')).toBeNull();
+});
+
+it('в браузере есть своя кнопка «Назад», а в Telegram — нативная', async () => {
+  renderPage();
+  expect(await screen.findByRole('button', { name: 'common.back' })).toBeTruthy();
+  expect(backButton.show).not.toHaveBeenCalled();
+  cleanup();
+
+  platformState.platform = 'telegram';
+  platformState.hasBackButton = true;
+  try {
+    renderPage();
+    await waitFor(() => expect(backButton.show).toHaveBeenCalledTimes(1));
+    expect(screen.queryByRole('button', { name: 'common.back' })).toBeNull();
+  } finally {
+    platformState.platform = 'web';
+    platformState.hasBackButton = false;
+  }
 });

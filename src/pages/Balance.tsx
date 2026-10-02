@@ -18,7 +18,7 @@ import { staggerContainer, staggerItem } from '@/components/motion/transitions';
 import { isPaidStatus, isFailedStatus } from '../utils/paymentStatus';
 import { transactionTypeBadge, transactionTypeLabelKey } from '../utils/transactionType';
 import { Skeleton, SkeletonGroup } from '@/components/ui/skeleton';
-import PaymentMethodIcon from '@/components/PaymentMethodIcon';
+import PaymentMethodIcon, { spofyPaymentIcon } from '@/components/PaymentMethodIcon';
 
 /**
  * Способы пополнения группами: человек сначала выбирает «чем платить»
@@ -58,11 +58,9 @@ function methodTitle(name: string, group: MethodGroup): string {
   return title;
 }
 
-/** Иконка способа: у Platega — по смыслу метода (карта/СБП или зарубежная карта), а не логотип провайдера. */
+/** Плитка способа — по тому, чем платит человек (см. spofyPaymentIcon). */
 function MethodIcon({ id }: { id: string }) {
-  const icon =
-    id === 'platega_m12' ? 'card_international' : id.startsWith('platega') ? 'card_sbp' : id;
-  return <PaymentMethodIcon method={icon} className="h-10 w-10 shrink-0" />;
+  return <PaymentMethodIcon method={spofyPaymentIcon(id)} className="h-11 w-11 shrink-0" />;
 }
 
 export default function Balance() {

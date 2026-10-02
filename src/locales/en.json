@@ -1058,7 +1058,9 @@
       "telegram": "Telegram",
       "other": "Other methods"
     },
-    "topUpHint": "Funds are credited automatically, usually within a minute"
+    "topUpHint": "Funds are credited automatically, usually within a minute",
+    "changeMethod": "Change",
+    "topUpFor": "Top up {{amount}}"
   },
   "referral": {
     "title": "Referral Program",

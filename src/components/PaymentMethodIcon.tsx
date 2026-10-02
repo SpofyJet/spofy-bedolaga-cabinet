@@ -80,43 +80,165 @@ export default function PaymentMethodIcon({
         </svg>
       );
 
-    // Spofy: способ по смыслу (карта/СБП, зарубежная карта) и xRocket
-    case 'card_sbp':
+    // Spofy: плитки «чем платить» — СБП, карта, зарубежная карта, крипта, звёзды.
+    case 'spofy_sbp':
       return (
         <svg className={className} viewBox="0 0 40 40" aria-hidden="true">
-          <circle cx="20" cy="20" r="20" fill="#2B63F5" />
+          <rect width="40" height="40" rx="11" fill="#2B63F5" />
+          <text
+            x="20"
+            y="24.6"
+            textAnchor="middle"
+            fontFamily="Manrope, system-ui, sans-serif"
+            fontSize="12.5"
+            fontWeight="800"
+            letterSpacing=".3"
+            fill="#fff"
+          >
+            СБП
+          </text>
+        </svg>
+      );
+
+    case 'spofy_intl_card':
+      return (
+        <svg className={className} viewBox="0 0 40 40" aria-hidden="true">
+          <rect width="40" height="40" rx="11" fill="#1B2232" />
+          <circle cx="16.5" cy="20" r="7.5" fill="#EB001B" />
+          <circle cx="23.5" cy="20" r="7.5" fill="#F79E1B" />
+          <path d="M20 13.37A7.5 7.5 0 0 1 20 26.63A7.5 7.5 0 0 1 20 13.37Z" fill="#FF5F00" />
+        </svg>
+      );
+
+    case 'spofy_card':
+      return (
+        <svg className={className} viewBox="0 0 40 40" aria-hidden="true">
+          <rect width="40" height="40" rx="11" fill="#0A84C6" />
           <rect
-            x="10"
-            y="13"
-            width="20"
-            height="14"
-            rx="2.5"
+            x="9"
+            y="12.5"
+            width="22"
+            height="15"
+            rx="2.6"
             fill="none"
             stroke="#fff"
             strokeWidth="1.8"
           />
-          <path d="M10 17.5h20" stroke="#fff" strokeWidth="2.4" />
-          <path d="M13.5 23h5" stroke="#fff" strokeWidth="1.8" strokeLinecap="round" />
+          <path d="M9 17.3h22" stroke="#fff" strokeWidth="2.6" />
+          <rect x="12.4" y="21.2" width="5.2" height="3.4" rx=".9" fill="#fff" />
         </svg>
       );
 
-    case 'card_international':
+    case 'spofy_crypto_cryptobot':
       return (
         <svg className={className} viewBox="0 0 40 40" aria-hidden="true">
-          <circle cx="20" cy="20" r="20" fill="#0E9F8E" />
-          <g fill="none" stroke="#fff" strokeWidth="1.8">
-            <circle cx="20" cy="20" r="9" />
-            <path d="M11 20h18M20 11c3 3.2 3 14.8 0 18M20 11c-3 3.2-3 14.8 0 18" />
-          </g>
+          <rect width="40" height="40" rx="11" fill="#2F8FEA" />
+          <circle
+            cx="20"
+            cy="20"
+            r="10.5"
+            fill="none"
+            stroke="#fff"
+            strokeOpacity=".35"
+            strokeWidth="1.6"
+          />
+          <path d="M14.6 14.4h10.8v2.7h-4.05v10.4h-2.7V17.1H14.6z" fill="#fff" />
+          <ellipse
+            cx="20"
+            cy="19.7"
+            rx="6.4"
+            ry="1.75"
+            fill="none"
+            stroke="#fff"
+            strokeWidth="1.4"
+          />
         </svg>
       );
 
-    case 'xrocket':
+    case 'spofy_crypto_heleket':
       return (
         <svg className={className} viewBox="0 0 40 40" aria-hidden="true">
-          <circle cx="20" cy="20" r="20" fill="#16181D" />
+          <rect width="40" height="40" rx="11" fill="#12A37E" />
+          <circle
+            cx="20"
+            cy="20"
+            r="10.5"
+            fill="none"
+            stroke="#fff"
+            strokeOpacity=".35"
+            strokeWidth="1.6"
+          />
+          <path d="M14.6 14.4h10.8v2.7h-4.05v10.4h-2.7V17.1H14.6z" fill="#fff" />
+          <ellipse
+            cx="20"
+            cy="19.7"
+            rx="6.4"
+            ry="1.75"
+            fill="none"
+            stroke="#fff"
+            strokeWidth="1.4"
+          />
+        </svg>
+      );
+
+    case 'spofy_crypto_xrocket':
+      return (
+        <svg className={className} viewBox="0 0 40 40" aria-hidden="true">
+          <rect width="40" height="40" rx="11" fill="#2A2F3A" />
+          <circle
+            cx="20"
+            cy="20"
+            r="10.5"
+            fill="none"
+            stroke="#fff"
+            strokeOpacity=".35"
+            strokeWidth="1.6"
+          />
+          <path d="M14.6 14.4h10.8v2.7h-4.05v10.4h-2.7V17.1H14.6z" fill="#fff" />
+          <ellipse
+            cx="20"
+            cy="19.7"
+            rx="6.4"
+            ry="1.75"
+            fill="none"
+            stroke="#fff"
+            strokeWidth="1.4"
+          />
+        </svg>
+      );
+
+    case 'spofy_crypto':
+      return (
+        <svg className={className} viewBox="0 0 40 40" aria-hidden="true">
+          <rect width="40" height="40" rx="11" fill="#26A17B" />
+          <circle
+            cx="20"
+            cy="20"
+            r="10.5"
+            fill="none"
+            stroke="#fff"
+            strokeOpacity=".35"
+            strokeWidth="1.6"
+          />
+          <path d="M14.6 14.4h10.8v2.7h-4.05v10.4h-2.7V17.1H14.6z" fill="#fff" />
+          <ellipse
+            cx="20"
+            cy="19.7"
+            rx="6.4"
+            ry="1.75"
+            fill="none"
+            stroke="#fff"
+            strokeWidth="1.4"
+          />
+        </svg>
+      );
+
+    case 'spofy_stars':
+      return (
+        <svg className={className} viewBox="0 0 40 40" aria-hidden="true">
+          <rect width="40" height="40" rx="11" fill="#F2A60D" />
           <path
-            d="M23.8 10.5c2.6-.6 5 .1 5.7.8.7.7 1.4 3.1.8 5.7-.6 2.6-2.5 5.3-5.3 7.3l-.5 3.7-3.3 2.3-.9-3.3-3.9-3.9-3.3-.9 2.3-3.3 3.7-.5c2-2.8 4.7-4.7 7.3-5.3Zm-.6 5.1a1.8 1.8 0 1 0 2.5 2.5 1.8 1.8 0 0 0-2.5-2.5ZM14 24.6c-1.5.4-2.6 1.7-3 4.4 2.7-.4 4-1.5 4.4-3l-1.4-1.4Z"
+            d="M20 9.5l3.1 6.3 6.9 1-5 4.9 1.2 6.9-6.2-3.3-6.2 3.3 1.2-6.9-5-4.9 6.9-1z"
             fill="#fff"
           />
         </svg>
@@ -603,4 +725,36 @@ export default function PaymentMethodIcon({
         </svg>
       );
   }
+}
+
+const SPOFY_CRYPTO_ICONS: Record<string, string> = {
+  cryptobot: 'spofy_crypto_cryptobot',
+  heleket: 'spofy_crypto_heleket',
+  xrocket: 'spofy_crypto_xrocket',
+};
+const SPOFY_CARD_METHODS = new Set([
+  'wata',
+  'yookassa',
+  'pal24',
+  'mulenpay',
+  'cloudpayments',
+  'cashera',
+  'lava',
+]);
+
+/**
+ * Spofy: какую плитку показать способу оплаты — по тому, ЧЕМ платит человек
+ * (СБП, карта, зарубежная карта, крипта, звёзды), а не по логотипу провайдера:
+ * абстрактные знаки провайдеров покупателю ничего не говорили.
+ */
+export function spofyPaymentIcon(methodId: string): string {
+  const id = methodId.toLowerCase();
+  if (id === 'platega_m12') return 'spofy_intl_card';
+  if (id === 'platega_m2' || id.includes('sbp')) return 'spofy_sbp';
+  if (id.startsWith('platega') || id.startsWith('freekassa') || SPOFY_CARD_METHODS.has(id))
+    return 'spofy_card';
+  if (SPOFY_CRYPTO_ICONS[id]) return SPOFY_CRYPTO_ICONS[id];
+  if (id.includes('crypto') || id.includes('ton') || id.includes('usdt')) return 'spofy_crypto';
+  if (id.includes('stars')) return 'spofy_stars';
+  return id;
 }

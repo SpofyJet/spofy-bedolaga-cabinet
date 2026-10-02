@@ -12,7 +12,7 @@ import { useCloseOnSuccessNotification } from '../store/successNotification';
 import { useHaptic, usePlatform } from '@/platform';
 import { staggerContainer, staggerItem } from '@/components/motion/transitions';
 import type { PaymentMethod, PaymentMethodOption } from '../types';
-import BentoCard from '../components/ui/BentoCard';
+import PaymentMethodIcon, { spofyPaymentIcon } from '../components/PaymentMethodIcon';
 import { saveTopUpPendingInfo } from '../utils/topUpStorage';
 import { getSafeRedirectPath } from '../utils/safeRedirect';
 import { openPaymentUrl } from '../utils/openPaymentUrl';
@@ -20,22 +20,12 @@ import { getApiErrorMessage } from '../utils/api-error';
 import { copyToClipboard } from '@/utils/clipboard';
 import { Skeleton, SkeletonGroup } from '@/components/ui/skeleton';
 import {
-  CardIcon,
+  BackIcon,
   CheckIcon,
   CopyIcon,
-  CryptoIcon,
   ExclamationIcon,
   ExternalLinkIcon,
-  SparklesIcon,
-  StarIcon,
 } from '@/components/icons';
-
-const getMethodIcon = (methodId: string) => {
-  const id = methodId.toLowerCase();
-  if (id.includes('stars')) return <StarIcon />;
-  if (id.includes('crypto') || id.includes('ton') || id.includes('usdt')) return <CryptoIcon />;
-  return <CardIcon />;
-};
 
 const getPreferredOptionId = (options?: PaymentMethod['options']) => {
   if (!options || options.length === 0) return null;
@@ -101,9 +91,23 @@ export default function TopUpAmount() {
   });
   const method = methods?.find((m) => m.id === methodId);
 
+  // Назад — к выбору способа: история браузера, а если страницу открыли
+  // по прямой ссылке — на баланс (иначе navigate(-1) уводил бы из кабинета).
   const handleNavigateBack = useCallback(() => {
-    navigate(-1);
+    if (window.history.length > 1) navigate(-1);
+    else navigate('/balance', { replace: true });
   }, [navigate]);
+
+  // В Telegram — нативная кнопка «Назад»: своей стрелки там нет, и экран суммы
+  // оставался тупиком.
+  const { capabilities, backButton } = usePlatform();
+  const backRef = useRef(handleNavigateBack);
+  backRef.current = handleNavigateBack;
+  useEffect(() => {
+    if (!capabilities.hasBackButton) return;
+    backButton.show(() => backRef.current());
+    return () => backButton.hide();
+  }, [capabilities.hasBackButton, backButton]);
 
   const handleSuccess = useCallback(() => {
     // returnTo arrives via query string — validate as an in-app path before
@@ -418,32 +422,54 @@ export default function TopUpAmount() {
     }
   };
 
+  const amountNumber = parseFloat(amount);
+  const canSubmit = !isPending && !!amount && amountNumber > 0;
+  const methodTitle = methodName
+    .replace(/^(?:\p{Extended_Pictographic}|\uFE0F|\u200D|\s)+/u, '')
+    .trim();
+
   return (
     <motion.div
-      className="mx-auto max-w-lg space-y-5"
+      className="mx-auto max-w-lg space-y-4"
       variants={staggerContainer}
       initial="initial"
       animate="animate"
     >
-      {/* Header icon and method */}
-      <motion.div variants={staggerItem} className="flex items-center gap-4 pb-1">
-        <div
-          className={`flex h-14 w-14 items-center justify-center rounded-2xl ${
-            isStarsMethod
-              ? 'bg-gradient-to-br from-yellow-500/20 to-orange-500/20 text-yellow-400'
-              : 'bg-gradient-to-br from-accent-500/20 to-accent-600/20 text-accent-400'
-          }`}
-        >
-          <div className="flex h-7 w-7 items-center justify-center">{getMethodIcon(method.id)}</div>
-        </div>
-        <div className="flex-1">
-          <h3 className="text-lg font-bold text-dark-100">{methodName}</h3>
-          <p className="text-sm text-dark-400">
-            {formatAmount(minRubles, 0)} – {formatAmount(maxRubles, 0)}
+      {/* Назад + заголовок. В Telegram — нативная кнопка «Назад» (см. выше). */}
+      <motion.div variants={staggerItem} className="flex items-center gap-3">
+        {platform !== 'telegram' && (
+          <button
+            type="button"
+            onClick={handleNavigateBack}
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[10px] bg-dark-50/[0.05] text-dark-200 transition-colors hover:bg-dark-50/[0.08] hover:text-dark-50"
+            aria-label={t('common.back')}
+          >
+            <BackIcon className="h-5 w-5" />
+          </button>
+        )}
+        <h1 className="text-xl font-bold text-dark-50">{t('balance.topUpBalance')}</h1>
+      </motion.div>
+
+      {/* Выбранный способ */}
+      <motion.div variants={staggerItem} className="bento-card flex items-center gap-3 !p-4">
+        <PaymentMethodIcon method={spofyPaymentIcon(method.id)} className="h-12 w-12 shrink-0" />
+        <div className="min-w-0 flex-1">
+          <div className="truncate font-semibold text-dark-50">{methodTitle}</div>
+          <div className="text-sm text-dark-400">
+            {formatAmount(minRubles, 0)}
+            {'\u00A0–\u00A0'}
+            {formatAmount(maxRubles, 0)}
             {'\u00A0'}
             {currencySymbol}
-          </p>
+          </div>
         </div>
+        <button
+          type="button"
+          onClick={handleNavigateBack}
+          className="shrink-0 rounded-lg px-2 py-1.5 text-sm font-medium text-accent-400 transition-colors hover:text-accent-300"
+        >
+          {t('balance.changeMethod')}
+        </button>
       </motion.div>
 
       {/* Payment options (if any) */}
@@ -456,10 +482,10 @@ export default function TopUpAmount() {
                 key={opt.id}
                 type="button"
                 onClick={() => setSelectedOption(opt.id)}
-                className={`relative rounded-xl px-4 py-3 text-sm font-semibold transition-all duration-200 ${
+                className={`relative rounded-xl px-4 py-3 text-sm font-semibold transition-colors duration-150 ${
                   selectedOption === opt.id
-                    ? 'bg-accent-500/15 text-accent-400 ring-2 ring-accent-500/40'
-                    : 'border border-dark-700/50 bg-dark-800/70 text-dark-300 hover:bg-dark-700/70'
+                    ? 'bg-accent-500/12 text-accent-400 ring-2 ring-accent-500/50'
+                    : 'bg-[var(--spofy-tile-bg)] text-dark-200 hover:bg-dark-50/[0.06]'
                 }`}
               >
                 {opt.name}
@@ -474,104 +500,106 @@ export default function TopUpAmount() {
         </motion.div>
       )}
 
-      {/* Amount input + Submit button - inline */}
-      <motion.div variants={staggerItem} className="space-y-2">
-        <label className="text-sm font-medium text-dark-400">{t('balance.enterAmount')}</label>
-        <div className="flex gap-2">
-          <div
-            className={`relative flex-1 rounded-2xl transition-all duration-200 ${
-              isInputFocused
-                ? 'bg-dark-800 ring-2 ring-accent-500/50'
-                : 'border border-dark-700/50 bg-dark-800/70'
-            }`}
-          >
-            <input
-              ref={inputRef}
-              type="number"
-              inputMode="decimal"
-              enterKeyHint="done"
-              value={amount}
-              onChange={(e) => {
-                setAmount(e.target.value);
-                setQuickRub(null);
-              }}
-              onFocus={() => setIsInputFocused(true)}
-              onBlur={() => setIsInputFocused(false)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') {
-                  e.preventDefault();
-                  handleSubmit();
-                }
-              }}
-              placeholder="0"
-              className="h-14 w-full bg-transparent px-4 pr-12 text-xl font-bold text-dark-100 placeholder:text-dark-600 focus:outline-none"
-              autoComplete="off"
-            />
-            <span className="absolute right-4 top-1/2 -translate-y-1/2 text-base font-semibold text-dark-500">
-              {currencySymbol}
-            </span>
-          </div>
-          <button
-            type="button"
-            onClick={handleSubmit}
-            disabled={isPending || !amount || parseFloat(amount) <= 0}
-            className={`flex h-14 shrink-0 items-center justify-center gap-2 overflow-hidden rounded-2xl px-6 text-base font-bold transition-colors duration-200 ${
-              isPending || !amount || parseFloat(amount) <= 0
-                ? 'cursor-not-allowed bg-dark-700 text-dark-500'
-                : isStarsMethod
-                  ? 'bg-gradient-to-r from-yellow-500 to-orange-500 text-white shadow-lg shadow-yellow-500/25 hover:from-yellow-400 hover:to-orange-400 active:from-yellow-600 active:to-orange-600'
-                  : 'bg-accent-500 text-on-accent shadow-lg shadow-accent-500/25 transition-colors hover:bg-accent-400 active:bg-accent-600'
-            }`}
-          >
-            {isPending ? (
-              <span className="h-5 w-5 animate-spin rounded-full border-2 border-white/30 border-t-white" />
-            ) : (
-              <>
-                <SparklesIcon className="h-4 w-4" />
-                <span>{t('balance.topUp')}</span>
-              </>
-            )}
-          </button>
+      {/* Сумма */}
+      <motion.div variants={staggerItem} className="bento-card space-y-3 !p-4">
+        <label htmlFor="topup-amount" className="block text-sm font-medium text-dark-300">
+          {t('balance.enterAmount')}
+        </label>
+        <div
+          className={`relative rounded-xl transition-shadow duration-150 ${
+            isInputFocused
+              ? 'ring-2 ring-accent-500/60'
+              : 'ring-1 ring-[var(--spofy-border-strong)]'
+          } bg-[var(--spofy-tile-bg)]`}
+        >
+          <input
+            id="topup-amount"
+            ref={inputRef}
+            type="number"
+            inputMode="decimal"
+            enterKeyHint="done"
+            value={amount}
+            onChange={(e) => {
+              setAmount(e.target.value);
+              setQuickRub(null);
+            }}
+            onFocus={() => setIsInputFocused(true)}
+            onBlur={() => setIsInputFocused(false)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                e.preventDefault();
+                handleSubmit();
+              }
+            }}
+            placeholder="0"
+            className="h-14 w-full bg-transparent px-4 pr-12 text-2xl font-bold text-dark-50 placeholder:text-dark-600 focus:outline-none"
+            autoComplete="off"
+          />
+          <span className="absolute right-4 top-1/2 -translate-y-1/2 text-lg font-semibold text-dark-400">
+            {currencySymbol}
+          </span>
         </div>
-      </motion.div>
 
-      {/* Quick amount buttons */}
-      {quickAmounts.length > 0 && (
-        <motion.div variants={staggerItem} className="grid grid-cols-2 gap-2 sm:grid-cols-4">
-          {quickAmounts.map((a) => {
-            const val = getQuickValue(a);
-            const isSelected = amount === val;
-            return (
-              <BentoCard
-                key={a}
-                as="button"
-                type="button"
-                onClick={() => {
-                  setAmount(val);
-                  setQuickRub(a);
-                  inputRef.current?.blur();
-                }}
-                hover
-                glow={isSelected}
-                className={`flex flex-col items-center justify-center px-2 py-3 ${
-                  isSelected ? 'border-accent-500/50 bg-accent-500/10' : ''
-                }`}
-              >
-                <span
-                  className={`text-base font-bold ${isSelected ? 'text-accent-400' : 'text-dark-200'}`}
+        {quickAmounts.length > 0 && (
+          <div
+            className={`grid gap-2 ${
+              // Без одинокой кнопки на второй строке: 5 — в ряд, 6 — 3×2.
+              (
+                {
+                  1: 'grid-cols-1',
+                  2: 'grid-cols-2',
+                  3: 'grid-cols-3',
+                  5: 'grid-cols-5',
+                  6: 'grid-cols-3',
+                } as Record<number, string>
+              )[quickAmounts.length] ?? 'grid-cols-4'
+            }`}
+          >
+            {quickAmounts.map((a) => {
+              const val = getQuickValue(a);
+              const isSelected = amount === val;
+              return (
+                <button
+                  key={a}
+                  type="button"
+                  onClick={() => {
+                    setAmount(val);
+                    setQuickRub(a);
+                    inputRef.current?.blur();
+                  }}
+                  className={`h-10 rounded-[10px] text-sm font-semibold transition-colors duration-150 ${
+                    isSelected
+                      ? 'bg-accent-500/15 text-accent-400 ring-1 ring-accent-500/50'
+                      : 'bg-[var(--spofy-tile-bg)] text-dark-200 hover:bg-dark-50/[0.06]'
+                  }`}
                 >
                   {formatAmount(a, 0)}
-                </span>
-                <span
-                  className={`mt-0.5 text-xs ${isSelected ? 'text-accent-400' : 'text-dark-500'}`}
-                >
-                  {currencySymbol}
-                </span>
-              </BentoCard>
-            );
-          })}
-        </motion.div>
-      )}
+                </button>
+              );
+            })}
+          </div>
+        )}
+      </motion.div>
+
+      {/* Оплатить */}
+      <motion.div variants={staggerItem}>
+        <button
+          type="button"
+          onClick={handleSubmit}
+          disabled={!canSubmit}
+          className="flex h-14 w-full items-center justify-center gap-2 rounded-xl bg-accent-500 text-base font-bold text-on-accent transition-colors hover:bg-accent-400 active:bg-accent-600 disabled:cursor-not-allowed disabled:bg-dark-50/[0.08] disabled:text-dark-500"
+        >
+          {isPending ? (
+            <span className="h-5 w-5 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+          ) : canSubmit ? (
+            t('balance.topUpFor', {
+              amount: `${formatAmount(amountNumber, 0)}\u00A0${currencySymbol}`,
+            })
+          ) : (
+            t('balance.topUp')
+          )}
+        </button>
+      </motion.div>
 
       {/* Error message */}
       {error && (

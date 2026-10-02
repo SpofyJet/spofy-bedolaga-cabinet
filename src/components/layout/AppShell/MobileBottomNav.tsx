@@ -1,5 +1,6 @@
 import { Link, useLocation } from 'react-router';
 import { useTranslation } from 'react-i18next';
+import { motion } from 'framer-motion';
 
 import { cn } from '@/lib/utils';
 import { usePlatform } from '@/platform';
@@ -40,43 +41,53 @@ export function MobileBottomNav({ items, isMenuOpen = false }: MobileBottomNavPr
   };
 
   return (
-    // Пристыкованная панель вкладок (как в нативных приложениях и Telegram):
-    // без «парящей капсулы», тени и пружинной плашки. Активная вкладка — цветом.
     <nav
       className={cn(
-        'spofy-tabbar fixed inset-x-0 bottom-0 z-50 transition-opacity duration-200 lg:hidden',
+        'fixed z-50 transition-all duration-200 lg:hidden',
+        'bg-dark-900/95 backdrop-blur-linear',
+        'border border-dark-700/30',
         isKeyboardOpen || isMenuOpen ? HIDDEN_UNDER_KEYBOARD : 'opacity-100',
       )}
       style={{
-        paddingBottom: 'env(safe-area-inset-bottom, 0px)',
-        paddingLeft: 'env(safe-area-inset-left, 0px)',
-        paddingRight: 'env(safe-area-inset-right, 0px)',
+        // Отступ снизу и просвет под панелью объявлены в globals.css
+        // (--mobile-nav-*): в standalone iOS inset около 34pt, и панель стоит
+        // вплотную к безопасной зоне, в браузере — 16px.
+        bottom: 'var(--mobile-nav-offset)',
+        // По бокам та же логика: в альбомной ориентации iPhone вырезы слева и
+        // справа около 59pt, панель не должна уходить под чёлку и углы.
+        left: 'max(16px, env(safe-area-inset-left, 0px))',
+        right: 'max(16px, env(safe-area-inset-right, 0px))',
+        borderRadius: 'var(--bento-radius, 24px)',
+        padding: '8px 4px',
+        boxShadow: '0 4px 30px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.05) inset',
       }}
     >
-      <div className="flex h-[58px] items-stretch justify-around">
+      <div className="flex justify-around">
         {items.map((item) => {
           const Icon = ICONS[item.key];
-          const active = isActive(item.path);
           return (
             <Link
               key={item.path}
               to={item.path}
               onClick={handleNavClick}
-              aria-current={active ? 'page' : undefined}
               className={cn(
-                // На 360 пяти пунктам достаётся по ~64 px: подпись короткая
-                // (navShort), а если и она не влезла — многоточие, не наезд.
-                'relative flex min-w-0 flex-1 flex-col items-center justify-center gap-1 transition-colors duration-150',
-                active ? 'text-accent-400' : 'text-dark-400 active:text-dark-200',
+                // На 360 пяти пунктам достаётся по ~64 px: при px-3 подпись
+                // «Колесо удачи» заходила на соседа. Боковых полей нет (подсветка —
+                // по всему пункту), подпись короткая (navShort), а если и она не
+                // влезла — многоточие, не наезд.
+                'relative flex min-w-0 flex-1 flex-col items-center justify-center rounded-2xl px-0 py-2.5 transition-all duration-200',
+                isActive(item.path) ? 'text-accent-400' : 'text-dark-400 hover:text-dark-200',
               )}
             >
-              <Icon className="h-[22px] w-[22px]" />
-              <span
-                className={cn(
-                  'max-w-full truncate px-1 text-[11px] leading-none',
-                  active ? 'font-semibold' : 'font-medium',
-                )}
-              >
+              {isActive(item.path) && (
+                <motion.div
+                  layoutId="bottom-nav-active"
+                  className="absolute inset-0 rounded-2xl bg-accent-500/15"
+                  transition={{ type: 'spring', stiffness: 500, damping: 30 }}
+                />
+              )}
+              <Icon className="relative z-10 h-5 w-5" />
+              <span className="relative z-10 mt-1 max-w-full truncate text-2xs">
                 {t(`navShort.${item.key}`, { defaultValue: t(`nav.${item.key}`) })}
               </span>
             </Link>
