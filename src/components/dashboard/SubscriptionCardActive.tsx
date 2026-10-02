@@ -5,6 +5,7 @@ import type { UseMutationResult } from '@tanstack/react-query';
 import TrafficProgressBar from './TrafficProgressBar';
 import Sparkline from './Sparkline';
 import ConnectDeviceTile from './ConnectDeviceTile';
+import BypassSuspendedBanner from '../subscription/BypassSuspendedBanner';
 import { useAnimatedNumber } from '../../hooks/useAnimatedNumber';
 import { useTheme } from '../../hooks/useTheme';
 import { useTrafficZone } from '../../hooks/useTrafficZone';
@@ -138,6 +139,11 @@ export default function SubscriptionCardActive({
           isUnlimited={isUnlimited}
         />
       </div>
+
+      {/* ─── Spofy: обходы отключены за трафик, обычные серверы работают ─── */}
+      {subscription.bypass_suspended && (
+        <BypassSuspendedBanner className="mb-4" renewTo="/subscription/purchase" />
+      )}
 
       {/* ─── Connect Device Button ─── */}
       <ConnectDeviceTile

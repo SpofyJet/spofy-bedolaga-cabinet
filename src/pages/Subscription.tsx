@@ -2,7 +2,7 @@ import { uiLocale } from '@/utils/uiLocale';
 import { useState, useEffect, useRef, useCallback, useMemo, memo } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
-import { Navigate, useNavigate, useParams } from 'react-router';
+import { Navigate, useNavigate, useParams, useSearchParams } from 'react-router';
 import { subscriptionApi } from '../api/subscription';
 import { WebBackButton } from '../components/WebBackButton';
 import TrafficProgressBar from '../components/dashboard/TrafficProgressBar';
@@ -14,6 +14,7 @@ import { copyToClipboard } from '../utils/clipboard';
 import { useTheme } from '../hooks/useTheme';
 import { useCloseOnSuccessNotification } from '../store/successNotification';
 import PurchaseCTAButton from '../components/subscription/PurchaseCTAButton';
+import BypassSuspendedBanner from '../components/subscription/BypassSuspendedBanner';
 import { planTitle, showsAddonOptions } from '../utils/legacySubscription';
 import {
   CalendarIcon,
@@ -204,7 +205,11 @@ export default function Subscription() {
   const [devicesToAdd, setDevicesToAdd] = useState(1);
   const [showDeviceReduction, setShowDeviceReduction] = useState(false);
   const [targetDeviceLimit, setTargetDeviceLimit] = useState<number>(1);
-  const [showTrafficTopup, setShowTrafficTopup] = useState(false);
+  // ?topup=traffic (баннер «обходы отключены» на главной) сразу открывает докупку трафика.
+  const [searchParams] = useSearchParams();
+  const [showTrafficTopup, setShowTrafficTopup] = useState(
+    () => searchParams.get('topup') === 'traffic',
+  );
   const [selectedTrafficPackage, setSelectedTrafficPackage] = useState<number | null>(null);
   const [showServerManagement, setShowServerManagement] = useState(false);
   const [selectedServersToUpdate, setSelectedServersToUpdate] = useState<string[]>([]);
@@ -519,6 +524,19 @@ export default function Subscription() {
                         : t('subscription.expired')}
                 </span>
               </div>
+
+              {/* ─── Spofy: обходы отключены за трафик, обычные серверы работают ─── */}
+              {subscription.bypass_suspended && (
+                <BypassSuspendedBanner
+                  className="mb-6"
+                  onBuyTraffic={() => setShowTrafficTopup(true)}
+                  renewTo={
+                    isMultiTariff
+                      ? `/subscriptions/${subscription.id}/renew`
+                      : '/subscription/purchase'
+                  }
+                />
+              )}
 
               {/* ─── Traffic Limited Banner ─── */}
               {subscription.is_limited && (

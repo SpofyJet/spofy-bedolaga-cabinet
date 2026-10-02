@@ -139,3 +139,21 @@ describe('индикатор устройств', () => {
     expect(container.querySelector('.w-16 .rounded-full')).toBeTruthy();
   });
 });
+
+describe('Spofy: обходы отключены за трафик', () => {
+  it('без пометки баннера нет', async () => {
+    await renderCard(subscription());
+    expect(screen.queryByTestId('bypass-suspended-banner')).toBeNull();
+  });
+
+  it('баннер ведёт к докупке трафика и продлению', async () => {
+    await renderCard(
+      subscription({ bypass_suspended: true, traffic_used_gb: 250, traffic_used_percent: 100 }),
+    );
+
+    const banner = screen.getByTestId('bypass-suspended-banner');
+    expect(banner.textContent).toContain('subscription.bypassSuspended.title');
+    const links = Array.from(banner.querySelectorAll('a')).map((a) => a.getAttribute('href'));
+    expect(links).toEqual(['/subscription?topup=traffic', '/subscription/purchase']);
+  });
+});

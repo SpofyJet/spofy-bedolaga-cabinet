@@ -747,6 +747,12 @@
       "autopayHint": "订阅将通过 Cashera 自动续费",
       "purchaseButton": "⚡ 使用 Cashera 自动付款订阅",
       "purchaseHint": "通过 Cashera 链接确认自动扣款，之后续费将自动扣款。"
+    },
+    "bypassSuspended": {
+      "title": "绕行服务器已关闭——其流量已用完",
+      "description": "普通服务器仍可正常使用，VPN 没有断开。购买更多流量或续订后，绕行服务器会恢复。",
+      "buyTraffic": "购买流量",
+      "renew": "续订"
     }
   },
   "balance": {

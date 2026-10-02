@@ -836,6 +836,12 @@
       "autopayHint": "Your subscription will renew automatically via Cashera",
       "purchaseButton": "⚡ Subscribe with Cashera auto-pay",
       "purchaseHint": "Confirm auto-charges via the Cashera link; renewals are then charged automatically."
+    },
+    "bypassSuspended": {
+      "title": "Bypass servers are off — their traffic is used up",
+      "description": "Regular servers keep working, your VPN is still on. Bypass servers come back once you buy more traffic or renew your subscription.",
+      "buyTraffic": "Buy more traffic",
+      "renew": "Renew subscription"
     }
   },
   "balance": {
