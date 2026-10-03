@@ -867,7 +867,8 @@
         "server_error": "خطای سرور"
       },
       "daysLeft": "روزهای باقی‌مانده: {{count}}",
-      "selectSubscription": "اشتراک را انتخاب کنید"
+      "selectSubscription": "اشتراک را انتخاب کنید",
+      "haveOne": "کد تخفیف دارید؟"
     },
     "minAmountError": "حداقل مبلغ: {{amount}}",
     "maxAmountError": "حداکثر مبلغ: {{amount}}",
@@ -939,7 +940,16 @@
     },
     "topUpHint": "مبلغ به‌طور خودکار، معمولاً ظرف یک دقیقه واریز می‌شود",
     "changeMethod": "تغییر",
-    "topUpFor": "شارژ {{amount}}"
+    "topUpFor": "شارژ {{amount}}",
+    "renew": {
+      "title": "تمدید اشتراک",
+      "until": "معتبر تا {{date}}",
+      "days_one": "{{count}} روز",
+      "days_other": "{{count}} روز",
+      "perMonth": "{{amount}} {{currency}}/ماه"
+    },
+    "referralEarned": "درآمد از دعوت دوستان تاکنون: {{amount}} {{currency}}. موجودی را می‌توانید برای تمدید خرج کنید.",
+    "methodFast": "سریع"
   },
   "referral": {
     "title": "برنامه معرفی",

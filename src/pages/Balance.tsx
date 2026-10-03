@@ -7,9 +7,11 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 import { useAuthStore } from '../store/auth';
 import { balanceApi } from '../api/balance';
+import { subscriptionApi } from '../api/subscription';
+import { referralApi } from '../api/referral';
 import { useCurrency } from '../hooks/useCurrency';
 import { API } from '../config/constants';
-import type { PaginatedResponse, Transaction } from '../types';
+import type { PaginatedResponse, RenewalOption, Transaction } from '../types';
 
 import { Card } from '@/components/data-display/Card';
 import { Button } from '@/components/primitives/Button';
@@ -46,6 +48,9 @@ function methodGroup(id: string): MethodGroup {
   return 'other';
 }
 
+/** Способ, которым платят 9 из 10: помечаем «Быстро» (карта / СБП через Platega). */
+const FAST_METHOD_ID = 'platega_m2';
+
 const LEADING_EMOJI = /^(?:\p{Extended_Pictographic}|\uFE0F|\u200D|\s)+/u;
 
 /** Имя без эмодзи-префикса (рядом есть иконка); в группе крипты — без «Криптовалюта (…)». */
@@ -61,6 +66,24 @@ function methodTitle(name: string, group: MethodGroup): string {
 /** Плитка способа — по тому, чем платит человек (см. spofyPaymentIcon). */
 function MethodIcon({ id }: { id: string }) {
   return <PaymentMethodIcon method={spofyPaymentIcon(id)} className="h-11 w-11 shrink-0" />;
+}
+
+/** Какие периоды показать кнопками: 30 / 90 / 365 дней, если есть, иначе первые три. */
+function pickShortcutPeriods(options: RenewalOption[]): RenewalOption[] {
+  const sorted = [...options].sort((a, b) => a.period_days - b.period_days);
+  const preferred = [30, 90, 365]
+    .map((days) => sorted.find((o) => o.period_days === days))
+    .filter((o): o is RenewalOption => !!o);
+  return (preferred.length >= 2 ? preferred : sorted).slice(0, 3);
+}
+
+/** Цена в месяц и выгода к самому короткому периоду из показанных (от 5%). */
+function perMonthInfo(option: RenewalOption, base: RenewalOption | undefined) {
+  if (option.period_days < 60) return null;
+  const perMonth = Math.round((option.price_rubles * 30) / option.period_days);
+  const baseMonth = base ? (base.price_rubles * 30) / base.period_days : 0;
+  const saving = baseMonth > 0 ? Math.round(100 - (perMonth * 100) / baseMonth) : 0;
+  return { perMonth, saving: saving >= 5 ? saving : 0 };
 }
 
 export default function Balance() {
@@ -79,6 +102,32 @@ export default function Balance() {
     staleTime: API.BALANCE_STALE_TIME_MS,
     refetchOnMount: 'always',
   });
+
+  // Продление «в один шаг»: ближайшие периоды с ценами прямо под балансом
+  const { data: subscriptionResponse } = useQuery({
+    queryKey: ['subscription', undefined],
+    queryFn: () => subscriptionApi.getSubscription(),
+    retry: false,
+    staleTime: 30_000,
+  });
+  const ownSubscription = subscriptionResponse?.subscription ?? null;
+  const canRenew = !!ownSubscription && !ownSubscription.is_trial && !ownSubscription.is_daily;
+  const { data: renewalOptions } = useQuery({
+    queryKey: ['renewal-options', ownSubscription?.id],
+    queryFn: () => subscriptionApi.getRenewalOptions(ownSubscription?.id),
+    enabled: canRenew,
+    retry: false,
+    staleTime: 60_000,
+  });
+  const shortcuts = canRenew && renewalOptions ? pickShortcutPeriods(renewalOptions) : [];
+
+  const { data: referralInfo } = useQuery({
+    queryKey: ['referral-info'],
+    queryFn: referralApi.getReferralInfo,
+    retry: false,
+    staleTime: 5 * 60_000,
+  });
+  const referralEarnings = referralInfo?.total_earnings_rubles ?? 0;
 
   // Refresh user data on mount to sync balance in store
   useEffect(() => {
@@ -117,6 +166,7 @@ export default function Balance() {
     days_left: number;
   }> | null>(null);
   const [promoSelectCode, setPromoSelectCode] = useState<string | null>(null);
+  const [promoOpen, setPromoOpen] = useState(false);
   const [transactionsPage, setTransactionsPage] = useState(1);
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
 
@@ -240,8 +290,79 @@ export default function Balance() {
               <WalletIcon className="h-[22px] w-[22px]" />
             </span>
           </div>
+          {referralEarnings > 0 && (balanceData?.balance_rubles || 0) > 0 && (
+            <p className="mt-3 border-t border-accent-500/15 pt-3 text-sm text-dark-300">
+              {t('balance.referralEarned', {
+                amount: formatAmount(referralEarnings, 0),
+                currency: currencySymbol,
+              })}
+            </p>
+          )}
         </div>
       </motion.div>
+
+      {/* Продление: периоды с ценой, один тап до страницы продления с уже выбранным сроком */}
+      {ownSubscription && shortcuts.length > 0 && (
+        <motion.div variants={staggerItem}>
+          <Card>
+            <h2 className="text-lg font-bold text-dark-50">{t('balance.renew.title')}</h2>
+            <p className="mt-0.5 text-sm text-dark-400">
+              {t('balance.renew.until', {
+                date: new Date(ownSubscription.end_date).toLocaleDateString(uiLocale(), {
+                  day: 'numeric',
+                  month: 'long',
+                }),
+              })}
+            </p>
+            <div className="mt-4 grid grid-cols-1 gap-2.5 sm:grid-cols-3">
+              {shortcuts.map((option) => {
+                const info = perMonthInfo(option, shortcuts[0]);
+                return (
+                  <button
+                    type="button"
+                    key={option.period_days}
+                    onClick={() =>
+                      navigate(
+                        `/subscriptions/${ownSubscription.id}/renew?period=${option.period_days}`,
+                      )
+                    }
+                    className="flex items-center justify-between gap-3 rounded-xl border border-dark-700/60 bg-dark-50/[0.03] px-3.5 py-3 text-left transition-colors hover:border-accent-500/50 hover:bg-accent-500/[0.06] sm:block sm:p-3.5"
+                  >
+                    <span className="block text-sm text-dark-300 sm:text-dark-300">
+                      {t('balance.renew.days', { count: option.period_days })}
+                      <span className="mt-0.5 block min-h-[1rem] text-xs text-dark-400 sm:hidden">
+                        {info
+                          ? t('balance.renew.perMonth', {
+                              amount: formatAmount(info.perMonth, 0),
+                              currency: currencySymbol,
+                            }) + (info.saving ? ` · −${info.saving}%` : '')
+                          : option.discount_percent > 0
+                            ? `−${option.discount_percent}%`
+                            : ''}
+                      </span>
+                    </span>
+                    <span className="block text-xl font-bold text-dark-50 sm:mt-0.5">
+                      {formatAmount(option.price_rubles, 0)}
+                      {'\u00A0'}
+                      {currencySymbol}
+                    </span>
+                    <span className="mt-1 hidden min-h-[1.25rem] text-xs text-dark-400 sm:block">
+                      {info
+                        ? t('balance.renew.perMonth', {
+                            amount: formatAmount(info.perMonth, 0),
+                            currency: currencySymbol,
+                          }) + (info.saving ? ` · −${info.saving}%` : '')
+                        : option.discount_percent > 0
+                          ? `−${option.discount_percent}%`
+                          : ''}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </Card>
+        </motion.div>
+      )}
 
       {/* Payment Methods — self-animated: mounts after its query resolves, when
           the parent stagger orchestration has already finished and would leave
@@ -288,6 +409,11 @@ export default function Balance() {
                             <span className="min-w-0 flex-1">
                               <span className="block font-semibold leading-snug text-dark-50">
                                 {methodTitle(method.name || translatedName, group)}
+                                {method.id === FAST_METHOD_ID && (
+                                  <span className="ml-2 rounded-md bg-success-500/15 px-1.5 py-0.5 align-middle text-[11px] font-semibold text-success-400">
+                                    {t('balance.methodFast')}
+                                  </span>
+                                )}
                               </span>
                               <span className="mt-0.5 block text-[13px] leading-snug text-dark-400">
                                 {description && <>{description} · </>}
@@ -313,96 +439,116 @@ export default function Balance() {
         </motion.div>
       )}
 
-      {/* Promo Code Section */}
-      <motion.div variants={staggerItem}>
-        <Card>
-          <h2 className="mb-4 text-lg font-semibold text-dark-100">
-            {t('balance.promocode.title')}
-          </h2>
-          {/* На телефоне поле во всю ширину, кнопка под ним: рядом с «Активировать»
+      {/* Promo Code Section: свёрнут в ссылку, пока человек сам не откроет — не отвлекает от оплаты */}
+      {!promoOpen && !promocode && !promocodeError && !promocodeSuccess && !promoSelectSubs && (
+        <motion.div variants={staggerItem}>
+          <button
+            type="button"
+            onClick={() => setPromoOpen(true)}
+            className="text-sm font-medium text-accent-400 transition-colors hover:text-accent-300"
+          >
+            {t('balance.promocode.haveOne')}
+          </button>
+        </motion.div>
+      )}
+      {(promoOpen ||
+        !!promocode ||
+        !!promocodeError ||
+        !!promocodeSuccess ||
+        !!promoSelectSubs) && (
+        <motion.div variants={staggerItem}>
+          <Card>
+            <h2 className="mb-4 text-lg font-semibold text-dark-100">
+              {t('balance.promocode.title')}
+            </h2>
+            {/* На телефоне поле во всю ширину, кнопка под ним: рядом с «Активировать»
               подсказка в поле обрезалась посреди слова. */}
-          <div className="flex flex-col gap-3 sm:flex-row">
-            <input
-              type="text"
-              value={promocode}
-              onChange={(e) => setPromocode(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && handlePromocodeActivate()}
-              placeholder={t('balance.promocode.placeholder')}
-              className="input min-w-0 flex-1"
-              disabled={promocodeLoading}
-            />
-            <Button
-              onClick={() => handlePromocodeActivate()}
-              disabled={!promocode.trim()}
-              loading={promocodeLoading}
-            >
-              {t('balance.promocode.activate')}
-            </Button>
-          </div>
-          <AnimatePresence mode="wait">
-            {promocodeError && (
-              <motion.div
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                className="mt-3 rounded-linear border border-error-500/30 bg-error-500/10 p-3 text-sm text-error-400"
+            <div className="flex flex-col gap-3 sm:flex-row">
+              <input
+                type="text"
+                value={promocode}
+                onChange={(e) => setPromocode(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && handlePromocodeActivate()}
+                placeholder={t('balance.promocode.placeholder')}
+                className="input min-w-0 flex-1"
+                disabled={promocodeLoading}
+              />
+              <Button
+                onClick={() => handlePromocodeActivate()}
+                disabled={!promocode.trim()}
+                loading={promocodeLoading}
               >
-                {promocodeError}
-              </motion.div>
-            )}
-            {promocodeSuccess && (
-              <motion.div
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                className="mt-3 rounded-linear border border-success-500/30 bg-success-500/10 p-3 text-sm text-success-400"
-              >
-                <div className="font-medium">{promocodeSuccess.message}</div>
-                {promocodeSuccess.amount > 0 && (
-                  <div className="mt-1">
-                    {t('balance.promocode.balanceAdded', {
-                      amount: promocodeSuccess.amount.toFixed(2),
-                    })}
-                  </div>
-                )}
-              </motion.div>
-            )}
-          </AnimatePresence>
-          {promoSelectSubs && promoSelectSubs.length > 0 && (
-            <motion.div
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="mt-3 space-y-2 rounded-linear border border-accent-500/30 bg-accent-500/10 p-3"
-            >
-              <div className="text-sm font-medium text-dark-200">
-                {t('balance.promocode.selectSubscription', 'К какой подписке применить промокод?')}
-              </div>
-              {promoSelectSubs.map((sub) => (
-                <button
-                  key={sub.id}
-                  onClick={() => handlePromocodeActivate(sub.id)}
-                  disabled={promocodeLoading}
-                  className="flex w-full min-w-0 items-center justify-between gap-3 rounded-linear border border-dark-600 bg-dark-700 px-3 py-2 text-sm text-dark-200 transition-colors hover:border-accent-500/50 hover:bg-dark-600"
+                {t('balance.promocode.activate')}
+              </Button>
+            </div>
+            <AnimatePresence mode="wait">
+              {promocodeError && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  className="mt-3 rounded-linear border border-error-500/30 bg-error-500/10 p-3 text-sm text-error-400"
                 >
-                  <span className="truncate">{sub.tariff_name}</span>
-                  <span className="shrink-0 text-dark-400">
-                    {t('balance.promocode.daysLeft', '{{count}} дн.', { count: sub.days_left })}
-                  </span>
-                </button>
-              ))}
-              <button
-                onClick={() => {
-                  setPromoSelectSubs(null);
-                  setPromoSelectCode(null);
-                }}
-                className="text-xs text-dark-400 hover:text-dark-200"
+                  {promocodeError}
+                </motion.div>
+              )}
+              {promocodeSuccess && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  className="mt-3 rounded-linear border border-success-500/30 bg-success-500/10 p-3 text-sm text-success-400"
+                >
+                  <div className="font-medium">{promocodeSuccess.message}</div>
+                  {promocodeSuccess.amount > 0 && (
+                    <div className="mt-1">
+                      {t('balance.promocode.balanceAdded', {
+                        amount: promocodeSuccess.amount.toFixed(2),
+                      })}
+                    </div>
+                  )}
+                </motion.div>
+              )}
+            </AnimatePresence>
+            {promoSelectSubs && promoSelectSubs.length > 0 && (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="mt-3 space-y-2 rounded-linear border border-accent-500/30 bg-accent-500/10 p-3"
               >
-                {t('common.cancel', 'Отмена')}
-              </button>
-            </motion.div>
-          )}
-        </Card>
-      </motion.div>
+                <div className="text-sm font-medium text-dark-200">
+                  {t(
+                    'balance.promocode.selectSubscription',
+                    'К какой подписке применить промокод?',
+                  )}
+                </div>
+                {promoSelectSubs.map((sub) => (
+                  <button
+                    key={sub.id}
+                    onClick={() => handlePromocodeActivate(sub.id)}
+                    disabled={promocodeLoading}
+                    className="flex w-full min-w-0 items-center justify-between gap-3 rounded-linear border border-dark-600 bg-dark-700 px-3 py-2 text-sm text-dark-200 transition-colors hover:border-accent-500/50 hover:bg-dark-600"
+                  >
+                    <span className="truncate">{sub.tariff_name}</span>
+                    <span className="shrink-0 text-dark-400">
+                      {t('balance.promocode.daysLeft', '{{count}} дн.', { count: sub.days_left })}
+                    </span>
+                  </button>
+                ))}
+                <button
+                  onClick={() => {
+                    setPromoSelectSubs(null);
+                    setPromoSelectCode(null);
+                  }}
+                  className="text-xs text-dark-400 hover:text-dark-200"
+                >
+                  {t('common.cancel', 'Отмена')}
+                </button>
+              </motion.div>
+            )}
+          </Card>
+        </motion.div>
+      )}
 
       {/* Transaction History */}
       <motion.div variants={staggerItem}>

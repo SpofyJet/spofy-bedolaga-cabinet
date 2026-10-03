@@ -861,7 +861,8 @@
         "server_error": "服务器错误"
       },
       "daysLeft": "剩余天数：{{count}}",
-      "selectSubscription": "选择订阅"
+      "selectSubscription": "选择订阅",
+      "haveOne": "有优惠码？"
     },
     "minAmountError": "最小金额：{{amount}}",
     "maxAmountError": "最大金额：{{amount}}",
@@ -933,7 +934,15 @@
     },
     "topUpHint": "资金自动到账，通常在一分钟内",
     "changeMethod": "更改",
-    "topUpFor": "充值 {{amount}}"
+    "topUpFor": "充值 {{amount}}",
+    "renew": {
+      "title": "续订",
+      "until": "有效期至 {{date}}",
+      "days_other": "{{count}} 天",
+      "perMonth": "{{amount}} {{currency}}/月"
+    },
+    "referralEarned": "推荐奖励累计：{{amount}} {{currency}}。余额可用于续订。",
+    "methodFast": "快速"
   },
   "referral": {
     "title": "推荐计划",

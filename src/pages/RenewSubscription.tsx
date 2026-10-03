@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
-import { Navigate, useNavigate, useParams } from 'react-router';
+import { Navigate, useNavigate, useParams, useSearchParams } from 'react-router';
 import { subscriptionApi } from '../api/subscription';
 import { useTheme } from '../hooks/useTheme';
 import { getGlassColors } from '../utils/glassTheme';
@@ -17,6 +17,9 @@ import { needsTariff, tariffSelectionPath } from '../utils/legacySubscription';
 
 export default function RenewSubscription() {
   const { subscriptionId } = useParams<{ subscriptionId: string }>();
+  // ?period=90 — период, выбранный на странице «Баланс»
+  const [searchParams] = useSearchParams();
+  const requestedPeriod = Number(searchParams.get('period')) || null;
   const subId = subscriptionId ? Number(subscriptionId) : undefined;
 
   const { t } = useTranslation();
@@ -52,9 +55,16 @@ export default function RenewSubscription() {
   // Без отметки выбор остаётся за человеком: сами выгоду не выдумываем.
   useEffect(() => {
     if (selectedPeriod !== null) return;
+    const requested = requestedPeriod
+      ? options?.find((o) => o.period_days === requestedPeriod)
+      : null;
+    if (requested) {
+      setSelectedPeriod(requested.period_days);
+      return;
+    }
     const best = pickBestValue(options);
     if (best) setSelectedPeriod(best.period_days);
-  }, [options, selectedPeriod]);
+  }, [options, selectedPeriod, requestedPeriod]);
 
   // Load balance
   const { data: purchaseOptions } = useQuery({

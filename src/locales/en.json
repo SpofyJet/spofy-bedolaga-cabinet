@@ -992,7 +992,8 @@
         "server_error": "Server error"
       },
       "daysLeft": "Days left: {{count}}",
-      "selectSubscription": "Select a subscription"
+      "selectSubscription": "Select a subscription",
+      "haveOne": "Have a promo code?"
     },
     "minAmountError": "Minimum amount: {{amount}} ₽",
     "maxAmountError": "Maximum amount: {{amount}} ₽",
@@ -1066,7 +1067,16 @@
     },
     "topUpHint": "Funds are credited automatically, usually within a minute",
     "changeMethod": "Change",
-    "topUpFor": "Top up {{amount}}"
+    "topUpFor": "Top up {{amount}}",
+    "renew": {
+      "title": "Renew subscription",
+      "until": "Active until {{date}}",
+      "days_one": "{{count}} day",
+      "days_other": "{{count}} days",
+      "perMonth": "{{amount}} {{currency}}/mo"
+    },
+    "referralEarned": "Earned from referrals so far: {{amount}} {{currency}}. Your balance can be spent on renewal.",
+    "methodFast": "Fast"
   },
   "referral": {
     "title": "Referral Program",

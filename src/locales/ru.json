@@ -1020,7 +1020,8 @@
         "server_error": "Ошибка сервера"
       },
       "daysLeft": "Осталось дней: {{count}}",
-      "selectSubscription": "Выберите подписку"
+      "selectSubscription": "Выберите подписку",
+      "haveOne": "Есть промокод?"
     },
     "minAmountError": "Минимальная сумма: {{amount}} ₽",
     "maxAmountError": "Максимальная сумма: {{amount}} ₽",
@@ -1094,7 +1095,18 @@
     },
     "topUpHint": "Деньги зачисляются автоматически, обычно за минуту",
     "changeMethod": "Изменить",
-    "topUpFor": "Пополнить на {{amount}}"
+    "topUpFor": "Пополнить на {{amount}}",
+    "renew": {
+      "title": "Продлить подписку",
+      "until": "Действует до {{date}}",
+      "days_one": "{{count}} день",
+      "days_few": "{{count}} дня",
+      "days_many": "{{count}} дней",
+      "days_other": "{{count}} дня",
+      "perMonth": "{{amount}} {{currency}}/мес"
+    },
+    "referralEarned": "Заработано на рефералах за всё время: {{amount}} {{currency}}. Баланс можно потратить на продление.",
+    "methodFast": "Быстро"
   },
   "referral": {
     "title": "Реферальная программа",
