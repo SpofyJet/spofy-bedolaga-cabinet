@@ -157,3 +157,26 @@ describe('Spofy: обходы отключены за трафик', () => {
     expect(links).toEqual(['/subscriptions/42?topup=traffic', '/subscription/purchase']);
   });
 });
+
+describe('Spofy: квота на обходы и пробный', () => {
+  it('лимит-квота на обходы подписана: обычные серверы без лимита', async () => {
+    await renderCard(subscription({ bypass_quota: true }));
+    expect(screen.getByText('dashboard.bypassQuotaTitle')).toBeTruthy();
+    expect(screen.getByText('dashboard.regularUnlimited')).toBeTruthy();
+  });
+
+  it('у пробного баннер ведёт к тарифу, а не к докупке трафика', async () => {
+    await renderCard(
+      subscription({
+        is_trial: true,
+        bypass_suspended: true,
+        bypass_quota: true,
+        traffic_used_gb: 250,
+      }),
+    );
+    const banner = screen.getByTestId('bypass-suspended-banner');
+    expect(banner.textContent).toContain('subscription.bypassSuspended.trialTitle');
+    const links = Array.from(banner.querySelectorAll('a')).map((a) => a.getAttribute('href'));
+    expect(links).toEqual(['/subscription/purchase']);
+  });
+});

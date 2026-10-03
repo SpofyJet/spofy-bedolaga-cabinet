@@ -376,7 +376,9 @@
     },
     "manageAll": "Manage all",
     "showAll": "Show all",
-    "subscriptions": "Subscriptions"
+    "subscriptions": "Subscriptions",
+    "bypassQuotaTitle": "Bypass traffic",
+    "regularUnlimited": "Regular servers — unlimited"
   },
   "subscription": {
     "title": "Subscription",
@@ -841,8 +843,12 @@
       "title": "Bypass servers are off — their traffic is used up",
       "description": "Regular servers keep working, your VPN is still on. Bypass servers come back once you buy more traffic or renew your subscription.",
       "buyTraffic": "Buy more traffic",
-      "renew": "Renew subscription"
-    }
+      "renew": "Renew subscription",
+      "trialTitle": "Your trial bypass GB are used up",
+      "trialDescription": "Regular servers keep working without limits until the trial ends. «Обход» (bypass) servers come with the «С Обходами» plan.",
+      "trialCta": "Get «С Обходами»"
+    },
+    "bypassQuotaLabel": "Bypass"
   },
   "balance": {
     "title": "Balance",

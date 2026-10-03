@@ -99,6 +99,8 @@ export interface Subscription {
   is_limited: boolean;
   /** Spofy: bypass servers off (traffic quota used up), regular servers work. */
   bypass_suspended?: boolean;
+  /** Spofy: the traffic limit is a bypass-only quota; regular servers are unlimited. */
+  bypass_quota?: boolean;
   traffic_purchases?: TrafficPurchase[];
   // Daily tariff fields
   is_daily?: boolean;

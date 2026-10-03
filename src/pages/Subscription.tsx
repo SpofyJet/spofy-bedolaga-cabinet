@@ -542,6 +542,7 @@ export default function Subscription() {
               {subscription.bypass_suspended && (
                 <BypassSuspendedBanner
                   className="mb-6"
+                  isTrial={subscription.is_trial}
                   onBuyTraffic={() => setShowTrafficTopup(true)}
                   renewTo={
                     isMultiTariff
@@ -660,7 +661,9 @@ export default function Subscription() {
               <div className="mb-6">
                 <div className="mb-2.5 flex items-center justify-between">
                   <span className="text-[11px] font-medium uppercase tracking-wider text-dark-400">
-                    {t('subscription.traffic')}
+                    {subscription.bypass_quota
+                      ? t('subscription.bypassQuotaLabel')
+                      : t('subscription.traffic')}
                   </span>
                   <div className="flex items-center gap-2">
                     <span className="font-mono text-[11px] text-dark-400">
@@ -683,6 +686,11 @@ export default function Subscription() {
                     </button>
                   </div>
                 </div>
+                {subscription.bypass_quota && (
+                  <div className="mb-1 text-[11px] text-dark-300">
+                    {t('dashboard.regularUnlimited')}
+                  </div>
+                )}
                 {subscription.traffic_reset_mode &&
                   subscription.traffic_reset_mode !== 'NO_RESET' && (
                     <div className="mb-2 text-[10px] text-dark-400">

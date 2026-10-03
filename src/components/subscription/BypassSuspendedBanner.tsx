@@ -11,6 +11,8 @@ interface BypassSuspendedBannerProps {
    *  drops the query. */
   trafficTo?: string;
   className?: string;
+  /** Trial: traffic can't be bought — the only way back to bypass is a plan. */
+  isTrial?: boolean;
 }
 
 /**
@@ -23,6 +25,7 @@ export default function BypassSuspendedBanner({
   onBuyTraffic,
   trafficTo,
   className = '',
+  isTrial = false,
 }: BypassSuspendedBannerProps) {
   const { t } = useTranslation();
   const primary =
@@ -41,13 +44,25 @@ export default function BypassSuspendedBanner({
       }}
     >
       <p className="text-sm font-semibold text-dark-50">
-        {t('subscription.bypassSuspended.title')}
+        {t(
+          isTrial
+            ? 'subscription.bypassSuspended.trialTitle'
+            : 'subscription.bypassSuspended.title',
+        )}
       </p>
       <p className="mt-1 text-xs leading-relaxed text-dark-400">
-        {t('subscription.bypassSuspended.description')}
+        {t(
+          isTrial
+            ? 'subscription.bypassSuspended.trialDescription'
+            : 'subscription.bypassSuspended.description',
+        )}
       </p>
       <div className="mt-3 flex flex-wrap gap-2">
-        {onBuyTraffic ? (
+        {isTrial ? (
+          <Link to="/subscription/purchase" className={primary}>
+            {t('subscription.bypassSuspended.trialCta')}
+          </Link>
+        ) : onBuyTraffic ? (
           <button type="button" onClick={onBuyTraffic} className={primary}>
             {t('subscription.bypassSuspended.buyTraffic')}
           </button>
@@ -56,9 +71,11 @@ export default function BypassSuspendedBanner({
             {t('subscription.bypassSuspended.buyTraffic')}
           </Link>
         )}
-        <Link to={renewTo} className={secondary}>
-          {t('subscription.bypassSuspended.renew')}
-        </Link>
+        {!isTrial && (
+          <Link to={renewTo} className={secondary}>
+            {t('subscription.bypassSuspended.renew')}
+          </Link>
+        )}
       </div>
     </div>
   );

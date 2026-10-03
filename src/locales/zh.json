@@ -342,7 +342,9 @@
     "unlimited": "无限",
     "usageLast14Days": "近 14 天使用情况",
     "usedSuffix": "已用",
-    "validUntil": "有效期至 {{date}}"
+    "validUntil": "有效期至 {{date}}",
+    "bypassQuotaTitle": "绕行流量",
+    "regularUnlimited": "普通服务器不限流量"
   },
   "subscription": {
     "title": "订阅",
@@ -752,8 +754,12 @@
       "title": "绕行服务器已关闭——其流量已用完",
       "description": "普通服务器仍可正常使用，VPN 没有断开。购买更多流量或续订后，绕行服务器会恢复。",
       "buyTraffic": "购买流量",
-      "renew": "续订"
-    }
+      "renew": "续订",
+      "trialTitle": "试用的绕行流量已用完",
+      "trialDescription": "试用期结束前，普通服务器仍可无限制使用。绕行服务器包含在「С Обходами」套餐中。",
+      "trialCta": "购买「С Обходами」"
+    },
+    "bypassQuotaLabel": "绕行"
   },
   "balance": {
     "title": "余额",

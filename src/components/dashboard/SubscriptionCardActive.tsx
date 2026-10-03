@@ -98,8 +98,14 @@ export default function SubscriptionCardActive({
 
           {/* Title */}
           <h2 className="text-lg font-bold tracking-tight text-dark-50">
-            {t('dashboard.trafficUsageTitle')}
+            {subscription.bypass_quota
+              ? t('dashboard.bypassQuotaTitle')
+              : t('dashboard.trafficUsageTitle')}
           </h2>
+          {/* Spofy: limit counts only on bypass servers — say so, or 5 GB reads as a ceiling */}
+          {subscription.bypass_quota && (
+            <p className="mt-0.5 text-xs text-dark-400">{t('dashboard.regularUnlimited')}</p>
+          )}
         </div>
 
         {/* Big percentage / infinity */}
@@ -144,6 +150,7 @@ export default function SubscriptionCardActive({
       {subscription.bypass_suspended && (
         <BypassSuspendedBanner
           className="mb-4"
+          isTrial={subscription.is_trial}
           trafficTo={`/subscriptions/${subscription.id}?topup=traffic`}
           renewTo="/subscription/purchase"
         />
