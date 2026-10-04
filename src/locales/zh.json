@@ -947,6 +947,13 @@
   "referral": {
     "title": "推荐计划",
     "yourLink": "您的推荐链接",
+    "friendDays": {
+      "title": "每位好友 +{{days}} 天",
+      "text": "通过您的链接邀请好友。好友首次连接 VPN 后，你们都将获得额外订阅天数。好友越多，奖励越多。",
+      "badgeYou": "您 +{{days}} 天",
+      "badgeFriend": "好友 +{{days}} 天",
+      "badgeNoLimit": "不设上限"
+    },
     "botLink": "机器人链接",
     "cabinetLink": "面板链接",
     "copyLink": "复制",

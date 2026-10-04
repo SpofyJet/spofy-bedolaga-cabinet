@@ -1081,6 +1081,13 @@
   "referral": {
     "title": "Referral Program",
     "yourLink": "Your Referral Links",
+    "friendDays": {
+      "title": "+{{days}} days for every friend",
+      "text": "Invite a friend with your link. When they connect VPN for the first time, you both get extra days. As many friends, as many rewards.",
+      "badgeYou": "You get +{{days}} days",
+      "badgeFriend": "Friend gets +{{days}} days",
+      "badgeNoLimit": "No limit"
+    },
     "botLink": "Bot link",
     "cabinetLink": "Cabinet link",
     "copyLink": "Copy",

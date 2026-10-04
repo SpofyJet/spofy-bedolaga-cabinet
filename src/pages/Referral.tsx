@@ -389,6 +389,9 @@ export function tierProgressText(
   });
 }
 
+// Дни, которые бот начисляет обоим, когда друг впервые подключил VPN (trial_quest_service, DAYS_FRIEND).
+const FRIEND_DAYS = 2;
+
 export default function Referral() {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
@@ -668,6 +671,34 @@ export default function Referral() {
   return (
     <div className="space-y-6">
       <h1 className="text-2xl font-bold text-dark-50 sm:text-3xl">{t('referral.title')}</h1>
+
+      {/* Дни за друзей: бот начисляет и другу, и пригласившему, когда друг подключит VPN */}
+      <div className="bento-card border border-accent-500/30 bg-accent-500/5">
+        <div className="flex items-start gap-4">
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-accent-500/15 text-accent-400">
+            <GiftIcon className="h-6 w-6" />
+          </div>
+          <div className="min-w-0">
+            <h2 className="text-lg font-semibold text-dark-50">
+              {t('referral.friendDays.title', { days: FRIEND_DAYS })}
+            </h2>
+            <p className="mt-1 text-sm text-dark-300">
+              {t('referral.friendDays.text', { days: FRIEND_DAYS })}
+            </p>
+            <div className="mt-3 flex flex-wrap gap-2">
+              <span className="rounded-full bg-accent-500/15 px-3 py-1 text-xs font-medium text-accent-300">
+                {t('referral.friendDays.badgeYou', { days: FRIEND_DAYS })}
+              </span>
+              <span className="rounded-full bg-accent-500/15 px-3 py-1 text-xs font-medium text-accent-300">
+                {t('referral.friendDays.badgeFriend', { days: FRIEND_DAYS })}
+              </span>
+              <span className="rounded-full bg-dark-700/60 px-3 py-1 text-xs font-medium text-dark-200">
+                {t('referral.friendDays.badgeNoLimit')}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
 
       {/* Stats Cards */}
       <div className="grid grid-cols-2 gap-3 md:grid-cols-3 md:gap-4">
