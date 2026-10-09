@@ -308,6 +308,10 @@
   },
   "dashboard": {
     "title": "Личный кабинет",
+    "trialFriendDays": {
+      "title": "+{{days}} дня за каждого друга",
+      "text": "Позовите друга: когда он подключит VPN, вам обоим добавим дни. Без ограничений."
+    },
     "welcome": "Добро пожаловать, {{name}}!",
     "welcomeNoName": "Добро пожаловать!",
     "yourSubscription": "Ваша подписка",
@@ -1063,6 +1067,7 @@
       "starsOnlyInTelegram": "Оплата Stars доступна только в Telegram Mini App",
       "generic": "Ошибка: {{details}}",
       "invoiceFailed": "Не удалось создать счёт",
+      "tryAnotherMethod": "Не получилось оплатить? Попробуйте другой способ",
       "rateLimit": "Подождите {{seconds}} сек.",
       "selectMethod": "Выберите способ",
       "enterAmount": "Введите сумму",

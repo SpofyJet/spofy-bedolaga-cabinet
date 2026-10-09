@@ -300,6 +300,10 @@
   },
   "dashboard": {
     "title": "Dashboard",
+    "trialFriendDays": {
+      "title": "+{{days}} days for every friend",
+      "text": "Invite a friend: when they connect VPN, you both get extra days. No limit."
+    },
     "welcome": "Welcome, {{name}}!",
     "welcomeNoName": "Welcome!",
     "yourSubscription": "Your Subscription",
@@ -1035,6 +1039,7 @@
       "starsOnlyInTelegram": "Stars payment is only available in Telegram Mini App",
       "generic": "Error: {{details}}",
       "invoiceFailed": "Failed to create invoice",
+      "tryAnotherMethod": "Could not pay? Try another method",
       "rateLimit": "Please wait {{seconds}} sec.",
       "selectMethod": "Select a method",
       "enterAmount": "Enter an amount",

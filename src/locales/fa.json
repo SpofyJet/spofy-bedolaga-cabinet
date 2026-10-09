@@ -285,6 +285,10 @@
   },
   "dashboard": {
     "title": "داشبورد",
+    "trialFriendDays": {
+      "title": "{{days}}+ روز برای هر دوست",
+      "text": "دوستی را دعوت کنید: وقتی VPN را وصل کرد، هر دوی شما روز اضافه می‌گیرید. بدون محدودیت."
+    },
     "welcome": "خوش آمدید، {{name}}!",
     "welcomeNoName": "خوش آمدید!",
     "yourSubscription": "اشتراک شما",
@@ -880,6 +884,7 @@
       "starsOnlyInTelegram": "پرداخت Stars فقط در Telegram Mini App در دسترس است",
       "generic": "خطا: {{details}}",
       "invoiceFailed": "ایجاد فاکتور ناموفق بود",
+      "tryAnotherMethod": "پرداخت انجام نشد؟ روش دیگری را امتحان کنید",
       "rateLimit": "لطفاً {{seconds}} ثانیه صبر کنید",
       "selectMethod": "روش را انتخاب کنید",
       "enterAmount": "مبلغ را وارد کنید",

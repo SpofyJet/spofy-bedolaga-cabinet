@@ -280,6 +280,10 @@
   },
   "dashboard": {
     "title": "个人中心",
+    "trialFriendDays": {
+      "title": "每位好友 +{{days}} 天",
+      "text": "邀请好友：好友连接 VPN 后，你们都将获得额外天数。不设上限。"
+    },
     "welcome": "欢迎，{{name}}！",
     "welcomeNoName": "欢迎！",
     "yourSubscription": "您的订阅",
@@ -874,6 +878,7 @@
       "starsOnlyInTelegram": "Stars支付仅在Telegram Mini App中可用",
       "generic": "错误：{{details}}",
       "invoiceFailed": "创建账单失败",
+      "tryAnotherMethod": "付款没成功？请试试其他方式",
       "rateLimit": "请等待 {{seconds}} 秒",
       "selectMethod": "请选择支付方式",
       "enterAmount": "请输入金额",

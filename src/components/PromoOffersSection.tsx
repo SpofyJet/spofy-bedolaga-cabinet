@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router';
@@ -36,7 +36,9 @@ const formatTimeLeft = (
   if (hours > 0) {
     return `${hours}${t('promo.time.hours')} ${minutes}${t('promo.time.minutes')}`;
   }
-  return `${minutes}${t('promo.time.minutes')}`;
+  // Последний час идёт «живым» таймером ММ:СС: срочность видна, а не «около 47 мин».
+  const seconds = Math.floor((diffMs % (1000 * 60)) / 1000);
+  return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
 };
 
 const getOfferIcon = (effectType: string, discountPercent?: number | null) => {
@@ -83,6 +85,8 @@ export default function PromoOffersSection({ className = '' }: PromoOffersSectio
   const [claimingId, setClaimingId] = useState<number | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  // Тик раз в секунду, пока у скидки есть срок: таймер идёт, а по истечении скидка исчезает без перезагрузки.
+  const [, setTick] = useState(0);
 
   // Fetch available offers
   const { data: offers = [], isLoading: offersLoading } = useQuery({
@@ -97,6 +101,23 @@ export default function PromoOffersSection({ className = '' }: PromoOffersSectio
     queryFn: promoApi.getActiveDiscount,
     staleTime: 30000,
   });
+
+  const discountExpiresAt = activeDiscount?.expires_at ?? null;
+  useEffect(() => {
+    if (!discountExpiresAt) return;
+    const expiresMs = new Date(
+      /Z|[+-]\d\d:?\d\d$/.test(discountExpiresAt) ? discountExpiresAt : `${discountExpiresAt}Z`,
+    ).getTime();
+    let refreshed = false;
+    const id = window.setInterval(() => {
+      setTick((n) => n + 1);
+      if (!refreshed && Date.now() >= expiresMs) {
+        refreshed = true;
+        queryClient.invalidateQueries({ queryKey: ['active-discount'] });
+      }
+    }, 1000);
+    return () => window.clearInterval(id);
+  }, [discountExpiresAt, queryClient]);
 
   // Claim offer mutation
   const claimMutation = useMutation({

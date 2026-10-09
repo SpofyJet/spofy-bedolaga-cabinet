@@ -317,6 +317,25 @@ export default function TopUpAmount() {
 
   const hasOptions = method.options && method.options.length > 0;
   const orderedOptions = sortOptionsWithSbpFirst(method.options);
+  // Другие доступные способы оплаты для блока «Попробуйте другой способ».
+  const alternativeMethods = (methods ?? [])
+    .filter((m) => m.id !== methodId && m.is_available)
+    .slice(0, 5);
+
+  const alternativeMethodName = (m: { id: string; name: string }) => {
+    const key = m.id.toLowerCase().replace(/-/g, '_');
+    return t(`balance.paymentMethods.${key}.name`, { defaultValue: '' }) || m.name;
+  };
+
+  const goToAlternativeMethod = (id: string) => {
+    const typed = parseFloat(amount);
+    const rubles = quickRub ?? (Number.isNaN(typed) || typed <= 0 ? null : convertToRub(typed));
+    const qs = rubles
+      ? `?amount=${encodeURIComponent(String(Math.round(rubles * 100) / 100))}`
+      : '';
+    navigate(`/balance/top-up/${id}${qs}`);
+  };
+
   const minRubles = method.min_amount_kopeks / 100;
   const maxRubles = method.max_amount_kopeks / 100;
   const methodKey = method.id.toLowerCase().replace(/-/g, '_');
@@ -607,6 +626,30 @@ export default function TopUpAmount() {
         >
           <ExclamationIcon className="h-5 w-5 shrink-0 text-error-400" />
           <span className="text-sm text-error-400">{error}</span>
+        </motion.div>
+      )}
+
+      {/* Не получилось оплатить: те же деньги можно внести другим способом (как в боте) */}
+      {error && alternativeMethods.length > 0 && (
+        <motion.div
+          variants={staggerItem}
+          className="space-y-3 rounded-xl border border-accent-500/30 bg-accent-500/5 p-4"
+        >
+          <div className="text-sm font-semibold text-dark-50">
+            {t('balance.errors.tryAnotherMethod')}
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {alternativeMethods.map((alt) => (
+              <button
+                key={alt.id}
+                type="button"
+                onClick={() => goToAlternativeMethod(alt.id)}
+                className="rounded-xl border border-dark-600 bg-dark-800 px-4 py-2 text-sm font-medium text-dark-100 transition-colors hover:border-accent-500/50 hover:text-accent-300"
+              >
+                {alternativeMethodName(alt)}
+              </button>
+            ))}
+          </div>
         </motion.div>
       )}
 

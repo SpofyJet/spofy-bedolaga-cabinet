@@ -24,7 +24,7 @@ import PendingGiftCard from '../components/dashboard/PendingGiftCard';
 import SubscriptionListCard from '../components/subscription/SubscriptionListCard';
 import { DeviceLimitSheet } from '../components/subscription/DeviceLimitSheet';
 import { API } from '../config/constants';
-import { ChevronRightIcon, StarIcon } from '@/components/icons';
+import { ChevronRightIcon, GiftIcon, StarIcon } from '@/components/icons';
 import { Skeleton, SkeletonGroup } from '@/components/ui/skeleton';
 import { safeLocal } from '../utils/safeStorage';
 import { getApiErrorMessage } from '../utils/api-error';
@@ -238,6 +238,10 @@ export default function Dashboard() {
   const hasActivePaid = (multiSubData?.subscriptions ?? []).some(
     (s) => !s.is_trial && (s.status === 'active' || s.status === 'limited'),
   );
+  // Идёт пробный период: ему показываем «+2 дня за друга» (бот начисляет обоим, когда друг подключит VPN).
+  const hasActiveTrial =
+    (multiSubData?.subscriptions ?? []).some((s) => s.is_trial && s.status === 'active') ||
+    (subscription?.is_trial === true && subscription.status === 'active');
   // Старая подписка (без тарифа при включённых тарифах) в списке: «купить ещё»
   // не предлагаем, её карточка ведёт на переход на тариф.
   const hasLegacy = hasLegacySubscription(multiSubData?.subscriptions);
@@ -433,6 +437,27 @@ export default function Dashboard() {
 
       {/* Promo Offers */}
       <PromoOffersSection />
+
+      {/* Пробный период: дни за друга (до кнопки «Купить» они тоже работают) */}
+      {hasActiveTrial && (
+        <Link
+          to="/referral"
+          className="flex items-center gap-4 rounded-2xl border border-accent-500/30 bg-accent-500/5 p-4 transition-colors hover:bg-accent-500/10"
+        >
+          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-accent-500/15 text-accent-400">
+            <GiftIcon className="h-5 w-5" />
+          </div>
+          <div className="min-w-0 flex-1">
+            <div className="font-semibold text-dark-50">
+              {t('dashboard.trialFriendDays.title', { days: 2 })}
+            </div>
+            <div className="text-sm text-dark-300">
+              {t('dashboard.trialFriendDays.text', { days: 2 })}
+            </div>
+          </div>
+          <ChevronRightIcon className="h-5 w-5 shrink-0 text-dark-500" />
+        </Link>
+      )}
 
       {/* Stats Grid */}
       <StatsGrid
