@@ -118,7 +118,7 @@ export default function Contests() {
                     }).map((_, i) => (
                       <button
                         key={i}
-                        onClick={() => handleSubmitAnswer(`${i}_${gameData.game_data.secret}`)}
+                        onClick={() => handleSubmitAnswer(String(i))}
                         disabled={submitAnswerMutation.isPending}
                         className="flex aspect-square items-center justify-center rounded-lg bg-dark-700 text-2xl transition-colors hover:bg-dark-600"
                       >
