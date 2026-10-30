@@ -606,7 +606,7 @@ export default function TopUpAmount() {
             autoComplete="off"
           />
           <span className="absolute right-4 top-1/2 -translate-y-1/2 text-lg font-semibold text-dark-400">
-            {noCurrencyLabel ? '' : currencySymbol}
+            {currencySymbol}
           </span>
         </div>
 
@@ -671,9 +671,7 @@ export default function TopUpAmount() {
             <span className="h-5 w-5 animate-spin rounded-full border-2 border-white/30 border-t-white" />
           ) : canSubmit ? (
             t('balance.topUpFor', {
-              amount: noCurrencyLabel
-                ? formatAmount(amountNumber, 0)
-                : `${formatAmount(amountNumber, 0)}\u00A0${currencySymbol}`,
+              amount: `${formatAmount(amountNumber, 0)}\u00A0${currencySymbol}`,
             })
           ) : (
             t('balance.topUp')
