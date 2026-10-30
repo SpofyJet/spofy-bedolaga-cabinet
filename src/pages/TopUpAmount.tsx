@@ -355,6 +355,9 @@ export default function TopUpAmount() {
   const maxRubles = method.max_amount_kopeks / 100;
   const methodKey = method.id.toLowerCase().replace(/-/g, '_');
   const isStarsMethod = methodKey.includes('stars');
+  // Международные карты (Platega метод 12) списываются не в рублях —
+  // символ валюты рядом с суммой вводит в заблуждение, показываем число.
+  const noCurrencyLabel = method.id === 'platega_m12';
   const methodName =
     method.name || t(`balance.paymentMethods.${methodKey}.name`, { defaultValue: '' });
 
@@ -502,8 +505,8 @@ export default function TopUpAmount() {
             {formatAmount(minRubles, 0)}
             {'\u00A0–\u00A0'}
             {formatAmount(maxRubles, 0)}
-            {'\u00A0'}
-            {currencySymbol}
+            {noCurrencyLabel ? '' : '\u00A0'}
+            {noCurrencyLabel ? '' : currencySymbol}
           </div>
         </div>
         <button
@@ -603,7 +606,7 @@ export default function TopUpAmount() {
             autoComplete="off"
           />
           <span className="absolute right-4 top-1/2 -translate-y-1/2 text-lg font-semibold text-dark-400">
-            {currencySymbol}
+            {noCurrencyLabel ? '' : currencySymbol}
           </span>
         </div>
 
@@ -668,7 +671,9 @@ export default function TopUpAmount() {
             <span className="h-5 w-5 animate-spin rounded-full border-2 border-white/30 border-t-white" />
           ) : canSubmit ? (
             t('balance.topUpFor', {
-              amount: `${formatAmount(amountNumber, 0)}\u00A0${currencySymbol}`,
+              amount: noCurrencyLabel
+                ? formatAmount(amountNumber, 0)
+                : `${formatAmount(amountNumber, 0)}\u00A0${currencySymbol}`,
             })
           ) : (
             t('balance.topUp')

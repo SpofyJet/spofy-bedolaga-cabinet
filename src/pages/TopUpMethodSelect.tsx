@@ -86,8 +86,8 @@ export default function TopUpMethodSelect() {
                     <div className="mt-3 text-xs text-dark-400">
                       {formatAmount(method.min_amount_kopeks / 100, 0)} –{' '}
                       {formatAmount(method.max_amount_kopeks / 100, 0)}
-                      {'\u00A0'}
-                      {currencySymbol}
+                      {method.id === 'platega_m12' ? '' : '\u00A0'}
+                      {method.id === 'platega_m12' ? '' : currencySymbol}
                     </div>
                   </Card>
                 );
