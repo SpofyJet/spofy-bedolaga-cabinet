@@ -8,6 +8,7 @@ import type {
   MergeResponse,
   OAuthProvider,
   RegisterResponse,
+  ServerCompletePreviewResponse,
   ServerCompleteResponse,
   TokenResponse,
   User,
@@ -314,6 +315,15 @@ export const authApi = {
     return response.data;
   },
 
+  // Which account the external-browser link will attach to (state is not consumed).
+  linkServerCompletePreview: async (state: string): Promise<ServerCompletePreviewResponse> => {
+    const response = await apiClient.get<ServerCompletePreviewResponse>(
+      '/cabinet/auth/account/link/server-complete/preview',
+      { params: { state } },
+    );
+    return response.data;
+  },
+
   linkServerComplete: async (
     code: string,
     state: string,
@@ -325,6 +335,7 @@ export const authApi = {
         code,
         state,
         device_id: deviceId,
+        confirm: true,
       },
     );
     return response.data;

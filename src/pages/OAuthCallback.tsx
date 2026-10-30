@@ -10,7 +10,7 @@ import {
   clearOAuthState,
   getErrorDetail,
 } from '../utils/oauth';
-import type { ServerCompleteResponse } from '../types';
+import type { ServerCompletePreviewResponse, ServerCompleteResponse } from '../types';
 import { CheckIcon, ExclamationIcon } from '@/components/icons';
 
 type CallbackMode = 'login' | 'link-browser' | 'link-server';
@@ -24,6 +24,16 @@ export default function OAuthCallback() {
   const [serverLinkResult, setServerCompleteResponse] = useState<ServerCompleteResponse | null>(
     null,
   );
+  // External-browser link (Mini App flow): the state is not from this browser, so
+  // the owner must see which account the provider will be linked to and confirm.
+  // Auto-completing let anyone send their authorize_url and capture the victim's login.
+  const [pendingServerLink, setPendingServerLink] = useState<{
+    code: string;
+    state: string;
+    deviceId: string | null;
+    preview: ServerCompletePreviewResponse;
+  } | null>(null);
+  const [confirmingServerLink, setConfirmingServerLink] = useState(false);
   const loginWithOAuth = useAuthStore((state) => state.loginWithOAuth);
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const hasRun = useRef(false);
@@ -116,11 +126,10 @@ export default function OAuthCallback() {
 
       // mode === 'link-server': No sessionStorage state found.
       // This happens when OAuth was opened in external browser from Mini App.
-      // Complete linking via state-token-authenticated server endpoint.
+      // Show which account will be linked; complete only after explicit confirmation.
       try {
-        // Provider is resolved server-side from the state token in Redis.
-        const response = await authApi.linkServerComplete(code, urlState, deviceId ?? undefined);
-        setServerCompleteResponse(response);
+        const preview = await authApi.linkServerCompletePreview(urlState);
+        setPendingServerLink({ code, state: urlState, deviceId, preview });
       } catch (err: unknown) {
         setErrorMode('link-server');
         setError(getErrorDetail(err) || t('profile.accounts.linkError'));
@@ -129,6 +138,75 @@ export default function OAuthCallback() {
 
     handle();
   }, [searchParams, loginWithOAuth, navigate, isAuthenticated, t]);
+
+  const confirmServerLink = async () => {
+    if (!pendingServerLink || confirmingServerLink) return;
+    setConfirmingServerLink(true);
+    try {
+      const response = await authApi.linkServerComplete(
+        pendingServerLink.code,
+        pendingServerLink.state,
+        pendingServerLink.deviceId ?? undefined,
+      );
+      setPendingServerLink(null);
+      setServerCompleteResponse(response);
+    } catch (err: unknown) {
+      setPendingServerLink(null);
+      setErrorMode('link-server');
+      setError(getErrorDetail(err) || t('profile.accounts.linkError'));
+    } finally {
+      setConfirmingServerLink(false);
+    }
+  };
+
+  if (pendingServerLink && !error) {
+    return (
+      <div className="min-h-viewport flex items-center justify-center px-4 py-8">
+        <div className="fixed inset-0 bg-gradient-to-br from-dark-950 via-dark-900 to-dark-950" />
+        <div className="relative w-full max-w-md text-center">
+          <div className="card">
+            <h2 className="mb-2 text-lg font-semibold text-dark-50">
+              {t('profile.accounts.confirmLinkTitle', 'Confirm account linking')}
+            </h2>
+            <p className="mb-2 text-sm text-dark-400">
+              {t(
+                'profile.accounts.confirmLinkText',
+                'Your {{provider}} sign-in will be linked to this account:',
+                { provider: pendingServerLink.preview.provider },
+              )}
+            </p>
+            <p className="mb-4 break-words font-medium text-dark-50">
+              {pendingServerLink.preview.account_label}
+            </p>
+            <p className="mb-6 text-xs text-dark-400">
+              {t(
+                'profile.accounts.confirmLinkWarning',
+                'If this is not your account or you did not start linking, close this page: whoever owns that account would be able to sign in with your login.',
+              )}
+            </p>
+            <button
+              onClick={confirmServerLink}
+              disabled={confirmingServerLink}
+              className="btn-primary mb-3 w-full"
+            >
+              {t('profile.accounts.confirmLinkButton', 'Yes, this is my account — link')}
+            </button>
+            <button
+              onClick={() => {
+                setPendingServerLink(null);
+                setErrorMode('link-server');
+                setError(t('profile.accounts.linkCancelled', 'Linking cancelled'));
+              }}
+              disabled={confirmingServerLink}
+              className="btn-secondary w-full"
+            >
+              {t('common.cancel', 'Cancel')}
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   // Server-complete result: show success with "Return to Telegram" link
   // (merge redirect is handled by the useEffect above)

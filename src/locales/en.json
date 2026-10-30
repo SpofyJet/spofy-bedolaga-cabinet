@@ -7268,6 +7268,11 @@
       "returnToTelegram": "Return to Telegram to continue",
       "openTelegram": "Open Telegram",
       "continueInBrowser": "Continue authorization in the opened browser",
+      "confirmLinkTitle": "Confirm account linking",
+      "confirmLinkText": "Your {{provider}} sign-in will be linked to this account:",
+      "confirmLinkWarning": "If this is not your account or you did not start linking, close this page: whoever owns that account would be able to sign in with your login.",
+      "confirmLinkButton": "Yes, this is my account — link",
+      "linkCancelled": "Linking cancelled",
       "pollingTimeout": "Authorization check timed out. Refresh the page if you completed linking.",
       "providers": {
         "telegram": "Telegram",

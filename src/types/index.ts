@@ -937,6 +937,11 @@ export interface ServerCompleteResponse extends LinkCallbackResponse {
   provider: string;
 }
 
+export interface ServerCompletePreviewResponse {
+  provider: string;
+  account_label: string;
+}
+
 // Account Merge
 export interface MergeSubscriptionPreview {
   status: string;
