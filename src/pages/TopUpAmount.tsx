@@ -355,9 +355,6 @@ export default function TopUpAmount() {
   const maxRubles = method.max_amount_kopeks / 100;
   const methodKey = method.id.toLowerCase().replace(/-/g, '_');
   const isStarsMethod = methodKey.includes('stars');
-  // Международные карты (Platega метод 12) списываются не в рублях —
-  // символ валюты рядом с суммой вводит в заблуждение, показываем число.
-  const noCurrencyLabel = method.id === 'platega_m12';
   const methodName =
     method.name || t(`balance.paymentMethods.${methodKey}.name`, { defaultValue: '' });
 
@@ -505,8 +502,8 @@ export default function TopUpAmount() {
             {formatAmount(minRubles, 0)}
             {'\u00A0–\u00A0'}
             {formatAmount(maxRubles, 0)}
-            {noCurrencyLabel ? '' : '\u00A0'}
-            {noCurrencyLabel ? '' : currencySymbol}
+            {'\u00A0'}
+            {currencySymbol}
           </div>
         </div>
         <button
@@ -652,6 +649,8 @@ export default function TopUpAmount() {
                   }`}
                 >
                   {formatAmount(a, 0)}
+                  {'\u00A0'}
+                  {currencySymbol}
                 </button>
               );
             })}
