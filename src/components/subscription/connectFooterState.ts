@@ -7,7 +7,7 @@
  */
 
 export type ConnectFooterState =
-  /** Подключать нечего: подписка истекла или у неё нет ссылки. */
+  /** Нет ссылки на подписку — показывать вход некуда. */
   | { kind: 'hidden' }
   /** Счётчик устройств ещё не пришёл — показываем скелетон, а не догадку. */
   | { kind: 'loading' }
@@ -16,8 +16,9 @@ export type ConnectFooterState =
   /** Слоты кончились — ведём разбираться, а не блокируем. */
   | { kind: 'full'; used: number; limit: number };
 
-/** Статусы, при которых доступ ещё работает и устройство есть смысл подключать. */
-const CONNECTABLE_STATUSES = new Set(['active', 'trial', 'limited']);
+/** Ссылка полезна при живом доступе и после его окончания. */
+const LINK_STATUSES = new Set(['active', 'trial', 'limited', 'expired', 'disabled']);
+const INACTIVE_STATUSES = new Set(['expired', 'disabled']);
 
 export interface ConnectFooterInput {
   status: string;
@@ -35,7 +36,7 @@ export function connectFooterState({
   deviceLimit,
   connected,
 }: ConnectFooterInput): ConnectFooterState {
-  if (!subscriptionUrl || !CONNECTABLE_STATUSES.has(status)) {
+  if (!subscriptionUrl || !LINK_STATUSES.has(status)) {
     return { kind: 'hidden' };
   }
 
@@ -44,6 +45,18 @@ export function connectFooterState({
   }
 
   const unlimited = deviceLimit === 0;
+
+  // После окончания доступа лимит устройств не должен закрывать саб-страницу:
+  // там можно купить доступ, а ссылку — добавить в приложение и увидеть статус.
+  if (INACTIVE_STATUSES.has(status)) {
+    return {
+      kind: 'connect',
+      used: connected,
+      limit: deviceLimit,
+      unlimited,
+      highlight: false,
+    };
+  }
 
   // `>=`, а не `===`: лимит можно понизить ниже числа уже подключённых
   // устройств, и тогда слотов «минус один» — состояние всё равно полное.

@@ -37,9 +37,9 @@ describe('liteStatus', () => {
     expect(status.action).toBe('connect');
   });
 
-  it('на исходе зовёт продлить, а не подключиться', () => {
+  it('на исходе сохраняет подключение главным действием', () => {
     expect(liteStatus({ ...active, days_left: RENEW_PROMPT_DAYS }).key).toBe('expiring');
-    expect(liteStatus({ ...active, days_left: RENEW_PROMPT_DAYS }).action).toBe('renew');
+    expect(liteStatus({ ...active, days_left: RENEW_PROMPT_DAYS }).action).toBe('connect');
     expect(liteStatus({ ...active, days_left: RENEW_PROMPT_DAYS + 1 }).key).toBe('active');
   });
 
@@ -70,6 +70,46 @@ describe('liteStatus', () => {
     expect(status.action).toBe('renew');
   });
 
+  it.each([
+    ['expired', { is_expired: true }],
+    ['disabled', { status: 'disabled' }],
+  ])('неактивная подписка %s со ссылкой сохраняет вход на саб-страницу', (_status, override) => {
+    const status = liteStatus({
+      ...active,
+      ...override,
+      subscription_url: 'https://example.invalid/sub/7',
+    });
+    expect(status.key).toBe('expired');
+    expect(status.action).toBe('connect');
+  });
+
+  it('crypto-link тоже сохраняет вход после окончания доступа', () => {
+    const status = liteStatus({
+      ...active,
+      is_expired: true,
+      subscription_crypto_link: 'happ://crypt/example',
+    });
+    expect(status.action).toBe('connect');
+  });
+
+  it.each([
+    ['обычной', false, 'renew'],
+    ['пробной', true, 'buy'],
+  ] as const)(
+    'истёкшая %s подписка без ссылки не получает мёртвое подключение',
+    (_name, is_trial, action) => {
+      expect(
+        liteStatus({ ...active, is_expired: true, is_trial, subscription_url: null }).action,
+      ).toBe(action);
+    },
+  );
+
+  it('истёкшая старая подписка без ссылки ведёт к выбору тарифа', () => {
+    expect(
+      liteStatus({ ...active, is_expired: true, requires_tariff_selection: true }).action,
+    ).toBe('chooseTariff');
+  });
+
   it('выключенную считает истёкшей', () => {
     expect(liteStatus({ ...active, status: 'disabled' }).key).toBe('expired');
   });
@@ -87,10 +127,10 @@ describe('liteStatus', () => {
     expect(status.action).toBe('manage');
   });
 
-  it('старая подписка ведёт выбирать тариф, а не продлевать несуществующий', () => {
+  it('живая старая подписка сохраняет подключение главным действием', () => {
     const status = liteStatus({ ...active, requires_tariff_selection: true, days_left: 1 });
     expect(status.key).toBe('legacy');
-    expect(status.action).toBe('chooseTariff');
+    expect(status.action).toBe('connect');
   });
 
   it('истёкшая старая подписка всё же продлевается через выбор тарифа', () => {

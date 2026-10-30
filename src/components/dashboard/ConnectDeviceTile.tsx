@@ -56,15 +56,13 @@ export default function ConnectDeviceTile({
     <HoverBorderGradient
       as="button"
       accentColor={zone.mainHex}
-      disabled={isAtDeviceLimit}
       onClick={() => {
-        if (isAtDeviceLimit) {
-          haptic.notification('error');
-          return;
-        }
+        haptic.impact('light');
+        // Заполненный лимит — предупреждение, а не запрет открыть саб-страницу
+        // или добавить уже существующую ссылку в приложение.
         navigate(`/connection?sub=${subscription.id}`);
       }}
-      className={`mb-2.5 flex w-full items-center gap-3.5 rounded-[14px] p-3.5 text-left transition-shadow duration-300 ${isAtDeviceLimit ? 'cursor-not-allowed opacity-50' : ''}`}
+      className="mb-2.5 flex w-full items-center gap-3.5 rounded-[14px] p-3.5 text-left transition-shadow duration-300"
       data-onboarding="connect-devices"
       style={{ fontFamily: 'inherit' }}
     >

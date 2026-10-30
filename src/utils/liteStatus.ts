@@ -18,6 +18,8 @@ export interface LiteStatusInput {
   is_daily_paused?: boolean;
   days_left?: number;
   end_date?: string | null;
+  subscription_url?: string | null;
+  subscription_crypto_link?: string | null;
   requires_tariff_selection?: boolean;
 }
 
@@ -43,16 +45,30 @@ export function liteStatus(subscription: LiteStatusInput | null | undefined): Li
 
   const endDate = subscription.end_date ?? null;
 
-  // Закончилась или выключена — всё остальное про неё уже неважно. Пробный
-  // период продлить нельзя (у него нет вариантов продления — экран «Нет
-  // вариантов продления» и был тупиком), поэтому после него ведём в покупку.
+  // Саб-ссылка нужна и после окончания доступа: она открывает страницу покупки
+  // и добавляется в приложение, где видно состояние подписки. Покупка или
+  // продление в кабинете остаются отдельным действием. Без ссылки мёртвый вход
+  // не показываем, а старую подписку ведём сразу к выбору тарифа.
   if (subscription.is_expired || subscription.status === 'disabled') {
-    return { key: 'expired', action: subscription.is_trial ? 'buy' : 'renew', date: endDate };
+    const fallbackAction = subscription.requires_tariff_selection
+      ? 'chooseTariff'
+      : subscription.is_trial
+        ? 'buy'
+        : 'renew';
+    return {
+      key: 'expired',
+      action:
+        subscription.subscription_url || subscription.subscription_crypto_link
+          ? 'connect'
+          : fallbackAction,
+      date: endDate,
+    };
   }
 
-  // Старая подписка без тарифа: продлевать нечего, человека ведём выбирать тариф.
+  // Старая, но ещё живая подписка: ссылка и доступ уже есть, поэтому основное
+  // действие — подключение. Переход на тариф остаётся отдельной строкой.
   if (subscription.requires_tariff_selection) {
-    return { key: 'legacy', action: 'chooseTariff', date: endDate };
+    return { key: 'legacy', action: 'connect', date: endDate };
   }
 
   // Пауза посуточной подписки — состояние, из которого выходят руками.
@@ -75,7 +91,9 @@ export function liteStatus(subscription: LiteStatusInput | null | undefined): Li
 
   const daysLeft = subscription.days_left;
   if (typeof daysLeft === 'number' && daysLeft <= RENEW_PROMPT_DAYS) {
-    return { key: 'expiring', action: 'renew', date: endDate };
+    // Срок скоро закончится, но текущий доступ всё ещё работает. Не подменяем
+    // подключение продлением: продление доступно отдельной строкой рядом.
+    return { key: 'expiring', action: 'connect', date: endDate };
   }
 
   return { key: 'active', action: 'connect', date: endDate };

@@ -111,6 +111,12 @@ export default function DashboardLite() {
 
   const status = liteStatus(subscription);
   const subscriptionId = subscription?.id;
+  const canOpenConnection = Boolean(
+    subscription &&
+      ((!subscription.is_expired && subscription.status !== 'disabled') ||
+        subscription.subscription_url ||
+        subscription.subscription_crypto_link),
+  );
   const offersTrial = status.action === 'buy' && Boolean(trialInfo?.is_available);
   // Платный пробный период списывается с баланса. Если денег не хватает,
   // активация падает на стороне сервера, и кнопка «Попробовать» превращается
@@ -128,6 +134,21 @@ export default function DashboardLite() {
     manage: subscriptionId ? `/subscriptions/${subscriptionId}` : '/subscriptions',
     chooseTariff: '/subscription/purchase',
   };
+
+  // Подключение не подменяет покупку: продление, тарифы и переход со старой
+  // подписки остаются отдельным действием ниже, в том числе после окончания.
+  const secondaryAction: LiteAction | null =
+    status.key === 'expiring'
+      ? 'renew'
+      : status.key === 'legacy'
+        ? 'chooseTariff'
+        : status.key === 'expired' && status.action === 'connect'
+          ? subscription?.requires_tariff_selection
+            ? 'chooseTariff'
+            : subscription?.is_trial
+              ? null // Витрина тарифов уже есть отдельной строкой ниже.
+              : 'renew'
+          : null;
 
   const isLoading = listLoading || (wantsSingle && subLoading);
 
@@ -234,7 +255,7 @@ export default function DashboardLite() {
 
       <div className="mt-6">
         <LiteRowGroup>
-          {subscription && (
+          {subscription && canOpenConnection && (
             <LiteRow
               to={`/connection?sub=${subscription.id}`}
               label={t('lite.rows.devices', 'Устройства')}
@@ -253,6 +274,9 @@ export default function DashboardLite() {
               to="/subscription/purchase"
               label={t('lite.rows.plans', 'Посмотреть тарифы')}
             />
+          )}
+          {secondaryAction && (
+            <LiteRow to={actionPath[secondaryAction]} label={t(`lite.action.${secondaryAction}`)} />
           )}
           <LiteRow
             to="/balance"

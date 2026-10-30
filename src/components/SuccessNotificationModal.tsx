@@ -82,6 +82,8 @@ export default function SuccessNotificationModal() {
     data.type === 'subscription_activated' ||
     data.type === 'subscription_renewed' ||
     data.type === 'subscription_purchased';
+  const isConnectionNext =
+    data.type === 'subscription_activated' || data.type === 'subscription_purchased';
   const isDevicesPurchased = data.type === 'devices_purchased';
   const isTrafficPurchased = data.type === 'traffic_purchased';
 
@@ -140,6 +142,11 @@ export default function SuccessNotificationModal() {
   const handleGoToSubscription = () => {
     hide();
     navigate('/subscriptions');
+  };
+
+  const handleGoToConnection = () => {
+    hide();
+    navigate('/connection');
   };
 
   const handleGoToBalance = () => {
@@ -284,11 +291,15 @@ export default function SuccessNotificationModal() {
           <div className="space-y-2 pt-2">
             {isSubscription && (
               <button
-                onClick={handleGoToSubscription}
+                onClick={isConnectionNext ? handleGoToConnection : handleGoToSubscription}
                 className="flex w-full items-center justify-center gap-2 rounded-xl bg-accent-500 py-3.5 font-bold text-on-accent shadow-lg shadow-accent-500/25 transition-colors hover:bg-accent-400 active:bg-accent-600"
               >
                 <RocketIcon className="h-8 w-8" />
-                <span>{t('successNotification.goToSubscription', 'Go to Subscription')}</span>
+                <span>
+                  {isConnectionNext
+                    ? t('successNotification.connectDevice', 'Connect device')
+                    : t('successNotification.goToSubscription', 'Go to Subscription')}
+                </span>
               </button>
             )}
 

@@ -233,10 +233,10 @@ export default function Dashboard() {
     ? multiSubData !== undefined && (multiSubData.subscriptions?.length ?? 0) === 0
     : subscriptionResponse?.has_subscription === false && !subLoading;
 
-  // Есть ли НАСТОЯЩАЯ (платная, не триал) живая подписка — от этого зависит CTA:
-  // «+ Купить ещё» только при наличии платной; иначе явная «Посмотреть тарифы».
-  const hasActivePaid = (multiSubData?.subscriptions ?? []).some(
-    (s) => !s.is_trial && (s.status === 'active' || s.status === 'limited'),
+  // При живом доступе подключение в карточке остаётся главным действием,
+  // а покупка любого следующего тарифа — спокойным второстепенным CTA.
+  const hasActiveAccess = (multiSubData?.subscriptions ?? []).some(
+    (s) => s.status === 'active' || s.status === 'limited',
   );
   // Идёт пробный период: ему показываем «+2 дня за друга» (бот начисляет обоим, когда друг подключит VPN).
   const hasActiveTrial =
@@ -356,7 +356,7 @@ export default function Dashboard() {
               {t('dashboard.showAll', 'Показать все')} ({multiSubData.subscriptions.length})
             </Link>
           )}
-          {hasLegacy ? null : hasActivePaid ? (
+          {hasLegacy ? null : hasActiveAccess ? (
             <Link
               to="/subscription/purchase"
               className="flex w-full items-center justify-center gap-2 rounded-2xl bg-accent-500/15 p-3.5 text-sm font-medium text-accent-400 transition-all hover:bg-accent-500/25"

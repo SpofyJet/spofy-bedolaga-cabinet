@@ -261,6 +261,19 @@ export default function SubscriptionCardExpired({
         </div>
       )}
 
+      {/* Саб-страница и добавление ссылки в приложение доступны и после
+          окончания доступа. Покупка и продление ниже остаются отдельно. */}
+      {(subscription.subscription_url || subscription.subscription_crypto_link) && (
+        <Link
+          to={`/connection?sub=${subscription.id}`}
+          onClick={() => haptic.buttonPress()}
+          className="mb-2.5 flex w-full items-center justify-center rounded-[14px] px-5 py-3.5 text-[15px] font-semibold tracking-tight text-dark-50 transition-colors duration-200"
+          style={{ background: g.innerBg, border: `1px solid ${g.innerBorder}` }}
+        >
+          {t('dashboard.connectDevice')}
+        </Link>
+      )}
+
       {/* Action buttons */}
       <div className="flex gap-2.5">
         {isLimited ? (

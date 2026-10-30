@@ -129,6 +129,21 @@ describe('обычная истёкшая подписка', () => {
     expect(calls.purchaseTariff).toEqual([]);
   });
 
+  it('сохраняет вход на саб-страницу вместе с продлением', async () => {
+    await renderCard(subscription({ subscription_url: 'https://example.invalid/sub/42' }), 500000);
+
+    const connect = await screen.findByRole('link', { name: 'dashboard.connectDevice' });
+    expect(connect.getAttribute('href')).toBe('/connection?sub=42');
+    expect(screen.getByText('dashboard.expired.quickRenew')).toBeTruthy();
+  });
+
+  it('без ссылки не рисует мёртвое подключение, но оставляет продление', async () => {
+    await renderCard(subscription(), 500000);
+
+    expect(screen.queryByRole('link', { name: 'dashboard.connectDevice' })).toBeNull();
+    expect(await screen.findByText('dashboard.expired.quickRenew')).toBeTruthy();
+  });
+
   it('ведёт на выбор периода и без денег на балансе — цены надо сначала увидеть', async () => {
     await renderCard(subscription(), 0);
 

@@ -65,11 +65,10 @@ export default function Subscriptions() {
   const subscriptions = data?.subscriptions ?? [];
   const isMultiTariff = data?.multi_tariff_enabled ?? false;
   const hasNoSubscriptions = !isLoading && subscriptions.length === 0;
-  // Есть ли хотя бы одна НАСТОЯЩАЯ (платная, не триал) живая подписка. От этого
-  // зависит CTA: «+ Купить ещё» — только если уже есть платная; иначе показываем
-  // явную «Посмотреть тарифы и купить подписку» (триал/истёкшие — это ещё не покупка).
-  const hasActivePaid = subscriptions.some(
-    (s) => !s.is_trial && (s.status === 'active' || s.status === 'limited'),
+  // Активный триал — тоже работающий доступ: покупку сохраняем, но не делаем
+  // её заметнее подключения. Для истёкших подписок покупка остаётся основной.
+  const hasActiveAccess = subscriptions.some(
+    (s) => s.status === 'active' || s.status === 'limited',
   );
   // Старая подписка (без тарифа при включённых тарифах) в списке: «купить ещё»
   // не предлагаем, её карточка ведёт на переход на тариф.
@@ -119,8 +118,8 @@ export default function Subscriptions() {
         <h1 className="truncate text-xl font-bold" style={{ color: g.text }}>
           {t('subscriptions.title', 'Мои подписки')}
         </h1>
-        {/* «+ Купить ещё» — только если уже есть платная активная подписка */}
-        {!isLoading && !hasLegacy && hasActivePaid && (
+        {/* При живом доступе покупка остаётся компактным второстепенным действием. */}
+        {!isLoading && !hasLegacy && hasActiveAccess && (
           <button
             onClick={() => navigate('/subscription/purchase')}
             className="flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-xl px-4 py-2 text-sm font-medium transition-colors"
@@ -136,9 +135,8 @@ export default function Subscriptions() {
         )}
       </div>
 
-      {/* Есть подписки, но платной активной нет (только триал/истёкшие) —
-          даём ЯВНУЮ primary-кнопку покупки: мы продаём подписки. */}
-      {!isLoading && subscriptions.length > 0 && !hasActivePaid && !hasLegacy && (
+      {/* Живого доступа нет: покупка или продление остаётся явным следующим шагом. */}
+      {!isLoading && subscriptions.length > 0 && !hasActiveAccess && !hasLegacy && (
         <button
           onClick={() => navigate('/subscription/purchase')}
           className="flex w-full items-center justify-center gap-2 rounded-2xl bg-accent-500 p-3.5 text-sm font-semibold text-on-accent transition-colors hover:bg-accent-600"

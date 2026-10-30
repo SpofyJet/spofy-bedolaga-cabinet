@@ -24,7 +24,11 @@ import { useTheme } from '@/hooks/useTheme';
 import { copyToClipboard } from '@/utils/clipboard';
 import { resolveConnectionUrlForUi } from '@/utils/connectionLink';
 import { getGlassColors } from '@/utils/glassTheme';
-import { showsAddonOptions } from '@/utils/legacySubscription';
+import {
+  canOpenTariffSwitch,
+  showsAddonOptions,
+  tariffSelectionPath,
+} from '@/utils/legacySubscription';
 import { formatLiteDate } from '@/utils/liteDate';
 
 type OpenPanel = 'traffic' | 'devices' | 'reduce' | 'servers' | 'devicesList' | 'delete' | null;
@@ -153,6 +157,11 @@ export default function SubscriptionLite() {
     );
   }
 
+  const hasLiveAccess = !subscription.is_expired && subscription.status !== 'disabled';
+  const hasConnectionLink = Boolean(
+    subscription.subscription_url || subscription.subscription_crypto_link,
+  );
+  const canOpenConnection = hasLiveAccess || hasConnectionLink;
   const showsAddons = showsAddonOptions(subscription);
   // Пока режим продаж неизвестен, строку «Серверы» не рисуем вовсе: иначе она
   // успевает появиться и тут же исчезнуть, когда приходит ответ о тарифах.
@@ -187,12 +196,14 @@ export default function SubscriptionLite() {
         </div>
       </section>
 
-      <Link
-        to={`/connection?sub=${subscription.id}`}
-        className="flex w-full items-center justify-center rounded-2xl bg-accent-500 px-5 py-4 text-[15px] font-semibold text-on-accent transition-colors hover:bg-accent-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-400"
-      >
-        {t('lite.action.connect')}
-      </Link>
+      {canOpenConnection && (
+        <Link
+          to={`/connection?sub=${subscription.id}`}
+          className="flex w-full items-center justify-center rounded-2xl bg-accent-500 px-5 py-4 text-[15px] font-semibold text-on-accent transition-colors hover:bg-accent-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-400"
+        >
+          {t('lite.action.connect')}
+        </Link>
+      )}
 
       <div className="mt-6">
         <LiteRowGroup>
@@ -200,13 +211,20 @@ export default function SubscriptionLite() {
             // Пробный период не продлевается: «Продлить» вела на экран «Нет
             // вариантов продления». После триала покупают тариф.
             <LiteRow
-              to="/subscription/purchase"
+              to={tariffSelectionPath(subscription.id)}
               label={t('lite.rows.plans', 'Посмотреть тарифы')}
             />
-          ) : (
+          ) : !subscription.is_daily || !subscription.is_active ? (
             <LiteRow
               to={`/subscriptions/${subscription.id}/renew`}
               label={t('lite.action.renew')}
+            />
+          ) : null}
+
+          {purchaseOptions?.sales_mode === 'tariffs' && canOpenTariffSwitch(subscription) && (
+            <LiteRow
+              to={tariffSelectionPath(subscription.id)}
+              label={t('subscription.switchTariff.title')}
             />
           )}
 

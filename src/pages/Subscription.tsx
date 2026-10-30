@@ -711,15 +711,11 @@ export default function Subscription() {
                 <HoverBorderGradient
                   as="button"
                   accentColor={zone.mainHex}
-                  disabled={isAtDeviceLimit}
                   onClick={() => {
-                    if (isAtDeviceLimit) {
-                      haptic.notification('error');
-                      return;
-                    }
+                    haptic.impact('light');
                     navigate(subscriptionId ? `/connection?sub=${subscriptionId}` : '/connection');
                   }}
-                  className={`mb-5 flex w-full items-center gap-3.5 rounded-[14px] p-3.5 text-left transition-shadow duration-300${isAtDeviceLimit ? 'cursor-not-allowed opacity-50' : ''}`}
+                  className="mb-5 flex w-full items-center gap-3.5 rounded-[14px] p-3.5 text-left transition-shadow duration-300"
                   style={{ fontFamily: 'inherit' }}
                 >
                   <div
@@ -966,7 +962,11 @@ export default function Subscription() {
       )}
 
       {/* Purchase / Renewal CTA */}
-      <PurchaseCTAButton subscription={subscription} isMultiTariff={isMultiTariff} />
+      <PurchaseCTAButton
+        subscription={subscription}
+        isMultiTariff={isMultiTariff}
+        isTariffsMode={isTariffsMode}
+      />
 
       {/* Delete expired subscription */}
       {isMultiTariff &&

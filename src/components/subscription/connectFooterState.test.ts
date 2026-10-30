@@ -50,9 +50,22 @@ describe('connectFooterState', () => {
     expect(connectFooterState({ ...base, connected: undefined })).toEqual({ kind: 'loading' });
   });
 
-  it.each(['expired', 'disabled'])('у подписки со статусом %s подключать нечего', (status) => {
-    expect(connectFooterState({ ...base, status })).toEqual({ kind: 'hidden' });
+  it.each(['expired', 'disabled'])('статус %s сохраняет вход по саб-ссылке', (status) => {
+    expect(connectFooterState({ ...base, status })).toMatchObject({ kind: 'connect' });
   });
+
+  it.each(['expired', 'disabled'])(
+    'лимит устройств не закрывает саб-страницу для статуса %s',
+    (status) => {
+      expect(connectFooterState({ ...base, status, connected: 5 })).toEqual({
+        kind: 'connect',
+        used: 5,
+        limit: 5,
+        unlimited: false,
+        highlight: false,
+      });
+    },
+  );
 
   it.each(['active', 'trial', 'limited'])('статус %s подвал показывает', (status) => {
     expect(connectFooterState({ ...base, status }).kind).toBe('connect');
@@ -60,6 +73,12 @@ describe('connectFooterState', () => {
 
   it.each([null, undefined, ''])('без ссылки на подписку (%s) подвала нет', (subscriptionUrl) => {
     expect(connectFooterState({ ...base, subscriptionUrl })).toEqual({ kind: 'hidden' });
+  });
+
+  it.each(['expired', 'disabled'])('без ссылки у статуса %s мёртвого входа нет', (status) => {
+    expect(connectFooterState({ ...base, status, subscriptionUrl: null })).toEqual({
+      kind: 'hidden',
+    });
   });
 
   it('отсутствие ссылки важнее незагруженного счётчика', () => {

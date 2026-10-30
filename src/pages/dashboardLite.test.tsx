@@ -83,7 +83,8 @@ function renderScreen() {
 
 /** Единственная кнопка действия: крупная ссылка над списком строк. */
 async function primaryAction() {
-  return await screen.findByRole('link', { name: /^lite\.action\./ });
+  const actions = await screen.findAllByRole('link', { name: /^lite\.action\./ });
+  return actions[0];
 }
 
 beforeEach(() => {
@@ -116,6 +117,40 @@ describe('DashboardLite', () => {
     expect(screen.getAllByRole('link', { name: /^lite\.action\./ })).toHaveLength(1);
   });
 
+  it('заканчивающаяся подписка: подключение главное, продление остаётся отдельно', async () => {
+    getSubscription.mockResolvedValue({
+      has_subscription: true,
+      subscription: { ...baseSubscription, days_left: 2 },
+    });
+    renderScreen();
+
+    const action = await primaryAction();
+    expect(action.textContent).toContain('lite.action.connect');
+    expect(action.getAttribute('href')).toBe('/connection?sub=7');
+
+    const actions = screen.getAllByRole('link', { name: /^lite\.action\./ });
+    expect(actions).toHaveLength(2);
+    expect(actions[1].textContent).toContain('lite.action.renew');
+    expect(actions[1].getAttribute('href')).toBe('/subscriptions/7/renew');
+  });
+
+  it('живая старая подписка: подключение главное, выбор тарифа остаётся отдельно', async () => {
+    getSubscription.mockResolvedValue({
+      has_subscription: true,
+      subscription: { ...baseSubscription, requires_tariff_selection: true },
+    });
+    renderScreen();
+
+    const action = await primaryAction();
+    expect(action.textContent).toContain('lite.action.connect');
+    expect(action.getAttribute('href')).toBe('/connection?sub=7');
+
+    const actions = screen.getAllByRole('link', { name: /^lite\.action\./ });
+    expect(actions).toHaveLength(2);
+    expect(actions[1].textContent).toContain('lite.action.chooseTariff');
+    expect(actions[1].getAttribute('href')).toBe('/subscription/purchase');
+  });
+
   it('истёкшая подписка ведёт продлевать, а не подключаться', async () => {
     getSubscription.mockResolvedValue({
       has_subscription: true,
@@ -126,6 +161,64 @@ describe('DashboardLite', () => {
     const action = await primaryAction();
     expect(action.textContent).toContain('lite.action.renew');
     expect(action.getAttribute('href')).toBe('/subscriptions/7/renew');
+  });
+
+  it('истёкшая подписка со ссылкой: подключение главное, продление остаётся рядом', async () => {
+    getSubscription.mockResolvedValue({
+      has_subscription: true,
+      subscription: {
+        ...baseSubscription,
+        is_expired: true,
+        days_left: 0,
+        subscription_url: 'https://example.invalid/sub/7',
+      },
+    });
+    renderScreen();
+
+    const actions = await screen.findAllByRole('link', { name: /^lite\.action\./ });
+    expect(actions).toHaveLength(2);
+    expect(actions[0].textContent).toContain('lite.action.connect');
+    expect(actions[0].getAttribute('href')).toBe('/connection?sub=7');
+    expect(actions[1].textContent).toContain('lite.action.renew');
+    expect(actions[1].getAttribute('href')).toBe('/subscriptions/7/renew');
+  });
+
+  it('истёкший триал со ссылкой сохраняет вход и одну витрину без дубля покупки', async () => {
+    getSubscription.mockResolvedValue({
+      has_subscription: true,
+      subscription: {
+        ...baseSubscription,
+        is_trial: true,
+        is_expired: true,
+        days_left: 0,
+        subscription_url: 'https://example.invalid/sub/7',
+      },
+    });
+    renderScreen();
+
+    const action = await primaryAction();
+    expect(action.textContent).toContain('lite.action.connect');
+    expect(action.getAttribute('href')).toBe('/connection?sub=7');
+    expect(screen.getAllByRole('link', { name: /^lite\.action\./ })).toHaveLength(1);
+    expect(screen.getByRole('link', { name: /Посмотреть тарифы/ }).getAttribute('href')).toBe(
+      '/subscription/purchase',
+    );
+  });
+
+  it('отключённая подписка с crypto-link тоже открывает подключение', async () => {
+    getSubscription.mockResolvedValue({
+      has_subscription: true,
+      subscription: {
+        ...baseSubscription,
+        status: 'disabled',
+        subscription_crypto_link: 'happ://crypt/example',
+      },
+    });
+    renderScreen();
+
+    const action = await primaryAction();
+    expect(action.textContent).toContain('lite.action.connect');
+    expect(action.getAttribute('href')).toBe('/connection?sub=7');
   });
 
   it('свежий триал зовёт подключить устройство, а тарифы — строкой', async () => {
