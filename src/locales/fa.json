@@ -78,7 +78,7 @@
     "wheel": "چرخ شانس",
     "menu": "منو",
     "gift": "هدیه",
-"navigation": "ناوبری",
+    "navigation": "ناوبری",
     "more": "بیشتر"
   },
   "notifications": {
@@ -374,7 +374,35 @@
     "usedSuffix": "مصرف شده",
     "validUntil": "معتبر تا {{date}}",
     "bypassQuotaTitle": "ترافیک عبور",
-    "regularUnlimited": "سرورهای معمولی — بدون محدودیت"
+    "regularUnlimited": "سرورهای معمولی — بدون محدودیت",
+    "info": {
+      "subscription": {
+        "title": "اشتراک",
+        "days": "{{days}} روز",
+        "until": "تا {{date}}",
+        "none": "بدون اشتراک",
+        "chooseTariff": "انتخاب تعرفه",
+        "trial": "دوره آزمایشی",
+        "active": "فعال",
+        "expired": "منقضی شده"
+      },
+      "balance": {
+        "title": "موجودی",
+        "renewals": "پرداخت تمدید",
+        "fromFriends": "+{{amount}} ₽ از دوستان"
+      }
+    },
+    "useful": {
+      "title": "مفید",
+      "instructions": "راهنما",
+      "qrTv": "QR برای تلویزیون",
+      "devices": "دستگاه‌ها",
+      "buyTraffic": "خرید ترافیک",
+      "gift": "هدیه",
+      "promocode": "کد تخفیف",
+      "balance": "موجودی",
+      "support": "پشتیبانی"
+    }
   },
   "subscription": {
     "dailyRenewalExplanation": "این طرح هر بار برای یک روز از موجودی تمدید می‌شود. اگر دوره پرداخت‌شده تمام شده باشد، با ازسرگیری هزینه یک روز کسر می‌شود.",
@@ -6742,7 +6770,29 @@
     "emailMergeCodeDescription": "این ایمیل قبلاً به حساب دیگری تعلق دارد. کدی به آن ارسال کردیم — برای تأیید مالکیت و ادغام حساب‌ها آن را وارد کنید.",
     "emailMergeCodeLabel": "کد ارسال‌شده در ایمیل",
     "emailMergeConfirm": "تأیید و ادغام",
-    "emailMergeCodeInvalid": "کد نامعتبر یا منقضی‌شده"
+    "emailMergeCodeInvalid": "کد نامعتبر یا منقضی‌شده",
+    "menu": {
+      "section": {
+        "subscription": "اشتراک",
+        "account": "حساب کاربری",
+        "about": "درباره سرویس",
+        "more": "تنظیمات بیشتر"
+      },
+      "devices": "دستگاه‌های من",
+      "paymentHistory": "تاریخچه پرداخت",
+      "promocode": "کد تخفیف",
+      "connected": "حساب‌های متصل",
+      "connectedHint": "تلگرام",
+      "notifications": "اعلان‌ها",
+      "notificationsOn": "روشن",
+      "notificationsOff": "خاموش",
+      "email": "ایمیل",
+      "emailNotLinked": "متصل نیست",
+      "about": "درباره سرویس",
+      "aboutHint": "قوانین، آفر، حریم خصوصی",
+      "gift": "اهدای اشتراک",
+      "signInVia": "ورود از طریق تلگرام"
+    }
   },
   "theme": {
     "colors": "رنگ‌های تم",
@@ -7561,5 +7611,9 @@
         ]
       }
     }
+  },
+  "legal": {
+    "serviceRules": "قوانین سرویس",
+    "privacy": "حریم خصوصی"
   }
 }

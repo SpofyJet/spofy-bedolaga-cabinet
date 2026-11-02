@@ -14,18 +14,18 @@ import Onboarding, { useOnboarding } from '../components/Onboarding';
 import PromoOffersSection from '../components/PromoOffersSection';
 import NewsSection from '../components/news/NewsSection';
 import SubscriptionCardActive from '../components/dashboard/SubscriptionCardActive';
-import DashboardHero from '../components/dashboard/DashboardHero';
 import SubscriptionCardExpired from '../components/dashboard/SubscriptionCardExpired';
 import { hasLegacySubscription } from '../utils/legacySubscription';
 import TrialOfferCard from '../components/dashboard/TrialOfferCard';
 import ReminderCards from '../components/dashboard/ReminderCards';
-import StatsGrid from '../components/dashboard/StatsGrid';
 import { giftApi } from '../api/gift';
 import { promoApi } from '../api/promo';
 import PendingGiftCard from '../components/dashboard/PendingGiftCard';
 import SubscriptionListCard from '../components/subscription/SubscriptionListCard';
 import { DeviceLimitSheet } from '../components/subscription/DeviceLimitSheet';
 import QuickActions from '../components/dashboard/QuickActions';
+import InfoCards from '../components/dashboard/InfoCards';
+import UsefulGrid from '../components/dashboard/UsefulGrid';
 import { StoryRail } from '../components/stories';
 import { useBranding } from '../hooks/useBranding';
 import { useFeatureFlags } from '@/hooks/useFeatureFlags';
@@ -319,28 +319,15 @@ export default function Dashboard() {
       ? 'expired'
       : 'none';
   const firstSubId = isMultiTariff ? visibleSubscriptions[0]?.id : subscription?.id;
-  // Данные фокус-визуала: первая активная подписка (multi — первая видимая).
-  // Дней до конца считаем от end_date — это поле есть у обоих типов подписки.
-  const heroSub = isMultiTariff ? visibleSubscriptions[0] : subscription;
-  const heroDaysLeft = useMemo(() => {
-    if (!heroSub?.end_date) return undefined;
-    const ms = new Date(heroSub.end_date).getTime() - Date.now();
+  // Первая активная подписка (multi — первая видимая). Дней до конца считаем
+  // от end_date — это поле есть у обоих типов подписки.
+  const focusSub = isMultiTariff ? visibleSubscriptions[0] : subscription;
+  const daysLeft = useMemo(() => {
+    if (!focusSub?.end_date) return undefined;
+    const ms = new Date(focusSub.end_date).getTime() - Date.now();
     return Math.max(0, Math.ceil(ms / 86_400_000));
-  }, [heroSub?.end_date]);
-  const heroActive = status === 'active' && heroSub != null && heroDaysLeft != null;
+  }, [focusSub?.end_date]);
   const renewTo = firstSubId != null ? `/subscriptions/${firstSubId}/renew` : '/subscriptions';
-  const statusChip =
-    status === 'active'
-      ? {
-          label: t('dashboard.status.active', 'Работает'),
-          className: 'bg-success-500/12 text-success-400 border-success-500/25',
-        }
-      : status === 'expired'
-        ? {
-            label: t('dashboard.status.expired', 'Закончилась'),
-            className: 'bg-error-500/12 text-error-400 border-error-500/25',
-          }
-        : null;
 
   return (
     <div className="space-y-5">
@@ -366,9 +353,7 @@ export default function Dashboard() {
             </span>
             <span className="mt-1 flex items-center gap-2">
               {user?.id != null && (
-                <span className="font-mono text-[11px] uppercase tracking-[0.12em] text-dark-400">
-                  ID {user.id}
-                </span>
+                <span className="text-xs font-medium text-dark-400">ID {user.id}</span>
               )}
               {promoGroupData?.group_name && (
                 <span
@@ -395,33 +380,24 @@ export default function Dashboard() {
             <GiftIcon className="h-5 w-5" />
           </Link>
         )}
-        {statusChip && (
-          <span
-            className={`inline-flex shrink-0 items-center gap-2 rounded-full border px-3 py-1.5 font-mono text-[11px] font-semibold uppercase tracking-[0.1em] ${statusChip.className}`}
-          >
-            <span
-              className={`led ${status === 'active' ? 'led-live' : 'led-danger'}`}
-              aria-hidden
-            />
-            {statusChip.label}
-          </span>
-        )}
       </div>
 
       {/* Сторис — самый верх под шапкой: инструкция рядом с входом, не ниже
-          сгиба, раньше любых карточек. */}
+          сгиба, раньше любых карточек. Без заголовка — лента говорит сама. */}
       <section aria-label={t('dashboard.storiesTitle')} className="-mt-1">
-        <div className="mb-2 px-1">
-          <span className="mono-label">{t('dashboard.storiesTitle')}</span>
-        </div>
         <StoryRail />
       </section>
 
-      {/* Фокус-визуал: стекло + гигантская цифра. Без CTA — они в QuickActions. */}
-      {heroActive && heroDaysLeft != null && (
-        <DashboardHero variant="active" planName={heroSub.tariff_name} daysLeft={heroDaysLeft} />
-      )}
-      {status === 'none' && !subLoading && <DashboardHero variant="none" />}
+      {/* Информационные карточки вместо hero-шапки: Подписка + Баланс */}
+      <InfoCards
+        status={status}
+        daysLeft={daysLeft}
+        endDate={focusSub?.end_date}
+        isTrial={Boolean(focusSub?.is_trial)}
+        balanceRubles={balanceData?.balance_rubles ?? 0}
+        fromFriendsRubles={referralInfo?.available_balance_rubles ?? null}
+        loading={subLoading}
+      />
 
       {/* Быстрые действия: один тап — один ответ на «что дальше» */}
       <QuickActions
@@ -570,14 +546,6 @@ export default function Dashboard() {
         </Link>
       )}
 
-      {/* Stats Grid */}
-      <StatsGrid
-        balanceRubles={balanceData?.balance_rubles || 0}
-        referralCount={referralInfo?.total_referrals || 0}
-        earningsRubles={referralInfo?.available_balance_rubles || 0}
-        refLoading={refLoading}
-      />
-
       {/* Fortune Wheel Banner */}
       {wheelConfig?.is_enabled && (
         <Link to="/wheel" className="bento-card-hover group flex items-center justify-between">
@@ -596,6 +564,9 @@ export default function Dashboard() {
 
       {/* Напоминания (админка → Напоминания) */}
       <ReminderCards />
+
+      {/* Полезное: инструкции, QR для ТВ, устройства, баланс, поддержка */}
+      <UsefulGrid giftEnabled={Boolean(giftEnabled)} />
 
       {/* News Section */}
       <NewsSection />

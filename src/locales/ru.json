@@ -83,7 +83,7 @@
     "wheel": "Колесо удачи",
     "menu": "Меню",
     "gift": "Подарить",
-"navigation": "Навигация",
+    "navigation": "Навигация",
     "more": "Ещё"
   },
   "notifications": {
@@ -411,7 +411,35 @@
     "showAll": "Показать все",
     "subscriptions": "Подписки",
     "bypassQuotaTitle": "Трафик на обходы",
-    "regularUnlimited": "Обычные серверы — без лимита"
+    "regularUnlimited": "Обычные серверы — без лимита",
+    "info": {
+      "subscription": {
+        "title": "Подписка",
+        "days": "{{days}} дней",
+        "until": "до {{date}}",
+        "none": "Нет подписки",
+        "chooseTariff": "Выберите тариф",
+        "trial": "Пробный период",
+        "active": "Активна",
+        "expired": "Закончилась"
+      },
+      "balance": {
+        "title": "Баланс",
+        "renewals": "Оплата продлений",
+        "fromFriends": "+{{amount}} ₽ с друзей"
+      }
+    },
+    "useful": {
+      "title": "Полезное",
+      "instructions": "Инструкция",
+      "qrTv": "QR для ТВ",
+      "devices": "Устройства",
+      "buyTraffic": "Докупить ГБ",
+      "gift": "Подарок",
+      "promocode": "Промокод",
+      "balance": "Баланс",
+      "support": "Поддержка"
+    }
   },
   "subscription": {
     "dailyRenewalExplanation": "Суточный тариф продлевается на один день при списании с баланса. Если оплаченный срок закончился, при возобновлении спишется стоимость суток.",
@@ -7912,7 +7940,29 @@
     "emailMergeCodeDescription": "Этот email уже привязан к другому аккаунту. Мы отправили на него код — введите его, чтобы подтвердить владение и объединить аккаунты.",
     "emailMergeCodeLabel": "Код из письма",
     "emailMergeConfirm": "Подтвердить и объединить",
-    "emailMergeCodeInvalid": "Неверный или просроченный код"
+    "emailMergeCodeInvalid": "Неверный или просроченный код",
+    "menu": {
+      "section": {
+        "subscription": "Подписка",
+        "account": "Аккаунт",
+        "about": "О сервисе",
+        "more": "Ещё настройки"
+      },
+      "devices": "Мои устройства",
+      "paymentHistory": "История платежей",
+      "promocode": "Промокод",
+      "connected": "Подключённые аккаунты",
+      "connectedHint": "Telegram",
+      "notifications": "Уведомления",
+      "notificationsOn": "Включены",
+      "notificationsOff": "Выключены",
+      "email": "Email",
+      "emailNotLinked": "Не привязан",
+      "about": "О сервисе",
+      "aboutHint": "Правила, оферта, политика",
+      "gift": "Подарить подписку",
+      "signInVia": "вход через Telegram"
+    }
   },
   "theme": {
     "colors": "Цвета темы",
@@ -8681,5 +8731,9 @@
         ]
       }
     }
+  },
+  "legal": {
+    "serviceRules": "Правила сервиса",
+    "privacy": "Политика конфиденциальности"
   }
 }

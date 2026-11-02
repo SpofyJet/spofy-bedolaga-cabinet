@@ -26,6 +26,18 @@ import { Button } from '@/components/primitives/Button';
 import { Switch } from '@/components/primitives/Switch';
 import { staggerContainer, staggerItem } from '@/components/motion/transitions';
 import { CopyIcon, CheckIcon, ShareIcon, ArrowRightIcon, PencilIcon } from '@/components/icons';
+import {
+  PiDevices,
+  PiClockCounterClockwise,
+  PiTicket,
+  PiLinkSimple,
+  PiBell,
+  PiInfo,
+  PiGift,
+} from 'react-icons/pi';
+import { useBranding } from '@/hooks/useBranding';
+import { useFeatureFlags } from '@/hooks/useFeatureFlags';
+import type { ReactNode } from 'react';
 import { Skeleton, SkeletonGroup } from '@/components/ui/skeleton';
 
 export default function Profile() {
@@ -48,6 +60,18 @@ export default function Profile() {
   const [verificationResendCooldown, startVerificationResendCooldown] = useCountdown();
   const newEmailInputRef = useRef<HTMLInputElement>(null);
   const codeInputRef = useRef<HTMLInputElement>(null);
+
+  const { logoLetter } = useBranding();
+  const { giftEnabled } = useFeatureFlags();
+
+  // Фото профиля Telegram (прокси бота); без него — брендовая буква.
+  const { data: avatarData } = useQuery({
+    queryKey: ['user-avatar'],
+    queryFn: authApi.getMyAvatar,
+    staleTime: 10 * 60_000,
+    retry: false,
+  });
+  const avatarUrl = avatarData?.photo_url ?? null;
 
   // Referral data
   const { data: referralInfo } = useQuery({
@@ -257,6 +281,15 @@ export default function Profile() {
     updateNotificationsMutation.mutate(update);
   };
 
+  const notificationsOn = Boolean(
+    notificationSettings &&
+      (notificationSettings.subscription_expiry_enabled ||
+        notificationSettings.traffic_warning_enabled ||
+        notificationSettings.balance_low_enabled ||
+        notificationSettings.news_enabled ||
+        notificationSettings.promo_offers_enabled),
+  );
+
   return (
     <motion.div
       className="space-y-6"
@@ -267,6 +300,120 @@ export default function Profile() {
       <motion.div variants={staggerItem}>
         <h1 className="text-xl font-bold tracking-tight text-dark-50 sm:text-2xl">{t('profile.title')}</h1>
       </motion.div>
+
+      {/* Карточка пользователя: аватар, имя, ID и способ входа — как в референсе. */}
+      <motion.div variants={staggerItem}>
+        <Card>
+          <div className="flex items-center gap-3">
+            <span className="relative flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-dark-700/60 bg-gradient-to-b from-accent-500/25 to-accent-500/5">
+              {avatarUrl ? (
+                <img src={avatarUrl} alt="" className="h-full w-full object-cover" />
+              ) : (
+                <span className="font-display text-lg font-bold text-accent-300">
+                  {logoLetter.toUpperCase()}
+                </span>
+              )}
+            </span>
+            <span className="min-w-0">
+              <span className="block truncate text-lg font-bold tracking-tight text-dark-50">
+                {displayName(user)}
+              </span>
+              <span className="mt-0.5 block text-xs text-dark-400">
+                ID {user?.id ?? '—'}
+                {user?.telegram_id != null && (
+                  <> · {t('profile.menu.signInVia', 'вход через Telegram')}</>
+                )}
+              </span>
+            </span>
+          </div>
+        </Card>
+      </motion.div>
+
+      {/* Подписка */}
+      <MenuGroup
+        title={t('profile.menu.section.subscription', 'Подписка')}
+        items={[
+          {
+            key: 'devices',
+            icon: <PiDevices className="h-5 w-5" />,
+            label: t('profile.menu.devices', 'Мои устройства'),
+            to: '/connection',
+          },
+          {
+            key: 'payments',
+            icon: <PiClockCounterClockwise className="h-5 w-5" />,
+            label: t('profile.menu.paymentHistory', 'История платежей'),
+            to: '/balance',
+          },
+          {
+            key: 'promocode',
+            icon: <PiTicket className="h-5 w-5" />,
+            label: t('profile.menu.promocode', 'Промокод'),
+            to: '/balance',
+          },
+        ]}
+      />
+
+      {/* Аккаунт */}
+      <MenuGroup
+        title={t('profile.menu.section.account', 'Аккаунт')}
+        items={[
+          {
+            key: 'accounts',
+            icon: <PiLinkSimple className="h-5 w-5" />,
+            label: t('profile.menu.connected', 'Подключённые аккаунты'),
+            hint: t('profile.menu.connectedHint', 'Telegram'),
+            to: '/profile/accounts',
+          },
+          {
+            key: 'notifications',
+            icon: <PiBell className="h-5 w-5" />,
+            label: t('profile.menu.notifications', 'Уведомления'),
+            hint: notificationsLoading
+              ? undefined
+              : notificationsOn
+                ? t('profile.menu.notificationsOn', 'Включены')
+                : t('profile.menu.notificationsOff', 'Выключены'),
+            anchor: 'notifications',
+          },
+          {
+            key: 'email',
+            icon: <PiInfo className="h-5 w-5" />,
+            label: t('profile.menu.email', 'Email'),
+            hint: user?.email ?? t('profile.menu.emailNotLinked', 'Не привязан'),
+            anchor: 'email',
+          },
+        ]}
+      />
+
+      {/* О сервисе */}
+      <MenuGroup
+        title={t('profile.menu.section.about', 'О сервисе')}
+        items={[
+          {
+            key: 'about',
+            icon: <PiInfo className="h-5 w-5" />,
+            label: t('profile.menu.about', 'О сервисе'),
+            hint: t('profile.menu.aboutHint', 'Правила, оферта, политика'),
+            to: '/info',
+          },
+        ]}
+      />
+
+      {/* Ещё настройки */}
+      {Boolean(giftEnabled) && (
+        <MenuGroup
+          title={t('profile.menu.section.more', 'Ещё настройки')}
+          items={[
+            {
+              key: 'gift',
+              icon: <PiGift className="h-5 w-5" />,
+              label: t('profile.menu.gift', 'Подарить подписку'),
+              to: '/gift',
+            },
+          ]}
+        />
+      )}
 
       {/* User Info Card */}
       <motion.div variants={staggerItem}>
@@ -349,7 +496,7 @@ export default function Profile() {
 
       {/* Email Section - only show when email auth is enabled */}
       {isEmailAuthEnabled && (
-        <motion.div variants={staggerItem}>
+        <motion.div variants={staggerItem} id="email" className="scroll-mt-4">
           <Card>
             <h2 className="mb-6 text-lg font-semibold text-dark-100">{t('profile.emailAuth')}</h2>
 
@@ -575,7 +722,7 @@ export default function Profile() {
       )}
 
       {/* Notification Settings */}
-      <motion.div variants={staggerItem}>
+      <motion.div variants={staggerItem} id="notifications" className="scroll-mt-4">
         <Card>
           <h2 className="mb-6 text-lg font-semibold text-dark-100">
             {t('profile.notifications.title')}
@@ -738,6 +885,72 @@ export default function Profile() {
           )}
         </Card>
       </motion.div>
+    </motion.div>
+  );
+}
+
+interface MenuGroupItem {
+  key: string;
+  icon: ReactNode;
+  label: string;
+  hint?: string;
+  to?: string;
+  anchor?: string;
+}
+
+/**
+ * Группа-меню профиля: мелкий серый заголовок + карточка со строками
+ * (иконка, название, подсказка, стрелка) — как в референсе.
+ */
+function MenuGroup({ title, items }: { title: string; items: MenuGroupItem[] }) {
+  return (
+    <motion.div variants={staggerItem}>
+      <div className="mb-2 px-1 text-xs font-semibold uppercase tracking-wide text-dark-500">
+        {title}
+      </div>
+      <Card className="!p-0">
+        <div className="divide-y divide-dark-800/60">
+          {items.map((item) => {
+            const inner = (
+              <>
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-dark-700/50 bg-dark-800/60 text-dark-300">
+                  {item.icon}
+                </span>
+                <span className="min-w-0 flex-1">
+                  <span className="block truncate text-sm font-semibold text-dark-100">
+                    {item.label}
+                  </span>
+                  {item.hint && (
+                    <span className="block truncate text-xs text-dark-400">{item.hint}</span>
+                  )}
+                </span>
+                <ArrowRightIcon className="h-4 w-4 shrink-0 text-dark-500" />
+              </>
+            );
+            const rowClass =
+              'flex w-full items-center gap-3 px-4 py-3 text-left transition-colors hover:bg-dark-800/40';
+            return item.to ? (
+              <Link key={item.key} to={item.to} className={rowClass}>
+                {inner}
+              </Link>
+            ) : (
+              <a
+                key={item.key}
+                href={`#${item.anchor ?? ''}`}
+                onClick={(e) => {
+                  e.preventDefault();
+                  document
+                    .getElementById(item.anchor ?? '')
+                    ?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }}
+                className={rowClass}
+              >
+                {inner}
+              </a>
+            );
+          })}
+        </div>
+      </Card>
     </motion.div>
   );
 }

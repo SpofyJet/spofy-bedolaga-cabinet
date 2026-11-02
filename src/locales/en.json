@@ -78,7 +78,7 @@
     "wheel": "Fortune Wheel",
     "menu": "Menu",
     "gift": "Gift",
-"navigation": "Navigation",
+    "navigation": "Navigation",
     "more": "More"
   },
   "notifications": {
@@ -403,7 +403,35 @@
     "showAll": "Show all",
     "subscriptions": "Subscriptions",
     "bypassQuotaTitle": "Bypass traffic",
-    "regularUnlimited": "Regular servers — unlimited"
+    "regularUnlimited": "Regular servers — unlimited",
+    "info": {
+      "subscription": {
+        "title": "Subscription",
+        "days": "{{days}} days",
+        "until": "until {{date}}",
+        "none": "No subscription",
+        "chooseTariff": "Choose a plan",
+        "trial": "Trial",
+        "active": "Active",
+        "expired": "Expired"
+      },
+      "balance": {
+        "title": "Balance",
+        "renewals": "Renewal payments",
+        "fromFriends": "+{{amount}} ₽ from friends"
+      }
+    },
+    "useful": {
+      "title": "Useful",
+      "instructions": "Instructions",
+      "qrTv": "QR for TV",
+      "devices": "Devices",
+      "buyTraffic": "Top up GB",
+      "gift": "Gift",
+      "promocode": "Promocode",
+      "balance": "Balance",
+      "support": "Support"
+    }
   },
   "subscription": {
     "dailyRenewalExplanation": "This plan renews one day at a time from your balance. Resuming after the paid period ends charges one day.",
@@ -7307,7 +7335,29 @@
     "emailMergeCodeDescription": "This email already belongs to another account. We sent a code to it — enter it to confirm ownership and merge the accounts.",
     "emailMergeCodeLabel": "Code from the email",
     "emailMergeConfirm": "Confirm and merge",
-    "emailMergeCodeInvalid": "Invalid or expired code"
+    "emailMergeCodeInvalid": "Invalid or expired code",
+    "menu": {
+      "section": {
+        "subscription": "Subscription",
+        "account": "Account",
+        "about": "About",
+        "more": "More settings"
+      },
+      "devices": "My devices",
+      "paymentHistory": "Payment history",
+      "promocode": "Promocode",
+      "connected": "Connected accounts",
+      "connectedHint": "Telegram",
+      "notifications": "Notifications",
+      "notificationsOn": "On",
+      "notificationsOff": "Off",
+      "email": "Email",
+      "emailNotLinked": "Not linked",
+      "about": "About the service",
+      "aboutHint": "Rules, offer, policy",
+      "gift": "Gift subscription",
+      "signInVia": "sign-in via Telegram"
+    }
   },
   "theme": {
     "colors": "Theme Colors",
@@ -8066,5 +8116,9 @@
         ]
       }
     }
+  },
+  "legal": {
+    "serviceRules": "Service rules",
+    "privacy": "Privacy policy"
   }
 }

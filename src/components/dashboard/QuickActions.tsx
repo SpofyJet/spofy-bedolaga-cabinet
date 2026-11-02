@@ -73,27 +73,28 @@ export default function QuickActions({
   if (actions.length === 0) return null;
 
   return (
-    // Центрированный ряд, а не сетка: при двух действиях (нет подписки) пустые
-    // ячейки сетки выглядели дыряво — так пара кнопок стоит по центру ровно.
-    <div className="flex flex-wrap justify-center gap-x-1 gap-y-3 sm:gap-x-2">
+    // Ровная сетка: колонок ровно столько, сколько действий — тайлы всегда
+    // одинаковой ширины и всегда по центру, на телефоне и на ПК.
+    <div
+      className="grid gap-3"
+      style={{ gridTemplateColumns: `repeat(${actions.length}, minmax(0, 1fr))` }}
+    >
       {actions.map((action) => (
         <Link
           key={action.key}
           to={action.to}
           onClick={action.onClick}
-          className={cn(
-            'group flex w-[76px] shrink-0 flex-col items-center gap-2 rounded-2xl py-1 transition-transform duration-200 active:scale-95',
-          )}
+          className="group flex flex-col items-center gap-2 transition-transform duration-200 active:scale-95"
         >
           <span
             className={cn(
-              'flex items-center justify-center rounded-2xl border transition-all duration-200',
+              'flex h-[52px] w-full max-w-[64px] items-center justify-center rounded-2xl border transition-all duration-200',
               action.primary
-                ? 'h-[52px] w-[52px] rounded-3xl border-accent-400/50 bg-gradient-to-b from-accent-500/20 to-accent-500/5 text-accent-300 shadow-[0_0_26px_-8px_rgba(var(--color-accent-500),0.6),inset_0_1px_0_rgba(255,255,255,0.08)] group-hover:from-accent-500/25'
-                : 'h-11 w-11 border-dark-600/50 bg-dark-800/50 text-dark-300 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] group-hover:border-dark-500/60 group-hover:text-dark-100',
+                ? 'border-accent-400/50 bg-gradient-to-b from-accent-500/20 to-accent-500/5 text-accent-300 shadow-[0_0_26px_-8px_rgba(var(--color-accent-500),0.6),inset_0_1px_0_rgba(255,255,255,0.08)] group-hover:from-accent-500/25'
+                : 'border-dark-600/50 bg-dark-800/50 text-dark-300 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] group-hover:border-dark-500/60 group-hover:text-dark-100',
             )}
           >
-            <action.icon className={cn(action.primary ? 'h-6 w-6' : 'h-5 w-5')} />
+            <action.icon className="h-5 w-5" />
           </span>
           <span
             className={cn(

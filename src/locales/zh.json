@@ -73,7 +73,7 @@
     "wheel": "幸运转盘",
     "menu": "菜单",
     "gift": "赠送",
-"navigation": "导航",
+    "navigation": "导航",
     "more": "更多"
   },
   "notifications": {
@@ -369,7 +369,35 @@
     "usedSuffix": "已用",
     "validUntil": "有效期至 {{date}}",
     "bypassQuotaTitle": "绕行流量",
-    "regularUnlimited": "普通服务器不限流量"
+    "regularUnlimited": "普通服务器不限流量",
+    "info": {
+      "subscription": {
+        "title": "订阅",
+        "days": "剩余 {{days}} 天",
+        "until": "至 {{date}}",
+        "none": "无订阅",
+        "chooseTariff": "选择套餐",
+        "trial": "试用期",
+        "active": "有效",
+        "expired": "已到期"
+      },
+      "balance": {
+        "title": "余额",
+        "renewals": "续费支付",
+        "fromFriends": "+{{amount}} ₽ 来自好友"
+      }
+    },
+    "useful": {
+      "title": "实用",
+      "instructions": "使用说明",
+      "qrTv": "电视二维码",
+      "devices": "设备",
+      "buyTraffic": "购买流量",
+      "gift": "礼物",
+      "promocode": "优惠码",
+      "balance": "余额",
+      "support": "支持"
+    }
   },
   "subscription": {
     "dailyRenewalExplanation": "此套餐每天从余额中扣费续订。已付费时段结束后，恢复订阅将扣除一天的费用。",
@@ -6686,7 +6714,29 @@
     "emailMergeCodeDescription": "该邮箱已属于另一个账户。我们已向其发送验证码——请输入以确认所有权并合并账户。",
     "emailMergeCodeLabel": "邮件中的验证码",
     "emailMergeConfirm": "确认并合并",
-    "emailMergeCodeInvalid": "验证码无效或已过期"
+    "emailMergeCodeInvalid": "验证码无效或已过期",
+    "menu": {
+      "section": {
+        "subscription": "订阅",
+        "account": "账户",
+        "about": "关于服务",
+        "more": "更多设置"
+      },
+      "devices": "我的设备",
+      "paymentHistory": "支付记录",
+      "promocode": "优惠码",
+      "connected": "已绑定账户",
+      "connectedHint": "Telegram",
+      "notifications": "通知",
+      "notificationsOn": "已开启",
+      "notificationsOff": "已关闭",
+      "email": "邮箱",
+      "emailNotLinked": "未绑定",
+      "about": "关于服务",
+      "aboutHint": "规则、条款、政策",
+      "gift": "赠送订阅",
+      "signInVia": "通过 Telegram 登录"
+    }
   },
   "theme": {
     "colors": "主题颜色",
@@ -7505,5 +7555,9 @@
         ]
       }
     }
+  },
+  "legal": {
+    "serviceRules": "服务条款",
+    "privacy": "隐私政策"
   }
 }
