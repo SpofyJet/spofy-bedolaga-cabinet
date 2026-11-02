@@ -53,6 +53,7 @@ import {
   PiFunnel,
   PiDotsSix,
   PiDotsThree,
+  PiSquaresFour,
   PiDotsSixVertical,
   PiHeartbeat,
   PiClockCounterClockwise,
@@ -324,6 +325,11 @@ export const FilterIcon = ({ className }: IconProps) => (
 /** «Ещё действия» — меню ⋯ в шапках карточек. */
 export const MoreIcon = ({ className }: IconProps) => (
   <PiDotsThree className={cn('h-5 w-5', className)} />
+);
+
+/** Сетка разделов — кнопка «Ещё» нижней панели: читается как «apps/more», не как загрузка. */
+export const GridIcon = ({ className }: IconProps) => (
+  <PiSquaresFour className={cn('h-5 w-5', className)} />
 );
 
 export const GripIcon = ({ className }: IconProps) => (

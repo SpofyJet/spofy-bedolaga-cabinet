@@ -359,7 +359,7 @@ export default function Support() {
         variants={staggerItem}
         className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between"
       >
-        <h1 className="text-2xl font-bold text-dark-50 sm:text-3xl">{t('support.title')}</h1>
+        <h1 className="text-xl font-bold tracking-tight text-dark-50 sm:text-2xl">{t('support.title')}</h1>
         <Button
           onClick={() => {
             setShowCreateForm(true);

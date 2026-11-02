@@ -265,7 +265,7 @@ export default function Profile() {
       animate="animate"
     >
       <motion.div variants={staggerItem}>
-        <h1 className="text-2xl font-bold text-dark-50 sm:text-3xl">{t('profile.title')}</h1>
+        <h1 className="text-xl font-bold tracking-tight text-dark-50 sm:text-2xl">{t('profile.title')}</h1>
       </motion.div>
 
       {/* User Info Card */}

@@ -3,13 +3,7 @@
  * кнопки: на вложенных страницах и в админке её нет, и место под неё не
  * резервируется (AppShell ставит data-mobile-nav="off", см. globals.css).
  */
-export type MobileNavKey =
-  | 'dashboard'
-  | 'subscription'
-  | 'balance'
-  | 'wheel'
-  | 'referral'
-  | 'support';
+export type MobileNavKey = 'dashboard' | 'wheel' | 'referral' | 'support' | 'profile';
 
 export interface MobileNavItem {
   /** Ключ пункта: хвост ключа перевода `nav.*` и ключ иконки в панели. */
@@ -29,16 +23,18 @@ export interface MobileNavFlags {
 }
 
 const DASHBOARD: MobileNavItem = { key: 'dashboard', path: '/' };
-const SUBSCRIPTION: MobileNavItem = { key: 'subscription', path: '/subscriptions' };
-const BALANCE: MobileNavItem = { key: 'balance', path: '/balance' };
 const SUPPORT: MobileNavItem = { key: 'support', path: '/support' };
+const PROFILE: MobileNavItem = { key: 'profile', path: '/profile' };
 const WHEEL: MobileNavItem = { key: 'wheel', path: '/wheel' };
 const REFERRAL: MobileNavItem = { key: 'referral', path: '/referral' };
 
 /**
- * Поддержка есть всегда: платящему клиенту с проблемой помощь нужна в основной
- * навигации, а не в меню шапки. Под колесо и рефералку остаётся один слот:
- * колесо (оператор включил его как бренд-момент) важнее, рефералка уходит в шапку.
+ * Минимальная панель — четыре вкладки + центральная кнопка подключения:
+ * Главная · [Колесо|Друзья] · Подключить · Поддержка · Профиль.
+ * Баланс и подписка живут в шапке/на главной, остальное — в меню шапки (☰):
+ * операторский состав флагов (конкурсы, опросы, подарки, инфо) туда и так
+ * собран, дублировать его вторым рядом кнопок незачем. Колесо — бренд-момент
+ * оператора, поэтому занимает слот и вытесняет рефералку в меню шапки.
  */
 function slotItems({ wheelEnabled, referralEnabled }: MobileNavFlags): readonly MobileNavItem[] {
   if (wheelEnabled) return [WHEEL];
@@ -47,32 +43,15 @@ function slotItems({ wheelEnabled, referralEnabled }: MobileNavFlags): readonly 
 }
 
 export function mobileNavItems(flags: MobileNavFlags): readonly MobileNavItem[] {
-  const head = flags.lite ? [DASHBOARD, BALANCE] : [DASHBOARD, SUBSCRIPTION, BALANCE];
-  return [...head, ...slotItems(flags), SUPPORT];
+  return [DASHBOARD, ...slotItems(flags), SUPPORT, PROFILE];
 }
 
 function withoutTrailingSlash(pathname: string): string {
   return pathname.length > 1 && pathname.endsWith('/') ? pathname.slice(0, -1) : pathname;
 }
 
-/**
- * Экраны, куда кнопка панели приводит не напрямую.
- *
- * «Подписка» ведёт на список, а список с единственной подпиской сам открывает её
- * карточку (Subscriptions.tsx). Для клиента это и есть экран кнопки: он нажал
- * «Подписка» и оказался здесь — панель пропадать не должна. Продление и покупка
- * сюда не попадают: туда уходят уже изнутри карточки.
- */
-const NAV_SCREEN_PATTERNS: readonly RegExp[] = [/^\/subscriptions\/\d+$/];
-
-/** Экран кнопки: сам путь пункта или то, во что он разворачивается. */
+/** Экран кнопки: сам путь пункта. Вложенные страницы панель не сохраняют. */
 export function isMobileNavScreen(pathname: string, items: readonly MobileNavItem[]): boolean {
   const path = withoutTrailingSlash(pathname);
-  if (items.some((item) => item.path === path)) return true;
-
-  // Карточка подписки — экран кнопки только пока такая кнопка есть. В простом
-  // виде её нет, и карточка становится обычной вложенной страницей: панель на
-  // ней показывалась бы без пункта, который туда ведёт.
-  if (!items.some((item) => item.path === SUBSCRIPTION.path)) return false;
-  return NAV_SCREEN_PATTERNS.some((pattern) => pattern.test(path));
+  return items.some((item) => item.path === path);
 }

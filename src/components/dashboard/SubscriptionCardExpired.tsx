@@ -167,6 +167,21 @@ export default function SubscriptionCardExpired({
         }}
         aria-hidden="true"
       />
+      {/* Стеклянный ключ — декоративный арт, растворён в фоне */}
+      <img
+        src="/img/card-glass.jpg"
+        alt=""
+        aria-hidden="true"
+        className="pointer-events-none absolute mix-blend-screen"
+        style={{
+          top: -56,
+          right: -48,
+          width: 190,
+          opacity: isDark ? 0.55 : 0.28,
+          maskImage: 'radial-gradient(70% 70% at 50% 50%, #000 38%, transparent 72%)',
+          WebkitMaskImage: 'radial-gradient(70% 70% at 50% 50%, #000 38%, transparent 72%)',
+        }}
+      />
       {/* Grid pattern */}
       <div
         className="pointer-events-none absolute inset-0"

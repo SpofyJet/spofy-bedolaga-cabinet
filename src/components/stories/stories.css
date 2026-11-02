@@ -1,0 +1,643 @@
+/* ============ STORIES SYSTEM ============ */
+/* Дизайн-язык слайдов: крупный короткий заголовок, одна инструкция,
+   выразительный мокап с подсветкой, градиент фона единый внутри серии.
+   Все иллюстрации — вектор/CSS, без внешних картинок. */
+
+/* ---------- Лента обложек ---------- */
+
+.story-rail {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding: 4px 2px 8px;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.story-rail::-webkit-scrollbar {
+  display: none;
+}
+
+.story-cover {
+  position: relative;
+  flex: 0 0 auto;
+  width: 88px;
+  border-radius: 18px;
+  padding: 10px 9px;
+  min-height: 112px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  text-align: left;
+  color: #fff;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.18),
+    0 6px 18px -8px rgba(0, 0, 0, 0.5);
+  transition:
+    transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 0.2s ease;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.story-cover::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(120% 90% at 20% 0%, rgba(255, 255, 255, 0.22), transparent 55%);
+  pointer-events: none;
+}
+
+/* 3D-стеклянный арт серии: полнокровно, со скримом под заголовок. */
+.story-cover-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+}
+
+.story-cover-img + .story-cover-index {
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.55);
+}
+
+.story-cover-title {
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.65);
+  background: linear-gradient(180deg, transparent, rgba(3, 6, 12, 0.72) 32%);
+  margin: auto -9px -10px;
+  padding: 14px 9px 10px;
+}
+
+/* Моно-индекс серии — якорь ленты, как нумерация на пульте. */
+.story-cover-index {
+  position: absolute;
+  z-index: 1;
+  top: 9px;
+  left: 10px;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.story-cover:active {
+  transform: scale(0.95);
+}
+
+.story-cover-icon {
+  position: relative;
+  z-index: 1;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(4px);
+}
+
+.story-cover-title {
+  position: relative;
+  z-index: 1;
+  font-size: 11px;
+  line-height: 1.25;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Акцентная первая карточка — чуть шире, с бейджем. */
+.story-cover-featured {
+  width: 104px;
+}
+
+.story-badge {
+  position: absolute;
+  z-index: 2;
+  top: 8px;
+  right: 8px;
+  min-width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.25);
+}
+
+.story-badge-label {
+  height: auto;
+  padding: 2px 7px;
+  font-size: 9px;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+/* ---------- Просмотрщик ---------- */
+
+.story-viewer {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(4, 7, 13, 0.92);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  touch-action: none;
+}
+
+.story-viewer-frame {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  max-width: 480px;
+  margin: 0 auto;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+@media (min-width: 640px) {
+  .story-viewer-frame {
+    height: min(92vh, 900px);
+    width: min(420px, 94vw);
+    border-radius: 28px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 40px 120px -30px rgba(0, 0, 0, 0.8);
+  }
+}
+
+.story-slide {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  padding: calc(env(safe-area-inset-top, 0px) + 14px) 22px
+    calc(env(safe-area-inset-bottom, 0px) + 20px);
+  color: #fff;
+}
+
+/* Верхний световой блик — глубина сцены без дополнительных элементов. */
+.story-slide::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(130% 55% at 50% -8%, rgba(255, 255, 255, 0.16), transparent 62%),
+    radial-gradient(120% 70% at 50% 115%, rgba(0, 0, 0, 0.22), transparent 60%);
+  pointer-events: none;
+}
+
+.story-slide > * {
+  position: relative;
+  z-index: 1;
+}
+
+@media (min-width: 640px) {
+  .story-slide {
+    padding-top: 22px;
+  }
+}
+
+/* Прогресс-бары */
+.story-progress-list {
+  display: flex;
+  gap: 5px;
+  padding: 4px 44px 4px 4px;
+}
+
+.story-progress-track {
+  flex: 1;
+  height: 3px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.28);
+  overflow: hidden;
+}
+
+.story-progress-fill {
+  height: 100%;
+  width: 0%;
+  border-radius: 999px;
+  background: #fff;
+}
+
+/* Моно-метка серии под прогресс-барами */
+.story-meta {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-top: 12px;
+  padding-left: 4px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.story-meta-index {
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.story-meta-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  opacity: 0.75;
+}
+
+/* Шапка слайда */
+.story-head {
+  margin-top: 16px;
+}
+
+.story-title {
+  font-size: clamp(26px, 7.4vw, 34px);
+  line-height: 1.12;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+.story-subtitle {
+  margin-top: 10px;
+  font-size: clamp(14px, 3.9vw, 17px);
+  line-height: 1.45;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.82);
+  max-width: 34ch;
+}
+
+/* Зона иллюстрации */
+.story-art {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 6px;
+}
+
+.story-art-deco {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.story-art-deco-bottom {
+  align-items: flex-end;
+  padding-bottom: 2%;
+}
+
+.story-globe {
+  filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.25));
+}
+
+.story-pin {
+  position: absolute;
+  animation: story-float 4s ease-in-out infinite;
+  filter: drop-shadow(0 8px 14px rgba(0, 0, 0, 0.25));
+}
+
+.story-shield {
+  filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.25));
+}
+
+/* Мокап телефона */
+.story-phone {
+  position: relative;
+  height: min(46vh, 430px);
+  aspect-ratio: 1 / 2.02;
+  border-radius: 34px;
+  padding: 10px;
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.32), rgba(255, 255, 255, 0.08));
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.45);
+  animation: story-phone-in 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.story-phone-notch {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 34%;
+  height: 16px;
+  border-radius: 0 0 12px 12px;
+  background: rgba(10, 14, 22, 0.85);
+  z-index: 3;
+}
+
+.story-phone-screen {
+  height: 100%;
+  border-radius: 25px;
+  background: linear-gradient(175deg, rgba(255, 255, 255, 0.96), rgba(235, 240, 248, 0.92));
+  color: #1a2233;
+  padding: 30px 12px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  overflow: hidden;
+}
+
+.story-phone-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 11px;
+  font-weight: 600;
+  color: #3a4358;
+  padding: 0 2px 2px;
+}
+
+.story-screen-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.75);
+  border: 1px solid rgba(15, 23, 42, 0.06);
+  border-radius: 13px;
+  padding: 9px 11px;
+  box-shadow: 0 2px 8px -2px rgba(15, 23, 42, 0.08);
+}
+
+.story-highlight {
+  border: 2px solid;
+  border-radius: 14px;
+  padding: 9px 11px;
+  background: rgba(255, 255, 255, 0.92);
+  animation: story-highlight-pulse 2.2s ease-in-out infinite;
+}
+
+.story-bar {
+  height: 9px;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.16);
+}
+
+.story-chev {
+  color: rgba(15, 23, 42, 0.35);
+  font-weight: 700;
+}
+
+.story-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: #3a4358;
+}
+
+.story-label-strong {
+  font-size: 12px;
+  font-weight: 700;
+  color: #101828;
+}
+
+.story-label-link {
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.story-avatar {
+  width: 30px;
+  height: 30px;
+  flex: 0 0 auto;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 800;
+  color: #fff;
+  background: linear-gradient(140deg, #7c5cff, #4f46e5);
+}
+
+.story-dot {
+  width: 9px;
+  height: 9px;
+  flex: 0 0 auto;
+  border-radius: 999px;
+  display: inline-block;
+}
+
+.story-progress {
+  height: 6px;
+  margin-top: 10px;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.1);
+  overflow: hidden;
+}
+
+.story-progress-fill {
+  height: 100%;
+  border-radius: 999px;
+}
+
+.story-power {
+  width: 62px;
+  height: 62px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  background: linear-gradient(160deg, #3ddc84, #0e9f6e);
+  box-shadow: 0 10px 24px -6px rgba(14, 159, 110, 0.55);
+}
+
+.story-app-icon {
+  width: 44px;
+  height: 44px;
+  flex: 0 0 auto;
+  border-radius: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(150deg, #64748b, #1e293b);
+}
+
+.story-cta-mock {
+  border-radius: 12px;
+  padding: 9px 12px;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 700;
+  color: #101828;
+  background: rgba(15, 23, 42, 0.07);
+}
+
+.story-refresh-mock {
+  width: 38px;
+  height: 38px;
+  margin: 0 auto;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #101828;
+  background: rgba(15, 23, 42, 0.07);
+}
+
+.story-bubble {
+  max-width: 85%;
+  border-radius: 14px;
+  padding: 9px 11px;
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(15, 23, 42, 0.06);
+}
+
+.story-bubble-out {
+  align-self: flex-end;
+  background: rgba(255, 255, 255, 0.65);
+}
+
+/* Медальон чек/алерт */
+.story-medallion {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: story-phone-in 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.story-medallion-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  border: 1.5px solid;
+}
+
+.story-medallion-core {
+  width: 72%;
+  height: 72%;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(165deg, rgba(255, 255, 255, 0.32), rgba(255, 255, 255, 0.1));
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(6px);
+}
+
+/* CTA финального слайда */
+.story-cta {
+  position: relative;
+  z-index: 5;
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-radius: 18px;
+  padding: 15px 18px;
+  font-size: 15px;
+  font-weight: 700;
+  color: #0b1220;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow:
+    0 14px 34px -10px rgba(0, 0, 0, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  transition: transform 0.15s ease;
+}
+
+.story-cta:active {
+  transform: scale(0.97);
+}
+
+/* Кнопка закрытия */
+.story-close {
+  position: absolute;
+  top: calc(env(safe-area-inset-top, 0px) + 8px);
+  right: max(14px, env(safe-area-inset-right, 0px));
+  z-index: 20;
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(6px);
+  transition: background 0.15s ease;
+}
+
+.story-close:hover {
+  background: rgba(255, 255, 255, 0.24);
+}
+
+@media (min-width: 640px) {
+  .story-close {
+    top: 12px;
+  }
+}
+
+/* Тап-зоны (прозрачные) */
+.story-tapzone {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  z-index: 10;
+  width: 32%;
+}
+
+/* Анимации */
+@keyframes story-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes story-phone-in {
+  from {
+    opacity: 0;
+    transform: translateY(26px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes story-highlight-pulse {
+  0%,
+  100% {
+    filter: brightness(1);
+  }
+  50% {
+    filter: brightness(1.06);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .story-phone,
+  .story-medallion {
+    animation: none;
+  }
+  .story-pin {
+    animation: none;
+  }
+  .story-highlight {
+    animation: none;
+  }
+}

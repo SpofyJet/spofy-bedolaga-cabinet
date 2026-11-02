@@ -39,7 +39,7 @@ export default function TopUpMethodSelect() {
       animate="animate"
     >
       <motion.div variants={staggerItem}>
-        <h1 className="text-2xl font-bold text-dark-50 sm:text-3xl">
+        <h1 className="text-xl font-bold tracking-tight text-dark-50 sm:text-2xl">
           {t('balance.selectPaymentMethod')}
         </h1>
       </motion.div>

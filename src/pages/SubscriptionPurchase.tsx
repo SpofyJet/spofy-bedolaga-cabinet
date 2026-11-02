@@ -118,7 +118,7 @@ export default function SubscriptionPurchase() {
   if (optionsError || (!purchaseOptions && !optionsLoading)) {
     return (
       <div className="space-y-6">
-        <h1 className="text-2xl font-bold text-dark-50 sm:text-3xl">{t('subscription.extend')}</h1>
+        <h1 className="text-xl font-bold tracking-tight text-dark-50 sm:text-2xl">{t('subscription.extend')}</h1>
         <div
           className="rounded-3xl p-6 text-center"
           style={{
@@ -156,7 +156,7 @@ export default function SubscriptionPurchase() {
         <header className="flex items-start gap-3">
           <WebBackButton to={`/subscriptions/${subscription.id}`} />
           <div className="min-w-0">
-            <h1 className="text-2xl font-bold text-dark-50 sm:text-3xl">
+            <h1 className="text-xl font-bold tracking-tight text-dark-50 sm:text-2xl">
               {t('subscription.switchTariff.title')}
             </h1>
             <p className="mt-2 break-words text-sm text-dark-400">
@@ -228,7 +228,7 @@ export default function SubscriptionPurchase() {
         <WebBackButton
           to={subscriptionId ? `/subscriptions/${subscriptionId}` : '/subscriptions'}
         />
-        <h1 className="text-2xl font-bold text-dark-50 sm:text-3xl">
+        <h1 className="text-xl font-bold tracking-tight text-dark-50 sm:text-2xl">
           {needsTariff(subscription)
             ? t('subscription.cta.moveToTariff')
             : isTariffsMode && subscriptionId && canOpenTariffSwitch(subscription)

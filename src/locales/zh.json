@@ -56,7 +56,8 @@
     }
   },
   "navShort": {
-    "wheel": "转盘"
+    "wheel": "转盘",
+    "more": "更多"
   },
   "nav": {
     "dashboard": "首页",
@@ -72,7 +73,8 @@
     "wheel": "幸运转盘",
     "menu": "菜单",
     "gift": "赠送",
-    "navigation": "导航"
+"navigation": "导航",
+    "more": "更多"
   },
   "notifications": {
     "ticketNotifications": "工单通知",
@@ -282,6 +284,22 @@
     "goToLogin": "前往登录"
   },
   "dashboard": {
+    "status": {
+      "active": "使用中",
+      "expired": "已到期"
+    },
+    "hero": {
+      "noneTitle": "解锁无边界访问",
+      "noneSubtitle": "选择套餐或从试用开始——连接只需几分钟。",
+      "untilEnd": "订阅剩余时间"
+    },
+    "quick": {
+      "connect": "连接",
+      "renew": "续费",
+      "topup": "充值",
+      "invite": "邀请"
+    },
+    "storiesTitle": "指南",
     "title": "个人中心",
     "trialFriendDays": {
       "title": "每位好友 +{{days}} 天",
@@ -7388,6 +7406,104 @@
     },
     "subscription": {
       "untitled": "订阅"
+    }
+  },
+  "stories": {
+    "sectionTitle": "指南",
+    "close": "关闭",
+    "series": {
+      "appstore-region": {
+        "coverTitle": "更改 App Store 地区",
+        "slides": [
+          {
+            "title": "更改 App Store 地区",
+            "subtitle": "几分钟后，你就能访问其他地区应用。"
+          },
+          {
+            "title": "点击你的姓名",
+            "subtitle": "在打开的 Account 菜单中，就是第一行。"
+          },
+          {
+            "title": "更改国家/地区",
+            "subtitle": "打开「国家/地区」，选择「哈萨克斯坦」。"
+          },
+          {
+            "title": "同意条款",
+            "subtitle": "付款方式选 None——无需绑定银行卡。"
+          },
+          {
+            "title": "完成！",
+            "subtitle": "回到个人中心，选择适合的套餐。",
+            "ctaLabel": "选择套餐"
+          }
+        ]
+      },
+      "connect-ios": {
+        "coverTitle": "在 iPhone 上使用 VPN",
+        "slides": [
+          {
+            "title": "一分钟装好 iPhone VPN",
+            "subtitle": "只需要个人中心——配置会自动生成。"
+          },
+          {
+            "title": "打开「连接」",
+            "subtitle": "个人中心 → 连接 → 选择你的订阅。"
+          },
+          {
+            "title": "安装描述文件",
+            "subtitle": "点击「安装」并确认安装描述文件。"
+          },
+          {
+            "title": "开启 VPN",
+            "subtitle": "在应用中点一下，连接即受保护。",
+            "ctaLabel": "去连接"
+          }
+        ]
+      },
+      "connect-android": {
+        "coverTitle": "在 Android 上使用 VPN",
+        "slides": [
+          {
+            "title": "Android 上的 VPN",
+            "subtitle": "通过应用连接——链接已在个人中心里。"
+          },
+          {
+            "title": "打开「连接」",
+            "subtitle": "个人中心 → 连接 → 选择你的订阅。"
+          },
+          {
+            "title": "安装应用",
+            "subtitle": "点击链接，安装 VPN 应用。"
+          },
+          {
+            "title": "开启 VPN",
+            "subtitle": "点一下连接按钮——完成。",
+            "ctaLabel": "去连接"
+          }
+        ]
+      },
+      "no-connection": {
+        "coverTitle": "VPN 连不上",
+        "slides": [
+          {
+            "title": "VPN 连不上？",
+            "subtitle": "检查三件事——几乎都能解决。"
+          },
+          {
+            "title": "检查订阅状态",
+            "subtitle": "首页状态应为「使用中」，否则请先续费。"
+          },
+          {
+            "title": "更新配置",
+            "subtitle": "在应用中更新订阅，重新拉取服务器列表。"
+          },
+          {
+            "title": "还没解决？",
+            "subtitle": "联系客服——我们一起排查。",
+            "ctaLabel": "打开客服"
+          }
+        ]
+      }
     }
   }
 }

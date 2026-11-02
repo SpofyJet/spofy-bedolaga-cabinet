@@ -670,7 +670,24 @@ export default function Referral() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-dark-50 sm:text-3xl">{t('referral.title')}</h1>
+      <h1 className="text-xl font-bold tracking-tight text-dark-50 sm:text-2xl">{t('referral.title')}</h1>
+
+      {/* Классический процент — гигантской цифрой, как фокус экрана.
+          В схемах «tiers/levels» процент ничего не решает — там баннер не нужен. */}
+      {!isTiersScheme && !isLevelsScheme && info && (
+        <div className="hero-visual">
+          <div className="hero-ambient" aria-hidden />
+          <img className="hero-orb hero-orb-cluster" src="/img/glass-cluster.jpg" alt="" aria-hidden />
+          <div className="relative z-10 p-5">
+            <span className="hero-pill">{t('referral.stats.commissionRate')}</span>
+            <div className="mt-4 flex items-baseline">
+              <span className="hero-numeral text-dark-50" style={{ fontSize: 'clamp(56px, 17vw, 84px)' }}>
+                {info.commission_percent || 0}%
+              </span>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Дни за друзей: бот начисляет и другу, и пригласившему, когда друг подключит VPN */}
       <div className="bento-card border border-accent-500/30 bg-accent-500/5">

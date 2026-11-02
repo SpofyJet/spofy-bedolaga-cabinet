@@ -114,7 +114,7 @@ export function StatCard({
                   и во всю ширину — переносится. */}
               <div
                 className={cn(
-                  'font-semibold [overflow-wrap:anywhere] tile-wide:text-lg sm:tile-wide:text-xl',
+                  'font-semibold font-mono tabular-nums [overflow-wrap:anywhere] tile-wide:text-lg sm:tile-wide:text-xl',
                   longValue ? 'text-[length:clamp(0.75rem,10cqi,1rem)]' : 'text-base',
                   valueClass,
                 )}

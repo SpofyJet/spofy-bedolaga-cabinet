@@ -188,7 +188,7 @@ export default function SavedCards() {
         >
           <BackIcon className="h-5 w-5" />
         </button>
-        <h1 className="text-2xl font-bold text-dark-50 sm:text-3xl">
+        <h1 className="text-xl font-bold tracking-tight text-dark-50 sm:text-2xl">
           {t('balance.savedCards.pageTitle')}
         </h1>
       </motion.div>

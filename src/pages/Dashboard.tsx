@@ -6,6 +6,7 @@ import { useAuthStore } from '../store/auth';
 import { displayName } from '../utils/displayName';
 import { useBlockingStore } from '../store/blocking';
 import { subscriptionApi } from '../api/subscription';
+import { authApi } from '../api/auth';
 import { referralApi } from '../api/referral';
 import { balanceApi } from '../api/balance';
 import { wheelApi } from '../api/wheel';
@@ -13,6 +14,7 @@ import Onboarding, { useOnboarding } from '../components/Onboarding';
 import PromoOffersSection from '../components/PromoOffersSection';
 import NewsSection from '../components/news/NewsSection';
 import SubscriptionCardActive from '../components/dashboard/SubscriptionCardActive';
+import DashboardHero from '../components/dashboard/DashboardHero';
 import SubscriptionCardExpired from '../components/dashboard/SubscriptionCardExpired';
 import { hasLegacySubscription } from '../utils/legacySubscription';
 import TrialOfferCard from '../components/dashboard/TrialOfferCard';
@@ -23,6 +25,10 @@ import { promoApi } from '../api/promo';
 import PendingGiftCard from '../components/dashboard/PendingGiftCard';
 import SubscriptionListCard from '../components/subscription/SubscriptionListCard';
 import { DeviceLimitSheet } from '../components/subscription/DeviceLimitSheet';
+import QuickActions from '../components/dashboard/QuickActions';
+import { StoryRail } from '../components/stories';
+import { useBranding } from '../hooks/useBranding';
+import { useFeatureFlags } from '@/hooks/useFeatureFlags';
 import { API } from '../config/constants';
 import { ChevronRightIcon, GiftIcon, StarIcon } from '@/components/icons';
 import { Skeleton, SkeletonGroup } from '@/components/ui/skeleton';
@@ -294,31 +300,136 @@ export default function Dashboard() {
   };
 
   const userName = displayName(user);
+  const { appName, logoLetter } = useBranding();
+  const { giftEnabled } = useFeatureFlags();
+
+  // Фото профиля Telegram (прокси бота); без него — брендовая буква.
+  const { data: avatarData } = useQuery({
+    queryKey: ['user-avatar'],
+    queryFn: authApi.getMyAvatar,
+    staleTime: 10 * 60_000,
+    retry: false,
+  });
+  const avatarUrl = avatarData?.photo_url ?? null;
+
+  // Статус доступа одной фразой: главный вопрос главной — «работает ли моя подписка».
+  const status: 'active' | 'expired' | 'none' = hasActiveAccess
+    ? 'active'
+    : !hasNoSubscription
+      ? 'expired'
+      : 'none';
+  const firstSubId = isMultiTariff ? visibleSubscriptions[0]?.id : subscription?.id;
+  // Данные фокус-визуала: первая активная подписка (multi — первая видимая).
+  // Дней до конца считаем от end_date — это поле есть у обоих типов подписки.
+  const heroSub = isMultiTariff ? visibleSubscriptions[0] : subscription;
+  const heroDaysLeft = useMemo(() => {
+    if (!heroSub?.end_date) return undefined;
+    const ms = new Date(heroSub.end_date).getTime() - Date.now();
+    return Math.max(0, Math.ceil(ms / 86_400_000));
+  }, [heroSub?.end_date]);
+  const heroActive = status === 'active' && heroSub != null && heroDaysLeft != null;
+  const renewTo = firstSubId != null ? `/subscriptions/${firstSubId}/renew` : '/subscriptions';
+  const statusChip =
+    status === 'active'
+      ? {
+          label: t('dashboard.status.active', 'Работает'),
+          className: 'bg-success-500/12 text-success-400 border-success-500/25',
+        }
+      : status === 'expired'
+        ? {
+            label: t('dashboard.status.expired', 'Закончилась'),
+            className: 'bg-error-500/12 text-error-400 border-error-500/25',
+          }
+        : null;
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div data-onboarding="welcome">
-        <h1 className="text-2xl font-bold text-dark-50 sm:text-3xl">
-          {userName ? t('dashboard.welcome', { name: userName }) : t('dashboard.welcomeNoName')}
-        </h1>
-        <div className="mt-1 flex flex-wrap items-center gap-2">
-          <p className="text-dark-400">{t('dashboard.yourSubscription')}</p>
-          {promoGroupData?.group_name && (
-            <span
-              className="inline-flex max-w-[160px] items-center gap-1 rounded-full px-2.5 py-0.5 text-[11px] font-semibold"
-              style={{
-                background: 'rgba(var(--color-accent-400), 0.1)',
-                border: '1px solid rgba(var(--color-accent-400), 0.2)',
-                color: 'rgb(var(--color-accent-400))',
-              }}
-            >
-              <StarIcon filled className="h-2.5 w-2.5 shrink-0" />
-              <span className="truncate">{promoGroupData.group_name}</span>
+    <div className="space-y-5">
+      {/* Шапка профиля, как в топовых VPN-клиентах: аватар — тап в профиль,
+          рядом имя и ID, справа подарок (по флагу) и статус-пилюля. */}
+      <div className="flex items-center gap-3" data-onboarding="welcome">
+        <Link
+          to="/profile"
+          className="flex min-w-0 flex-1 items-center gap-3 rounded-2xl transition-opacity hover:opacity-85"
+        >
+          <span className="relative flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-dark-700/60 bg-gradient-to-b from-accent-500/25 to-accent-500/5">
+            {avatarUrl ? (
+              <img src={avatarUrl} alt="" className="h-full w-full object-cover" />
+            ) : (
+              <span className="font-display text-lg font-bold text-accent-300">
+                {logoLetter.toUpperCase()}
+              </span>
+            )}
+          </span>
+          <span className="min-w-0">
+            <span className="block truncate text-lg font-bold tracking-tight text-dark-50">
+              {userName || appName}
             </span>
-          )}
-        </div>
+            <span className="mt-1 flex items-center gap-2">
+              {user?.id != null && (
+                <span className="font-mono text-[11px] uppercase tracking-[0.12em] text-dark-400">
+                  ID {user.id}
+                </span>
+              )}
+              {promoGroupData?.group_name && (
+                <span
+                  className="inline-flex max-w-[140px] items-center gap-1 rounded-full px-2 py-px text-[10px] font-semibold"
+                  style={{
+                    background: 'rgba(var(--color-accent-400), 0.1)',
+                    border: '1px solid rgba(var(--color-accent-400), 0.2)',
+                    color: 'rgb(var(--color-accent-400))',
+                  }}
+                >
+                  <StarIcon filled className="h-2 w-2 shrink-0" />
+                  <span className="truncate">{promoGroupData.group_name}</span>
+                </span>
+              )}
+            </span>
+          </span>
+        </Link>
+        {giftEnabled && (
+          <Link
+            to="/gift"
+            aria-label={t('nav.gift')}
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl border border-dark-700/50 bg-dark-800/50 text-dark-300 transition-colors hover:border-accent-500/40 hover:text-accent-300"
+          >
+            <GiftIcon className="h-5 w-5" />
+          </Link>
+        )}
+        {statusChip && (
+          <span
+            className={`inline-flex shrink-0 items-center gap-2 rounded-full border px-3 py-1.5 font-mono text-[11px] font-semibold uppercase tracking-[0.1em] ${statusChip.className}`}
+          >
+            <span
+              className={`led ${status === 'active' ? 'led-live' : 'led-danger'}`}
+              aria-hidden
+            />
+            {statusChip.label}
+          </span>
+        )}
       </div>
+
+      {/* Сторис — самый верх под шапкой: инструкция рядом с входом, не ниже
+          сгиба, раньше любых карточек. */}
+      <section aria-label={t('dashboard.storiesTitle')} className="-mt-1">
+        <div className="mb-2 px-1">
+          <span className="mono-label">{t('dashboard.storiesTitle')}</span>
+        </div>
+        <StoryRail />
+      </section>
+
+      {/* Фокус-визуал: стекло + гигантская цифра. Без CTA — они в QuickActions. */}
+      {heroActive && heroDaysLeft != null && (
+        <DashboardHero variant="active" planName={heroSub.tariff_name} daysLeft={heroDaysLeft} />
+      )}
+      {status === 'none' && !subLoading && <DashboardHero variant="none" />}
+
+      {/* Быстрые действия: один тап — один ответ на «что дальше» */}
+      <QuickActions
+        canConnect={hasActiveAccess}
+        hasSubscription={!hasNoSubscription}
+        renewTo={renewTo}
+        connectTo={firstSubId != null ? `/connection?sub=${firstSubId}` : '/connection'}
+      />
 
       {/* Pending Gift Activations */}
       {pendingGifts && pendingGifts.length > 0 && <PendingGiftCard gifts={pendingGifts} />}

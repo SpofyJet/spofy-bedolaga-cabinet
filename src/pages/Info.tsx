@@ -750,7 +750,7 @@ export default function Info() {
     <div className="space-y-6">
       <div className="flex items-center gap-3">
         <InfoIcon className="h-6 w-6" />
-        <h1 className="text-2xl font-bold text-dark-50 sm:text-3xl">{t('info.title')}</h1>
+        <h1 className="text-xl font-bold tracking-tight text-dark-50 sm:text-2xl">{t('info.title')}</h1>
       </div>
 
       {/* Tabs */}

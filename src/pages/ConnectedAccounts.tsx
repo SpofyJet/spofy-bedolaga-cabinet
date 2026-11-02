@@ -658,7 +658,7 @@ export default function ConnectedAccounts() {
     >
       {/* Page title */}
       <motion.div variants={staggerItem}>
-        <h1 className="text-2xl font-bold text-dark-50 sm:text-3xl">
+        <h1 className="text-xl font-bold tracking-tight text-dark-50 sm:text-2xl">
           {t('profile.accounts.title')}
         </h1>
         <p className="mt-1 text-dark-400">{t('profile.accounts.subtitle')}</p>

@@ -39,6 +39,8 @@ import {
 
 import { MobileBottomNav } from './MobileBottomNav';
 import { isMobileNavScreen, mobileNavItems } from './mobileNavRoutes';
+import { subscriptionApi } from '@/api/subscription';
+import { API } from '@/config/constants';
 import { AppHeader } from './AppHeader';
 import { LogoutButton } from './LogoutButton';
 import { useBackgroundConsumer } from '@/components/backgrounds/BackgroundHost';
@@ -97,6 +99,26 @@ export function AppShell({ children }: AppShellProps) {
   // место под неё не резервируется (data-mobile-nav="off" → --mobile-nav-clearance).
   const navItems = mobileNavItems({ wheelEnabled, referralEnabled, lite });
   const showMobileNav = isMobileNavScreen(location.pathname, navItems);
+
+  // Центральная кнопка панели ведёт сразу на маршрут подключения активной
+  // подписки. Те же queryKey, что на дашборде — оболочка и главная делят кэш.
+  const { data: navMultiSub } = useQuery({
+    queryKey: ['subscriptions-list'],
+    queryFn: () => subscriptionApi.getSubscriptions(),
+    staleTime: 60_000,
+  });
+  const navIsMultiTariff = navMultiSub?.multi_tariff_enabled ?? false;
+  const { data: navSingleSub } = useQuery({
+    queryKey: ['subscription'],
+    queryFn: () => subscriptionApi.getSubscription(),
+    retry: false,
+    staleTime: API.BALANCE_STALE_TIME_MS,
+    enabled: !navIsMultiTariff,
+  });
+  const navFirstSubId = navIsMultiTariff
+    ? navMultiSub?.subscriptions?.[0]?.id
+    : navSingleSub?.subscription?.id;
+  const connectTo = navFirstSubId != null ? `/connection?sub=${navFirstSubId}` : '/connection';
 
   // Desktop navigation — labels always visible (no hover-reveal gimmick)
   const desktopNav = [
@@ -179,7 +201,7 @@ export function AppShell({ children }: AppShellProps) {
           скроллбара, и капсула по центру прыгала бы на полширины скроллбара при
           переходах между страницами со скроллом и без. 100vw даёт ту же ось
           центрирования, что и у body (тоже 100vw). */}
-      <header className="fixed left-0 top-0 z-50 hidden w-screen border-b border-dark-800/50 bg-dark-950/95 lg:block">
+      <header className="header-tint fixed left-0 top-0 z-50 hidden w-screen border-b border-dark-800/50 bg-dark-950/95 lg:block">
         {/* 3-зонный grid: лого | капсула | действия. Колонки 1fr_auto_1fr держат
             капсулу строго по центру вьюпорта НЕЗАВИСИМО от ширины лого/действий,
             а действия — у правого края. Поэтому ничего не «скачет» при переходах
@@ -292,7 +314,9 @@ export function AppShell({ children }: AppShellProps) {
       </main>
 
       {/* Mobile Bottom Navigation — только на экранах её кнопок */}
-      {showMobileNav && <MobileBottomNav items={navItems} isMenuOpen={mobileMenuOpen} />}
+      {showMobileNav && (
+        <MobileBottomNav items={navItems} connectTo={connectTo} isMenuOpen={mobileMenuOpen} />
+      )}
     </div>
   );
 }

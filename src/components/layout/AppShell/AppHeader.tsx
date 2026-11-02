@@ -171,7 +171,7 @@ export function AppHeader({
           режима задаёт .app-mobile-header в globals.css (display-mode: standalone),
           чтобы не было ни отдельного светлого блока, ни жёсткой границы. */}
       <header
-        className="glass app-mobile-header fixed left-0 right-0 top-0 z-50 shadow-lg shadow-black/10 lg:hidden"
+        className="glass header-tint app-mobile-header fixed left-0 right-0 top-0 z-50 shadow-lg shadow-black/10 lg:hidden"
         style={{
           paddingTop: isFullscreen
             ? `${Math.max(safeAreaInset.top, contentSafeAreaInset.top) + (telegramPlatform === 'android' ? 48 : 45)}px`

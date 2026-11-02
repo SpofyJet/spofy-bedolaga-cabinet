@@ -27,6 +27,7 @@ const ALLOWED = new Set([
   'pages/AdminPayments.tsx', // спиннер
   'components/wheel/FortuneWheel.tsx',
   'components/dashboard/Sparkline.tsx',
+  'components/stories/artwork.tsx', // иллюстрации слайдов сторис (глобус, медальоны, декор) — не иконки
   'components/admin/reachability/GeoMap.tsx',
   'components/admin/dpichecker/DpiRegionMap.tsx', // карта регионов, не иконка
   'components/ui/backgrounds/background-beams.tsx',

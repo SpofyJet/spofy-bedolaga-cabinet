@@ -46,8 +46,10 @@ function flatten(tree: Tree, prefix = ''): Map<string, string> {
   return out;
 }
 
-const enFlat = flatten(en as Tree);
-const ruFlat = flatten(ru as Tree);
+// Массивы (слайды сторис) читаются flatten через числовые индексы — приведение
+// через unknown, т.к. Tree не объявляет массивы.
+const enFlat = flatten(en as unknown as Tree);
+const ruFlat = flatten(ru as unknown as Tree);
 
 function baseKeys(flat: Map<string, string>): Set<string> {
   return new Set([...flat.keys()].map((k) => k.replace(PLURAL_SUFFIX, '')));

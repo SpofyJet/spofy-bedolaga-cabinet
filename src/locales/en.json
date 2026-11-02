@@ -61,7 +61,8 @@
     }
   },
   "navShort": {
-    "wheel": "Wheel"
+    "wheel": "Wheel",
+    "more": "More"
   },
   "nav": {
     "dashboard": "Dashboard",
@@ -77,7 +78,8 @@
     "wheel": "Fortune Wheel",
     "menu": "Menu",
     "gift": "Gift",
-    "navigation": "Navigation"
+"navigation": "Navigation",
+    "more": "More"
   },
   "notifications": {
     "ticketNotifications": "Ticket Notifications",
@@ -302,6 +304,22 @@
     "tokenExpiredOrInvalid": "This password reset link is invalid or has expired."
   },
   "dashboard": {
+    "status": {
+      "active": "Active",
+      "expired": "Expired"
+    },
+    "hero": {
+      "noneTitle": "Unlock borderless access",
+      "noneSubtitle": "Pick a plan or start with a trial — setup takes a couple of minutes.",
+      "untilEnd": "left on your subscription"
+    },
+    "quick": {
+      "connect": "Connect",
+      "renew": "Renew",
+      "topup": "Top up",
+      "invite": "Invite"
+    },
+    "storiesTitle": "Guides",
     "title": "Dashboard",
     "trialFriendDays": {
       "title": "+{{days}} days for every friend",
@@ -7949,6 +7967,104 @@
     },
     "subscription": {
       "untitled": "Subscription"
+    }
+  },
+  "stories": {
+    "sectionTitle": "Guides",
+    "close": "Close",
+    "series": {
+      "appstore-region": {
+        "coverTitle": "Change App Store region",
+        "slides": [
+          {
+            "title": "Change your App Store region",
+            "subtitle": "In a couple of minutes you'll get access to apps from another region."
+          },
+          {
+            "title": "Tap your name",
+            "subtitle": "In the Account menu that opens, it's the very first row."
+          },
+          {
+            "title": "Change the country",
+            "subtitle": "Open «Country/Region» and choose «Kazakhstan»."
+          },
+          {
+            "title": "Agree to the terms",
+            "subtitle": "Pick None as the payment method — no card needed."
+          },
+          {
+            "title": "All set!",
+            "subtitle": "Now head back to the cabinet and pick a plan.",
+            "ctaLabel": "Browse plans"
+          }
+        ]
+      },
+      "connect-ios": {
+        "coverTitle": "VPN on iPhone",
+        "slides": [
+          {
+            "title": "VPN on iPhone in a minute",
+            "subtitle": "You only need the cabinet — the configuration builds itself."
+          },
+          {
+            "title": "Open «Connect»",
+            "subtitle": "Cabinet → Connect → choose your subscription."
+          },
+          {
+            "title": "Install the profile",
+            "subtitle": "Tap «Install» and confirm the profile installation."
+          },
+          {
+            "title": "Turn VPN on",
+            "subtitle": "One tap in the app — and your connection is protected.",
+            "ctaLabel": "Connect"
+          }
+        ]
+      },
+      "connect-android": {
+        "coverTitle": "VPN on Android",
+        "slides": [
+          {
+            "title": "VPN on Android",
+            "subtitle": "Connect through the app — the link is already in the cabinet."
+          },
+          {
+            "title": "Open «Connect»",
+            "subtitle": "Cabinet → Connect → choose your subscription."
+          },
+          {
+            "title": "Install the app",
+            "subtitle": "Follow the link and install the VPN app."
+          },
+          {
+            "title": "Turn VPN on",
+            "subtitle": "One tap on the connect button — done.",
+            "ctaLabel": "Connect"
+          }
+        ]
+      },
+      "no-connection": {
+        "coverTitle": "VPN won't connect",
+        "slides": [
+          {
+            "title": "VPN won't connect?",
+            "subtitle": "Check three things — they fix almost every case."
+          },
+          {
+            "title": "Check your subscription",
+            "subtitle": "The status on the home screen must be «Active». If not — renew it."
+          },
+          {
+            "title": "Refresh the configuration",
+            "subtitle": "Update the subscription in the app to pull the servers again."
+          },
+          {
+            "title": "Still stuck?",
+            "subtitle": "Message support — we'll sort it out together.",
+            "ctaLabel": "Open support"
+          }
+        ]
+      }
     }
   }
 }

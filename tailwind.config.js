@@ -130,7 +130,7 @@ export default {
           'sans-serif',
         ],
         display: ['Twemoji Country Flags', 'Outfit', 'Manrope', 'system-ui', 'sans-serif'],
-        mono: ['Twemoji Country Flags', 'IBM Plex Mono', 'ui-monospace', 'monospace'],
+        mono: ['Twemoji Country Flags', 'JetBrains Mono', 'ui-monospace', 'SFMono-Regular', 'monospace'],
       },
       borderRadius: {
         bento: '24px',

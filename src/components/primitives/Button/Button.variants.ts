@@ -14,8 +14,10 @@ export const buttonVariants = cva(
       variant: {
         primary: [
           'bg-accent-500 text-on-accent',
+          // Верхний блик — кнопка выглядит объёмной, а не плоской заливкой.
+          'shadow-[inset_0_1px_0_rgba(255,255,255,0.22),inset_0_-1px_0_rgba(0,0,0,0.12),0_1px_2px_rgba(0,0,0,0.25)]',
           'hover:bg-accent-600',
-          'active:bg-accent-700',
+          'active:bg-accent-700 active:shadow-[inset_0_2px_4px_rgba(0,0,0,0.15)]',
           'shadow-linear-sm hover:shadow-linear',
         ],
         secondary: [
