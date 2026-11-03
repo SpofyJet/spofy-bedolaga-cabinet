@@ -103,7 +103,7 @@ afterEach(() => {
 async function renderCard(sub: Subscription, balanceKopeks: number) {
   const Card = (await import('./SubscriptionCardExpired')).default;
   const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
-  render(
+  return render(
     <QueryClientProvider client={client}>
       <PlatformProvider>
         <MemoryRouter initialEntries={['/']}>
@@ -118,39 +118,24 @@ async function renderCard(sub: Subscription, balanceKopeks: number) {
 }
 
 describe('обычная истёкшая подписка', () => {
-  it('открывает выбор периода вместо молчаливого списания за месяц', async () => {
-    await renderCard(subscription(), 500000);
+  /*
+   * v10: на главной уже есть «Подписка · Закончилась» и быстрое действие
+   * «Продлить» (→ /subscriptions/:id/renew, выбор периода). Карточка повторяла бы
+   * те же кнопки, поэтому для обычной подписки её нет — и она точно ничего не
+   * списывает молча.
+   */
+  it('не дублирует «Продлить» с главной и ничего не списывает', async () => {
+    const { container } = await renderCard(subscription(), 500000);
 
-    const renew = await screen.findByText('dashboard.expired.quickRenew');
-    fireEvent.click(renew);
-
-    expect(await screen.findByText('экран выбора периода')).toBeTruthy();
+    expect(container.textContent).toBe('');
     expect(calls.renew).toEqual([]);
     expect(calls.purchaseTariff).toEqual([]);
   });
 
-  it('сохраняет вход на саб-страницу вместе с продлением', async () => {
-    await renderCard(subscription({ subscription_url: 'https://example.invalid/sub/42' }), 500000);
+  it('и без денег на балансе тоже молчит — продление открывается быстрым действием', async () => {
+    const { container } = await renderCard(subscription(), 0);
 
-    const connect = await screen.findByRole('link', { name: 'dashboard.connectDevice' });
-    expect(connect.getAttribute('href')).toBe('/connection?sub=42');
-    expect(screen.getByText('dashboard.expired.quickRenew')).toBeTruthy();
-  });
-
-  it('без ссылки не рисует мёртвое подключение, но оставляет продление', async () => {
-    await renderCard(subscription(), 500000);
-
-    expect(screen.queryByRole('link', { name: 'dashboard.connectDevice' })).toBeNull();
-    expect(await screen.findByText('dashboard.expired.quickRenew')).toBeTruthy();
-  });
-
-  it('ведёт на выбор периода и без денег на балансе — цены надо сначала увидеть', async () => {
-    await renderCard(subscription(), 0);
-
-    const renew = await screen.findByText('dashboard.expired.quickRenew');
-    fireEvent.click(renew);
-
-    expect(await screen.findByText('экран выбора периода')).toBeTruthy();
+    expect(container.textContent).toBe('');
   });
 });
 

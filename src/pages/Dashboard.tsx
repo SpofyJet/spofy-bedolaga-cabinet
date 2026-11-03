@@ -31,6 +31,7 @@ import { useBranding } from '../hooks/useBranding';
 import { useFeatureFlags } from '@/hooks/useFeatureFlags';
 import { API } from '../config/constants';
 import { ChevronRightIcon, GiftIcon, StarIcon } from '@/components/icons';
+import { WheelIcon } from '@/components/layout/AppShell/icons';
 import { Skeleton, SkeletonGroup } from '@/components/ui/skeleton';
 import { safeLocal } from '../utils/safeStorage';
 import { getApiErrorMessage } from '../utils/api-error';
@@ -339,7 +340,7 @@ export default function Dashboard() {
           to="/profile"
           className="flex min-w-0 flex-1 items-center gap-3 rounded-2xl transition-opacity hover:opacity-85"
         >
-          <span className="relative flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-dark-700/60 bg-gradient-to-b from-accent-500/25 to-accent-500/5">
+          <span className="relative flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-accent-500/10 ring-1 ring-inset ring-dark-800/80">
             {avatarUrl ? (
               <img src={avatarUrl} alt="" className="h-full w-full object-cover" />
             ) : (
@@ -470,7 +471,7 @@ export default function Dashboard() {
       {/* Subscription Status Card — hidden in multi-tariff (managed via /subscriptions) */}
       {!isMultiTariff &&
         (subLoading ? (
-          <SkeletonGroup className="bento-card p-4">
+          <SkeletonGroup className="rounded-3xl bg-dark-900/70 ring-1 ring-inset ring-dark-800/80 p-4">
             <Skeleton className="mb-4 h-5 w-40" />
             <div className="grid grid-cols-2 gap-3">
               <Skeleton className="h-16 w-full rounded-xl" />
@@ -534,12 +535,17 @@ export default function Dashboard() {
 
       {/* Fortune Wheel Banner */}
       {wheelConfig?.is_enabled && (
-        <Link to="/wheel" className="bento-card-hover group flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <span className="text-3xl">🎰</span>
+        <Link
+          to="/wheel"
+          className="rounded-3xl bg-dark-900/70 ring-1 ring-inset ring-dark-800/80 cursor-pointer transition-colors hover:bg-dark-800/50 active:bg-dark-800/70 group flex items-center justify-between p-4"
+        >
+          <div className="flex items-center gap-3">
+            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-accent-500/10 text-accent-400 [&>svg]:h-[22px] [&>svg]:w-[22px]">
+              <WheelIcon />
+            </span>
             <div className="min-w-0 flex-1">
-              <h3 className="text-base font-semibold text-dark-100">{t('wheel.banner.title')}</h3>
-              <p className="text-sm text-dark-400">{t('wheel.banner.description')}</p>
+              <h3 className="text-[15px] font-semibold text-dark-100">{t('wheel.banner.title')}</h3>
+              <p className="text-[13px] text-dark-400">{t('wheel.banner.description')}</p>
             </div>
           </div>
           <div className="flex-shrink-0 text-dark-500 transition-all duration-300 group-hover:translate-x-1 group-hover:text-accent-400">

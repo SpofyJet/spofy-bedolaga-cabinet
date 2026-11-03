@@ -93,7 +93,7 @@ export default function InfoCards({
               ? '/subscription'
               : '/subscription/purchase'
         }
-        className="bento-card-hover group flex min-h-[118px] flex-col justify-between p-4"
+        className="rounded-3xl bg-dark-900/70 ring-1 ring-inset ring-dark-800/80 cursor-pointer transition-colors hover:bg-dark-800/50 active:bg-dark-800/70 group flex min-h-[118px] flex-col justify-between p-4"
       >
         <span className="text-sm font-medium text-dark-400">
           {t('dashboard.info.subscription.title', 'Подписка')}
@@ -148,7 +148,7 @@ export default function InfoCards({
       {/* Баланс */}
       <Link
         to="/balance"
-        className="bento-card-hover group flex min-h-[118px] flex-col justify-between p-4"
+        className="rounded-3xl bg-dark-900/70 ring-1 ring-inset ring-dark-800/80 cursor-pointer transition-colors hover:bg-dark-800/50 active:bg-dark-800/70 group flex min-h-[118px] flex-col justify-between p-4"
       >
         <span className="text-sm font-medium text-dark-400">
           {t('dashboard.info.balance.title', 'Баланс')}

@@ -92,7 +92,10 @@ export default function DevicesTrafficCard({
     : `/subscriptions/${subscriptionId}?topup=traffic`;
 
   return (
-    <section className="bento-card p-4" aria-label={t('dashboard.devicesTraffic.title')}>
+    <section
+      className="rounded-3xl bg-dark-900/70 ring-1 ring-inset ring-dark-800/80 p-4"
+      aria-label={t('dashboard.devicesTraffic.title')}
+    >
       <Link to="/subscription" className="group mb-4 flex items-center justify-between gap-2">
         <h2 className="text-base font-bold tracking-tight text-dark-50">
           {t('dashboard.devicesTraffic.title')}

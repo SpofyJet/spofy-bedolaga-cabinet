@@ -44,7 +44,7 @@ export default function UsefulGrid() {
 
   return (
     <section aria-label={t('dashboard.useful.title', 'Полезное')}>
-      <h2 className="mb-3 px-1 text-base font-bold tracking-tight text-dark-50">
+      <h2 className="mb-2 px-1 text-[13px] font-semibold text-dark-400">
         {t('dashboard.useful.title', 'Полезное')}
       </h2>
       <div className="grid grid-cols-4 gap-2.5">
@@ -52,12 +52,12 @@ export default function UsefulGrid() {
           <Link
             key={item.key}
             to={item.to}
-            className="group flex flex-col items-center gap-2 transition-transform duration-150 active:scale-95"
+            className="group flex flex-col items-center gap-1.5 transition-transform duration-150 active:scale-95"
           >
-            <span className="flex aspect-square w-full max-w-[64px] items-center justify-center rounded-2xl bg-accent-500/10 text-accent-300 ring-1 ring-inset ring-accent-500/15 transition-colors duration-200 group-hover:bg-accent-500/15">
-              <item.icon className="h-7 w-7" />
+            <span className="flex h-12 w-full max-w-[88px] items-center justify-center rounded-2xl bg-dark-800/70 text-accent-300 ring-1 ring-inset ring-dark-700/60 transition-colors duration-200 group-hover:bg-dark-700/70 sm:h-[52px]">
+              <item.icon className="h-5 w-5" />
             </span>
-            <span className="text-center text-xs font-medium leading-tight text-dark-300 group-hover:text-dark-100">
+            <span className="text-center text-[11.5px] font-semibold leading-none text-dark-300 group-hover:text-dark-100">
               {item.label}
             </span>
           </Link>

@@ -5,9 +5,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import type { Subscription } from '../../types';
 import { subscriptionApi } from '../../api/subscription';
-import { useTheme } from '../../hooks/useTheme';
 import { useHapticFeedback } from '../../platform/hooks/useHaptic';
-import { getGlassColors } from '../../utils/glassTheme';
 import { getInsufficientBalanceError } from '../../utils/subscriptionHelpers';
 import { needsTariff, tariffSelectionPath } from '../../utils/legacySubscription';
 import { ClockIcon, ExclamationIcon, PlusIcon, SubscriptionIcon } from '@/components/icons';
@@ -25,8 +23,6 @@ export default function SubscriptionCardExpired({
   className,
 }: SubscriptionCardExpiredProps) {
   const { t } = useTranslation();
-  const { isDark } = useTheme();
-  const g = getGlassColors(isDark);
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const location = useLocation();
@@ -117,204 +113,107 @@ export default function SubscriptionCardExpired({
     navigate(`/balance/top-up?${params.toString()}`);
   };
 
-  // Color scheme: amber for limited, red for expired/disabled
-  const accent = isLimited
-    ? {
-        r: 255,
-        g: 184,
-        b: 0,
-        hex: 'rgb(var(--color-urgent-400))',
-        gradient: 'linear-gradient(135deg, #FFB800, #FF8C00)',
-      }
-    : {
-        r: 255,
-        g: 59,
-        b: 92,
-        hex: 'rgb(var(--color-critical-500))',
-        gradient: 'linear-gradient(135deg, #FF3B5C, #FF6B35)',
-      };
+  /*
+   * v10: на главной уже есть «Подписка · Закончилась» и быстрые действия
+   * «Продлить · Тарифы». Карточка показывается только там, где у неё своё
+   * действие: суточный тариф (продлить/возобновить с баланса одним нажатием),
+   * исчерпанный трафик (докупить) и старая подписка без тарифа (перейти на
+   * тариф). Обычной истёкшей подписке она повторяла бы те же три кнопки.
+   */
+  if (!isLimited && !isInstantRenew && !requiresTariff) return null;
+
+  const title = isLimited
+    ? t('subscription.trafficLimitedTitle')
+    : isDisabledDaily
+      ? t('dashboard.suspended.title')
+      : subscription.is_trial
+        ? t('dashboard.expired.trialTitle')
+        : t('dashboard.expired.title');
+
+  const primaryCls =
+    'flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-accent-500 px-5 text-[15px] font-semibold text-on-accent transition-colors hover:bg-accent-600 active:scale-[0.98] disabled:opacity-50';
 
   return (
-    <div
-      className={`relative overflow-hidden rounded-3xl ${className ?? ''}`}
-      style={{
-        background: g.cardBg,
-        border: isDark
-          ? `1px solid rgba(${accent.r},${accent.g},${accent.b},0.12)`
-          : `1px solid rgba(${accent.r},${accent.g},${accent.b},0.2)`,
-        boxShadow: isDark
-          ? g.shadow
-          : `0 2px 16px rgba(${accent.r},${accent.g},${accent.b},0.1), 0 0 0 1px rgba(${accent.r},${accent.g},${accent.b},0.06)`,
-        padding: '20px',
-      }}
+    <section
+      className={`rounded-3xl bg-dark-900/70 p-4 ring-1 ring-inset ring-dark-800/80 ${className ?? ''}`}
     >
-      {/* Glow */}
-      {/* Header */}
-      <div className="mb-5 flex items-center gap-3">
-        <div
-          className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-[14px]"
-          style={{
-            background: `rgba(${accent.r},${accent.g},${accent.b},0.1)`,
-            border: `1px solid rgba(${accent.r},${accent.g},${accent.b},0.15)`,
-            color: accent.hex,
-          }}
+      <div className="flex items-start gap-3">
+        <span
+          className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${
+            isLimited ? 'bg-warning-500/10 text-warning-400' : 'bg-error-500/10 text-error-400'
+          }`}
         >
           {isLimited ? (
             <ExclamationIcon className="h-[22px] w-[22px]" />
           ) : (
             <ClockIcon className="h-[22px] w-[22px]" />
           )}
+        </span>
+        <div className="min-w-0 flex-1">
+          <h2 className="text-[15px] font-semibold text-dark-100">{title}</h2>
+          {isLimited && (
+            <p className="mt-0.5 text-[13px] leading-snug text-dark-400">
+              {t('subscription.trafficLimitedDescription')}
+            </p>
+          )}
         </div>
-        <h2 className="text-lg font-bold tracking-tight text-dark-50">
-          {isLimited
-            ? t('subscription.trafficLimitedTitle')
-            : isDisabledDaily
-              ? t('dashboard.suspended.title')
-              : subscription.is_trial
-                ? t('dashboard.expired.trialTitle')
-                : t('dashboard.expired.title')}
-        </h2>
       </div>
 
-      {/* Limited description */}
-      {isLimited && (
-        <p className="mb-4 text-sm text-dark-50/60">
-          {t('subscription.trafficLimitedDescription')}
-        </p>
-      )}
-
-      {/* Renew error */}
       {renewError && (
         <div
-          className="mb-4 rounded-xl border border-error-500/30 bg-error-500/10 p-3 text-center text-sm text-error-400"
+          className="mt-3 rounded-xl bg-error-500/10 p-3 text-center text-sm text-error-400 ring-1 ring-inset ring-error-500/25"
           role="alert"
         >
           {renewError}
         </div>
       )}
 
-      {/* Саб-страница и добавление ссылки в приложение доступны и после
-          окончания доступа. Покупка и продление ниже остаются отдельно. */}
-      {(subscription.subscription_url || subscription.subscription_crypto_link) && (
-        <Link
-          to={`/connection?sub=${subscription.id}`}
-          onClick={() => haptic.buttonPress()}
-          className="mb-2.5 flex w-full items-center justify-center rounded-[14px] px-5 py-3.5 text-[15px] font-semibold tracking-tight text-dark-50 transition-colors duration-200"
-          style={{ background: g.innerBg, border: `1px solid ${g.innerBorder}` }}
-        >
-          {t('dashboard.connectDevice')}
-        </Link>
-      )}
-
-      {/* Action buttons */}
-      <div className="flex gap-2.5">
-        {isLimited ? (
+      <div className="mt-4">
+        {isLimited || requiresTariff ? (
           <Link
             to={
               requiresTariff
                 ? tariffSelectionPath(subscription.id)
                 : `/subscriptions/${subscription.id}`
             }
-            className="flex flex-1 items-center justify-center gap-2 rounded-[14px] py-3.5 text-[15px] font-semibold tracking-tight text-white transition-all duration-300"
-            style={{
-              background: accent.gradient,
-              boxShadow: `0 4px 20px rgba(${accent.r},${accent.g},${accent.b},0.2)`,
-            }}
+            onClick={() => haptic.buttonPress()}
+            className={primaryCls}
           >
-            <PlusIcon className="h-4 w-4" />
+            {requiresTariff ? (
+              <SubscriptionIcon className="h-4 w-4" />
+            ) : (
+              <PlusIcon className="h-4 w-4" />
+            )}
             {requiresTariff ? t('subscription.cta.moveToTariff') : t('subscription.buyTraffic')}
           </Link>
+        ) : hasBalance ? (
+          <button
+            type="button"
+            onClick={handleQuickRenew}
+            disabled={isRenewing}
+            className={primaryCls}
+          >
+            {isRenewing ? (
+              <span
+                className="h-4 w-4 animate-spin rounded-full border-2 border-current/30 border-t-current"
+                aria-hidden="true"
+              />
+            ) : (
+              <SubscriptionIcon className="h-4 w-4" />
+            )}
+            {isRenewing
+              ? t('common.loading')
+              : isDisabledDaily
+                ? t('dashboard.suspended.resume')
+                : t('dashboard.expired.quickRenew')}
+          </button>
         ) : (
-          <>
-            {/* Quick Renew or Top Up button (hidden for expired trials) */}
-            {!subscription.is_trial && (
-              <>
-                {!isInstantRenew ? (
-                  <Link
-                    to={
-                      requiresTariff
-                        ? tariffSelectionPath(subscription.id)
-                        : `/subscriptions/${subscription.id}/renew`
-                    }
-                    onClick={() => haptic.buttonPressHeavy()}
-                    className="flex flex-1 items-center justify-center gap-2 rounded-[14px] py-3.5 text-[15px] font-semibold tracking-tight text-white transition-all duration-300"
-                    style={{
-                      background: accent.gradient,
-                      boxShadow: `0 4px 20px rgba(${accent.r},${accent.g},${accent.b},0.2)`,
-                    }}
-                  >
-                    <SubscriptionIcon className="h-4 w-4" />
-                    {requiresTariff
-                      ? t('subscription.cta.moveToTariff')
-                      : t('dashboard.expired.quickRenew')}
-                  </Link>
-                ) : hasBalance ? (
-                  <button
-                    type="button"
-                    onClick={handleQuickRenew}
-                    disabled={isRenewing}
-                    className="flex flex-1 items-center justify-center gap-2 rounded-[14px] py-3.5 text-[15px] font-semibold tracking-tight text-white transition-all duration-300 disabled:opacity-50"
-                    style={{
-                      background: accent.gradient,
-                      boxShadow: `0 4px 20px rgba(${accent.r},${accent.g},${accent.b},0.2)`,
-                    }}
-                  >
-                    {isRenewing ? (
-                      <span
-                        className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white"
-                        aria-hidden="true"
-                      />
-                    ) : (
-                      <SubscriptionIcon className="h-4 w-4" />
-                    )}
-                    {isRenewing
-                      ? t('common.loading')
-                      : isDisabledDaily
-                        ? t('dashboard.suspended.resume')
-                        : t('dashboard.expired.quickRenew')}
-                  </button>
-                ) : (
-                  <button
-                    type="button"
-                    onClick={handleTopUp}
-                    className="flex flex-1 items-center justify-center gap-2 rounded-[14px] py-3.5 text-[15px] font-semibold tracking-tight text-white transition-all duration-300"
-                    style={{
-                      background: accent.gradient,
-                      boxShadow: `0 4px 20px rgba(${accent.r},${accent.g},${accent.b},0.2)`,
-                    }}
-                  >
-                    <PlusIcon className="h-4 w-4" />
-                    {t('dashboard.expired.topUp')}
-                  </button>
-                )}
-              </>
-            )}
-
-            {/* Tariffs (go to purchase page) — full-width for trials */}
-            {!requiresTariff && (
-              <Link
-                to="/subscription/purchase"
-                className={`flex items-center justify-center rounded-[14px] px-5 py-3.5 text-[15px] font-semibold tracking-tight transition-colors duration-200 ${
-                  subscription.is_trial ? 'flex-1 text-white' : 'text-dark-50/50'
-                }`}
-                style={
-                  subscription.is_trial
-                    ? {
-                        background: accent.gradient,
-                        boxShadow: `0 4px 20px rgba(${accent.r},${accent.g},${accent.b},0.2)`,
-                      }
-                    : {
-                        background: g.innerBg,
-                        border: `1px solid ${g.innerBorder}`,
-                      }
-                }
-              >
-                {t('dashboard.expired.tariffs')}
-              </Link>
-            )}
-          </>
+          <button type="button" onClick={handleTopUp} className={primaryCls}>
+            <PlusIcon className="h-4 w-4" />
+            {t('dashboard.expired.topUp')}
+          </button>
         )}
       </div>
-    </div>
+    </section>
   );
 }
