@@ -62,6 +62,8 @@ export function useBranding() {
   return {
     appName,
     logoLetter,
+    /** Брендинг уже известен (из кэша или с сервера): до этого буква — запасная из .env. */
+    brandingReady: branding !== undefined,
     hasCustomLogo,
     logoUrl,
     isLogoPreloaded,

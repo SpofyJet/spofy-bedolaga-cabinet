@@ -61,7 +61,7 @@ export default function Dashboard() {
   });
 
   // Multi-tariff: check if user has multiple subscriptions
-  const { data: multiSubData } = useQuery({
+  const { data: multiSubData, isPending: multiSubPending } = useQuery({
     queryKey: ['subscriptions-list'],
     queryFn: () => subscriptionApi.getSubscriptions(),
     staleTime: 60_000,
@@ -301,17 +301,26 @@ export default function Dashboard() {
   };
 
   const userName = displayName(user);
-  const { appName, logoLetter } = useBranding();
+  const { appName, logoLetter, brandingReady } = useBranding();
   const { giftEnabled } = useFeatureFlags();
 
   // Фото профиля Telegram (прокси бота); без него — брендовая буква.
-  const { data: avatarData } = useQuery({
+  const { data: avatarData, isPending: avatarPending } = useQuery({
     queryKey: ['user-avatar'],
     queryFn: authApi.getMyAvatar,
     staleTime: 10 * 60_000,
     retry: false,
   });
   const avatarUrl = avatarData?.photo_url ?? null;
+  // Пока не ясно, есть ли фото и какая буква бренда, плитка пустая: иначе
+  // сначала мелькала запасная «V», потом «S», потом фото.
+  const showAvatarLetter = !avatarPending && brandingReady;
+
+  // Состояние доступа известно только когда пришёл список подписок (и, без
+  // мультитарифа, сама подписка). До этого всё, что от него зависит, — заглушки:
+  // раньше главная сначала рисовала «Продлить · Тарифы» и «Закончилась», а через
+  // мгновение — «Подключить» и «214 дней».
+  const statusReady = !multiSubPending && (isMultiTariff || !subLoading);
 
   // Статус доступа одной фразой: главный вопрос главной — «работает ли моя подписка».
   const status: 'active' | 'expired' | 'none' = hasActiveAccess
@@ -343,11 +352,11 @@ export default function Dashboard() {
           <span className="relative flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-accent-500/10 ring-1 ring-inset ring-dark-800/80">
             {avatarUrl ? (
               <img src={avatarUrl} alt="" className="h-full w-full object-cover" />
-            ) : (
+            ) : showAvatarLetter ? (
               <span className="font-display text-lg font-bold text-accent-300">
                 {logoLetter.toUpperCase()}
               </span>
-            )}
+            ) : null}
           </span>
           <span className="min-w-0">
             <span className="block truncate text-lg font-bold tracking-tight text-dark-50">
@@ -392,6 +401,7 @@ export default function Dashboard() {
 
       {/* Главное действие для состояния + три спокойных */}
       <QuickActions
+        loading={!statusReady}
         state={status}
         renewTo={renewTo}
         connectTo={firstSubId != null ? `/connection?sub=${firstSubId}` : '/connection'}
@@ -406,9 +416,9 @@ export default function Dashboard() {
         isTrial={Boolean(focusSub?.is_trial)}
         isLifetime={focusLifetime}
         tariffName={focusSub?.tariff_name ?? null}
-        balanceRubles={balanceData?.balance_rubles ?? 0}
+        balanceRubles={balanceData?.balance_rubles}
         fromFriendsRubles={referralInfo?.available_balance_rubles ?? null}
-        loading={subLoading}
+        loading={!statusReady}
         renewTo={renewTo}
       />
 

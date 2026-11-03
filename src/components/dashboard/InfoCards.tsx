@@ -20,7 +20,8 @@ interface InfoCardsProps {
   isLifetime?: boolean;
   /** Название тарифа: у вечной подписки крупно показывается оно, а «навсегда» — подписью. */
   tariffName?: string | null;
-  balanceRubles: number;
+  /** undefined — баланс ещё грузится (заглушка вместо «0 ₽»). */
+  balanceRubles?: number;
   /** Заработано с рефералов, ₽ — чип под балансом. 0/null — чип скрыт. */
   fromFriendsRubles?: number | null;
   loading?: boolean;
@@ -138,11 +139,15 @@ export default function InfoCards({
             )}
           </span>
         )}
-        <span
-          className={`mt-2 inline-flex w-fit items-center rounded-full border px-2.5 py-1 text-2xs font-semibold ${chipClass}`}
-        >
-          {subChip.label}
-        </span>
+        {loading ? (
+          <Skeleton className="mt-2 h-6 w-20 rounded-full" />
+        ) : (
+          <span
+            className={`mt-2 inline-flex w-fit items-center rounded-full border px-2.5 py-1 text-2xs font-semibold ${chipClass}`}
+          >
+            {subChip.label}
+          </span>
+        )}
       </Link>
 
       {/* Баланс */}
@@ -154,10 +159,14 @@ export default function InfoCards({
           {t('dashboard.info.balance.title', 'Баланс')}
         </span>
         <span className="mt-1 block">
-          <span className="block text-[26px] font-bold leading-none tracking-tight text-dark-50">
-            {Math.floor(balanceRubles).toLocaleString('ru-RU')}
-            {'\u00A0'}₽
-          </span>
+          {balanceRubles === undefined ? (
+            <Skeleton className="h-[26px] w-20" />
+          ) : (
+            <span className="block text-[26px] font-bold leading-none tracking-tight text-dark-50">
+              {Math.floor(balanceRubles).toLocaleString('ru-RU')}
+              {'\u00A0'}₽
+            </span>
+          )}
           <span className="mt-1 block text-xs text-dark-400">
             {t('dashboard.info.balance.renewals', 'Оплата продлений')}
           </span>

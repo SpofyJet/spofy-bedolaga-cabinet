@@ -434,12 +434,18 @@ export default function Subscription() {
           <Stat
             label={t('subscription.devices')}
             value={
-              subscription.device_limit === 0
-                ? `${connectedDevices} · ∞`
-                : t('subscription.v10.devicesOf', '{{used}} из {{max}}', {
-                    used: connectedDevices,
-                    max: subscription.device_limit,
-                  })
+              // число устройств живёт в панели и приходит позже подписки — без
+              // заглушки сначала мелькало «0 из 5», потом «3 из 5»
+              devicesData === undefined ? (
+                <Skeleton className="h-[30px] w-20" />
+              ) : subscription.device_limit === 0 ? (
+                `${connectedDevices} · ∞`
+              ) : (
+                t('subscription.v10.devicesOf', '{{used}} из {{max}}', {
+                  used: connectedDevices,
+                  max: subscription.device_limit,
+                })
+              )
             }
             hint={
               isAtDeviceLimit

@@ -10,6 +10,7 @@ import {
 } from 'react-icons/pi';
 import type { IconType } from 'react-icons';
 
+import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/lib/utils';
 
 /**
@@ -29,6 +30,9 @@ interface QuickActionsProps {
   connectTo: string;
   /** Вечная подписка (ULTIMA): «Продлить» не предлагаем. */
   lifetime?: boolean;
+  /** Состояние доступа ещё не известно: четыре пустые плитки того же размера,
+   *  а не набор кнопок для «закончилась», который через миг сменится. */
+  loading?: boolean;
 }
 
 interface Action {
@@ -43,8 +47,22 @@ export default function QuickActions({
   renewTo,
   connectTo,
   lifetime = false,
+  loading = false,
 }: QuickActionsProps) {
   const { t } = useTranslation();
+
+  if (loading) {
+    return (
+      <div className="grid grid-cols-4 gap-2.5" aria-busy="true">
+        {[0, 1, 2, 3].map((i) => (
+          <span key={i} className="flex flex-col items-center gap-1.5">
+            <Skeleton className="h-12 w-full max-w-[88px] rounded-2xl sm:h-[52px]" />
+            <Skeleton className="h-[11.5px] w-14" />
+          </span>
+        ))}
+      </div>
+    );
+  }
 
   const connect: Action = {
     key: 'connect',

@@ -145,7 +145,8 @@ export default function Balance() {
     retry: false,
     staleTime: 60_000,
   });
-  const shortcuts = canRenew && renewalOptions ? pickShortcutPeriods(renewalOptions) : [];
+  const shortcuts =
+    canRenew && Array.isArray(renewalOptions) ? pickShortcutPeriods(renewalOptions) : [];
 
   const { data: referralInfo } = useQuery({
     queryKey: ['referral-info'],
@@ -325,7 +326,13 @@ export default function Balance() {
       <Surface>
         <Stat
           label={t('balance.currentBalance')}
-          value={`${formatAmount(balanceRubles, Number.isInteger(balanceRubles) ? 0 : 2)} ${currencySymbol}`}
+          value={
+            balanceData === undefined ? (
+              <Skeleton className="h-[30px] w-28" />
+            ) : (
+              `${formatAmount(balanceRubles, Number.isInteger(balanceRubles) ? 0 : 2)} ${currencySymbol}`
+            )
+          }
           hint={
             referralEarnings > 0 && balanceRubles > 0
               ? t('balance.referralEarned', {
