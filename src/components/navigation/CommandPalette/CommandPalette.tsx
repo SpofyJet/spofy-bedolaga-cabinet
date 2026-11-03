@@ -135,8 +135,10 @@ export function CommandPalette({
               {/* Content */}
               <DialogPrimitive.Content asChild>
                 <motion.div
+                  // центрирование через x анимации: класс -translate-x-1/2 затирался scale
+                  style={{ x: '-50%' }}
                   className={cn(
-                    'fixed left-1/2 top-[15%] z-50 w-full max-w-lg -translate-x-1/2',
+                    'fixed left-1/2 top-[15%] z-50 w-full max-w-lg',
                     'overflow-hidden rounded-linear-lg border border-dark-700/50 bg-dark-900/95 backdrop-blur-linear',
                     'shadow-2xl',
                     'focus:outline-none',

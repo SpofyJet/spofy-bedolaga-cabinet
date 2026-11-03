@@ -118,9 +118,13 @@ export function MobileBottomNav({
       {/* Центральная кнопка подключения — главный жест VPN, как у топовых
           клиентов: круг с иконкой питания на верхней кромке панели. */}
       {connectTo && (
+        // Сдвиг к центру — через x/y самой анимации: Tailwind-классы translate
+        // затирались inline-transform'ом от whileTap, и кнопка при нажатии
+        // отскакивала на полкнопки вправо-вниз («улетала»).
         <motion.div
           whileTap={{ scale: 0.9 }}
-          className="absolute left-1/2 top-0 z-10 -translate-x-1/2 -translate-y-1/2"
+          style={{ x: '-50%', y: '-50%' }}
+          className="absolute left-1/2 top-0 z-10"
         >
           <Link
             to={connectTo}
