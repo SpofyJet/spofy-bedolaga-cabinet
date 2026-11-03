@@ -1,3 +1,5 @@
+import { isLifetimePeriod } from './lifetime';
+
 /** Длина «месяца» в днях — тот же множитель, что использует бэкенд при расчёте цены за месяц. */
 const DAYS_IN_MONTH = 30;
 
@@ -11,5 +13,7 @@ const DAYS_IN_MONTH = 30;
 export function getMonthlyPriceKopeks(priceKopeks: number, days: number): number | null {
   if (!Number.isFinite(priceKopeks) || !Number.isFinite(days)) return null;
   if (days <= DAYS_IN_MONTH) return null;
+  // Вечный период «за месяц» не считается: «Навсегда» — не 74 месяца.
+  if (isLifetimePeriod(days)) return null;
   return Math.round((priceKopeks * DAYS_IN_MONTH) / days);
 }

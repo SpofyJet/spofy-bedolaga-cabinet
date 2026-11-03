@@ -50,6 +50,15 @@ describe('tariffAction', () => {
     ).toBe('current-daily');
   });
 
+  it('текущий вечный тариф не продлевают — он не кончается', () => {
+    const lifetime = { ...activeSub, end_date: '2099-12-31T23:59:59Z' } as Subscription;
+    expect(ask({ tariff: { id: 10, is_current: false }, subscription: lifetime })).toBe(
+      'current-daily',
+    );
+    // Другой тариф с вечной подписки — обычная смена.
+    expect(ask({ subscription: lifetime })).toBe('switch');
+  });
+
   it('старую подписку переводят на тариф, а не «меняют»', () => {
     const legacy = { ...activeSub, requires_tariff_selection: true } as Subscription;
     expect(ask({ subscription: legacy })).toBe('moveToTariff');

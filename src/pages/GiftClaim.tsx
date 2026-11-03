@@ -1,3 +1,4 @@
+import { isLifetimePeriod } from '@/utils/lifetime';
 import { useMemo, useRef, useState } from 'react';
 import { useParams, useNavigate } from 'react-router';
 import { useQuery, useMutation } from '@tanstack/react-query';
@@ -93,6 +94,7 @@ export default function GiftClaim() {
   const periodLabel = useMemo(() => {
     const days = gift?.period_days;
     if (!days) return '';
+    if (isLifetimePeriod(days)) return t('subscription.lifetime.forever');
     return `${days} ${t('gift.days', 'days')}`;
   }, [gift?.period_days, t]);
 

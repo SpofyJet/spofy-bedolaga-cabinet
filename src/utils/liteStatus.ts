@@ -8,6 +8,8 @@
  * всего.
  */
 
+import { isLifetimeSubscription } from './lifetime';
+
 export type LiteAction = 'connect' | 'renew' | 'buy' | 'manage' | 'chooseTariff';
 
 export interface LiteStatusInput {
@@ -18,6 +20,7 @@ export interface LiteStatusInput {
   is_daily_paused?: boolean;
   days_left?: number;
   end_date?: string | null;
+  is_lifetime?: boolean;
   subscription_url?: string | null;
   subscription_crypto_link?: string | null;
   requires_tariff_selection?: boolean;
@@ -25,7 +28,16 @@ export interface LiteStatusInput {
 
 export interface LiteStatus {
   /** Хвост ключа перевода: `lite.status.<key>`. */
-  key: 'none' | 'expired' | 'limited' | 'paused' | 'legacy' | 'expiring' | 'trial' | 'active';
+  key:
+    | 'none'
+    | 'expired'
+    | 'limited'
+    | 'paused'
+    | 'legacy'
+    | 'expiring'
+    | 'trial'
+    | 'lifetime'
+    | 'active';
   action: LiteAction;
   /** Дата, которую подставляет фраза; null — фраза без даты. */
   date: string | null;
@@ -43,7 +55,10 @@ export function liteStatus(subscription: LiteStatusInput | null | undefined): Li
     return { key: 'none', action: 'buy', date: null };
   }
 
-  const endDate = subscription.end_date ?? null;
+  // Вечной подписке (ULTIMA) дату не подставляем: «до 31 декабря 2099 г.» —
+  // не ответ человеку. Срок у неё один — «Навсегда».
+  const lifetime = isLifetimeSubscription(subscription);
+  const endDate = lifetime ? null : (subscription.end_date ?? null);
 
   // Саб-ссылка нужна и после окончания доступа: она открывает страницу покупки
   // и добавляется в приложение, где видно состояние подписки. Покупка или
@@ -87,6 +102,11 @@ export function liteStatus(subscription: LiteStatusInput | null | undefined): Li
   // чтобы дать подключить устройство. Тарифы при этом рядом строкой.
   if (subscription.is_trial) {
     return { key: 'trial', action: 'connect', date: endDate };
+  }
+
+  // Вечная не кончается: ни «скоро закончится», ни продления.
+  if (lifetime) {
+    return { key: 'lifetime', action: 'connect', date: null };
   }
 
   const daysLeft = subscription.days_left;

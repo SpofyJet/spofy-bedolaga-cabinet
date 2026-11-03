@@ -1,3 +1,4 @@
+import { isLifetimePeriod } from '@/utils/lifetime';
 import { useTranslation } from 'react-i18next';
 import { useCurrency } from '../../../hooks/useCurrency';
 import { deviceUnavailableText } from '../deviceReasons';
@@ -178,7 +179,10 @@ export function DeviceTopupSheet({
                   devicePriceData.price_per_device_label
                 )}
                 /{t('subscription.perDevice').replace('/ ', '')} (
-                {t('subscription.days', { count: devicePriceData.days_left })})
+                {isLifetimePeriod(devicePriceData.days_left)
+                  ? t('subscription.lifetime.forever')
+                  : t('subscription.days', { count: devicePriceData.days_left })}
+                )
               </div>
               {devicePriceData.discount_percent != null && devicePriceData.discount_percent > 0 && (
                 <div className="mb-2">

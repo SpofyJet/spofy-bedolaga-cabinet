@@ -14,6 +14,7 @@ import { useCurrency } from '@/hooks/useCurrency';
 import { getApiErrorMessage } from '@/utils/api-error';
 import { formatLiteDate } from '@/utils/liteDate';
 import { liteStatus, type LiteAction } from '@/utils/liteStatus';
+import { isLifetimeSubscription } from '@/utils/lifetime';
 
 /** Единственное главное действие экрана — ссылкой или кнопкой, вид один. */
 const PRIMARY_ACTION_CLASS =
@@ -145,8 +146,8 @@ export default function DashboardLite() {
         : status.key === 'expired' && status.action === 'connect'
           ? subscription?.requires_tariff_selection
             ? 'chooseTariff'
-            : subscription?.is_trial
-              ? null // Витрина тарифов уже есть отдельной строкой ниже.
+            : subscription?.is_trial || isLifetimeSubscription(subscription)
+              ? null // Витрина тарифов уже есть строкой ниже; вечную не продлевают.
               : 'renew'
           : null;
 
@@ -202,6 +203,7 @@ export default function DashboardLite() {
             id: item.id,
             name: item.tariff_name,
             endDate: item.end_date,
+            lifetime: isLifetimeSubscription(item),
           }))}
         />
       ) : (
@@ -307,7 +309,7 @@ export default function DashboardLite() {
 }
 
 interface ManySubscriptionsProps {
-  items: { id: number; name: string | null; endDate: string | null }[];
+  items: { id: number; name: string | null; endDate: string | null; lifetime?: boolean }[];
 }
 
 /**
@@ -330,7 +332,13 @@ function ManySubscriptions({ items }: ManySubscriptionsProps) {
               key={item.id}
               to={`/subscriptions/${item.id}`}
               label={item.name || t('lite.subscription.untitled', 'Подписка')}
-              value={item.endDate ? formatLiteDate(item.endDate) : undefined}
+              value={
+                item.lifetime
+                  ? t('subscription.lifetime.forever')
+                  : item.endDate
+                    ? formatLiteDate(item.endDate)
+                    : undefined
+              }
             />
           ))}
         </LiteRowGroup>

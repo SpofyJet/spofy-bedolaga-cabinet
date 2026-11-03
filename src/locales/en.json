@@ -948,7 +948,11 @@
       "trialDescription": "Regular servers keep working without limits until the trial ends. «Обход» (bypass) servers come with the «С Обходами» plan.",
       "trialCta": "Get «С Обходами»"
     },
-    "bypassQuotaLabel": "Bypass"
+    "bypassQuotaLabel": "Bypass",
+    "lifetime": {
+      "forever": "Forever",
+      "term": "Term"
+    }
   },
   "balance": {
     "paymentEmail": "Payment email",
@@ -8012,6 +8016,7 @@
     "status": {
       "none": "No subscription yet",
       "active": "Subscription works until {{date}}",
+      "lifetime": "Your subscription works forever",
       "trial": "Trial until {{date}}",
       "expiring": "Subscription ends on {{date}}",
       "expired": "Subscription ended on {{date}}",

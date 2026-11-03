@@ -15,6 +15,7 @@ import PromoOffersSection from '../components/PromoOffersSection';
 import DevicesTrafficCard from '../components/dashboard/DevicesTrafficCard';
 import SubscriptionCardExpired from '../components/dashboard/SubscriptionCardExpired';
 import { hasLegacySubscription } from '../utils/legacySubscription';
+import { isLifetimeSubscription } from '../utils/lifetime';
 import TrialOfferCard from '../components/dashboard/TrialOfferCard';
 import ReminderCards from '../components/dashboard/ReminderCards';
 import { giftApi } from '../api/gift';
@@ -321,6 +322,7 @@ export default function Dashboard() {
   // Первая активная подписка (multi — первая видимая). Дней до конца считаем
   // от end_date — это поле есть у обоих типов подписки.
   const focusSub = isMultiTariff ? visibleSubscriptions[0] : subscription;
+  const focusLifetime = isLifetimeSubscription(focusSub);
   const daysLeft = useMemo(() => {
     if (!focusSub?.end_date) return undefined;
     const ms = new Date(focusSub.end_date).getTime() - Date.now();
@@ -392,6 +394,7 @@ export default function Dashboard() {
         state={status}
         renewTo={renewTo}
         connectTo={firstSubId != null ? `/connection?sub=${firstSubId}` : '/connection'}
+        lifetime={focusLifetime}
       />
 
       {/* Подписка + Баланс */}
@@ -400,6 +403,7 @@ export default function Dashboard() {
         daysLeft={daysLeft}
         endDate={focusSub?.end_date}
         isTrial={Boolean(focusSub?.is_trial)}
+        isLifetime={focusLifetime}
         balanceRubles={balanceData?.balance_rubles ?? 0}
         fromFriendsRubles={referralInfo?.available_balance_rubles ?? null}
         loading={subLoading}

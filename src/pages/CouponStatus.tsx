@@ -1,3 +1,4 @@
+import { isLifetimeEndDate, isLifetimePeriod } from '@/utils/lifetime';
 import { useState } from 'react';
 import { useParams } from 'react-router';
 import { useQuery, useMutation } from '@tanstack/react-query';
@@ -101,8 +102,11 @@ export default function CouponStatus() {
             {redeemed.renewed ? t('coupon.success.renewed') : t('coupon.success.activated')}
           </h1>
           <p className="text-sm text-dark-400">
-            {redeemed.tariff_name} · {redeemed.period_days} {t('coupon.daysSuffix')}
-            {redeemed.end_date && (
+            {redeemed.tariff_name} ·{' '}
+            {isLifetimePeriod(redeemed.period_days) || isLifetimeEndDate(redeemed.end_date)
+              ? t('subscription.lifetime.forever')
+              : `${redeemed.period_days} ${t('coupon.daysSuffix')}`}
+            {redeemed.end_date && !isLifetimeEndDate(redeemed.end_date) && (
               <>
                 <br />
                 {t('coupon.success.until')} {formatShortDate(redeemed.end_date)}
@@ -131,7 +135,9 @@ export default function CouponStatus() {
           <div className="flex justify-between gap-4">
             <span className="text-dark-400">{t('coupon.period')}</span>
             <span className="font-medium text-dark-100">
-              {coupon.period_days} {t('coupon.daysSuffix')}
+              {isLifetimePeriod(coupon.period_days)
+                ? t('subscription.lifetime.forever')
+                : `${coupon.period_days} ${t('coupon.daysSuffix')}`}
             </span>
           </div>
           {coupon.valid_until && (

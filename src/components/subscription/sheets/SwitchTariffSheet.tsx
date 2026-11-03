@@ -12,6 +12,7 @@ import { buttonVariants } from '@/components/primitives/Button/Button.variants';
 import { cn } from '@/lib/utils';
 import { Spinner } from '@/components/ui/Spinner';
 import { formatLiteDate } from '@/utils/liteDate';
+import { isLifetimeSubscription } from '@/utils/lifetime';
 import { tariffTrafficLabel } from '@/utils/tariffTrafficLabel';
 import InsufficientBalancePrompt from '../../InsufficientBalancePrompt';
 import type { Subscription, Tariff } from '../../../types';
@@ -135,6 +136,8 @@ export function SwitchTariffSheet({
   const dailyQuote = target ? dailyPriceQuote(target, applyPromoDiscount) : null;
   const targetIsDaily = Boolean(target?.is_daily);
   const periodicSwitch = subscription && !subscription.is_daily && !targetIsDaily;
+  // Вечная подписка: ни «31 декабря 2099 г.», ни «26 000 дней» — срок «Навсегда».
+  const lifetime = isLifetimeSubscription(subscription);
 
   return (
     <section
@@ -210,15 +213,19 @@ export function SwitchTariffSheet({
             <div className="flex justify-between gap-3">
               <dt className="text-sm text-dark-400">
                 {t(
-                  periodicSwitch
-                    ? 'subscription.switchTariff.endDate'
-                    : 'subscription.switchTariff.remainingDays',
+                  lifetime
+                    ? 'subscription.lifetime.term'
+                    : periodicSwitch
+                      ? 'subscription.switchTariff.endDate'
+                      : 'subscription.switchTariff.remainingDays',
                 )}
               </dt>
               <dd className="min-w-0 text-end text-sm text-dark-100">
-                {periodicSwitch
-                  ? formatLiteDate(subscription.end_date)
-                  : switchPreview.remaining_days}
+                {lifetime
+                  ? t('subscription.lifetime.forever')
+                  : periodicSwitch
+                    ? formatLiteDate(subscription.end_date)
+                    : switchPreview.remaining_days}
               </dd>
             </div>
           </dl>

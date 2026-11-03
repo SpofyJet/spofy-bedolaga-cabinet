@@ -1,4 +1,5 @@
 import type { Subscription } from '@/types';
+import { isLifetimeSubscription } from './lifetime';
 
 /**
  * Старая подписка: платная, без тарифа, а оператор уже на тарифах (куплена в
@@ -72,9 +73,15 @@ export function showsAddonOptions(
   );
 }
 
-/** Тумблер автоплатежа: не у пробных, не у суточных и не у старых подписок. */
+/** Тумблер автоплатежа: не у пробных, не у суточных, не у старых и не у вечных подписок. */
 export function showsAutopayToggle(
-  subscription: Pick<Subscription, 'is_trial' | 'is_daily' | 'requires_tariff_selection'>,
+  subscription: Pick<Subscription, 'is_trial' | 'is_daily' | 'requires_tariff_selection'> &
+    Partial<Pick<Subscription, 'is_lifetime' | 'end_date'>>,
 ): boolean {
-  return !subscription.is_trial && !subscription.is_daily && !needsTariff(subscription);
+  return (
+    !subscription.is_trial &&
+    !subscription.is_daily &&
+    !needsTariff(subscription) &&
+    !isLifetimeSubscription(subscription)
+  );
 }

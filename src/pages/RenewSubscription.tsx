@@ -1,3 +1,4 @@
+import { isLifetimePeriod } from '@/utils/lifetime';
 import { isUncertainPurchaseOutcome } from '@/utils/api-error';
 import { useEffect, useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -242,7 +243,9 @@ export default function RenewSubscription() {
                 <div className="flex items-center justify-between">
                   <div>
                     <span className="text-base font-semibold" style={{ color: g.text }}>
-                      {option.period_days} {t('subscription.days', 'дней')}
+                      {isLifetimePeriod(option.period_days)
+                        ? t('subscription.lifetime.forever')
+                        : `${option.period_days} ${t('subscription.days', 'дней')}`}
                     </span>
                     {option.discount_percent > 0 && (
                       <span className="ml-2 rounded-full bg-success-400/15 px-2 py-0.5 text-[10px] font-semibold text-success-400">

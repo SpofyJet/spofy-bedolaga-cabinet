@@ -19,6 +19,7 @@ import { cn } from '@/lib/utils';
  *   доступ есть   → Подключить · Продлить · Пополнить · Пригласить
  *   закончилась   → Продлить · Тарифы · Пополнить · Пригласить
  *   нет подписки  → Тарифы · Пополнить · Промокод · Пригласить
+ * Вечной подписке продлевать нечего: вместо «Продлить» — «Тарифы».
  */
 export type QuickActionsState = 'active' | 'expired' | 'none';
 
@@ -26,6 +27,8 @@ interface QuickActionsProps {
   state: QuickActionsState;
   renewTo: string;
   connectTo: string;
+  /** Вечная подписка (ULTIMA): «Продлить» не предлагаем. */
+  lifetime?: boolean;
 }
 
 interface Action {
@@ -35,7 +38,12 @@ interface Action {
   to: string;
 }
 
-export default function QuickActions({ state, renewTo, connectTo }: QuickActionsProps) {
+export default function QuickActions({
+  state,
+  renewTo,
+  connectTo,
+  lifetime = false,
+}: QuickActionsProps) {
   const { t } = useTranslation();
 
   const connect: Action = {
@@ -77,7 +85,7 @@ export default function QuickActions({ state, renewTo, connectTo }: QuickActions
 
   const actions =
     state === 'active'
-      ? [connect, renew, topup, invite]
+      ? [connect, lifetime ? plans : renew, topup, invite]
       : state === 'expired'
         ? [renew, plans, topup, invite]
         : [plans, topup, promo, invite];

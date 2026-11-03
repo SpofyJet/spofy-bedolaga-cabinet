@@ -858,7 +858,11 @@
       "trialDescription": "试用期结束前，普通服务器仍可无限制使用。绕行服务器包含在「С Обходами」套餐中。",
       "trialCta": "购买「С Обходами」"
     },
-    "bypassQuotaLabel": "绕行"
+    "bypassQuotaLabel": "绕行",
+    "lifetime": {
+      "forever": "永久",
+      "term": "期限"
+    }
   },
   "balance": {
     "paymentEmail": "支付邮箱",
@@ -7450,6 +7454,7 @@
     "status": {
       "none": "还没有订阅",
       "active": "订阅有效期至 {{date}}",
+      "lifetime": "订阅永久有效",
       "trial": "试用期至 {{date}}",
       "expiring": "订阅将于 {{date}} 到期",
       "expired": "订阅已于 {{date}} 到期",

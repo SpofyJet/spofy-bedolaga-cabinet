@@ -1,3 +1,4 @@
+import { isLifetimePeriod, isLifetimeSubscription } from '@/utils/lifetime';
 import { uiLocale } from '@/utils/uiLocale';
 import { useState, useEffect, useRef } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
@@ -111,7 +112,12 @@ export default function Balance() {
     staleTime: 30_000,
   });
   const ownSubscription = subscriptionResponse?.subscription ?? null;
-  const canRenew = !!ownSubscription && !ownSubscription.is_trial && !ownSubscription.is_daily;
+  // Вечную подписку (ULTIMA) не продлевают — блока «Продлить подписку» у неё нет.
+  const canRenew =
+    !!ownSubscription &&
+    !ownSubscription.is_trial &&
+    !ownSubscription.is_daily &&
+    !isLifetimeSubscription(ownSubscription);
   const { data: renewalOptions } = useQuery({
     queryKey: ['renewal-options', ownSubscription?.id],
     queryFn: () => subscriptionApi.getRenewalOptions(ownSubscription?.id),
@@ -554,7 +560,11 @@ export default function Balance() {
                   >
                     <span className="truncate">{sub.tariff_name}</span>
                     <span className="shrink-0 text-dark-400">
-                      {t('balance.promocode.daysLeft', '{{count}} дн.', { count: sub.days_left })}
+                      {isLifetimePeriod(sub.days_left)
+                        ? t('subscription.lifetime.forever')
+                        : t('balance.promocode.daysLeft', '{{count}} дн.', {
+                            count: sub.days_left,
+                          })}
                     </span>
                   </button>
                 ))}

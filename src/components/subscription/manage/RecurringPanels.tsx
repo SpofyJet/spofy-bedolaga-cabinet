@@ -24,6 +24,7 @@ import {
   type CasheraUiState,
 } from '@/utils/casheraRecurring';
 import { isRecurringFeatureOff } from '@/utils/recurringFeature';
+import { isLifetimeSubscription } from '@/utils/lifetime';
 import {
   isSbpFeatureDisabledError,
   sbpIntervalLabelKey,
@@ -58,6 +59,13 @@ export function RecurringPanels({ subscription, subscriptionId }: RecurringPanel
   const { isDark } = useTheme();
   const g = getGlassColors(isDark);
 
+  // Вечной подписке включать автосписание не предлагаем — продлевать нечего.
+  // Уже подключённое (active/pending/past_due) остаётся видно, чтобы его можно
+  // было отключить.
+  const lifetime = isLifetimeSubscription(subscription);
+  const offerable = <S extends string>(state: S): S | 'hidden' =>
+    lifetime && state === 'off' ? 'hidden' : state;
+
   const purchaseOptionsQuery = useQuery({
     queryKey: ['purchase-options', subscriptionId],
     queryFn: () => subscriptionApi.getPurchaseOptions(subscriptionId),
@@ -90,7 +98,7 @@ export function RecurringPanels({ subscription, subscriptionId }: RecurringPanel
   const sbpFeatureDisabled = sbpFeatureOff || isSbpFeatureDisabledError(sbpQuery.error);
   const sbpUiStateValue: SbpUiState =
     sbpInfo !== undefined || sbpFeatureDisabled
-      ? sbpUiState(sbpInfo, sbpFeatureDisabled)
+      ? offerable(sbpUiState(sbpInfo, sbpFeatureDisabled))
       : 'hidden';
 
   const enableSbpMutation = useMutation({
@@ -162,7 +170,7 @@ export function RecurringPanels({ subscription, subscriptionId }: RecurringPanel
   const lavaFeatureDisabled = lavaFeatureOff || isLavaFeatureDisabledError(lavaQuery.error);
   const lavaUiStateValue: LavaUiState =
     lavaInfo !== undefined || lavaFeatureDisabled
-      ? lavaUiState(lavaInfo, lavaFeatureDisabled)
+      ? offerable(lavaUiState(lavaInfo, lavaFeatureDisabled))
       : 'hidden';
 
   const enableLavaMutation = useMutation({
@@ -234,7 +242,7 @@ export function RecurringPanels({ subscription, subscriptionId }: RecurringPanel
     casheraFeatureOff || isCasheraFeatureDisabledError(casheraQuery.error);
   const casheraUiStateValue: CasheraUiState =
     casheraInfo !== undefined || casheraFeatureDisabled
-      ? casheraUiState(casheraInfo, casheraFeatureDisabled)
+      ? offerable(casheraUiState(casheraInfo, casheraFeatureDisabled))
       : 'hidden';
 
   const enableCasheraMutation = useMutation({

@@ -1,5 +1,6 @@
 import type { PurchaseOptions, Subscription, Tariff } from '../../../types';
 import { needsTariff } from '@/utils/legacySubscription';
+import { isLifetimeSubscription } from '@/utils/lifetime';
 
 /**
  * Что делает нажатие на тариф.
@@ -11,7 +12,8 @@ import { needsTariff } from '@/utils/legacySubscription';
  * за то, что выбрала.
  */
 export type TariffActionKind =
-  /** Текущий посуточный тариф: продлевать нечего, списание идёт само. */
+  /** Текущий посуточный тариф: продлевать нечего, списание идёт само. Так же —
+   *  текущий вечный тариф: он не кончается, продлевать его нечего. */
   | 'current-daily'
   /** Текущий тариф: продлеваем его же. */
   | 'extend'
@@ -48,7 +50,9 @@ export function tariffAction({
   const isCurrent = Boolean(tariff.is_current) || tariff.id === subscription?.tariff_id;
 
   if (isCurrent) {
-    return subscription?.is_daily ? 'current-daily' : 'extend';
+    return subscription?.is_daily || isLifetimeSubscription(subscription)
+      ? 'current-daily'
+      : 'extend';
   }
 
   if (needsTariff(subscription)) {

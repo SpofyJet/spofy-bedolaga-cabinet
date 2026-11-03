@@ -147,3 +147,24 @@ describe('liteStatus', () => {
     expect(liteStatus(withoutDays).key).toBe('active');
   });
 });
+
+describe('liteStatus: вечная подписка', () => {
+  const lifetime: LiteStatusInput = {
+    ...active,
+    days_left: 26_355,
+    end_date: '2099-12-31T23:59:59Z',
+  };
+
+  it('говорит «навсегда» без даты и без «скоро закончится»', () => {
+    expect(liteStatus(lifetime)).toEqual({ key: 'lifetime', action: 'connect', date: null });
+    expect(liteStatus({ ...active, is_lifetime: true }).key).toBe('lifetime');
+  });
+
+  it('кончившийся трафик по-прежнему важнее', () => {
+    expect(liteStatus({ ...lifetime, is_limited: true }).key).toBe('limited');
+  });
+
+  it('отключённая вечная подписка не подставляет дату 2099 года', () => {
+    expect(liteStatus({ ...lifetime, status: 'disabled' }).date).toBeNull();
+  });
+});

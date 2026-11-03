@@ -1,3 +1,4 @@
+import { isLifetimePeriod } from '@/utils/lifetime';
 import { useCallback, useRef, useState } from 'react';
 import { useSearchParams, useNavigate } from 'react-router';
 import { useQuery } from '@tanstack/react-query';
@@ -109,7 +110,10 @@ function CodeOnlySuccessState({
         </h1>
         {tariffName && periodDays !== null && (
           <p className="mt-1 text-sm text-dark-300">
-            {tariffName} — {periodDays} {t('gift.days', 'days')}
+            {tariffName} —{' '}
+            {isLifetimePeriod(periodDays)
+              ? t('subscription.lifetime.forever')
+              : `${periodDays} ${t('gift.days', 'days')}`}
           </p>
         )}
       </div>
@@ -220,7 +224,10 @@ function DeliveredState({
         <h1 className="text-xl font-bold text-dark-50">{t('gift.successTitle', 'Gift sent!')}</h1>
         {tariffName && periodDays !== null && (
           <p className="mt-1 text-sm text-dark-300">
-            {tariffName} — {periodDays} {t('gift.days', 'days')}
+            {tariffName} —{' '}
+            {isLifetimePeriod(periodDays)
+              ? t('subscription.lifetime.forever')
+              : `${periodDays} ${t('gift.days', 'days')}`}
           </p>
         )}
         {recipientContact && (
@@ -284,7 +291,10 @@ function PendingActivationState({
         </h1>
         {tariffName && periodDays !== null && (
           <p className="mt-1 text-sm text-dark-300">
-            {tariffName} — {periodDays} {t('gift.days', 'days')}
+            {tariffName} —{' '}
+            {isLifetimePeriod(periodDays)
+              ? t('subscription.lifetime.forever')
+              : `${periodDays} ${t('gift.days', 'days')}`}
           </p>
         )}
         {recipientContact && (

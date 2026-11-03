@@ -14,6 +14,7 @@ import { canOpenTariffSwitch, needsTariff } from '../utils/legacySubscription';
 import { TariffPickerGrid } from '../components/subscription/purchase/TariffPickerGrid';
 import { TariffPickerLite } from '../components/subscription/purchase/TariffPickerLite';
 import { formatLiteDate } from '@/utils/liteDate';
+import { isLifetimeSubscription } from '@/utils/lifetime';
 import { useLiteMode } from '../hooks/useLiteMode';
 import { ClassicPurchaseWizard } from '../components/subscription/purchase/ClassicPurchaseWizard';
 import { ExclamationIcon, SparklesIcon } from '@/components/icons';
@@ -163,9 +164,11 @@ export default function SubscriptionPurchase() {
               {t('subscription.switchTariff.sourceContext', { name: subscription.tariff_name })}
               {!subscription.is_daily && subscription.end_date && (
                 <span className="mt-1 block">
-                  {t('subscription.switchTariff.validUntil', {
-                    date: formatLiteDate(subscription.end_date),
-                  })}
+                  {isLifetimeSubscription(subscription)
+                    ? `${t('subscription.lifetime.term')}: ${t('subscription.lifetime.forever')}`
+                    : t('subscription.switchTariff.validUntil', {
+                        date: formatLiteDate(subscription.end_date),
+                      })}
                 </span>
               )}
             </p>
@@ -237,9 +240,11 @@ export default function SubscriptionPurchase() {
                 ? t('subscription.newTariff', 'Новый тариф')
                 : !isMultiTariff && subscription?.is_daily && !subscription?.is_trial
                   ? t('subscription.switchTariff.title')
-                  : subscription && !subscription.is_trial
-                    ? t('subscription.extend')
-                    : t('subscription.getSubscription')}
+                  : isLifetimeSubscription(subscription)
+                    ? t('subscription.switchTariff.title')
+                    : subscription && !subscription.is_trial
+                      ? t('subscription.extend')
+                      : t('subscription.getSubscription')}
         </h1>
       </div>
 

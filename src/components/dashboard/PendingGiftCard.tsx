@@ -1,3 +1,4 @@
+import { isLifetimePeriod } from '@/utils/lifetime';
 import { Link } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
@@ -38,7 +39,10 @@ export default function PendingGiftCard({ gifts, className }: PendingGiftCardPro
               <p className="mt-0.5 text-xs text-dark-300">
                 {gift.tariff_name && (
                   <span>
-                    {gift.tariff_name} — {gift.period_days} {t('gift.days')}
+                    {gift.tariff_name} —{' '}
+                    {isLifetimePeriod(gift.period_days)
+                      ? t('subscription.lifetime.forever')
+                      : `${gift.period_days} ${t('gift.days')}`}
                   </span>
                 )}
                 {gift.sender_display && (

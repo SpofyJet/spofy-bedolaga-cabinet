@@ -81,6 +81,8 @@ export interface Subscription {
   start_date: string;
   end_date: string;
   days_left: number;
+  /** Вечная подписка (ULTIMA): срок «Навсегда», продления нет. Старые ответы его не несут — см. utils/lifetime. */
+  is_lifetime?: boolean;
   hours_left: number;
   minutes_left: number;
   time_left_display: string;
@@ -132,6 +134,8 @@ export interface SubscriptionListItem {
   traffic_used_gb: number;
   device_limit: number;
   end_date: string | null;
+  /** Вечная подписка (ULTIMA). Может отсутствовать — тогда узнаём по end_date. */
+  is_lifetime?: boolean;
   subscription_url: string | null;
   subscription_crypto_link: string | null;
   is_trial: boolean;

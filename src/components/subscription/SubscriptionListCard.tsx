@@ -8,11 +8,13 @@ import {
   CheckIcon,
   ChevronRightIcon,
   DevicesIcon,
+  InfinityIcon,
   StarIcon,
   XIcon,
 } from '@/components/icons';
 import type { SubscriptionListItem } from '../../types';
 import { needsTariff, tariffSelectionPath } from '@/utils/legacySubscription';
+import { isLifetimeSubscription } from '@/utils/lifetime';
 import { connectFooterState } from './connectFooterState';
 import { SubscriptionConnectFooter } from './SubscriptionConnectFooter';
 
@@ -107,6 +109,7 @@ export default function SubscriptionListCard({
   };
 
   const isTrial = subscription.is_trial;
+  const isLifetime = isLifetimeSubscription(subscription);
   const isActive =
     subscription.status === 'active' ||
     subscription.status === 'trial' ||
@@ -210,14 +213,23 @@ export default function SubscriptionListCard({
               {subscription.device_limit}
             </span>
           )}
-          <span className="flex items-center gap-1">
-            <CalendarIcon className="h-3.5 w-3.5 opacity-50" />
-            {formatDate(subscription.end_date, i18n.language)}
-          </span>
+          {isLifetime ? (
+            <span className="flex items-center gap-1">
+              <InfinityIcon className="h-3.5 w-3.5 opacity-50" />
+              {t('subscription.lifetime.forever')}
+            </span>
+          ) : (
+            <span className="flex items-center gap-1">
+              <CalendarIcon className="h-3.5 w-3.5 opacity-50" />
+              {formatDate(subscription.end_date, i18n.language)}
+            </span>
+          )}
           {/* Старая подписка (куплена в классике, тарифа нет): автоплатёж ей
-              недоступен — статус не показываем, кнопка перехода ниже. */}
+              недоступен — статус не показываем, кнопка перехода ниже.
+              Вечной подписке продлевать нечего — автопродления тоже нет. */}
           {!needsTariff(subscription) &&
             !isTrial &&
+            !isLifetime &&
             (() => {
               const isDaily = subscription.is_daily;
               const enabled = isDaily

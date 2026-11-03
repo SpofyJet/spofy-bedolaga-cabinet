@@ -12,6 +12,7 @@ import { customDaysPrice } from './customDaysPrice';
 import { usePlatform } from '../../../platform';
 import { openPaymentUrl } from '../../../utils/openPaymentUrl';
 import { getMonthlyPriceKopeks } from '../../../utils/pricing';
+import { isLifetimePeriod } from '../../../utils/lifetime';
 import { pickBestValue } from '../../../utils/bestValue';
 import InsufficientBalancePrompt from '../../InsufficientBalancePrompt';
 import type { Tariff, TariffPeriod } from '../../../types';
@@ -58,6 +59,9 @@ export function TariffPurchaseForm({
   onBack,
 }: TariffPurchaseFormProps) {
   const { t } = useTranslation();
+  // Вечный период (ULTIMA, 2222 дня) — «Навсегда», даже если подпись с сервера иная.
+  const periodLabel = (period: { days: number; label: string }) =>
+    isLifetimePeriod(period.days) ? t('subscription.lifetime.forever') : period.label;
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { formatAmount, currencySymbol } = useCurrency();
@@ -450,7 +454,9 @@ export function TariffPurchaseForm({
                           -{displayDiscount}%
                         </div>
                       )}
-                      <div className="text-lg font-semibold text-dark-100">{period.label}</div>
+                      <div className="text-lg font-semibold text-dark-100">
+                        {periodLabel(period)}
+                      </div>
                       {/* Цена не рвётся между числом и знаком валюты: две цены в
                           карточку шириной в полэкрана не влезают, и без переноса
                           целиком «₽» уезжал на свою строку. */}
@@ -737,7 +743,8 @@ export function TariffPurchaseForm({
                               <>
                                 <div className="flex flex-wrap justify-between gap-x-3 text-sm text-dark-300">
                                   <span>
-                                    {t('subscription.baseTariff')}: {selectedTariffPeriod.label}
+                                    {t('subscription.baseTariff')}:{' '}
+                                    {periodLabel(selectedTariffPeriod)}
                                   </span>
                                   <span>
                                     {formatPrice(selectedTariffPeriod.base_tariff_price_kopeks)}
@@ -760,7 +767,7 @@ export function TariffPurchaseForm({
                               <div className="flex flex-wrap justify-between gap-x-3 text-sm text-dark-300">
                                 <span>
                                   {t('subscription.summary.period', {
-                                    label: selectedTariffPeriod.label,
+                                    label: periodLabel(selectedTariffPeriod),
                                   })}
                                 </span>
                                 <div className="flex items-center gap-2 whitespace-nowrap">

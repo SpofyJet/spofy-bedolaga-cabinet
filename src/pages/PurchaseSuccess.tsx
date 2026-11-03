@@ -1,3 +1,4 @@
+import { isLifetimePeriod } from '@/utils/lifetime';
 import { useState, useCallback, useRef, useEffect } from 'react';
 import { useParams, useNavigate, useSearchParams } from 'react-router';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
@@ -131,7 +132,10 @@ function CabinetCredentialsState({
         <h1 className="text-xl font-bold text-dark-50">{t('landing.cabinetReady')}</h1>
         {tariffName && periodDays !== null && (
           <p className="mt-1 text-sm text-dark-300">
-            {tariffName} — {periodDays} {t('landing.daysAccess')}
+            {tariffName} —{' '}
+            {isLifetimePeriod(periodDays)
+              ? t('subscription.lifetime.forever')
+              : `${periodDays} ${t('landing.daysAccess')}`}
           </p>
         )}
       </div>
@@ -239,7 +243,10 @@ function SuccessState({
         </h1>
         {tariffName && periodDays !== null && (
           <p className="mt-1 text-sm text-dark-300">
-            {tariffName} — {periodDays} {t('landing.daysAccess')}
+            {tariffName} —{' '}
+            {isLifetimePeriod(periodDays)
+              ? t('subscription.lifetime.forever')
+              : `${periodDays} ${t('landing.daysAccess')}`}
           </p>
         )}
         {isGift && contactType === 'telegram' && recipientInBot === true && (
@@ -371,7 +378,10 @@ function PendingActivationState({
         <h1 className="text-xl font-bold text-dark-50">{t('landing.pendingActivation')}</h1>
         {tariffName && periodDays !== null && (
           <p className="mt-1 text-sm text-dark-300">
-            {tariffName} — {periodDays} {t('landing.daysAccess')}
+            {tariffName} —{' '}
+            {isLifetimePeriod(periodDays)
+              ? t('subscription.lifetime.forever')
+              : `${periodDays} ${t('landing.daysAccess')}`}
           </p>
         )}
         <p className="mt-2 text-sm text-dark-400">{t('landing.pendingActivationDesc')}</p>
@@ -462,7 +472,10 @@ function GiftPendingActivationState({
         <h1 className="text-xl font-bold text-dark-50">{t('landing.giftSentSuccess')}</h1>
         {tariffName && periodDays !== null && (
           <p className="mt-1 text-sm text-dark-300">
-            {tariffName} — {periodDays} {t('landing.daysAccess')}
+            {tariffName} —{' '}
+            {isLifetimePeriod(periodDays)
+              ? t('subscription.lifetime.forever')
+              : `${periodDays} ${t('landing.daysAccess')}`}
           </p>
         )}
         {contactType === 'telegram' && recipientInBot === true && (
@@ -603,7 +616,10 @@ function GiftLinkShareState({
         </h1>
         {tariffName && periodDays !== null && (
           <p className="mt-1 text-sm text-dark-300">
-            {tariffName} — {periodDays} {t('landing.daysAccess')}
+            {tariffName} —{' '}
+            {isLifetimePeriod(periodDays)
+              ? t('subscription.lifetime.forever')
+              : `${periodDays} ${t('landing.daysAccess')}`}
           </p>
         )}
       </div>

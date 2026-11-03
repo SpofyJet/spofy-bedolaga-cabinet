@@ -8,6 +8,7 @@ import {
   needsTariff,
   tariffSelectionPath,
 } from '../../utils/legacySubscription';
+import { isLifetimeSubscription } from '../../utils/lifetime';
 import { buttonVariants } from '@/components/primitives/Button/Button.variants';
 import { cn } from '@/lib/utils';
 
@@ -32,11 +33,13 @@ export default function PurchaseCTAButton({
   const isDaily = subscription?.is_daily;
   // Старая подписка (куплена в классике, тарифа нет): продлить нельзя — ведём на витрину тарифов.
   const requiresTariff = needsTariff(subscription);
+  // Вечная подписка (ULTIMA) не кончается: «Продлить» ей не предлагаем.
+  const isLifetime = isLifetimeSubscription(subscription);
 
   if (isTariffsMode && subscription && canOpenTariffSwitch(subscription)) {
     return (
       <div className="flex flex-col gap-3 sm:flex-row">
-        {!isDaily && (
+        {!isDaily && !isLifetime && (
           <Link
             to={`/subscriptions/${subscription.id}/renew`}
             className={cn(
@@ -62,6 +65,7 @@ export default function PurchaseCTAButton({
 
   // Daily tariffs renew automatically — no manual renewal button needed in multi-tariff
   if (isMultiTariff && isDaily && !isExpired) return null;
+  if (isLifetime && !isExpired) return null;
 
   const accentColor = isExpired ? 'rgb(var(--color-critical-500))' : 'rgb(var(--color-accent-400))';
 

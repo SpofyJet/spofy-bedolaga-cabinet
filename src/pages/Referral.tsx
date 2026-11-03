@@ -1,3 +1,4 @@
+import { isLifetimeEndDate } from '@/utils/lifetime';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -128,6 +129,8 @@ export function RewardSettings({
   const optionLabel = (option: ReferralDaysTargetOption) => {
     const name = option.tariff_name || t('referral.rewardSettings.subscription');
     if (!option.end_date) return name;
+    if (isLifetimeEndDate(option.end_date))
+      return `${name} — ${t('subscription.lifetime.forever')}`;
     const until = t('referral.rewardSettings.until', {
       date: new Date(option.end_date).toLocaleDateString(),
     });

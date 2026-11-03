@@ -2,8 +2,9 @@ import { Link } from 'react-router';
 import { useTranslation } from 'react-i18next';
 
 interface BypassSuspendedBannerProps {
-  /** Where «Продлить подписку» leads (purchase page or per-subscription renew). */
-  renewTo: string;
+  /** Where «Продлить подписку» leads (purchase page or per-subscription renew).
+   *  Omitted for a lifetime subscription: there is nothing to renew. */
+  renewTo?: string;
   /** On the subscription page the traffic sheet opens in place. */
   onBuyTraffic?: () => void;
   /** Elsewhere «Докупить трафик» is a link that opens that sheet: the subscription
@@ -71,7 +72,7 @@ export default function BypassSuspendedBanner({
             {t('subscription.bypassSuspended.buyTraffic')}
           </Link>
         )}
-        {!isTrial && (
+        {!isTrial && renewTo && (
           <Link to={renewTo} className={secondary}>
             {t('subscription.bypassSuspended.renew')}
           </Link>

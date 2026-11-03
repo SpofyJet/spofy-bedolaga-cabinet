@@ -1,3 +1,4 @@
+import { isLifetimeEndDate } from '@/utils/lifetime';
 /**
  * Global success notification modal.
  * Shows prominent success messages for balance top-ups and subscription purchases.
@@ -98,12 +99,15 @@ export default function SuccessNotificationModal() {
       ? `${formatAmount(data.newBalanceKopeks / 100)}\u00A0${currencySymbol}`
       : null;
 
-  // Format expiry date
-  const formattedExpiry = formatDateOrRaw(data.expiresAt, uiLocale(), {
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric',
-  });
+  // Format expiry date. Вечная подписка (ULTIMA, конец в 2099-м) — «Навсегда».
+  const lifetimeExpiry = isLifetimeEndDate(data.expiresAt);
+  const formattedExpiry = lifetimeExpiry
+    ? t('subscription.lifetime.forever')
+    : formatDateOrRaw(data.expiresAt, uiLocale(), {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric',
+      });
 
   // Determine title and message
   let title = data.title;
@@ -281,7 +285,9 @@ export default function SuccessNotificationModal() {
           {formattedExpiry && (
             <div className="flex items-center justify-between rounded-xl bg-dark-800/50 px-4 py-3">
               <span className="text-dark-400">
-                {t('successNotification.validUntil', 'Valid until')}
+                {lifetimeExpiry
+                  ? t('subscription.lifetime.term')
+                  : t('successNotification.validUntil', 'Valid until')}
               </span>
               <span className="font-semibold text-dark-100">{formattedExpiry}</span>
             </div>

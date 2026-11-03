@@ -30,6 +30,7 @@ import {
   tariffSelectionPath,
 } from '@/utils/legacySubscription';
 import { formatLiteDate } from '@/utils/liteDate';
+import { isLifetimeSubscription } from '@/utils/lifetime';
 
 type OpenPanel = 'traffic' | 'devices' | 'reduce' | 'servers' | 'devicesList' | 'delete' | null;
 
@@ -163,6 +164,8 @@ export default function SubscriptionLite() {
   );
   const canOpenConnection = hasLiveAccess || hasConnectionLink;
   const showsAddons = showsAddonOptions(subscription);
+  // Вечная подписка: срок «Навсегда», строки «Продлить» нет.
+  const lifetime = isLifetimeSubscription(subscription);
   // Пока режим продаж неизвестен, строку «Серверы» не рисуем вовсе: иначе она
   // успевает появиться и тут же исчезнуть, когда приходит ответ о тарифах.
   const managesServers = Boolean(purchaseOptions) && purchaseOptions?.sales_mode !== 'tariffs';
@@ -183,9 +186,13 @@ export default function SubscriptionLite() {
           {subscription.tariff_name || t('lite.subscription.untitled', 'Подписка')}
         </h1>
         <p className="mt-2 text-[15px] text-dark-400">
-          {subscription.is_expired
-            ? t('lite.status.expired', { date: formatLiteDate(subscription.end_date) })
-            : t('lite.status.active', { date: formatLiteDate(subscription.end_date) })}
+          {lifetime && !subscription.is_expired
+            ? t('lite.status.lifetime')
+            : subscription.is_expired
+              ? t('lite.status.expired', {
+                  date: lifetime ? '' : formatLiteDate(subscription.end_date),
+                })
+              : t('lite.status.active', { date: formatLiteDate(subscription.end_date) })}
         </p>
         <div className="mt-7">
           <LiteMeter
@@ -214,7 +221,7 @@ export default function SubscriptionLite() {
               to={tariffSelectionPath(subscription.id)}
               label={t('lite.rows.plans', 'Посмотреть тарифы')}
             />
-          ) : !subscription.is_daily || !subscription.is_active ? (
+          ) : lifetime ? null : !subscription.is_daily || !subscription.is_active ? (
             <LiteRow
               to={`/subscriptions/${subscription.id}/renew`}
               label={t('lite.action.renew')}

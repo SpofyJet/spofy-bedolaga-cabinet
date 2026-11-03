@@ -1,3 +1,4 @@
+import { isLifetimePeriod } from '@/utils/lifetime';
 import { uiLocale } from '@/utils/uiLocale';
 import { useState, useCallback, useEffect, useRef } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -615,7 +616,9 @@ export default function Wheel() {
                             {sub.tariff_name || t('subscription.defaultName', 'Подписка')}
                           </span>
                           <span className="shrink-0 text-xs opacity-60">
-                            {sub.days_left} {t('common.units.days', 'дней')}
+                            {isLifetimePeriod(sub.days_left)
+                              ? t('subscription.lifetime.forever')
+                              : `${sub.days_left} ${t('common.units.days', 'дней')}`}
                           </span>
                         </button>
                       ))}

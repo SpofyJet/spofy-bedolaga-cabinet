@@ -16,6 +16,8 @@ interface InfoCardsProps {
   endDate?: string | null;
   /** Пробный период — статус-чип вместо «Активна». */
   isTrial?: boolean;
+  /** Вечная подписка: вместо дней и даты — «Навсегда», «скоро закончится» не бывает. */
+  isLifetime?: boolean;
   balanceRubles: number;
   /** Заработано с рефералов, ₽ — чип под балансом. 0/null — чип скрыт. */
   fromFriendsRubles?: number | null;
@@ -40,6 +42,7 @@ export default function InfoCards({
   daysLeft,
   endDate,
   isTrial,
+  isLifetime = false,
   balanceRubles,
   fromFriendsRubles,
   loading,
@@ -47,7 +50,7 @@ export default function InfoCards({
 }: InfoCardsProps) {
   const { t, i18n } = useTranslation();
 
-  const endingSoon = status === 'active' && daysLeft != null && daysLeft <= 3;
+  const endingSoon = status === 'active' && !isLifetime && daysLeft != null && daysLeft <= 3;
   const subChip =
     status === 'expired'
       ? { label: t('dashboard.info.subscription.renew', 'Продлить'), tone: 'danger' }
@@ -94,6 +97,12 @@ export default function InfoCards({
         </span>
         {loading ? (
           <Skeleton className="mt-1 h-8 w-16" />
+        ) : status === 'active' && isLifetime ? (
+          <span className="mt-1 block">
+            <span className="block text-[26px] font-bold leading-none tracking-tight text-dark-50">
+              {t('subscription.lifetime.forever')}
+            </span>
+          </span>
         ) : status === 'active' && daysLeft != null ? (
           <span className="mt-1 block">
             <span className="block text-[26px] font-bold leading-none tracking-tight text-dark-50">
@@ -114,7 +123,7 @@ export default function InfoCards({
                 ? t('dashboard.info.subscription.expired', 'Закончилась')
                 : t('dashboard.info.subscription.none', 'Нет подписки')}
             </span>
-            {status === 'expired' && endDate && (
+            {status === 'expired' && endDate && !isLifetime && (
               <span className="mt-1 block text-xs text-dark-400">
                 {formatUntil(endDate, i18n.language)}
               </span>

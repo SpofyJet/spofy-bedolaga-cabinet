@@ -16,6 +16,7 @@ import { useCloseOnSuccessNotification } from '../store/successNotification';
 import PurchaseCTAButton from '../components/subscription/PurchaseCTAButton';
 import BypassSuspendedBanner from '../components/subscription/BypassSuspendedBanner';
 import { planTitle, showsAddonOptions } from '../utils/legacySubscription';
+import { isLifetimeEndDate, isLifetimeSubscription } from '../utils/lifetime';
 import {
   CalendarIcon,
   CheckIcon,
@@ -23,6 +24,7 @@ import {
   CopyIcon,
   DevicesIcon,
   DownloadIcon,
+  InfinityIcon,
   RefreshIcon,
   TrashIcon,
   WarningIcon,
@@ -187,6 +189,32 @@ const CountdownTimer = memo(function CountdownTimer({
     </div>
   );
 });
+
+/** Срок вечной подписки: на месте отсчёта — «Навсегда», без даты и таймера. */
+function LifetimeTerm({ glassColors: g }: { glassColors: ReturnType<typeof getGlassColors> }) {
+  const { t } = useTranslation();
+  return (
+    <div
+      className="min-w-0 overflow-hidden rounded-[14px] p-3.5"
+      style={{ background: g.innerBg, border: `1px solid ${g.innerBorder}` }}
+    >
+      <div className="mb-2 flex items-center gap-1.5 text-[10px] font-medium uppercase tracking-wider text-dark-400">
+        <div
+          className="flex h-6 w-6 items-center justify-center rounded-[7px]"
+          style={{ background: g.hoverBg }}
+        >
+          <span style={{ color: g.textSecondary }}>
+            <InfinityIcon className="h-[13px] w-[13px]" />
+          </span>
+        </div>
+        {t('subscription.lifetime.term')}
+      </div>
+      <div className="text-[20px] font-bold tracking-tight" style={{ color: g.text }}>
+        {t('subscription.lifetime.forever')}
+      </div>
+    </div>
+  );
+}
 
 export default function Subscription() {
   const { t } = useTranslation();
@@ -558,9 +586,11 @@ export default function Subscription() {
                   isTrial={subscription.is_trial}
                   onBuyTraffic={() => setShowTrafficTopup(true)}
                   renewTo={
-                    isMultiTariff
-                      ? `/subscriptions/${subscription.id}/renew`
-                      : '/subscription/purchase'
+                    isLifetimeSubscription(subscription)
+                      ? undefined
+                      : isMultiTariff
+                        ? `/subscriptions/${subscription.id}/renew`
+                        : '/subscription/purchase'
                   }
                 />
               )}
@@ -846,11 +876,16 @@ export default function Subscription() {
 
               {/* ─── Countdown ─── */}
               <div className="mb-5">
-                <CountdownTimer
-                  endDate={subscription.end_date}
-                  isActive={subscription.is_active || subscription.is_limited}
-                  glassColors={g}
-                />
+                {isLifetimeSubscription(subscription) &&
+                (subscription.is_active || subscription.is_limited) ? (
+                  <LifetimeTerm glassColors={g} />
+                ) : (
+                  <CountdownTimer
+                    endDate={subscription.end_date}
+                    isActive={subscription.is_active || subscription.is_limited}
+                    glassColors={g}
+                  />
+                )}
               </div>
 
               {/* ─── Purchased Traffic Packages ─── */}
@@ -860,69 +895,83 @@ export default function Subscription() {
                     {t('subscription.purchasedTraffic')}
                   </div>
                   <div className="space-y-2">
-                    {subscription.traffic_purchases.map((purchase) => (
-                      <div
-                        key={purchase.id}
-                        className="rounded-[12px] p-3"
-                        style={{
-                          background: g.innerBg,
-                          border: `1px solid ${g.innerBorder}`,
-                        }}
-                      >
-                        <div className="mb-2 flex items-center justify-between">
-                          <div className="flex items-center gap-2">
-                            <div
-                              className="flex h-7 w-7 items-center justify-center rounded-[8px]"
-                              style={{ background: `${zone.mainHex}12`, color: zone.mainHex }}
-                            >
-                              <DownloadIcon className="h-3.5 w-3.5" />
-                            </div>
-                            <span className="text-sm font-semibold text-dark-50">
-                              {purchase.traffic_gb} {t('common.units.gb')}
-                            </span>
-                          </div>
-                          <div className="text-right">
-                            <div
-                              className="text-[11px] font-medium"
-                              style={{
-                                color: purchase.days_remaining === 0 ? '#FF6B35' : g.textSecondary,
-                              }}
-                            >
-                              {purchase.days_remaining === 0
-                                ? t('subscription.expired')
-                                : t('subscription.days', { count: purchase.days_remaining })}
-                            </div>
-                            <div className="mt-0.5 font-mono text-[9px] text-dark-400">
-                              {t('subscription.trafficResetAt')}:{' '}
-                              {new Date(purchase.expires_at).toLocaleDateString(uiLocale(), {
-                                day: '2-digit',
-                                month: '2-digit',
-                                year: 'numeric',
-                              })}
-                            </div>
-                          </div>
-                        </div>
+                    {subscription.traffic_purchases.map((purchase) => {
+                      // Пакет вечной подписки живёт столько же, сколько она: без
+                      // «26 000 дней», даты 2099 года и полосы времени.
+                      const forever = isLifetimeEndDate(purchase.expires_at);
+                      return (
                         <div
-                          className="relative h-1.5 overflow-hidden rounded-full"
-                          style={{ background: g.trackBg }}
+                          key={purchase.id}
+                          className="rounded-[12px] p-3"
+                          style={{
+                            background: g.innerBg,
+                            border: `1px solid ${g.innerBorder}`,
+                          }}
                         >
-                          <div
-                            className="absolute inset-0 origin-left rounded-full bg-accent-500 transition-transform duration-500"
-                            style={{
-                              transform: `scaleX(${purchase.progress_percent / 100})`,
-                            }}
-                          />
+                          <div className="mb-2 flex items-center justify-between">
+                            <div className="flex items-center gap-2">
+                              <div
+                                className="flex h-7 w-7 items-center justify-center rounded-[8px]"
+                                style={{ background: `${zone.mainHex}12`, color: zone.mainHex }}
+                              >
+                                <DownloadIcon className="h-3.5 w-3.5" />
+                              </div>
+                              <span className="text-sm font-semibold text-dark-50">
+                                {purchase.traffic_gb} {t('common.units.gb')}
+                              </span>
+                            </div>
+                            <div className="text-right">
+                              <div
+                                className="text-[11px] font-medium"
+                                style={{
+                                  color:
+                                    purchase.days_remaining === 0 ? '#FF6B35' : g.textSecondary,
+                                }}
+                              >
+                                {forever
+                                  ? t('subscription.lifetime.forever')
+                                  : purchase.days_remaining === 0
+                                    ? t('subscription.expired')
+                                    : t('subscription.days', { count: purchase.days_remaining })}
+                              </div>
+                              {!forever && (
+                                <div className="mt-0.5 font-mono text-[9px] text-dark-400">
+                                  {t('subscription.trafficResetAt')}:{' '}
+                                  {new Date(purchase.expires_at).toLocaleDateString(uiLocale(), {
+                                    day: '2-digit',
+                                    month: '2-digit',
+                                    year: 'numeric',
+                                  })}
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                          {!forever && (
+                            <>
+                              <div
+                                className="relative h-1.5 overflow-hidden rounded-full"
+                                style={{ background: g.trackBg }}
+                              >
+                                <div
+                                  className="absolute inset-0 origin-left rounded-full bg-accent-500 transition-transform duration-500"
+                                  style={{
+                                    transform: `scaleX(${purchase.progress_percent / 100})`,
+                                  }}
+                                />
+                              </div>
+                              <div className="mt-1 flex justify-between font-mono text-[9px] text-dark-400">
+                                <span>
+                                  {new Date(purchase.created_at).toLocaleDateString(uiLocale())}
+                                </span>
+                                <span>
+                                  {new Date(purchase.expires_at).toLocaleDateString(uiLocale())}
+                                </span>
+                              </div>
+                            </>
+                          )}
                         </div>
-                        <div className="mt-1 flex justify-between font-mono text-[9px] text-dark-400">
-                          <span>
-                            {new Date(purchase.created_at).toLocaleDateString(uiLocale())}
-                          </span>
-                          <span>
-                            {new Date(purchase.expires_at).toLocaleDateString(uiLocale())}
-                          </span>
-                        </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 </div>
               )}

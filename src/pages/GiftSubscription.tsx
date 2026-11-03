@@ -1,3 +1,4 @@
+import { isLifetimePeriod } from '@/utils/lifetime';
 import { uiLocale } from '@/utils/uiLocale';
 import { useState, useMemo, useEffect, useCallback, useRef } from 'react';
 import { createPortal } from 'react-dom';
@@ -51,6 +52,7 @@ function formatPeriodLabel(
   days: number,
   t: (key: string, options?: Record<string, unknown>) => string,
 ): string {
+  if (isLifetimePeriod(days)) return t('subscription.lifetime.forever');
   const key = `landing.periodLabels.d${days}`;
   const result = t(key);
   if (result !== key) return result;
@@ -1073,7 +1075,9 @@ function SentGiftCard({ gift }: { gift: SentGift }) {
       <p className="mb-3 text-xs text-dark-400">
         {formatGiftDate(gift.created_at)}
         {' \u2022 '}
-        {gift.period_days} {t('gift.daysShort')}
+        {isLifetimePeriod(gift.period_days)
+          ? t('subscription.lifetime.forever')
+          : `${gift.period_days} ${t('gift.daysShort')}`}
         {' \u2022 '}
         {gift.device_limit} {t('gift.devicesShort', { count: gift.device_limit })}
       </p>
@@ -1145,7 +1149,9 @@ function ReceivedGiftCard({ gift }: { gift: ReceivedGift }) {
       <p className="mb-2 text-xs text-dark-400">
         {formatGiftDate(gift.created_at)}
         {' \u2022 '}
-        {gift.period_days} {t('gift.daysShort')}
+        {isLifetimePeriod(gift.period_days)
+          ? t('subscription.lifetime.forever')
+          : `${gift.period_days} ${t('gift.daysShort')}`}
         {' \u2022 '}
         {gift.device_limit} {t('gift.devicesShort', { count: gift.device_limit })}
       </p>

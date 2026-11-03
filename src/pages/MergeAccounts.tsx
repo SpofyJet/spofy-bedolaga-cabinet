@@ -1,3 +1,4 @@
+import { isLifetimeEndDate } from '@/utils/lifetime';
 import { uiLocale } from '@/utils/uiLocale';
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router';
@@ -105,7 +106,9 @@ function AccountCard({ account, label, isSelected, onSelect, showRadio }: Accoun
             </p>
             {account.subscription.end_date && (
               <p className="text-sm text-dark-400">
-                {t('merge.until', { date: formatDate(account.subscription.end_date) })}
+                {isLifetimeEndDate(account.subscription.end_date)
+                  ? t('subscription.lifetime.forever')
+                  : t('merge.until', { date: formatDate(account.subscription.end_date) })}
               </p>
             )}
             <p className="text-sm text-dark-400">

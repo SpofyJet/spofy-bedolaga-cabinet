@@ -1,3 +1,4 @@
+import { isLifetimePeriod } from '@/utils/lifetime';
 import { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import { useParams } from 'react-router';
@@ -54,6 +55,7 @@ function formatPeriodLabel(
   days: number,
   t: (key: string, options?: Record<string, unknown>) => string,
 ): string {
+  if (isLifetimePeriod(days)) return t('subscription.lifetime.forever');
   const key = `landing.periodLabels.d${days}`;
   const result = t(key);
   if (result !== key) return result;
