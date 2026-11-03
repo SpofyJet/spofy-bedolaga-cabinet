@@ -7354,7 +7354,8 @@
       "hours": "ساعت",
       "minutes": "دقیقه",
       "seconds": "ثانیه"
-    }
+    },
+    "resultTitle": "خرید"
   },
   "gift": {
     "title": "هدیه اشتراک",

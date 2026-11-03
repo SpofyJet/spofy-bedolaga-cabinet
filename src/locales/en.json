@@ -7810,7 +7810,8 @@
       "nMonths_other": "{{count}} months",
       "nDays": "{{count}} days",
       "nMonths": "{{count}} months"
-    }
+    },
+    "resultTitle": "Purchase"
   },
   "coupon": {
     "title": "Subscription coupon",

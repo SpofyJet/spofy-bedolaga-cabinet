@@ -8422,7 +8422,8 @@
       "nMonths_many": "{{count}} месяцев",
       "nDays": "{{count}} дн",
       "nMonths": "{{count}} мес"
-    }
+    },
+    "resultTitle": "Покупка"
   },
   "coupon": {
     "title": "Купон на подписку",
