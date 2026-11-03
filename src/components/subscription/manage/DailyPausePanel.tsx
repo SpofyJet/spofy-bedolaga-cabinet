@@ -3,11 +3,9 @@ import { useTranslation } from 'react-i18next';
 
 import { subscriptionApi } from '@/api/subscription';
 import InsufficientBalancePrompt from '@/components/InsufficientBalancePrompt';
-import { PauseIcon } from '@/components/icons';
+import { PiPauseDuotone } from 'react-icons/pi';
 import { useCurrency } from '@/hooks/useCurrency';
-import { useTheme } from '@/hooks/useTheme';
 import type { Subscription } from '@/types';
-import { getGlassColors } from '@/utils/glassTheme';
 import { getErrorMessage, getInsufficientBalanceError } from '@/utils/subscriptionHelpers';
 import { uiLocale } from '@/utils/uiLocale';
 
@@ -29,8 +27,6 @@ export function DailyPausePanel({ subscription, subscriptionId }: DailyPausePane
   const { t } = useTranslation();
   const queryClient = useQueryClient();
   const { formatAmount, currencySymbol } = useCurrency();
-  const { isDark } = useTheme();
-  const g = getGlassColors(isDark);
 
   const formatPrice = (kopeks: number) =>
     kopeks === 0
@@ -57,10 +53,10 @@ export function DailyPausePanel({ subscription, subscriptionId }: DailyPausePane
     <>
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-base font-bold tracking-tight text-dark-50">
+          <h2 className="text-[15px] font-semibold text-dark-100">
             {t('subscription.pause.title')}
           </h2>
-          <div className="mt-1 text-[12px] text-dark-400">
+          <div className="mt-0.5 text-[13px] text-dark-400">
             {subscription.is_limited
               ? t('subscription.trafficLimited')
               : subscription.status === 'expired'
@@ -77,8 +73,8 @@ export function DailyPausePanel({ subscription, subscriptionId }: DailyPausePane
           disabled={pauseMutation.isPending}
           className={
             needsResume
-              ? 'btn-primary shrink-0 px-4 py-2 text-sm'
-              : 'btn-secondary shrink-0 px-4 py-2 text-sm'
+              ? 'inline-flex h-10 shrink-0 items-center rounded-2xl bg-accent-500 px-4 text-sm font-semibold text-on-accent disabled:opacity-60'
+              : 'inline-flex h-10 shrink-0 items-center rounded-2xl bg-dark-800/70 px-4 text-sm font-semibold text-dark-100 ring-1 ring-inset ring-dark-700/60 disabled:opacity-60'
           }
         >
           {pauseMutation.isPending ? (
@@ -110,14 +106,7 @@ export function DailyPausePanel({ subscription, subscriptionId }: DailyPausePane
             );
           }
           return (
-            <div
-              className="mt-4 rounded-[10px] p-3 text-center text-sm"
-              style={{
-                background: 'rgba(255,59,92,0.08)',
-                border: '1px solid rgba(255,59,92,0.15)',
-                color: 'rgb(var(--color-critical-500))',
-              }}
-            >
+            <div className="mt-4 rounded-2xl bg-error-500/10 p-3 text-center text-[13px] text-error-400">
               {getErrorMessage(pauseMutation.error)}
             </div>
           );
@@ -125,23 +114,11 @@ export function DailyPausePanel({ subscription, subscriptionId }: DailyPausePane
 
       {/* Paused info or Next charge progress bar */}
       {subscription.is_daily_paused ? (
-        <div
-          className="mt-4 rounded-[12px] p-4"
-          style={{
-            background: 'rgba(255,184,0,0.06)',
-            border: '1px solid rgba(255,184,0,0.12)',
-          }}
-        >
+        <div className="mt-4 rounded-2xl bg-warning-500/10 p-4">
           <div className="flex items-start gap-3">
-            <PauseIcon
-              className="h-5 w-5 shrink-0"
-              style={{ color: 'rgb(var(--color-urgent-400))' }}
-            />
+            <PiPauseDuotone className="h-5 w-5 shrink-0 text-warning-400" />
             <div>
-              <div
-                className="text-sm font-semibold"
-                style={{ color: 'rgb(var(--color-urgent-400))' }}
-              >
+              <div className="text-sm font-semibold text-warning-400">
                 {t('subscription.pause.pausedInfo')}
               </div>
               <div className="mt-1 text-[12px] text-dark-400">
@@ -172,30 +149,26 @@ export function DailyPausePanel({ subscription, subscriptionId }: DailyPausePane
           return (
             <div className="mt-4">
               <div className="mb-2 flex items-center justify-between">
-                <span className="text-[11px] font-medium uppercase tracking-wider text-dark-400">
+                <span className="text-[13px] font-medium text-dark-400">
                   {t('subscription.pause.nextCharge')}
                 </span>
-                <span className="font-mono text-[12px] font-semibold text-dark-50">
+                <span className="text-[13px] font-semibold tabular-nums text-dark-50">
                   {hours > 0
                     ? `${hours}${t('subscription.pause.hours')} ${minutes}${t('subscription.pause.minutes')}`
                     : `${minutes}${t('subscription.pause.minutes')}`}
                 </span>
               </div>
-              <div
-                className="relative h-2 overflow-hidden rounded-full"
-                style={{ background: g.trackBg }}
-              >
+              <div className="relative h-2 overflow-hidden rounded-full bg-dark-800">
                 <div
                   className="absolute inset-0 origin-left rounded-full transition-transform duration-500"
                   style={{
                     transform: `scaleX(${progress / 100})`,
-                    background:
-                      'linear-gradient(90deg, rgb(var(--color-accent-500)), rgb(var(--color-accent-400)))',
+                    background: 'rgb(var(--color-accent-500))',
                   }}
                 />
               </div>
               {subscription.daily_price_kopeks && (
-                <div className="mt-2 text-center text-[11px] text-dark-400">
+                <div className="mt-2 text-center text-[13px] text-dark-400">
                   {t('subscription.pause.willBeCharged')}:{' '}
                   {formatPrice(subscription.daily_price_kopeks)}
                 </div>

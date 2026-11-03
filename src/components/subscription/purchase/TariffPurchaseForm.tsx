@@ -1,5 +1,7 @@
 import { tariffTrafficLabel } from '../../../utils/tariffTrafficLabel';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { Button, Chip, SectionTitle, Stat, Surface } from '@/components/spofy/ui';
+import { cn } from '@/lib/utils';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -74,10 +76,11 @@ export function TariffPurchaseForm({
   const ref = useRef<HTMLDivElement>(null);
   const checkoutAttempt = useRef<{ signature: string; id: string } | null>(null);
 
+  // Целые суммы без «,00»: «299 ₽», а не «299,00 ₽».
   const formatPrice = (kopeks: number) =>
     kopeks === 0
       ? t('subscription.free', 'Бесплатно')
-      : `${formatAmount(kopeks / 100)}\u00A0${currencySymbol}`;
+      : `${formatAmount(kopeks / 100).replace(/[.,]00$/, '')}\u00A0${currencySymbol}`;
 
   // Form-internal state — seeded from the tariff prop. Resets via
   // `key={tariff.id}` on the parent's render.
@@ -158,7 +161,7 @@ export function TariffPurchaseForm({
       <button
         onClick={() => sbpPurchaseMutation.mutate()}
         disabled={sbpPurchaseMutation.isPending || purchaseMutation.isPending}
-        className="mt-2 w-full rounded-xl border border-accent-500/40 bg-accent-500/10 py-3 text-sm font-medium text-accent-400 transition-colors hover:bg-accent-500/20 disabled:opacity-50"
+        className="mt-2 flex h-12 w-full items-center justify-center rounded-2xl bg-dark-800/70 text-[15px] font-semibold text-dark-100 ring-1 ring-inset ring-dark-700/60 transition-colors hover:bg-dark-700/70 disabled:opacity-50"
       >
         {sbpPurchaseMutation.isPending ? (
           <span className="flex items-center justify-center gap-2">
@@ -169,7 +172,7 @@ export function TariffPurchaseForm({
           t('subscription.sbpRecurring.purchaseButton')
         )}
       </button>
-      <div className="mt-1.5 text-center text-[11px] text-dark-500">
+      <div className="mt-1.5 text-center text-[12px] text-dark-500">
         {t('subscription.sbpRecurring.purchaseHint')}
       </div>
       {sbpPurchaseMutation.isError && (
@@ -200,7 +203,7 @@ export function TariffPurchaseForm({
       <button
         onClick={() => lavaPurchaseMutation.mutate()}
         disabled={lavaPurchaseMutation.isPending || purchaseMutation.isPending}
-        className="mt-2 w-full rounded-xl border border-accent-500/40 bg-accent-500/10 py-3 text-sm font-medium text-accent-400 transition-colors hover:bg-accent-500/20 disabled:opacity-50"
+        className="mt-2 flex h-12 w-full items-center justify-center rounded-2xl bg-dark-800/70 text-[15px] font-semibold text-dark-100 ring-1 ring-inset ring-dark-700/60 transition-colors hover:bg-dark-700/70 disabled:opacity-50"
       >
         {lavaPurchaseMutation.isPending ? (
           <span className="flex items-center justify-center gap-2">
@@ -211,7 +214,7 @@ export function TariffPurchaseForm({
           t('subscription.lavaRecurring.purchaseButton')
         )}
       </button>
-      <div className="mt-1.5 text-center text-[11px] text-dark-500">
+      <div className="mt-1.5 text-center text-[12px] text-dark-500">
         {t('subscription.lavaRecurring.purchaseHint')}
       </div>
       {lavaPurchaseMutation.isError && (
@@ -242,7 +245,7 @@ export function TariffPurchaseForm({
       <button
         onClick={() => casheraPurchaseMutation.mutate()}
         disabled={casheraPurchaseMutation.isPending || purchaseMutation.isPending}
-        className="mt-2 w-full rounded-xl border border-accent-500/40 bg-accent-500/10 py-3 text-sm font-medium text-accent-400 transition-colors hover:bg-accent-500/20 disabled:opacity-50"
+        className="mt-2 flex h-12 w-full items-center justify-center rounded-2xl bg-dark-800/70 text-[15px] font-semibold text-dark-100 ring-1 ring-inset ring-dark-700/60 transition-colors hover:bg-dark-700/70 disabled:opacity-50"
       >
         {casheraPurchaseMutation.isPending ? (
           <span className="flex items-center justify-center gap-2">
@@ -253,7 +256,7 @@ export function TariffPurchaseForm({
           t('subscription.casheraRecurring.purchaseButton')
         )}
       </button>
-      <div className="mt-1.5 text-center text-[11px] text-dark-500">
+      <div className="mt-1.5 text-center text-[12px] text-dark-500">
         {t('subscription.casheraRecurring.purchaseHint')}
       </div>
       {casheraPurchaseMutation.isError && (
@@ -274,88 +277,88 @@ export function TariffPurchaseForm({
     }
   }, []);
 
+  const isDailyTariff = Boolean(
+    tariff.is_daily || (tariff.daily_price_kopeks && tariff.daily_price_kopeks > 0),
+  );
+  const discountChip = (percent: number | null | undefined, isPromoGroup?: boolean) =>
+    percent != null && percent > 0 ? (
+      <Chip tone={isPromoGroup ? 'success' : 'warning'}>-{percent}%</Chip>
+    ) : null;
+  const switchClass = (on: boolean) =>
+    cn(
+      'relative h-7 w-12 shrink-0 rounded-full transition-colors duration-200',
+      on ? 'bg-accent-500' : 'bg-dark-700',
+    );
+  const knob = (on: boolean) => (
+    <span
+      className="absolute left-[3px] top-[3px] h-[22px] w-[22px] rounded-full bg-white shadow-sm transition-transform duration-200"
+      style={{ transform: on ? 'translateX(20px)' : 'translateX(0)' }}
+    />
+  );
+  const numberInput =
+    'w-20 rounded-xl bg-dark-800 px-3 py-2 text-center text-[15px] text-dark-100 outline-none ring-1 ring-inset ring-dark-700 focus:ring-accent-500';
+
   return (
     <div ref={ref} className="space-y-6">
-      <div className="flex items-center justify-between gap-2">
-        <h3 className="min-w-0 truncate text-lg font-medium text-dark-100">{tariff.name}</h3>
-        <button onClick={onBack} className="shrink-0 text-dark-400 hover:text-dark-200">
-          ← {t('common.back')}
-        </button>
-      </div>
-
-      {/* Tariff Info */}
-      <div className="rounded-xl bg-dark-800/50 p-4">
-        <div className="flex flex-wrap gap-4 text-sm">
-          <div>
-            <span className="text-dark-500">{t('subscription.traffic')}:</span>
-            <span className="ml-2 text-dark-200">
-              {tariffTrafficLabel(tariff.traffic_limit_gb, t)}
-            </span>
+      {/* Тариф: название, что входит, «другой тариф» */}
+      <Surface>
+        <div className="flex items-start justify-between gap-3">
+          <div className="min-w-0">
+            <p className="text-[13px] font-medium text-dark-400">
+              {t('subscription.baseTariff', 'Тариф')}
+            </p>
+            <h3 className="mt-0.5 truncate text-xl font-bold tracking-tight text-dark-50">
+              {tariff.name}
+            </h3>
           </div>
-          <div>
-            <span className="text-dark-500">{t('subscription.devices')}:</span>
-            <span className="ml-2 text-dark-200">
-              {tariff.device_limit === 0 ? '∞' : tariff.device_limit}
-              {tariff.extra_devices_count > 0 && (
-                <span className="ml-1 text-xs text-accent-400">
-                  (+{tariff.extra_devices_count})
-                </span>
-              )}
-            </span>
-          </div>
+          <button
+            type="button"
+            onClick={onBack}
+            className="shrink-0 rounded-xl px-2 py-1 text-[13px] font-medium text-accent-400 transition-colors hover:bg-accent-500/10"
+          >
+            {t('subscription.chooseDifferentTariff')}
+          </button>
         </div>
-      </div>
-
-      {/* Daily Tariff Purchase */}
-      {tariff.is_daily || (tariff.daily_price_kopeks && tariff.daily_price_kopeks > 0) ? (
-        <div className="rounded-xl border border-accent-500/30 bg-accent-500/10 p-5">
-          <div className="mb-4 text-center">
-            <div className="mb-2 text-sm text-dark-400">
-              {t('subscription.dailyPurchase.costPerDay')}
-            </div>
-            <div className="text-3xl font-bold text-accent-400">
-              {formatPrice(dailyQuote?.price ?? 0)}
-            </div>
-            {dailyQuote?.original && dailyQuote.original > dailyQuote.price && (
-              <div className="mt-1 flex items-center justify-center gap-2 text-sm">
-                <span className="text-dark-500 line-through">
-                  {formatPrice(dailyQuote.original)}
-                </span>
-                {dailyQuote.percent != null && dailyQuote.percent > 0 && (
-                  <span
-                    className={`rounded px-1.5 py-0.5 text-xs ${
-                      dailyQuote.isPromoGroup
-                        ? 'bg-success-500/20 text-success-400'
-                        : 'bg-warning-500/20 text-warning-400'
-                    }`}
-                  >
-                    -{dailyQuote.percent}%
-                  </span>
-                )}
-              </div>
+        <div className="mt-3 flex flex-wrap gap-1.5 text-[13px] text-dark-300">
+          <span className="rounded-full bg-dark-800/60 px-2.5 py-1">
+            {t('subscription.traffic')}: {tariffTrafficLabel(tariff.traffic_limit_gb, t)}
+          </span>
+          <span className="rounded-full bg-dark-800/60 px-2.5 py-1">
+            {t('subscription.devices')}: {tariff.device_limit === 0 ? '∞' : tariff.device_limit}
+            {tariff.extra_devices_count > 0 && (
+              <span className="ml-1 text-accent-400">(+{tariff.extra_devices_count})</span>
             )}
-          </div>
-          <div className="space-y-2 text-sm text-dark-400">
-            <div className="flex items-start gap-2">
-              <span className="text-accent-400">•</span>
-              <span>{t('subscription.dailyPurchase.chargedDaily')}</span>
-            </div>
-            <div className="flex items-start gap-2">
-              <span className="text-accent-400">•</span>
-              <span>{t('subscription.dailyPurchase.canPause')}</span>
-            </div>
-            <div className="flex items-start gap-2">
-              <span className="text-accent-400">•</span>
-              <span>{t('subscription.dailyPurchase.pausedOnLowBalance')}</span>
-            </div>
-          </div>
+          </span>
+        </div>
+      </Surface>
+
+      {isDailyTariff ? (
+        /* Суточный тариф: цена за день и одна кнопка */
+        <Surface className="space-y-4">
+          <Stat
+            label={t('subscription.dailyPurchase.costPerDay')}
+            value={formatPrice(dailyQuote?.price ?? 0)}
+            hint={
+              dailyQuote?.original && dailyQuote.original > dailyQuote.price ? (
+                <span className="flex items-center gap-2">
+                  <span className="line-through">{formatPrice(dailyQuote.original)}</span>
+                  {discountChip(dailyQuote.percent, dailyQuote.isPromoGroup)}
+                </span>
+              ) : undefined
+            }
+          />
+          <ul className="space-y-1.5 text-[13px] leading-snug text-dark-400">
+            <li>{t('subscription.dailyPurchase.chargedDaily')}</li>
+            <li>{t('subscription.dailyPurchase.canPause')}</li>
+            <li>{t('subscription.dailyPurchase.pausedOnLowBalance')}</li>
+          </ul>
 
           {(() => {
             const dailyPrice = dailyQuote?.price ?? 0;
             const hasEnoughBalance = balanceKopeks !== undefined && dailyPrice <= balanceKopeks;
 
             return (
-              <div className="mt-6">
+              <div>
                 {balanceKopeks !== undefined && !hasEnoughBalance && (
                   <InsufficientBalancePrompt
                     missingAmountKopeks={dailyPrice - balanceKopeks}
@@ -364,22 +367,22 @@ export function TariffPurchaseForm({
                   />
                 )}
 
-                <button
+                <Button
+                  className="w-full"
                   onClick={() => purchaseMutation.mutate()}
                   disabled={purchaseMutation.isPending}
-                  className="btn-primary w-full py-3"
                 >
                   {purchaseMutation.isPending ? (
-                    <span className="flex items-center justify-center gap-2">
-                      <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+                    <>
+                      <span className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
                       {t('common.loading')}
-                    </span>
+                    </>
                   ) : (
                     t('subscription.dailyPurchase.activate', {
                       price: formatPrice(dailyPrice),
                     })
                   )}
-                </button>
+                </Button>
 
                 {sbpPurchaseButton}
                 {lavaPurchaseButton}
@@ -387,7 +390,7 @@ export function TariffPurchaseForm({
 
                 {purchaseMutation.isError &&
                   !getInsufficientBalanceError(purchaseMutation.error) && (
-                    <div className="mt-3 text-center text-sm text-error-400">
+                    <div className="mt-3 text-center text-[13px] text-error-400">
                       {getErrorMessage(purchaseMutation.error)}
                     </div>
                   )}
@@ -406,75 +409,80 @@ export function TariffPurchaseForm({
               </div>
             );
           })()}
-        </div>
+        </Surface>
       ) : (
         <>
-          {/* Period Selection for non-daily tariffs */}
-          <div>
-            <div className="mb-3 text-sm text-dark-400">{t('subscription.selectPeriod')}</div>
+          {/* Период */}
+          <section>
+            <SectionTitle>{t('subscription.selectPeriod')}</SectionTitle>
 
             {tariff.periods.length > 0 && !useCustomDays && (
-              <div className="mb-4 grid grid-cols-2 gap-3 sm:grid-cols-3">
+              <div className="space-y-2">
                 {tariff.periods.map((period) => {
                   const promoPeriod = applyPromoDiscount(
                     period.price_kopeks,
                     period.original_price_kopeks,
                   );
-                  const displayDiscount = promoPeriod.percent;
                   const displayOriginal = promoPeriod.original;
                   const displayPrice = promoPeriod.price;
-                  const displayPerMonth = getMonthlyPriceKopeks(displayPrice, period.days);
+                  const displayPerMonth = isLifetimePeriod(period.days)
+                    ? null
+                    : getMonthlyPriceKopeks(displayPrice, period.days);
                   const isSelectedPeriod =
                     selectedTariffPeriod?.days === period.days && !useCustomDays;
 
                   return (
                     <button
                       key={period.days}
+                      type="button"
+                      aria-pressed={isSelectedPeriod}
                       onClick={() => {
                         setSelectedTariffPeriod(period);
                         setUseCustomDays(false);
                       }}
-                      className={`relative rounded-xl p-4 text-left transition-all ${
+                      className={cn(
+                        'flex min-h-[64px] w-full items-center gap-3 rounded-3xl px-4 py-3 text-left transition-colors',
                         period.is_highlighted
-                          ? `${bestValueFrame(isSelectedPeriod)} ${isSelectedPeriod ? 'bg-accent-500/10' : 'bg-dark-800/50'}`
+                          ? `${bestValueFrame(isSelectedPeriod)} ${isSelectedPeriod ? 'bg-accent-500/10' : 'bg-dark-900/70'}`
                           : isSelectedPeriod
-                            ? 'border border-accent-500 bg-accent-500/10'
-                            : 'border border-dark-700/50 bg-dark-800/50 hover:border-dark-600'
-                      }`}
-                    >
-                      {/* Плашка первой строкой, как в продлении; скидка — в правом
-                          верхнем углу поверх рамки, они не пересекаются. */}
-                      {period.is_highlighted && <BestValueBadge className="mb-2" />}
-                      {displayDiscount != null && displayDiscount > 0 && (
-                        <div
-                          className={`absolute -right-2 -top-2 rounded-full px-2 py-0.5 text-xs font-medium text-white ${
-                            promoPeriod.isPromoGroup ? 'bg-success-500' : 'bg-warning-500'
-                          }`}
-                        >
-                          -{displayDiscount}%
-                        </div>
+                            ? 'bg-accent-500/10 ring-2 ring-inset ring-accent-500'
+                            : 'bg-dark-900/70 ring-1 ring-inset ring-dark-800/80 hover:bg-dark-800/50',
                       )}
-                      <div className="text-lg font-semibold text-dark-100">
-                        {periodLabel(period)}
-                      </div>
-                      {/* Цена не рвётся между числом и знаком валюты: две цены в
-                          карточку шириной в полэкрана не влезают, и без переноса
-                          целиком «₽» уезжал на свою строку. */}
-                      <div className="flex flex-wrap items-center gap-x-2">
-                        <span className="whitespace-nowrap font-medium text-accent-400">
+                    >
+                      <span
+                        className={cn(
+                          'flex h-5 w-5 shrink-0 items-center justify-center rounded-full ring-2 ring-inset',
+                          isSelectedPeriod ? 'bg-accent-500 ring-accent-500' : 'ring-dark-600',
+                        )}
+                        aria-hidden
+                      >
+                        {isSelectedPeriod && <span className="h-2 w-2 rounded-full bg-white" />}
+                      </span>
+                      <span className="min-w-0 flex-1">
+                        <span className="flex flex-wrap items-center gap-2">
+                          <span className="text-[15px] font-semibold text-dark-100">
+                            {periodLabel(period)}
+                          </span>
+                          {period.is_highlighted && <BestValueBadge />}
+                          {discountChip(promoPeriod.percent, promoPeriod.isPromoGroup)}
+                        </span>
+                        {displayPerMonth !== null && (
+                          <span className="mt-0.5 block text-[13px] text-dark-400">
+                            {formatPrice(displayPerMonth)}/{t('subscription.month')}
+                          </span>
+                        )}
+                      </span>
+                      {/* Цена не рвётся между числом и знаком валюты. */}
+                      <span className="flex shrink-0 flex-col items-end">
+                        <span className="whitespace-nowrap text-[15px] font-bold tabular-nums text-dark-50">
                           {formatPrice(displayPrice)}
                         </span>
                         {displayOriginal && displayOriginal > displayPrice && (
-                          <span className="whitespace-nowrap text-sm text-dark-500 line-through">
+                          <span className="whitespace-nowrap text-[12px] text-dark-500 line-through">
                             {formatPrice(displayOriginal)}
                           </span>
                         )}
-                      </div>
-                      {displayPerMonth !== null && (
-                        <div className="mt-1 text-xs text-dark-500">
-                          {formatPrice(displayPerMonth)}/{t('subscription.month')}
-                        </div>
-                      )}
+                      </span>
                     </button>
                   );
                 })}
@@ -485,24 +493,24 @@ export function TariffPurchaseForm({
             {tariff.periods.length === 0 &&
               !useCustomDays &&
               !(tariff.custom_days_enabled && customDayUnitPrice > 0) && (
-                <div className="rounded-xl border border-warning-500/30 bg-warning-500/10 p-4 text-center">
-                  <div className="mb-2 text-sm font-medium text-warning-400">
+                <Surface className="bg-warning-500/5 text-center ring-warning-500/20">
+                  <p className="text-[15px] font-semibold text-warning-400">
                     {t('subscription.noPeriodsAvailable')}
-                  </div>
-                  <div className="text-xs text-dark-400">
+                  </p>
+                  <p className="mt-1 text-[13px] text-dark-400">
                     {t('subscription.noPeriodsAvailableHint')}
-                  </div>
-                  <button onClick={onBack} className="btn-secondary mt-3 px-4 py-2 text-sm">
+                  </p>
+                  <Button tone="secondary" className="mt-4" onClick={onBack}>
                     {t('subscription.chooseDifferentTariff')}
-                  </button>
-                </div>
+                  </Button>
+                </Surface>
               )}
 
-            {/* Custom days option */}
+            {/* Свой срок */}
             {tariff.custom_days_enabled && customDayUnitPrice > 0 && (
-              <div className="rounded-xl border border-dark-700/50 bg-dark-800/50 p-4">
-                <div className="mb-3 flex items-center justify-between">
-                  <span className="font-medium text-dark-200">
+              <Surface className="mt-2">
+                <div className="flex items-center justify-between gap-3">
+                  <span className="text-[15px] font-semibold text-dark-100">
                     {t('subscription.customDays.title')}
                   </span>
                   <button
@@ -511,19 +519,13 @@ export function TariffPurchaseForm({
                     role="switch"
                     aria-checked={useCustomDays}
                     aria-label={t('subscription.customDays.title')}
-                    className={`relative h-6 w-10 rounded-full transition-colors ${
-                      useCustomDays ? 'bg-accent-500' : 'bg-dark-600'
-                    }`}
+                    className={switchClass(useCustomDays)}
                   >
-                    <span
-                      className={`absolute top-1 h-4 w-4 rounded-full bg-white transition-transform ${
-                        useCustomDays ? 'left-5' : 'left-1'
-                      }`}
-                    />
+                    {knob(useCustomDays)}
                   </button>
                 </div>
                 {useCustomDays && (
-                  <div className="space-y-3">
+                  <div className="mt-4 space-y-3">
                     <div className="flex items-center gap-4">
                       <input
                         type="range"
@@ -549,7 +551,7 @@ export function TariffPurchaseForm({
                             ),
                           )
                         }
-                        className="w-20 rounded-lg border border-dark-600 bg-dark-700 px-3 py-2 text-center text-dark-100"
+                        className={numberInput}
                       />
                     </div>
                     {(() => {
@@ -559,7 +561,7 @@ export function TariffPurchaseForm({
                       );
                       const promoCustom = applyPromoDiscount(basePrice, existingOriginal);
                       return (
-                        <div className="flex flex-wrap justify-between gap-x-3 text-sm">
+                        <div className="flex flex-wrap justify-between gap-x-3 text-[13px]">
                           {/* «/день» — уже в переводе; второй «/» давал «₽//день». */}
                           <span className="text-dark-400">
                             {t('subscription.days', { count: customDays })} ×{' '}
@@ -574,23 +576,15 @@ export function TariffPurchaseForm({
                             )}
                           </span>
                           <div className="flex items-center gap-2 whitespace-nowrap">
-                            <span className="font-medium text-accent-400">
+                            <span className="font-semibold text-dark-50">
                               {formatPrice(promoCustom.price)}
                             </span>
                             {promoCustom.original && promoCustom.original > promoCustom.price && (
                               <>
-                                <span className="text-xs text-dark-500 line-through">
+                                <span className="text-dark-500 line-through">
                                   {formatPrice(promoCustom.original)}
                                 </span>
-                                <span
-                                  className={`rounded px-1.5 py-0.5 text-xs ${
-                                    promoCustom.isPromoGroup
-                                      ? 'bg-success-500/20 text-success-400'
-                                      : 'bg-warning-500/20 text-warning-400'
-                                  }`}
-                                >
-                                  -{promoCustom.percent}%
-                                </span>
+                                {discountChip(promoCustom.percent, promoCustom.isPromoGroup)}
                               </>
                             )}
                           </div>
@@ -599,19 +593,17 @@ export function TariffPurchaseForm({
                     })()}
                   </div>
                 )}
-              </div>
+              </Surface>
             )}
-          </div>
+          </section>
 
-          {/* Custom traffic option */}
+          {/* Свой объём трафика */}
           {tariff.custom_traffic_enabled && (tariff.traffic_price_per_gb_kopeks ?? 0) > 0 && (
-            <div>
-              <div className="mb-3 text-sm text-dark-400">
-                {t('subscription.customTraffic.label')}
-              </div>
-              <div className="rounded-xl border border-dark-700/50 bg-dark-800/50 p-4">
-                <div className="mb-3 flex items-center justify-between">
-                  <span className="font-medium text-dark-200">
+            <section>
+              <SectionTitle>{t('subscription.customTraffic.label')}</SectionTitle>
+              <Surface>
+                <div className="flex items-center justify-between gap-3">
+                  <span className="text-[15px] font-semibold text-dark-100">
                     {t('subscription.customTraffic.selectVolume')}
                   </span>
                   <button
@@ -620,28 +612,21 @@ export function TariffPurchaseForm({
                     role="switch"
                     aria-checked={useCustomTraffic}
                     aria-label={t('subscription.customTraffic.selectVolume')}
-                    className={`relative h-6 w-10 rounded-full transition-colors ${
-                      useCustomTraffic ? 'bg-accent-500' : 'bg-dark-600'
-                    }`}
+                    className={switchClass(useCustomTraffic)}
                   >
-                    <span
-                      className={`absolute top-1 h-4 w-4 rounded-full bg-white transition-transform ${
-                        useCustomTraffic ? 'left-5' : 'left-1'
-                      }`}
-                    />
+                    {knob(useCustomTraffic)}
                   </button>
                 </div>
                 {!useCustomTraffic && (
-                  <div className="text-sm text-dark-400">
+                  <p className="mt-1 text-[13px] text-dark-400">
                     {t('subscription.customTraffic.default', {
                       label: tariffTrafficLabel(tariff.traffic_limit_gb, t),
                     })}
-                  </div>
+                  </p>
                 )}
                 {useCustomTraffic && (
-                  <div className="space-y-3">
-                    {/* Ползунок сжимается, поле с «ГБ» — нет: на 360 «ГБ» упиралось
-                        в рамку карточки. */}
+                  <div className="mt-4 space-y-3">
+                    {/* Ползунок сжимается, поле с «ГБ» — нет. */}
                     <div className="flex items-center gap-3">
                       <input
                         type="range"
@@ -668,12 +653,12 @@ export function TariffPurchaseForm({
                               ),
                             )
                           }
-                          className="w-20 rounded-lg border border-dark-600 bg-dark-700 px-3 py-2 text-center text-dark-100"
+                          className={numberInput}
                         />
                         <span className="text-dark-400">{t('common.units.gb')}</span>
                       </div>
                     </div>
-                    <div className="flex flex-wrap justify-between gap-x-3 text-sm">
+                    <div className="flex flex-wrap justify-between gap-x-3 text-[13px]">
                       <span className="text-dark-400">
                         {customTrafficGb} {t('common.units.gb')} ×{' '}
                         <span className="whitespace-nowrap">
@@ -681,19 +666,19 @@ export function TariffPurchaseForm({
                           {t('common.units.gb')}
                         </span>
                       </span>
-                      <span className="whitespace-nowrap font-medium text-accent-400">
+                      <span className="whitespace-nowrap font-semibold text-dark-50">
                         +{formatPrice(customTrafficGb * (tariff.traffic_price_per_gb_kopeks ?? 0))}
                       </span>
                     </div>
                   </div>
                 )}
-              </div>
-            </div>
+              </Surface>
+            </section>
           )}
 
-          {/* Summary & Purchase */}
+          {/* Итог и оплата */}
           {(selectedTariffPeriod || useCustomDays) && (
-            <div className="rounded-xl bg-dark-800/50 p-5">
+            <Surface>
               {(() => {
                 const customQuote = customDaysPrice(tariff, customDays);
                 const basePeriodPrice = useCustomDays
@@ -717,117 +702,103 @@ export function TariffPurchaseForm({
                   ? promoPeriod.original + trafficPrice
                   : null;
 
+                const line = (label: ReactNode, value: ReactNode, key?: string) => (
+                  <div
+                    key={key}
+                    className="flex flex-wrap justify-between gap-x-3 text-[14px] text-dark-300"
+                  >
+                    <span>{label}</span>
+                    <span className="flex items-center gap-2 whitespace-nowrap">{value}</span>
+                  </div>
+                );
+                const struck = (v?: number | null) =>
+                  v ? (
+                    <span className="text-[12px] text-dark-500 line-through">{formatPrice(v)}</span>
+                  ) : null;
+
                 return (
                   <>
-                    <div className="mb-4 space-y-2">
-                      {useCustomDays ? (
-                        <div className="flex flex-wrap justify-between gap-x-3 text-sm text-dark-300">
-                          <span>
-                            {t('subscription.stepPeriod')}:{' '}
-                            {t('subscription.days', { count: customDays })}
-                          </span>
-                          <div className="flex items-center gap-2 whitespace-nowrap">
-                            <span>{formatPrice(promoPeriod.price)}</span>
-                            {promoPeriod.original && promoPeriod.original > promoPeriod.price && (
-                              <span className="text-xs text-dark-500 line-through">
-                                {formatPrice(promoPeriod.original)}
-                              </span>
-                            )}
-                          </div>
-                        </div>
-                      ) : (
-                        selectedTariffPeriod && (
-                          <>
-                            {(selectedTariffPeriod.extra_devices_count ?? 0) > 0 &&
-                            selectedTariffPeriod.base_tariff_price_kopeks ? (
+                    <div className="space-y-2">
+                      {useCustomDays
+                        ? line(
+                            `${t('subscription.stepPeriod')}: ${t('subscription.days', { count: customDays })}`,
+                            <>
+                              {formatPrice(promoPeriod.price)}
+                              {promoPeriod.original &&
+                                promoPeriod.original > promoPeriod.price &&
+                                struck(promoPeriod.original)}
+                            </>,
+                          )
+                        : selectedTariffPeriod &&
+                          ((selectedTariffPeriod.extra_devices_count ?? 0) > 0 &&
+                          selectedTariffPeriod.base_tariff_price_kopeks ? (
+                            <>
+                              {line(
+                                `${t('subscription.baseTariff')}: ${periodLabel(selectedTariffPeriod)}`,
+                                formatPrice(selectedTariffPeriod.base_tariff_price_kopeks),
+                              )}
+                              {line(
+                                `${t('subscription.extraDevices')} (${selectedTariffPeriod.extra_devices_count})`,
+                                `+${formatPrice(selectedTariffPeriod.extra_devices_cost_kopeks ?? 0)}`,
+                              )}
+                            </>
+                          ) : (
+                            line(
+                              t('subscription.summary.period', {
+                                label: periodLabel(selectedTariffPeriod),
+                              }),
                               <>
-                                <div className="flex flex-wrap justify-between gap-x-3 text-sm text-dark-300">
-                                  <span>
-                                    {t('subscription.baseTariff')}:{' '}
-                                    {periodLabel(selectedTariffPeriod)}
-                                  </span>
-                                  <span>
-                                    {formatPrice(selectedTariffPeriod.base_tariff_price_kopeks)}
-                                  </span>
-                                </div>
-                                <div className="flex flex-wrap justify-between gap-x-3 text-sm text-dark-300">
-                                  <span>
-                                    {t('subscription.extraDevices')} (
-                                    {selectedTariffPeriod.extra_devices_count})
-                                  </span>
-                                  <span>
-                                    +
-                                    {formatPrice(
-                                      selectedTariffPeriod.extra_devices_cost_kopeks ?? 0,
-                                    )}
-                                  </span>
-                                </div>
-                              </>
-                            ) : (
-                              <div className="flex flex-wrap justify-between gap-x-3 text-sm text-dark-300">
-                                <span>
-                                  {t('subscription.summary.period', {
-                                    label: periodLabel(selectedTariffPeriod),
-                                  })}
-                                </span>
-                                <div className="flex items-center gap-2 whitespace-nowrap">
-                                  <span>{formatPrice(promoPeriod.price)}</span>
-                                  {promoPeriod.original &&
-                                    promoPeriod.original > promoPeriod.price && (
-                                      <span className="text-xs text-dark-500 line-through">
-                                        {formatPrice(promoPeriod.original)}
-                                      </span>
-                                    )}
-                                </div>
-                              </div>
-                            )}
-                          </>
-                        )
-                      )}
-                      {useCustomTraffic && tariff.custom_traffic_enabled && (
-                        <div className="flex flex-wrap justify-between gap-x-3 text-sm text-dark-300">
-                          <span>{t('subscription.summary.traffic', { gb: customTrafficGb })}</span>
-                          <span>+{formatPrice(trafficPrice)}</span>
-                        </div>
-                      )}
+                                {formatPrice(promoPeriod.price)}
+                                {promoPeriod.original &&
+                                  promoPeriod.original > promoPeriod.price &&
+                                  struck(promoPeriod.original)}
+                              </>,
+                            )
+                          ))}
+                      {useCustomTraffic &&
+                        tariff.custom_traffic_enabled &&
+                        line(
+                          t('subscription.summary.traffic', { gb: customTrafficGb }),
+                          `+${formatPrice(trafficPrice)}`,
+                        )}
                     </div>
 
-                    {promoPeriod.percent && (
-                      <div className="mb-4 flex items-center justify-center gap-2 rounded-lg border border-warning-500/30 bg-warning-500/10 p-2">
-                        <span className="text-sm font-medium text-warning-400">
-                          {t('promo.discountApplied')} -{promoPeriod.percent}%
-                        </span>
-                      </div>
-                    )}
+                    {promoPeriod.percent ? (
+                      <p className="mt-3 rounded-2xl bg-warning-500/10 px-3 py-2 text-center text-[13px] font-medium text-warning-400">
+                        {t('promo.discountApplied')} -{promoPeriod.percent}%
+                      </p>
+                    ) : null}
 
-                    <div className="mb-4 flex items-center justify-between gap-3 border-t border-dark-700/50 pt-2">
-                      <span className="font-medium text-dark-100">{t('subscription.total')}</span>
+                    <div className="mt-4 flex items-end justify-between gap-3 border-t border-dark-800/70 pt-4">
+                      <span className="text-[15px] font-medium text-dark-300">
+                        {t('subscription.total')}
+                      </span>
                       <div className="text-right">
-                        <span className="whitespace-nowrap text-2xl font-bold text-accent-400">
+                        <span className="whitespace-nowrap text-[26px] font-bold leading-tight tracking-tight text-dark-50">
                           {formatPrice(totalPrice)}
                         </span>
                         {originalTotal && (
-                          <div className="text-sm text-dark-500 line-through">
+                          <div className="text-[13px] text-dark-500 line-through">
                             {formatPrice(originalTotal)}
                           </div>
                         )}
                       </div>
                     </div>
 
-                    <button
+                    <Button
+                      className="mt-4 w-full"
                       onClick={() => purchaseMutation.mutate()}
                       disabled={purchaseMutation.isPending}
-                      className="btn-primary w-full py-3"
                     >
                       {purchaseMutation.isPending ? (
-                        <span className="flex items-center justify-center gap-2">
-                          <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+                        <>
+                          <span className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
                           {t('common.loading')}
-                        </span>
+                        </>
                       ) : (
                         t('subscription.purchase')
                       )}
-                    </button>
+                    </Button>
 
                     {sbpPurchaseButton}
                     {lavaPurchaseButton}
@@ -837,7 +808,7 @@ export function TariffPurchaseForm({
               })()}
 
               {purchaseMutation.isError && !getInsufficientBalanceError(purchaseMutation.error) && (
-                <div className="mt-3 text-center text-sm text-error-400">
+                <div className="mt-3 text-center text-[13px] text-error-400">
                   {getErrorMessage(purchaseMutation.error)}
                 </div>
               )}
@@ -851,7 +822,7 @@ export function TariffPurchaseForm({
                   />
                 </div>
               )}
-            </div>
+            </Surface>
           )}
         </>
       )}

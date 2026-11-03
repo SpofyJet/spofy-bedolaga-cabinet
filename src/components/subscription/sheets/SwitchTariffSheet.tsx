@@ -141,7 +141,7 @@ export function SwitchTariffSheet({
 
   return (
     <section
-      className="space-y-4 rounded-xl bg-dark-800/50 p-5"
+      className="space-y-4 rounded-3xl bg-dark-900/70 p-4 ring-1 ring-inset ring-dark-800/80 sm:p-5"
       aria-labelledby="switch-review-title"
     >
       <div className="flex flex-wrap items-center justify-between gap-3">
@@ -149,7 +149,7 @@ export function SwitchTariffSheet({
           id="switch-review-title"
           ref={ref}
           tabIndex={-1}
-          className="font-medium text-dark-100 outline-none"
+          className="text-[17px] font-bold text-dark-50 outline-none"
         >
           {t('subscription.switchTariff.reviewTitle')}
         </h2>
@@ -271,7 +271,7 @@ export function SwitchTariffSheet({
                     {formatPrice(switchPreview.base_upgrade_cost_kopeks)}
                   </p>
                 )}
-              <p className="text-lg font-bold tabular-nums text-accent-400">
+              <p className="text-xl font-bold tabular-nums text-dark-50">
                 {formatPrice(switchPreview.upgrade_cost_kopeks)}
               </p>
             </div>

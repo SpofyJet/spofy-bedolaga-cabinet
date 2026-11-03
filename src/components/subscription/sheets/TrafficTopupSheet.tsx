@@ -5,7 +5,11 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { subscriptionApi } from '../../../api/subscription';
 import { getErrorMessage } from '../../../utils/subscriptionHelpers';
 import InsufficientBalancePrompt from '../../InsufficientBalancePrompt';
-import { ChevronRightIcon } from '../../icons';
+import { PiChartPieSliceDuotone } from 'react-icons/pi';
+import { Button, Chip, Row } from '@/components/spofy/ui';
+import { ResponsiveSheet } from '@/components/ui/ResponsiveSheet';
+import { cn } from '@/lib/utils';
+import { SheetBody, SheetNote, Spinner } from './sheetParts';
 import type { PurchaseOptions, Subscription } from '../../../types';
 
 // ──────────────────────────────────────────────────────────────────
@@ -38,7 +42,6 @@ export function TrafficTopupSheet({
   selectedTrafficPackage,
   onSelectedTrafficPackageChange,
   purchaseOptions,
-  isDark,
 }: TrafficTopupSheetProps) {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
@@ -70,165 +73,128 @@ export function TrafficTopupSheet({
     },
   });
 
-  if (!open) {
-    return (
-      <button
-        onClick={onOpen}
-        className={`w-full rounded-xl border p-4 text-left transition-colors ${isDark ? 'border-dark-700/50 bg-dark-800/50 hover:border-dark-600' : 'border-champagne-300/60 bg-champagne-200/40 hover:border-champagne-400'}`}
-      >
-        <div className="flex items-center justify-between">
-          <div>
-            <div className="font-medium text-dark-100">
-              {t('subscription.additionalOptions.buyTraffic')}
-            </div>
-            <div className="mt-1 text-sm text-dark-400">
-              {t('subscription.additionalOptions.currentTrafficLimit', {
-                limit: subscription.traffic_limit_gb,
-                used: subscription.traffic_used_gb.toFixed(1),
-              })}
-            </div>
-          </div>
-          <ChevronRightIcon className="text-dark-400" />
-        </div>
-      </button>
-    );
-  }
+  const close = () => {
+    onClose();
+    onSelectedTrafficPackageChange(null);
+  };
+  const selectedPkg =
+    selectedTrafficPackage !== null
+      ? trafficPackages?.find((p) => p.gb === selectedTrafficPackage)
+      : undefined;
+  const hasEnoughBalance =
+    !selectedPkg || !purchaseOptions || selectedPkg.price_kopeks <= purchaseOptions.balance_kopeks;
+  const missingAmount =
+    selectedPkg && purchaseOptions ? selectedPkg.price_kopeks - purchaseOptions.balance_kopeks : 0;
 
   return (
-    <div
-      className={`rounded-xl border p-5 ${isDark ? 'border-dark-700/50 bg-dark-800/50' : 'border-champagne-300/60 bg-champagne-200/40'}`}
-    >
-      <div className="mb-4 flex items-center justify-between">
-        <h3 className="font-medium text-dark-100">
-          {t('subscription.additionalOptions.buyTrafficTitle')}
-        </h3>
-        <button
-          onClick={() => {
-            onClose();
-            onSelectedTrafficPackageChange(null);
-          }}
-          className="text-sm text-dark-400 hover:text-dark-200"
-          aria-label={t('common.close', 'Close')}
-        >
-          ✕
-        </button>
-      </div>
-
-      <div
-        className={`mb-4 rounded-lg p-2 text-xs ${isDark ? 'bg-dark-700/30 text-dark-500' : 'bg-champagne-300/40 text-champagne-600'}`}
+    <>
+      <Row
+        icon={<PiChartPieSliceDuotone />}
+        label={t('subscription.additionalOptions.buyTraffic')}
+        description={t('subscription.additionalOptions.currentTrafficLimit', {
+          limit: subscription.traffic_limit_gb,
+          used: (subscription.traffic_used_gb ?? 0).toFixed(1),
+        })}
+        onClick={onOpen}
+      />
+      <ResponsiveSheet
+        isOpen={open}
+        onClose={close}
+        title={t('subscription.additionalOptions.buyTrafficTitle')}
       >
-        ⚠️ {t('subscription.additionalOptions.trafficWarning')}
-      </div>
+        <SheetBody>
+          <SheetNote>{t('subscription.additionalOptions.trafficWarning')}</SheetNote>
 
-      {!trafficPackages || trafficPackages.length === 0 ? (
-        <div className="py-4 text-center text-sm text-dark-400">
-          {t('subscription.additionalOptions.trafficUnavailable')}
-        </div>
-      ) : (
-        <div className="space-y-4">
-          {/* Лист сидит в карточке с большими полями: на телефоне плитке в две
-              колонки оставалось ~78 px, и «Безлимит» и цены рвались посреди слова.
-              Поля плитки меньше, крупный шрифт — с sm, цены не рвутся. */}
-          <div className="grid grid-cols-2 gap-2 sm:gap-3">
-            {trafficPackages.map((pkg) => (
-              <button
-                key={pkg.gb}
-                onClick={() => onSelectedTrafficPackageChange(pkg.gb)}
-                className={`min-w-0 rounded-xl border px-2 py-3 text-center transition-all sm:p-4 ${
-                  selectedTrafficPackage === pkg.gb
-                    ? 'border-accent-500 bg-accent-500/10'
-                    : isDark
-                      ? 'border-dark-700/50 bg-dark-800/50 hover:border-dark-600'
-                      : 'border-champagne-300/60 bg-champagne-200/40 hover:border-champagne-400'
-                }`}
+          {!trafficPackages || trafficPackages.length === 0 ? (
+            <SheetNote>{t('subscription.additionalOptions.trafficUnavailable')}</SheetNote>
+          ) : (
+            <>
+              <div className="divide-y divide-dark-800/70 overflow-hidden rounded-3xl bg-dark-800/40 ring-1 ring-inset ring-dark-800/80">
+                {trafficPackages.map((pkg) => {
+                  const selected = selectedTrafficPackage === pkg.gb;
+                  const discounted = pkg.discount_percent != null && pkg.discount_percent > 0;
+                  return (
+                    <button
+                      key={pkg.gb}
+                      type="button"
+                      onClick={() => onSelectedTrafficPackageChange(pkg.gb)}
+                      aria-pressed={selected}
+                      className={cn(
+                        'flex min-h-[56px] w-full items-center gap-3 px-4 py-2.5 text-left transition-colors',
+                        selected ? 'bg-accent-500/10' : 'hover:bg-dark-800/60',
+                      )}
+                    >
+                      <span
+                        className={cn(
+                          'flex h-5 w-5 shrink-0 items-center justify-center rounded-full ring-2 ring-inset',
+                          selected ? 'bg-accent-500 ring-accent-500' : 'ring-dark-600',
+                        )}
+                        aria-hidden
+                      >
+                        {selected && <span className="h-2 w-2 rounded-full bg-white" />}
+                      </span>
+                      <span className="min-w-0 flex-1 text-[15px] font-semibold text-dark-100">
+                        {pkg.is_unlimited
+                          ? t('subscription.additionalOptions.unlimited')
+                          : `${pkg.gb} ${t('common.units.gb')}`}
+                      </span>
+                      {discounted && <Chip tone="success">-{pkg.discount_percent}%</Chip>}
+                      <span className="flex flex-col items-end">
+                        <span className="whitespace-nowrap text-[15px] font-semibold tabular-nums text-dark-50">
+                          {formatPrice(pkg.price_kopeks)}
+                        </span>
+                        {discounted && pkg.base_price_kopeks ? (
+                          <span className="whitespace-nowrap text-[12px] text-dark-500 line-through">
+                            {formatPrice(pkg.base_price_kopeks)}
+                          </span>
+                        ) : null}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+
+              {selectedTrafficPackage !== null && !hasEnoughBalance && missingAmount > 0 && (
+                <InsufficientBalancePrompt
+                  missingAmountKopeks={missingAmount}
+                  compact
+                  onBeforeTopUp={async () => {
+                    await subscriptionApi.saveTrafficCart(selectedTrafficPackage, subscriptionId);
+                  }}
+                />
+              )}
+
+              <Button
+                className="w-full"
+                onClick={() =>
+                  selectedTrafficPackage !== null && purchaseMutation.mutate(selectedTrafficPackage)
+                }
+                disabled={
+                  selectedTrafficPackage === null || purchaseMutation.isPending || !hasEnoughBalance
+                }
               >
-                <div className="text-base font-semibold text-dark-100 sm:text-lg">
-                  {pkg.is_unlimited
-                    ? '♾️ ' + t('subscription.additionalOptions.unlimited')
-                    : `${pkg.gb} ${t('common.units.gb')}`}
-                </div>
-                {pkg.discount_percent != null && pkg.discount_percent > 0 && (
-                  <div className="mb-1">
-                    <span className="inline-block rounded-full bg-success-500/20 px-2 py-0.5 text-xs font-medium text-success-400">
-                      -{pkg.discount_percent}%
-                    </span>
-                  </div>
+                {purchaseMutation.isPending ? (
+                  <Spinner />
+                ) : selectedTrafficPackage === null ? (
+                  t('subscription.v10.pickPackage', 'Выберите пакет')
+                ) : selectedPkg?.is_unlimited ? (
+                  t('subscription.additionalOptions.buyUnlimited')
+                ) : (
+                  t('subscription.additionalOptions.buyTrafficGb', { gb: selectedTrafficPackage })
                 )}
-                <div className="font-medium text-accent-400">
-                  {pkg.discount_percent != null &&
-                  pkg.discount_percent > 0 &&
-                  pkg.base_price_kopeks ? (
-                    <div className="flex flex-wrap items-baseline justify-center gap-x-1">
-                      <span className="whitespace-nowrap text-sm text-dark-500 line-through">
-                        {formatPrice(pkg.base_price_kopeks)}
-                      </span>
-                      <span className="whitespace-nowrap">{formatPrice(pkg.price_kopeks)}</span>
-                    </div>
-                  ) : (
-                    formatPrice(pkg.price_kopeks)
-                  )}
-                </div>
-              </button>
-            ))}
-          </div>
+              </Button>
 
-          {selectedTrafficPackage !== null &&
-            (() => {
-              const selectedPkg = trafficPackages.find((p) => p.gb === selectedTrafficPackage);
-              const hasEnoughBalance =
-                !selectedPkg ||
-                !purchaseOptions ||
-                selectedPkg.price_kopeks <= purchaseOptions.balance_kopeks;
-              const missingAmount =
-                selectedPkg && purchaseOptions
-                  ? selectedPkg.price_kopeks - purchaseOptions.balance_kopeks
-                  : 0;
-
-              return (
-                <>
-                  {!hasEnoughBalance && missingAmount > 0 && (
-                    <InsufficientBalancePrompt
-                      missingAmountKopeks={missingAmount}
-                      compact
-                      className="mb-3"
-                      onBeforeTopUp={async () => {
-                        await subscriptionApi.saveTrafficCart(
-                          selectedTrafficPackage,
-                          subscriptionId,
-                        );
-                      }}
-                    />
-                  )}
-                  <button
-                    onClick={() => purchaseMutation.mutate(selectedTrafficPackage)}
-                    disabled={purchaseMutation.isPending || !hasEnoughBalance}
-                    className="btn-primary w-full py-3"
-                  >
-                    {purchaseMutation.isPending ? (
-                      <span className="flex items-center justify-center gap-2">
-                        <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
-                      </span>
-                    ) : selectedPkg?.is_unlimited ? (
-                      t('subscription.additionalOptions.buyUnlimited')
-                    ) : (
-                      t('subscription.additionalOptions.buyTrafficGb', {
-                        gb: selectedTrafficPackage,
-                      })
-                    )}
-                  </button>
-                </>
-              );
-            })()}
-
-          {purchaseMutation.isError && (
-            <div className="text-center text-sm text-error-400">
-              {isUncertainPurchaseOutcome(purchaseMutation.error)
-                ? t('subscription.purchaseOutcomeUnknown')
-                : getErrorMessage(purchaseMutation.error)}
-            </div>
+              {purchaseMutation.isError && (
+                <p className="text-center text-[13px] text-error-400">
+                  {isUncertainPurchaseOutcome(purchaseMutation.error)
+                    ? t('subscription.purchaseOutcomeUnknown')
+                    : getErrorMessage(purchaseMutation.error)}
+                </p>
+              )}
+            </>
           )}
-        </div>
-      )}
-    </div>
+        </SheetBody>
+      </ResponsiveSheet>
+    </>
   );
 }

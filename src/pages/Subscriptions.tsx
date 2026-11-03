@@ -3,54 +3,20 @@ import { hasLegacySubscription } from '../utils/legacySubscription';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Navigate, useNavigate } from 'react-router';
 import { useTranslation } from 'react-i18next';
-import { ClipboardIcon, PlusIcon } from '@/components/icons';
+import { PiPlusBold, PiStackDuotone } from 'react-icons/pi';
+import { PageHeader } from '@/components/layout/PageHeader';
+import { Button, EmptyState, Page } from '@/components/spofy/ui';
 import { subscriptionApi } from '../api/subscription';
 import { balanceApi } from '../api/balance';
-import { useTheme } from '../hooks/useTheme';
-import { getGlassColors } from '../utils/glassTheme';
 import { useAuthStore } from '../store/auth';
 import { getApiErrorMessage } from '../utils/api-error';
 import SubscriptionListCard from '../components/subscription/SubscriptionListCard';
 import TrialOfferCard from '../components/dashboard/TrialOfferCard';
 import { Skeleton, SkeletonGroup } from '@/components/ui/skeleton';
 
-function EmptyState({ onBuy }: { onBuy: () => void }) {
-  const { t } = useTranslation();
-  const { isDark } = useTheme();
-  const g = getGlassColors(isDark);
-
-  return (
-    <div
-      className="rounded-2xl border p-10 text-center"
-      style={{ background: g.cardBg, borderColor: g.cardBorder }}
-    >
-      <div
-        className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl"
-        style={{ background: g.innerBg }}
-      >
-        <ClipboardIcon className="h-8 w-8 opacity-40" />
-      </div>
-      <h3 className="mb-2 text-xl font-semibold" style={{ color: g.text }}>
-        {t('subscriptions.empty', 'Нет подписок')}
-      </h3>
-      <p className="mb-6 text-sm" style={{ color: g.textSecondary }}>
-        {t('subscriptions.emptyDesc', 'У вас пока нет активных подписок')}
-      </p>
-      <button
-        onClick={onBuy}
-        className="rounded-xl bg-accent-500 px-8 py-3 text-sm font-medium text-on-accent transition-colors hover:bg-accent-600"
-      >
-        {t('subscriptions.buy', 'Купить подписку')}
-      </button>
-    </div>
-  );
-}
-
 export default function Subscriptions() {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { isDark } = useTheme();
-  const g = getGlassColors(isDark);
   const queryClient = useQueryClient();
   const refreshUser = useAuthStore((state) => state.refreshUser);
   const [trialError, setTrialError] = useState<string | null>(null);
@@ -112,52 +78,35 @@ export default function Subscriptions() {
   }
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between gap-3">
-        <h1 className="truncate text-xl font-bold" style={{ color: g.text }}>
-          {t('subscriptions.title', 'Мои подписки')}
-        </h1>
-        {/* При живом доступе покупка остаётся компактным второстепенным действием. */}
-        {!isLoading && !hasLegacy && hasActiveAccess && (
-          <button
-            onClick={() => navigate('/subscription/purchase')}
-            className="flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-xl px-4 py-2 text-sm font-medium transition-colors"
-            style={{
-              background: 'rgba(var(--color-accent-400), 0.1)',
-              color: 'rgb(var(--color-accent-400))',
-              border: '1px solid rgba(var(--color-accent-400), 0.2)',
-            }}
-          >
-            <PlusIcon className="h-4 w-4" />
-            {t('subscriptions.buyAnother', 'Новый тариф')}
-          </button>
-        )}
-      </div>
+    <Page>
+      <PageHeader
+        title={t('subscriptions.title', 'Мои подписки')}
+        backTo="/"
+        right={
+          // При живом доступе покупка остаётся компактным второстепенным действием.
+          !isLoading && !hasLegacy && hasActiveAccess ? (
+            <Button
+              tone="secondary"
+              className="h-10 px-3.5 text-sm"
+              onClick={() => navigate('/subscription/purchase')}
+            >
+              <PiPlusBold className="h-4 w-4" />
+              {t('subscriptions.buyAnother', 'Новый тариф')}
+            </Button>
+          ) : undefined
+        }
+      />
 
       {/* Живого доступа нет: покупка или продление остаётся явным следующим шагом. */}
       {!isLoading && subscriptions.length > 0 && !hasActiveAccess && !hasLegacy && (
-        <button
-          onClick={() => navigate('/subscription/purchase')}
-          className="flex w-full items-center justify-center gap-2 rounded-2xl bg-accent-500 p-3.5 text-sm font-semibold text-on-accent transition-colors hover:bg-accent-600"
-        >
-          <PlusIcon className="h-5 w-5" />
+        <Button className="w-full" onClick={() => navigate('/subscription/purchase')}>
           {t('subscriptions.browsePlans', 'Посмотреть тарифы и купить подписку')}
-        </button>
+        </Button>
       )}
 
-      {/* Loading */}
       {isLoading && (
-        <SkeletonGroup className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          {[1, 2].map((i) => (
-            <Skeleton
-              key={i}
-              variant="card"
-              // Фон и рамку задаёт стеклянная тема, поэтому вариантную заливку гасим.
-              className="h-36 border-0 bg-transparent"
-              style={{ background: g.innerBg }}
-            />
-          ))}
+        <SkeletonGroup className="space-y-4">
+          <Skeleton variant="card" count={2} className="h-36 rounded-3xl" />
         </SkeletonGroup>
       )}
 
@@ -172,25 +121,32 @@ export default function Subscriptions() {
             trialError={trialError}
           />
           {/* Новый пользователь не обязан активировать триал, чтобы попасть
-              в витрину — даём явный путь к покупке подписки. Раньше при
-              доступном триале это был единственный экран без кнопки «Купить»
-              (Telegram-баг #605056/#605063). */}
-          <button
+              в витрину — даём явный путь к покупке подписки (Telegram-баг
+              #605056/#605063). */}
+          <Button
+            tone="secondary"
+            className="w-full"
             onClick={() => navigate('/subscription/purchase')}
-            className="flex w-full items-center justify-center gap-2 rounded-xl bg-accent-500 px-6 py-3 text-sm font-semibold text-on-accent transition-colors hover:bg-accent-600"
           >
-            <PlusIcon className="h-5 w-5" />
             {t('subscriptions.browsePlans', 'Посмотреть тарифы и купить подписку')}
-          </button>
+          </Button>
         </div>
       )}
       {hasNoSubscriptions && !trialLoading && !trialInfo?.is_available && (
-        <EmptyState onBuy={() => navigate('/subscription/purchase')} />
+        <EmptyState
+          icon={<PiStackDuotone />}
+          title={t('subscriptions.empty', 'Нет подписок')}
+          text={t('subscriptions.emptyDesc', 'У вас пока нет активных подписок')}
+          action={
+            <Button onClick={() => navigate('/subscription/purchase')}>
+              {t('subscriptions.buy', 'Купить подписку')}
+            </Button>
+          }
+        />
       )}
 
-      {/* Subscription grid */}
       {subscriptions.length > 0 && (
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:[&>*:last-child:nth-child(odd)]:col-span-2">
+        <div className="space-y-3">
           {subscriptions.map((sub) => (
             <SubscriptionListCard
               key={sub.id}
@@ -200,6 +156,6 @@ export default function Subscriptions() {
           ))}
         </div>
       )}
-    </div>
+    </Page>
   );
 }

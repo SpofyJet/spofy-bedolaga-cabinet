@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { TrashIcon } from '@/components/icons';
+import { PiTrashDuotone } from 'react-icons/pi';
+import { Button, Surface } from '@/components/spofy/ui';
 import { subscriptionApi } from '../../../api/subscription';
 import { usePlatform } from '../../../platform';
 import { useDestructiveConfirm } from '../../../platform/hooks/useNativeDialog';
@@ -68,49 +69,41 @@ export function DeleteSubscriptionSheet({
 
   if (!open) {
     return (
-      <button
+      <Button
+        tone="danger"
+        className="w-full"
         onClick={handleTriggerClick}
         disabled={deleteLoading}
-        className="flex w-full items-center justify-center gap-2 rounded-2xl border border-error-400/20 bg-error-400/5 p-3.5 text-sm font-medium text-error-400 transition-colors hover:bg-error-400/10 disabled:opacity-50"
       >
-        <TrashIcon className="h-4 w-4" />
+        <PiTrashDuotone className="h-5 w-5" />
         {t('subscription.delete', 'Удалить подписку')}
-      </button>
+      </Button>
     );
   }
 
   return (
-    <div
-      className="rounded-2xl border border-error-400/20 p-4"
-      style={{ background: 'rgba(255,59,92,0.04)' }}
-    >
-      <div className="mb-3 text-sm font-semibold text-error-400">
-        {t('subscription.deleteTitle', 'Удалить подписку?')}
+    <Surface className="space-y-4">
+      <div>
+        <p className="text-[15px] font-semibold text-error-400">
+          {t('subscription.deleteTitle', 'Удалить подписку?')}
+        </p>
+        <p className="mt-1 text-[13px] leading-snug" style={{ color: textSecondary }}>
+          {t(
+            'subscription.deleteWarning',
+            'Подписка будет удалена безвозвратно. Все данные, устройства и настройки будут потеряны. Это действие нельзя отменить.',
+          )}
+        </p>
       </div>
-      <div className="mb-4 text-xs" style={{ color: textSecondary }}>
-        {t(
-          'subscription.deleteWarning',
-          'Подписка будет удалена безвозвратно. Все данные, устройства и настройки будут потеряны. Это действие нельзя отменить.',
-        )}
-      </div>
-      <div className="flex gap-2">
-        <button
-          onClick={performDelete}
-          disabled={deleteLoading}
-          className="flex-1 rounded-xl bg-error-500 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-error-600 disabled:opacity-50"
-        >
+      <div className="grid grid-cols-2 gap-2">
+        <Button tone="danger" onClick={performDelete} disabled={deleteLoading}>
           {deleteLoading
             ? t('common.processing', 'Удаление...')
             : t('subscription.confirmDelete', 'Да, удалить')}
-        </button>
-        <button
-          onClick={onClose}
-          className="flex-1 rounded-xl border border-dark-700 py-2.5 text-sm font-medium transition-colors hover:bg-dark-700"
-          style={{ color: textSecondary }}
-        >
+        </Button>
+        <Button tone="secondary" onClick={onClose}>
           {t('common.cancel', 'Отмена')}
-        </button>
+        </Button>
       </div>
-    </div>
+    </Surface>
   );
 }
