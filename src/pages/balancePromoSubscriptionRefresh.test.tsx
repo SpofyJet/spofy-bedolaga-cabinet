@@ -62,8 +62,8 @@ it('refreshes an already cached subscription after granting promo days', async (
     </QueryClientProvider>,
   );
   expect(await screen.findByText('old-date')).toBeTruthy();
-  // Spofy-адаптация: поле промокода скрыто за кнопкой «У меня есть промокод».
-  fireEvent.click(screen.getByRole('button', { name: 'balance.promocode.haveOne' }));
+  // Spofy v10: поле промокода открывается кнопкой «Промокод» рядом с «Пополнить».
+  fireEvent.click(screen.getByRole('button', { name: 'balance.promocode.title' }));
   fireEvent.change(screen.getByPlaceholderText('balance.promocode.placeholder'), {
     target: { value: 'FREE3' },
   });

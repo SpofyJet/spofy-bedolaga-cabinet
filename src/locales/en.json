@@ -1133,7 +1133,10 @@
       "loadError": "Failed to load saved cards. Please try again later.",
       "sbpSection": "SBP Auto-payment",
       "sbpBinding": "SBP binding",
-      "sbpUnlink": "Disable SBP auto-payment"
+      "sbpUnlink": "Disable SBP auto-payment",
+      "cardsSection": "Cards",
+      "emptyTitle": "No cards yet",
+      "sbpUnlinkShort": "Turn off"
     },
     "paymentReady": "Payment link is ready",
     "clickToOpenPayment": "Click the button below to open the payment page in a new tab",
@@ -1164,7 +1167,8 @@
       "timeout": "Taking Longer Than Expected",
       "timeoutDesc": "Payment processing is taking longer than usual. You can try checking the status again.",
       "goToBalance": "Go to Balance",
-      "tryAgain": "Try Again"
+      "tryAgain": "Try Again",
+      "toHome": "Home"
     },
     "top_up": "Top up balance",
     "scanQrToPay": "Scan the QR code in your banking app or open the payment page",
@@ -1182,10 +1186,14 @@
       "until": "Active until {{date}}",
       "days_one": "{{count}} day",
       "days_other": "{{count}} days",
-      "perMonth": "{{amount}} {{currency}}/mo"
+      "perMonth": "{{amount}} {{currency}}/mo",
+      "untilShort": "until {{date}}"
     },
     "referralEarned": "Earned from referrals so far: {{amount}} {{currency}}. Your balance can be spent on renewal.",
-    "methodFast": "Fast"
+    "methodFast": "Fast",
+    "noTransactionsHint": "Top-ups and payments will appear here",
+    "afterTopUp": "Balance after top-up",
+    "topUpHintShort": "Usually credited within a minute"
   },
   "referral": {
     "title": "Referral Program",
