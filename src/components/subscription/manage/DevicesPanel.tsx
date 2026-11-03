@@ -80,7 +80,7 @@ export function DevicesPanel({ subscription, subscriptionId }: DevicesPanelProps
   });
 
   return (
-    <section>
+    <section id="sp-devices" className="scroll-mt-4">
       <SectionTitle
         right={
           devicesData && devicesData.devices.length > 0 ? (

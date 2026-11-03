@@ -20,20 +20,6 @@ export function isTicketOpen(ticket: Pick<Ticket, 'status'>): boolean {
 }
 
 /**
- * Чат показывает одну переписку: открытое обращение, а если его нет —
- * последнее закрытое (как история, новое сообщение начнёт новое обращение).
- */
-export function pickChatTicket<T extends Pick<Ticket, 'id' | 'status' | 'updated_at'>>(
-  tickets: T[] | undefined,
-): T | null {
-  if (!tickets || tickets.length === 0) return null;
-  const byRecent = [...tickets].sort(
-    (a, b) => new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime(),
-  );
-  return byRecent.find(isTicketOpen) ?? byRecent[0];
-}
-
-/**
  * Тема обращения для админки: первая строка сообщения. Бэк требует 3–255
  * символов, поэтому короткое/пустое (только фото) — нейтральная подпись.
  */

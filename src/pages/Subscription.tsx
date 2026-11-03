@@ -295,6 +295,19 @@ export default function Subscription() {
     });
   }, [showDeviceTopup, hasSubscriptionLoaded]);
 
+  // ?section=devices («Мои устройства» на главной) — сразу к списку устройств.
+  const openDevices = searchParams.get('section') === 'devices';
+  useEffect(() => {
+    if (!openDevices || !hasSubscriptionLoaded) return;
+    const id = window.setTimeout(() => {
+      const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+      document
+        .getElementById('sp-devices')
+        ?.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+    }, 120);
+    return () => window.clearTimeout(id);
+  }, [openDevices, hasSubscriptionLoaded]);
+
   // In multi-tariff mode without a specific subscription ID, redirect to list
   if (isMultiTariff && !subscriptionId && !isLoading) {
     return <Navigate to="/subscriptions" replace />;

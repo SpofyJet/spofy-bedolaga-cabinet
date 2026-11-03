@@ -2,7 +2,7 @@
 import { cleanup, render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import DevicesTrafficCard, { trafficPair } from './DevicesTrafficCard';
+import DevicesTrafficCard, { deviceTiles, trafficPair } from './DevicesTrafficCard';
 import type { Device } from '@/types';
 
 vi.mock('react-i18next', () => ({
@@ -65,10 +65,24 @@ describe('DevicesTrafficCard', () => {
     expect(screen.getByText('dashboard.devicesTraffic.allSlotsBusy')).toBeTruthy();
   });
 
-  it('безлимит — вместо докупки ГБ ссылка на устройства', () => {
+  it('безлимит — вместо докупки ГБ ссылка на список устройств', () => {
     renderCard({ trafficLimitGb: 0 });
     expect(screen.queryByRole('link', { name: /buyTraffic/ })).toBeNull();
-    expect(linkTo('dashboard.devicesTraffic.manage')).toBe('/connection?sub=42');
+    expect(linkTo('dashboard.devicesTraffic.manage')).toBe('/subscription?section=devices');
+  });
+});
+
+describe('deviceTiles', () => {
+  const kinds = (connected: number, limit: number) =>
+    deviceTiles(connected, limit, []).map((t) => (t.kind === 'more' ? `+${t.count}` : t.kind));
+
+  it('не больше четырёх плиток, «+N» — подключённые сверх, пунктир — свободное место', () => {
+    expect(kinds(8, 9)).toEqual(['device', 'device', '+6', 'free']);
+    expect(kinds(3, 5)).toEqual(['device', 'device', 'device', 'free']);
+    expect(kinds(5, 5)).toEqual(['device', 'device', 'device', '+2']);
+    expect(kinds(1, 2)).toEqual(['device', 'free']);
+    expect(kinds(0, 3)).toEqual(['free', 'free', 'free']);
+    expect(kinds(6, 0)).toEqual(['device', 'device', 'device', '+3']);
   });
 });
 

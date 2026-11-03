@@ -54,7 +54,7 @@ describe('обработчики ошибок в чате поддержки', (
   // Поведение (409 → сообщение уходит в уже открытое обращение) проверено
   // рендером в src/pages/supportChat.test.tsx. Здесь — структурная страховка:
   // отказ бэка не должен уходить в никуда, как было в старой тикет-форме.
-  const source = readFileSync(new URL('../pages/Support.tsx', import.meta.url), 'utf8');
+  const source = readFileSync(new URL('../pages/SupportChat.tsx', import.meta.url), 'utf8');
   const block = source.slice(source.indexOf('const sendMutation'), source.indexOf('const canSend'));
 
   it('отправка обрабатывает отказ бэка', () => {

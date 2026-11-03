@@ -10,6 +10,8 @@ import { useWebSocket, type WSMessage } from '@/hooks/useWebSocket';
 
 export const SUPPORT_UNREAD_KEY = ['ticket-notifications-count'] as const;
 export const SUPPORT_CHAT_KEY = ['support-chat'] as const;
+/** Список обращений (тикетов) пользователя. */
+export const SUPPORT_LIST_KEY = [...SUPPORT_CHAT_KEY, 'list'] as const;
 
 /**
  * Непрочитанные ответы поддержки для пользователя — вместо колокольчика в шапке.
@@ -24,7 +26,8 @@ export function useSupportUnread(enabled = true): number {
   const location = useLocation();
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const { showToast } = useToast();
-  const inChat = location.pathname === '/support';
+  // в разделе поддержки (список или любое обращение) тосты и бейдж не нужны
+  const inChat = location.pathname === '/support' || location.pathname.startsWith('/support/');
 
   const onMessage = useCallback(
     (message: WSMessage) => {
@@ -36,7 +39,7 @@ export function useSupportUnread(enabled = true): number {
         type: 'info',
         title: t('support.chat.toastTitle', 'Ответ поддержки'),
         message: message.message || t('support.chat.toastText', 'Откройте чат, чтобы прочитать'),
-        onClick: () => navigate('/support'),
+        onClick: () => navigate(message.ticket_id ? `/support/${message.ticket_id}` : '/support'),
         duration: 8000,
       });
     },

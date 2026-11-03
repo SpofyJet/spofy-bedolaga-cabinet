@@ -18,7 +18,7 @@ import { describe, expect, it } from 'vitest';
  */
 
 const RENDERERS = [
-  'src/pages/Support.tsx',
+  'src/pages/SupportChat.tsx',
   'src/pages/AdminTickets.tsx',
   'src/components/admin/userDetail/TicketsTab.tsx',
 ];

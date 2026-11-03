@@ -8,6 +8,7 @@ import {
   PiPlusBold,
   PiCaretRightBold,
   PiWarningCircleFill,
+  PiDevicesBold,
 } from 'react-icons/pi';
 import type { IconType } from 'react-icons';
 
@@ -15,8 +16,35 @@ import { cn } from '@/lib/utils';
 import { formatTraffic } from '@/utils/formatTraffic';
 import type { Device } from '@/types';
 
-/** Сколько ячеек устройств рисуем; дальше — «+N». */
-const MAX_SLOTS = 4;
+/** Сколько плиток помещается в половину карточки на телефоне (4 × 32px + зазоры). */
+const MAX_TILES = 4;
+
+type Tile =
+  | { kind: 'device'; device?: Device }
+  | { kind: 'more'; count: number }
+  | { kind: 'free' };
+
+/**
+ * Плитки устройств — не больше четырёх, чтобы ряд не налезал на колонку трафика:
+ * подключённые (иконкой платформы), «+N» — ещё N подключённых, которые не
+ * влезли, и пунктир — свободное место. Свободному месту, если оно есть, всегда
+ * достаётся последняя плитка: по ряду видно и «сколько подключено», и «есть ли
+ * куда ещё». Точное «8 из 9» — строкой ниже.
+ */
+export function deviceTiles(connected: number, limit: number, devices: Device[]): Tile[] {
+  const free = limit > 0 ? Math.max(0, limit - connected) : 0;
+  const forDevices = MAX_TILES - (free > 0 ? 1 : 0);
+  const tiles: Tile[] = [];
+  if (connected > forDevices) {
+    for (let i = 0; i < forDevices - 1; i++) tiles.push({ kind: 'device', device: devices[i] });
+    tiles.push({ kind: 'more', count: connected - (forDevices - 1) });
+  } else {
+    for (let i = 0; i < connected; i++) tiles.push({ kind: 'device', device: devices[i] });
+  }
+  const freeTiles = Math.min(free, MAX_TILES - tiles.length);
+  for (let i = 0; i < freeTiles; i++) tiles.push({ kind: 'free' });
+  return tiles;
+}
 
 interface DevicesTrafficCardProps {
   subscriptionId: number;
@@ -73,10 +101,7 @@ export default function DevicesTrafficCard({
   const { t } = useTranslation();
 
   const unlimitedDevices = deviceLimit <= 0;
-  const slots = unlimitedDevices
-    ? Math.min(connectedDevices, MAX_SLOTS)
-    : Math.min(deviceLimit, MAX_SLOTS);
-  const extraSlots = unlimitedDevices ? 0 : Math.max(0, deviceLimit - MAX_SLOTS);
+  const tiles = deviceTiles(connectedDevices, deviceLimit, devices);
   const atLimit = !unlimitedDevices && connectedDevices >= deviceLimit;
 
   const unlimitedTraffic = trafficLimitGb <= 0;
@@ -107,27 +132,33 @@ export default function DevicesTrafficCard({
         {/* Устройства */}
         <div className="flex min-w-0 flex-col">
           <div className="flex h-9 items-center gap-1.5" aria-hidden>
-            {Array.from({ length: slots }).map((_, i) => {
-              const device = devices[i];
-              const filled = i < connectedDevices;
-              const Icon = platformIcon(device?.platform);
+            {tiles.map((tile, i) => {
+              if (tile.kind === 'free')
+                return (
+                  <span
+                    key={i}
+                    className="h-8 w-8 shrink-0 rounded-[10px] border border-dashed border-dark-600/70"
+                  />
+                );
+              if (tile.kind === 'more')
+                return (
+                  <span
+                    key={i}
+                    className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[10px] bg-accent-500/15 text-xs font-bold text-accent-300"
+                  >
+                    +{tile.count}
+                  </span>
+                );
+              const Icon = platformIcon(tile.device?.platform);
               return (
                 <span
                   key={i}
-                  className={cn(
-                    'flex h-8 w-8 shrink-0 items-center justify-center rounded-[10px]',
-                    filled
-                      ? 'bg-accent-500/15 text-accent-300'
-                      : 'border border-dashed border-dark-600/70 text-dark-600',
-                  )}
+                  className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[10px] bg-accent-500/15 text-accent-300"
                 >
-                  {filled ? <Icon className="h-4 w-4" /> : null}
+                  <Icon className="h-4 w-4" />
                 </span>
               );
             })}
-            {extraSlots > 0 && (
-              <span className="text-xs font-semibold text-dark-400">+{extraSlots}</span>
-            )}
           </div>
           <div className="mt-3 text-lg font-bold leading-tight tracking-tight text-dark-50">
             {unlimitedDevices
@@ -148,7 +179,11 @@ export default function DevicesTrafficCard({
         <div className="flex min-w-0 flex-col border-l border-dark-700/50 pl-3">
           <div className="flex h-9 items-center">
             {unlimitedTraffic ? (
-              <span className="text-[28px] font-bold leading-none text-accent-300" aria-hidden>
+              // та же плитка, что у устройств: ряды двух колонок на одной высоте
+              <span
+                className="flex h-8 w-8 items-center justify-center rounded-[10px] bg-accent-500/15 text-lg font-bold leading-none text-accent-300"
+                aria-hidden
+              >
                 ∞
               </span>
             ) : (
@@ -171,7 +206,7 @@ export default function DevicesTrafficCard({
           </div>
           <div className="mt-3 truncate text-lg font-bold leading-tight tracking-tight text-dark-50">
             {unlimitedTraffic
-              ? t('dashboard.devicesTraffic.unlimited', 'Безлимит')
+              ? t('dashboard.devicesTraffic.noLimit', 'Без лимита')
               : t('dashboard.devicesTraffic.ofTraffic', '{{used}} из {{limit}}', {
                   ...trafficPair(trafficUsedGb, trafficLimitGb),
                 })}
@@ -211,9 +246,10 @@ export default function DevicesTrafficCard({
         </Link>
         {unlimitedTraffic ? (
           <Link
-            to={`/connection?sub=${subscriptionId}`}
+            to={`/subscription?section=devices`}
             className="flex h-11 items-center justify-center gap-1.5 rounded-xl bg-dark-800/80 text-sm font-semibold text-dark-100 transition-colors hover:bg-dark-700/80"
           >
+            <PiDevicesBold className="h-4 w-4" />
             {t('dashboard.devicesTraffic.manage', 'Мои устройства')}
           </Link>
         ) : (

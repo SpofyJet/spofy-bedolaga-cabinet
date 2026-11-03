@@ -3,8 +3,10 @@ import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/re
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AxiosError, AxiosHeaders } from 'axios';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { MemoryRouter, Route, Routes, useLocation } from 'react-router';
 import Support from './Support';
-import { buildTicketTitle, pickChatTicket, toMediaParams } from '../utils/supportChat';
+import SupportChat from './SupportChat';
+import { buildTicketTitle, toMediaParams } from '../utils/supportChat';
 
 const api = vi.hoisted(() => ({
   list: vi.fn(),
@@ -13,6 +15,7 @@ const api = vi.hoisted(() => ({
   create: vi.fn(),
   reply: vi.fn(),
   markRead: vi.fn(),
+  notifications: vi.fn(),
 }));
 
 const openTicket = {
@@ -47,10 +50,11 @@ vi.mock('../api/info', () => ({
   infoApi: { getSupportConfig: async () => ({ tickets_enabled: true, support_type: 'tickets' }) },
 }));
 vi.mock('../api/ticketNotifications', () => ({
-  ticketNotificationsApi: { markTicketAsRead: api.markRead },
+  ticketNotificationsApi: { markTicketAsRead: api.markRead, getNotifications: api.notifications },
 }));
 vi.mock('@/hooks/useSupportUnread', () => ({
   SUPPORT_CHAT_KEY: ['support-chat'],
+  SUPPORT_LIST_KEY: ['support-chat', 'list'],
   SUPPORT_UNREAD_KEY: ['ticket-notifications-count'],
 }));
 vi.mock('@/hooks/useBranding', () => ({
@@ -58,6 +62,7 @@ vi.mock('@/hooks/useBranding', () => ({
 }));
 vi.mock('@/platform', () => ({
   usePlatform: () => ({ openLink: vi.fn(), openTelegramLink: vi.fn() }),
+  useHaptic: () => ({ impact: vi.fn() }),
 }));
 vi.mock('../api/tickets', () => ({
   ticketsApi: {
@@ -70,14 +75,25 @@ vi.mock('../api/tickets', () => ({
   },
 }));
 
-const renderChat = () =>
+function Where() {
+  return <span data-testid="where">{useLocation().pathname + useLocation().search}</span>;
+}
+
+const renderAt = (path: string) =>
   render(
     <QueryClientProvider
       client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}
     >
-      <Support />
+      <MemoryRouter initialEntries={[path]}>
+        <Routes>
+          <Route path="/support" element={<Support />} />
+          <Route path="/support/:ticketId" element={<SupportChat />} />
+        </Routes>
+        <Where />
+      </MemoryRouter>
     </QueryClientProvider>,
   );
+const where = () => screen.getByTestId('where').textContent;
 
 beforeEach(() => {
   vi.clearAllMocks();
@@ -89,6 +105,7 @@ beforeEach(() => {
   api.create.mockResolvedValue({ ...openTicket, id: 5 });
   api.reply.mockResolvedValue({});
   api.markRead.mockResolvedValue({ success: true, marked_count: 1 });
+  api.notifications.mockResolvedValue({ items: [], unread_count: 0 });
   api.get.mockImplementation(async (id: number) =>
     id === closedTicket.id ? closedTicket : openTicket,
   );
@@ -122,10 +139,9 @@ async function attachAndSend(container: HTMLElement, text: string) {
   fireEvent.submit(container.querySelector('form')!);
 }
 
-describe('Support chat', () => {
-  it('replies into the open conversation with mixed media', async () => {
-    api.list.mockResolvedValue({ items: [openTicket] });
-    const { container } = renderChat();
+describe('Support chat (one request = one chat)', () => {
+  it('replies into the open request with mixed media', async () => {
+    const { container } = renderAt('/support/1');
     // Ссылка оператора — настоящая <a>, а не HTML-текст.
     const link = await screen.findByRole('link', { name: 'https://example.com' });
     expect(link.getAttribute('href')).toBe('https://example.com');
@@ -136,11 +152,18 @@ describe('Support chat', () => {
     expect(api.create).not.toHaveBeenCalled();
   });
 
-  it('starts a new conversation after the last one was closed', async () => {
-    api.list.mockResolvedValue({ items: [closedTicket] });
-    const { container } = renderChat();
+  it('a closed request is read-only and offers a new one', async () => {
+    renderAt('/support/2');
     await screen.findByText('support.chat.closed');
+    expect(screen.queryByRole('textbox')).toBeNull();
+    fireEvent.click(screen.getByRole('button', { name: /support.chat.newTicket/ }));
+    await waitFor(() => expect(where()).toBe('/support/new'));
+  });
 
+  it('a new request creates a ticket and the chat moves to its address', async () => {
+    api.list.mockResolvedValue({ items: [closedTicket] });
+    const { container } = renderAt('/support/new');
+    await screen.findByRole('textbox');
     await attachAndSend(container, 'Нужна помощь с оплатой');
     await waitFor(() =>
       expect(api.create).toHaveBeenCalledWith(
@@ -149,6 +172,13 @@ describe('Support chat', () => {
         media,
       ),
     );
+    await waitFor(() => expect(where()).toBe('/support/5'));
+  });
+
+  it('«new» goes to the open request when there is one (the bot keeps one open)', async () => {
+    api.list.mockResolvedValue({ items: [openTicket] });
+    renderAt('/support/new');
+    await waitFor(() => expect(where()).toBe('/support/1'));
   });
 
   it('falls back to the open ticket when the backend answers 409', async () => {
@@ -162,7 +192,7 @@ describe('Support chat', () => {
         config: { headers: new AxiosHeaders() },
       }),
     );
-    renderChat();
+    renderAt('/support/new');
     const box = await screen.findByRole('textbox');
     fireEvent.change(box, { target: { value: 'Привет' } });
     fireEvent.submit(box.closest('form')!);
@@ -170,15 +200,43 @@ describe('Support chat', () => {
   });
 });
 
-describe('supportChat utils', () => {
-  it('prefers an open ticket, otherwise the most recent one', () => {
-    const a = { id: 1, status: 'closed', updated_at: '2026-11-02T00:00:00Z' };
-    const b = { id: 2, status: 'pending', updated_at: '2026-10-01T00:00:00Z' };
-    expect(pickChatTicket([a, b])?.id).toBe(2);
-    expect(pickChatTicket([a, { ...b, status: 'closed' }])?.id).toBe(1);
-    expect(pickChatTicket([])).toBeNull();
+describe('Support requests list', () => {
+  const withLast = (ticket: typeof openTicket, text: string, admin: boolean) => ({
+    ...ticket,
+    messages_count: 1,
+    last_message: { ...openTicket.messages[0], message_text: text, is_from_admin: admin },
   });
 
+  it('shows the open request on top and closed ones in the archive tab', async () => {
+    api.list.mockResolvedValue({
+      items: [
+        withLast(openTicket, 'Ответ оператора', true),
+        withLast(closedTicket, 'Спасибо', false),
+      ],
+    });
+    renderAt('/support');
+    const row = await screen.findByRole('link', { name: /Не подключается/ });
+    expect(row.getAttribute('href')).toBe('/support/1');
+    expect(screen.getByText('Ответ оператора')).toBeTruthy();
+    expect(screen.queryByText('support.chat.youСпасибо')).toBeNull();
+
+    fireEvent.click(screen.getByRole('tab', { name: /support.chat.tabArchive/ }));
+    await waitFor(() => expect(where()).toBe('/support?tab=archive'));
+    expect(screen.getByRole('link', { name: /support.chat.youСпасибо/ }).getAttribute('href')).toBe(
+      '/support/2',
+    );
+  });
+
+  it('without an open request: an invitation row that starts a new one', async () => {
+    api.list.mockResolvedValue({ items: [] });
+    renderAt('/support');
+    const invite = await screen.findByRole('link', { name: /support.chat.invite/ });
+    expect(invite.getAttribute('href')).toBe('/support/new');
+    expect(screen.queryByRole('tablist')).toBeNull();
+  });
+});
+
+describe('supportChat utils', () => {
   it('builds a valid ticket title', () => {
     expect(buildTicketTitle('', 'Фолбэк')).toBe('Фолбэк');
     expect(buildTicketTitle('ок', 'Фолбэк')).toBe('Фолбэк');

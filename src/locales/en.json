@@ -453,7 +453,8 @@
       "bypassOffHint": "Regular servers still work. Buy more gigabytes to turn bypass back on.",
       "addSlot": "Add a slot",
       "buyTraffic": "Buy GB",
-      "manage": "My devices"
+      "manage": "My devices",
+      "noLimit": "No limit"
     }
   },
   "subscription": {
@@ -1478,7 +1479,7 @@
     },
     "chat": {
       "title": "{{name}} Support",
-      "subtitle": "We reply here and send you a notification",
+      "subtitle": "We're always here",
       "openTelegram": "Message us on Telegram",
       "disabled": "In-app chat is turned off right now. Message us on Telegram and we will reply there.",
       "write": "Contact support",
@@ -1486,7 +1487,7 @@
       "welcome": "Hi! Tell us what happened — you can attach a screenshot. We will reply right in this chat.",
       "welcomeNamed": "Hi {{name}}! Tell us what happened — you can attach a screenshot. We will reply right in this chat.",
       "today": "Today",
-      "closed": "This conversation is closed. Write again and we will start a new one.",
+      "closed": "This request is closed. Still have a question? Start a new one — we are here.",
       "sending": "sending…",
       "placeholder": "Message",
       "placeholderNew": "Describe the problem",
@@ -1497,7 +1498,23 @@
       "sendFailed": "Could not send. Your text is kept — please try again.",
       "toastTitle": "Support replied",
       "toastText": "Open the chat to read it",
-      "unread": "New reply from support"
+      "unread": "New reply from support",
+      "newTicket": "New request",
+      "ticketNumber": "#{{id}}",
+      "statusClosed": "Closed",
+      "statusAnswered": "Replied",
+      "statusWaiting": "Waiting for reply",
+      "emptyText": "You can attach a screenshot. We reply here and send a notification.",
+      "oneOpen": "While the request is open, write into it — the whole story stays in one place.",
+      "noMessages": "No messages yet",
+      "mediaMessage": "Photo or video",
+      "you": "You: ",
+      "telegramHint": "If Telegram is easier for you",
+      "tabCurrent": "Requests",
+      "tabArchive": "Archive",
+      "invite": "Hello! How can we help?",
+      "online": "online",
+      "writeShort": "Write"
     }
   },
   "wheel": {

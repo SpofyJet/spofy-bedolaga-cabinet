@@ -418,7 +418,8 @@
       "bypassOffHint": "普通服务器仍可使用。购买流量即可恢复绕行。",
       "addSlot": "增加名额",
       "buyTraffic": "购买流量",
-      "manage": "我的设备"
+      "manage": "我的设备",
+      "noLimit": "不限量"
     }
   },
   "subscription": {
@@ -1341,7 +1342,7 @@
     },
     "chat": {
       "title": "{{name}} 客服",
-      "subtitle": "我们会在这里回复并通知您",
+      "subtitle": "我们随时在线",
       "openTelegram": "在 Telegram 联系我们",
       "disabled": "应用内聊天暂时关闭。请在 Telegram 联系我们，我们会在那里回复。",
       "write": "联系客服",
@@ -1349,7 +1350,7 @@
       "welcome": "您好！请描述遇到的问题，可以附上截图。我们会直接在此聊天中回复。",
       "welcomeNamed": "{{name}}，您好！请描述遇到的问题，可以附上截图。我们会直接在此聊天中回复。",
       "today": "今天",
-      "closed": "此对话已结束。再次发送消息即可开始新的对话。",
+      "closed": "此工单已关闭。如仍有问题，请新建工单，我们随时在线。",
       "sending": "发送中…",
       "placeholder": "消息",
       "placeholderNew": "描述问题",
@@ -1360,7 +1361,23 @@
       "sendFailed": "发送失败。文字已保留，请重试。",
       "toastTitle": "客服已回复",
       "toastText": "打开聊天查看",
-      "unread": "客服有新回复"
+      "unread": "客服有新回复",
+      "newTicket": "新建工单",
+      "ticketNumber": "#{{id}}",
+      "statusClosed": "已关闭",
+      "statusAnswered": "已回复",
+      "statusWaiting": "等待回复",
+      "emptyText": "可附上截图。我们会在这里回复并发送通知。",
+      "oneOpen": "工单未关闭时请在其中继续留言，所有记录都在一处。",
+      "noMessages": "暂无消息",
+      "mediaMessage": "图片或视频",
+      "you": "你：",
+      "telegramHint": "如果您更习惯使用 Telegram",
+      "tabCurrent": "工单",
+      "tabArchive": "归档",
+      "invite": "您好！有什么可以帮您？",
+      "online": "在线",
+      "writeShort": "留言"
     }
   },
   "wheel": {

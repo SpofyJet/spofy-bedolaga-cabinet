@@ -66,6 +66,7 @@ const Balance = lazyWithRetry(() => import('./pages/Balance'));
 const SavedCards = lazyWithRetry(() => import('./pages/SavedCards'));
 const Referral = lazyWithRetry(() => import('./pages/Referral'));
 const Support = lazyWithRetry(() => import('./pages/Support'));
+const SupportChat = lazyWithRetry(() => import('./pages/SupportChat'));
 const Profile = lazyWithRetry(() => import('./pages/Profile'));
 const ProfileNotifications = lazyWithRetry(() => import('./pages/ProfileNotifications'));
 const ProfileEmail = lazyWithRetry(() => import('./pages/ProfileEmail'));
@@ -518,6 +519,16 @@ function App() {
             <ProtectedRoute>
               <LazyPage>
                 <Support />
+              </LazyPage>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/support/:ticketId"
+          element={
+            <ProtectedRoute>
+              <LazyPage>
+                <SupportChat />
               </LazyPage>
             </ProtectedRoute>
           }
