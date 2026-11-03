@@ -6,88 +6,93 @@
 /* ---------- Лента обложек ---------- */
 
 .story-rail {
-  display: flex;
-  gap: 10px;
-  overflow-x: auto;
-  margin: 0 -16px;
-  padding: 4px 16px 6px;
-  scroll-padding-inline: 16px;
-  scroll-snap-type: x proximity;
-  scrollbar-width: none;
-  -webkit-overflow-scrolling: touch;
-}
-
-.story-rail::-webkit-scrollbar {
-  display: none;
-}
-
-@media (min-width: 1024px) {
-  .story-rail {
-    margin: 0;
-    padding: 4px 2px 6px;
-    overflow: visible;
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
+  /* Всегда четыре в ряд: на телефоне и в узком окне Telegram на ПК
+     все серии видны сразу, без горизонтальной прокрутки. */
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 6px;
+  padding: 2px 0;
 }
 
 .story-cover {
-  position: relative;
-  flex: 0 0 122px;
-  min-height: 124px;
-  scroll-snap-align: start;
   display: flex;
+  min-width: 0;
   flex-direction: column;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 12px;
-  border-radius: 20px;
-  text-align: left;
-  color: rgb(var(--color-dark-50));
-  background:
-    radial-gradient(
-      120% 90% at 100% 0%,
-      color-mix(in srgb, var(--story-accent) 30%, transparent),
-      transparent 62%
-    ),
-    rgb(var(--color-dark-900));
-  /* Непросмотренная — кольцо в цвет серии, с зазором от фона. */
-  box-shadow:
-    0 0 0 2px rgb(var(--color-dark-950)),
-    0 0 0 4px var(--story-accent);
-  transition:
-    transform 0.18s ease,
-    box-shadow 0.2s ease;
+  align-items: center;
+  gap: 7px;
+  padding: 2px 0;
+  text-align: center;
+  color: rgb(var(--color-dark-100));
+  background: none;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
+  transition: transform 0.18s ease;
 }
 
 .story-cover:active {
-  transform: scale(0.96);
+  transform: scale(0.95);
 }
 
-.story-cover-read {
-  box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.16);
-}
-
+/* Кружок: кольцо в цвет серии, пока не просмотрена, с зазором от фона. */
 .story-cover-icon {
   display: flex;
-  height: 40px;
-  width: 40px;
+  height: 60px;
+  width: 60px;
+  flex-shrink: 0;
   align-items: center;
   justify-content: center;
-  border-radius: 12px;
+  border-radius: 9999px;
   color: var(--story-accent);
-  background: color-mix(in srgb, var(--story-accent) 16%, transparent);
+  background:
+    radial-gradient(
+      90% 90% at 70% 20%,
+      color-mix(in srgb, var(--story-accent) 30%, transparent),
+      transparent 70%
+    ),
+    rgb(var(--color-dark-900));
+  box-shadow:
+    0 0 0 2px rgb(var(--color-dark-950)),
+    0 0 0 4px var(--story-accent);
+  transition: box-shadow 0.2s ease;
+}
+
+.story-cover-icon svg {
+  height: 26px;
+  width: 26px;
+}
+
+.story-cover-read .story-cover-icon {
+  box-shadow:
+    0 0 0 2px rgb(var(--color-dark-950)),
+    0 0 0 3.5px rgba(148, 163, 184, 0.28);
 }
 
 .story-cover-title {
-  font-size: 13px;
-  font-weight: 700;
-  line-height: 1.2;
+  display: -webkit-box;
+  max-width: 100%;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  font-size: 11.5px;
+  font-weight: 600;
+  line-height: 1.25;
   letter-spacing: -0.01em;
   overflow-wrap: break-word;
-  hyphens: manual;
+  hyphens: auto;
+}
+
+.story-cover-read .story-cover-title {
+  color: rgb(var(--color-dark-300));
+}
+
+@media (min-width: 640px) {
+  .story-cover-icon {
+    height: 68px;
+    width: 68px;
+  }
+  .story-cover-title {
+    font-size: 12.5px;
+  }
 }
 
 /* ---------- Просмотрщик ---------- */
@@ -99,9 +104,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(3, 6, 14, 0.86);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  /* Без backdrop-filter: размытие под полноэкранным слоем пересчитывалось на
+     каждом кадре анимации и давало рывки на телефонах. */
+  background: rgba(3, 6, 14, 0.94);
 }
 
 .story-viewer-frame {
@@ -240,6 +245,14 @@
   flex-direction: column;
   padding: calc(var(--story-top, 0px) + max(10px, env(safe-area-inset-top, 0px)) + 74px) 22px
     calc(var(--story-bottom, 0px) + max(20px, env(safe-area-inset-bottom, 0px)));
+}
+
+.story-slide-inner {
+  display: flex;
+  height: 100%;
+  min-height: 0;
+  flex-direction: column;
+  will-change: transform, opacity;
 }
 
 .story-text {

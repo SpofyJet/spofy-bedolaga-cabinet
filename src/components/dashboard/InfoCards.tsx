@@ -18,6 +18,8 @@ interface InfoCardsProps {
   isTrial?: boolean;
   /** Вечная подписка: вместо дней и даты — «Навсегда», «скоро закончится» не бывает. */
   isLifetime?: boolean;
+  /** Название тарифа: у вечной подписки крупно показывается оно, а «навсегда» — подписью. */
+  tariffName?: string | null;
   balanceRubles: number;
   /** Заработано с рефералов, ₽ — чип под балансом. 0/null — чип скрыт. */
   fromFriendsRubles?: number | null;
@@ -43,6 +45,7 @@ export default function InfoCards({
   endDate,
   isTrial,
   isLifetime = false,
+  tariffName,
   balanceRubles,
   fromFriendsRubles,
   loading,
@@ -98,10 +101,15 @@ export default function InfoCards({
         {loading ? (
           <Skeleton className="mt-1 h-8 w-16" />
         ) : status === 'active' && isLifetime ? (
-          <span className="mt-1 block">
-            <span className="block text-[26px] font-bold leading-none tracking-tight text-dark-50">
-              {t('subscription.lifetime.forever')}
+          <span className="mt-1 block min-w-0">
+            <span className="block truncate text-[22px] font-bold leading-tight tracking-tight text-dark-50">
+              {tariffName || t('subscription.lifetime.forever')}
             </span>
+            {tariffName && (
+              <span className="mt-1 block text-xs text-dark-400">
+                ∞ {t('subscription.lifetime.forever').toLowerCase()}
+              </span>
+            )}
           </span>
         ) : status === 'active' && daysLeft != null ? (
           <span className="mt-1 block">

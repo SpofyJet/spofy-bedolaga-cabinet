@@ -1,5 +1,4 @@
 import { Link } from 'react-router';
-import { usePlatform } from '../platform';
 import { BackIcon } from './icons';
 
 interface WebBackButtonProps {
@@ -9,21 +8,17 @@ interface WebBackButtonProps {
 }
 
 /**
- * Back button visible only on web platform.
- * Hidden in Telegram Mini App — native back button handles navigation there.
+ * Кнопка «Назад» на странице. Видна и в Telegram: нативная кнопка есть не в
+ * каждом клиенте (и не на каждом экране), а застревать на странице нельзя.
  */
 export function WebBackButton({ to, replace, className }: WebBackButtonProps) {
-  const { platform } = usePlatform();
-
-  if (platform === 'telegram') return null;
-
   return (
     <Link
       to={to}
       replace={replace}
       className={
         className ||
-        'flex h-10 w-10 items-center justify-center rounded-xl border border-dark-700 bg-dark-800 transition-colors hover:border-dark-600'
+        'flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-dark-900/70 text-dark-200 ring-1 ring-inset ring-dark-800/80 transition-colors hover:bg-dark-800/70 hover:text-dark-50'
       }
     >
       <BackIcon />

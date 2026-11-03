@@ -37,7 +37,7 @@ export function StoryRail() {
               aria-label={coverTitle}
             >
               <span className="story-cover-icon" aria-hidden>
-                <Icon className="h-6 w-6" />
+                <Icon />
               </span>
               <span className="story-cover-title">{coverTitle}</span>
             </button>

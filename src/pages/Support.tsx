@@ -17,6 +17,7 @@ import { MessageMediaGrid } from '../components/tickets/MessageMediaGrid';
 import { useAuthStore } from '../store/auth';
 import { useBranding } from '@/hooks/useBranding';
 import { SUPPORT_CHAT_KEY, SUPPORT_UNREAD_KEY } from '@/hooks/useSupportUnread';
+import { useFitViewportHeight } from '@/hooks/useFitViewportHeight';
 import { usePlatform } from '@/platform';
 import { Skeleton } from '@/components/ui/skeleton';
 import { getApiErrorMessage } from '../utils/api-error';
@@ -249,11 +250,13 @@ export default function Support() {
 
   const messages = ticket?.messages ?? [];
   const lastId = messages[messages.length - 1]?.id;
+  // Прокручивается только лента: страница чата ровно по высоте экрана.
+  const pageRef = useFitViewportHeight<HTMLDivElement>();
+  const feedRef = useRef<HTMLDivElement>(null);
   const scrollToEnd = useCallback((smooth: boolean) => {
-    window.scrollTo({
-      top: document.documentElement.scrollHeight,
-      behavior: smooth ? 'smooth' : 'auto',
-    });
+    const feed = feedRef.current;
+    if (!feed) return;
+    feed.scrollTo?.({ top: feed.scrollHeight, behavior: smooth ? 'smooth' : 'auto' });
   }, []);
   const firstScroll = useRef(true);
   useEffect(() => {
@@ -309,7 +312,7 @@ export default function Support() {
 
   if (loading) {
     return (
-      <div className="support-page">
+      <div className="support-page" ref={pageRef}>
         {header}
         <div className="space-y-3 pt-4">
           <Skeleton className="h-14 w-3/4 rounded-2xl" />
@@ -323,7 +326,7 @@ export default function Support() {
   // Чат выключен в боте — честно ведём туда, где отвечают.
   if (!chatEnabled) {
     return (
-      <div className="support-page">
+      <div className="support-page" ref={pageRef}>
         {header}
         <div className="support-empty">
           <p>{t('support.chat.disabled')}</p>
@@ -373,10 +376,10 @@ export default function Support() {
   };
 
   return (
-    <div className="support-page">
+    <div className="support-page" ref={pageRef}>
       {header}
 
-      <div className="support-feed" aria-live="polite">
+      <div className="support-feed" ref={feedRef} aria-live="polite">
         <div className="support-note">
           <PiLockKeyDuotone className="h-5 w-5 shrink-0" aria-hidden />
           <p>{t('support.chat.safety')}</p>

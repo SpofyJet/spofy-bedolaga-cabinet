@@ -101,21 +101,21 @@ export default function QuickActions({
           <Link
             key={action.key}
             to={action.to}
-            className="group flex flex-col items-center gap-2 transition-transform duration-150 active:scale-95"
+            className="group flex flex-col items-center gap-1.5 transition-transform duration-150 active:scale-95"
           >
             <span
               className={cn(
-                'flex aspect-[5/4] w-full items-center justify-center rounded-2xl transition-colors duration-200',
+                'flex h-12 w-full max-w-[88px] items-center justify-center rounded-2xl transition-colors duration-200 sm:h-[52px]',
                 primary
                   ? 'bg-accent-500 text-on-accent shadow-[0_8px_24px_-10px_rgba(var(--color-accent-500),0.7)] group-hover:bg-accent-600'
                   : 'bg-dark-800/70 text-accent-300 ring-1 ring-inset ring-dark-700/60 group-hover:bg-dark-700/70',
               )}
             >
-              <action.icon className="h-[22px] w-[22px]" />
+              <action.icon className="h-5 w-5" />
             </span>
             <span
               className={cn(
-                'text-xs font-semibold leading-none',
+                'text-[11.5px] font-semibold leading-none',
                 primary ? 'text-dark-50' : 'text-dark-300 group-hover:text-dark-100',
               )}
             >

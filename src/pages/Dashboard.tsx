@@ -404,6 +404,7 @@ export default function Dashboard() {
         endDate={focusSub?.end_date}
         isTrial={Boolean(focusSub?.is_trial)}
         isLifetime={focusLifetime}
+        tariffName={focusSub?.tariff_name ?? null}
         balanceRubles={balanceData?.balance_rubles ?? 0}
         fromFriendsRubles={referralInfo?.available_balance_rubles ?? null}
         loading={subLoading}

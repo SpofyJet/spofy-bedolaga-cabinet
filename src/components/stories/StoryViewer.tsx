@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useNavigate } from 'react-router';
 import { useTranslation } from 'react-i18next';
-import { AnimatePresence, motion } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { PiXBold } from 'react-icons/pi';
 
 import { useBranding } from '@/hooks/useBranding';
@@ -137,11 +137,16 @@ export function StoryViewer({ initialIndex, onClose }: StoryViewerProps) {
     if (id) markStoryRead(id);
   }, [seriesIdx, seriesList]);
 
-  // Фото следующего слайда — заранее, чтобы не моргало при перелистывании.
+  // Все фото серии — сразу при открытии и декодированными: иначе картинка
+  // слайда догружалась уже после анимации и «прыгала».
   useEffect(() => {
-    const visual = series?.meta.slides[slideIdx + 1];
-    if (visual && 'image' in visual) new Image().src = visual.image;
-  }, [series, slideIdx]);
+    for (const visual of series?.meta.slides ?? []) {
+      if (!('image' in visual)) continue;
+      const img = new Image();
+      img.src = visual.image;
+      img.decode?.().catch(() => undefined);
+    }
+  }, [series]);
 
   const handlePointerDown = (e: React.PointerEvent) => {
     holdStart.current = { x: e.clientX, y: e.clientY, t: performance.now(), consumed: false };
@@ -241,22 +246,25 @@ export function StoryViewer({ initialIndex, onClose }: StoryViewerProps) {
           </div>
         </div>
 
-        <AnimatePresence initial={false} custom={direction} mode="popLayout">
+        {/* Жесты — на постоянном слое: он не пересоздаётся при смене слайда, поэтому
+            свайп не обрывается, а старый и новый слайды не рисуются друг поверх друга
+            (как было с AnimatePresence popLayout — отсюда «лаг» при перелистывании). */}
+        <div
+          className="story-slide"
+          onPointerDown={handlePointerDown}
+          onPointerMove={handlePointerMove}
+          onPointerUp={handlePointerUp}
+          onPointerCancel={() => {
+            holdStart.current = null;
+            setPaused(false);
+          }}
+        >
           <motion.div
             key={`${meta.id}-${slideIdx}`}
-            className="story-slide"
-            custom={direction}
-            initial={{ opacity: 0, x: direction * 40 }}
+            className="story-slide-inner"
+            initial={{ opacity: 0, x: direction * 18 }}
             animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: direction * -40 }}
-            transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-            onPointerDown={handlePointerDown}
-            onPointerMove={handlePointerMove}
-            onPointerUp={handlePointerUp}
-            onPointerCancel={() => {
-              holdStart.current = null;
-              setPaused(false);
-            }}
+            transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
           >
             <div className="story-text">
               {slides.length > 1 && (
@@ -291,7 +299,7 @@ export function StoryViewer({ initialIndex, onClose }: StoryViewerProps) {
               )}
             </div>
           </motion.div>
-        </AnimatePresence>
+        </div>
       </div>
     </div>,
     document.body,
