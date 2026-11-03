@@ -102,7 +102,7 @@ export default function Support() {
         <h1 className="block truncate text-[17px] font-bold tracking-tight text-dark-50">
           {t('support.chat.title', { name: appName })}
         </h1>
-        <span className="mt-0.5 flex items-center gap-1.5 text-[13px] text-dark-400">
+        <span className="mt-0.5 flex items-center gap-2 text-[13px] text-dark-400">
           <span className="support-head-online" aria-hidden />
           {t('support.chat.subtitle')}
         </span>
@@ -145,7 +145,7 @@ export default function Support() {
     to: string;
     title: string;
     text: string;
-    when: string;
+    when?: string;
     archived?: boolean;
     trailing?: React.ReactNode;
   }) => (
@@ -160,10 +160,7 @@ export default function Support() {
             <PiCheckBold className="h-5 w-5" aria-hidden />
           </span>
         ) : (
-          <>
-            <span className="support-row-avatar">{avatar}</span>
-            <span className="support-row-online" aria-hidden />
-          </>
+          <span className="support-row-avatar">{avatar}</span>
         )}
       </span>
       <span className="min-w-0 flex-1">
@@ -176,7 +173,7 @@ export default function Support() {
           >
             {o.title}
           </span>
-          <span className="shrink-0 text-[12px] text-dark-400">{o.when}</span>
+          {o.when && <span className="shrink-0 text-[12px] text-dark-400">{o.when}</span>}
         </span>
         <span className="mt-0.5 flex items-start gap-2">
           <span className="line-clamp-2 min-w-0 flex-1 text-[13.5px] leading-snug text-dark-400">
@@ -246,13 +243,9 @@ export default function Support() {
                   to: '/support/new',
                   title: t('support.chat.newTicket'),
                   text: t('support.chat.invite'),
-                  when: t('support.chat.online'),
                   trailing: <Chip>{t('support.chat.writeShort')}</Chip>,
                 })}
           </Group>
-          <p className="-mt-3 px-1 text-[12.5px] leading-snug text-dark-500">
-            {open ? t('support.chat.oneOpen') : t('support.chat.emptyText')}
-          </p>
         </>
       )}
 

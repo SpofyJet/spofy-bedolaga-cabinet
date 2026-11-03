@@ -131,20 +131,23 @@ export default function DevicesTrafficCard({
       <div className="grid grid-cols-2 gap-3">
         {/* Устройства */}
         <div className="flex min-w-0 flex-col">
-          <div className="flex h-9 items-center gap-1.5" aria-hidden>
+          {/* Плитки резиновые: четыре колонки по ширине своей половины карточки,
+              но не больше 32px — на узком экране Telegram ряд не наезжает на
+              колонку трафика. */}
+          <div className="grid h-9 max-w-[146px] grid-cols-4 items-center gap-1.5" aria-hidden>
             {tiles.map((tile, i) => {
               if (tile.kind === 'free')
                 return (
                   <span
                     key={i}
-                    className="h-8 w-8 shrink-0 rounded-[10px] border border-dashed border-dark-600/70"
+                    className="aspect-square w-full max-w-[32px] rounded-[10px] border border-dashed border-dark-600/70"
                   />
                 );
               if (tile.kind === 'more')
                 return (
                   <span
                     key={i}
-                    className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[10px] bg-accent-500/15 text-xs font-bold text-accent-300"
+                    className="flex aspect-square w-full max-w-[32px] items-center justify-center rounded-[10px] bg-accent-500/15 text-xs font-bold text-accent-300"
                   >
                     +{tile.count}
                   </span>
@@ -153,7 +156,7 @@ export default function DevicesTrafficCard({
               return (
                 <span
                   key={i}
-                  className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[10px] bg-accent-500/15 text-accent-300"
+                  className="flex aspect-square w-full max-w-[32px] items-center justify-center rounded-[10px] bg-accent-500/15 text-accent-300"
                 >
                   <Icon className="h-4 w-4" />
                 </span>
@@ -235,34 +238,34 @@ export default function DevicesTrafficCard({
         <Link
           to={devicesTo}
           className={cn(
-            'flex h-11 items-center justify-center gap-1.5 rounded-xl text-sm font-semibold transition-colors',
+            'flex h-11 items-center justify-center gap-1.5 whitespace-nowrap rounded-xl px-2 text-[13px] font-semibold transition-colors min-[360px]:text-sm',
             atLimit
               ? 'bg-accent-500 text-on-accent hover:bg-accent-600'
               : 'bg-dark-800/80 text-dark-100 hover:bg-dark-700/80',
           )}
         >
-          <PiPlusBold className="h-3.5 w-3.5" />
+          <PiPlusBold className="hidden h-3.5 w-3.5 shrink-0 min-[360px]:block" />
           {t('dashboard.devicesTraffic.addSlot', 'Добавить место')}
         </Link>
         {unlimitedTraffic ? (
           <Link
             to={`/subscription?section=devices`}
-            className="flex h-11 items-center justify-center gap-1.5 rounded-xl bg-dark-800/80 text-sm font-semibold text-dark-100 transition-colors hover:bg-dark-700/80"
+            className="flex h-11 items-center justify-center gap-1.5 whitespace-nowrap rounded-xl bg-dark-800/80 px-2 text-[13px] font-semibold text-dark-100 transition-colors hover:bg-dark-700/80 min-[360px]:text-sm"
           >
-            <PiDevicesBold className="h-4 w-4" />
+            <PiDevicesBold className="hidden h-4 w-4 shrink-0 min-[360px]:block" />
             {t('dashboard.devicesTraffic.manage', 'Мои устройства')}
           </Link>
         ) : (
           <Link
             to={trafficTo}
             className={cn(
-              'flex h-11 items-center justify-center gap-1.5 rounded-xl text-sm font-semibold transition-colors',
+              'flex h-11 items-center justify-center gap-1.5 whitespace-nowrap rounded-xl px-2 text-[13px] font-semibold transition-colors min-[360px]:text-sm',
               trafficLow
                 ? 'bg-accent-500 text-on-accent hover:bg-accent-600'
                 : 'bg-dark-800/80 text-dark-100 hover:bg-dark-700/80',
             )}
           >
-            <PiPlusBold className="h-3.5 w-3.5" />
+            <PiPlusBold className="hidden h-3.5 w-3.5 shrink-0 min-[360px]:block" />
             {t('dashboard.devicesTraffic.buyTraffic', 'Докупить ГБ')}
           </Link>
         )}

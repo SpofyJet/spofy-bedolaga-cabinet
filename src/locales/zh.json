@@ -1367,8 +1367,6 @@
       "statusClosed": "已关闭",
       "statusAnswered": "已回复",
       "statusWaiting": "等待回复",
-      "emptyText": "可附上截图。我们会在这里回复并发送通知。",
-      "oneOpen": "工单未关闭时请在其中继续留言，所有记录都在一处。",
       "noMessages": "暂无消息",
       "mediaMessage": "图片或视频",
       "you": "你：",
@@ -1376,7 +1374,6 @@
       "tabCurrent": "工单",
       "tabArchive": "归档",
       "invite": "您好！有什么可以帮您？",
-      "online": "在线",
       "writeShort": "留言"
     }
   },

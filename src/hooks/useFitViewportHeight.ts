@@ -1,23 +1,32 @@
-import { useLayoutEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 
 /**
  * Высота элемента — ровно до низа видимой области (минус место под нижнюю
- * панель). Для экранов-мессенджеров: шапка и поле ввода всегда на экране,
- * прокручивается только лента. Учитывает клавиатуру (visualViewport) и
- * вырезы Telegram: верх элемента меряется по факту, а не угадывается.
+ * панель, если она на этом экране есть). Для экранов-мессенджеров: шапка и
+ * поле ввода всегда на экране, прокручивается только лента. Учитывает
+ * клавиатуру (visualViewport) и вырезы Telegram: верх элемента меряется по
+ * факту, а не угадывается.
+ *
+ * Возвращает callback-ref: страница чата сначала рисует заглушку загрузки,
+ * потом сам чат — и меряется каждый новый элемент (раньше подгонялась только
+ * заглушка, а у чата оставалась CSS-высота с запасом под панель — поле ввода
+ * висело посреди экрана).
  */
 export function useFitViewportHeight<T extends HTMLElement>() {
-  const ref = useRef<T | null>(null);
+  const cleanup = useRef<(() => void) | null>(null);
 
-  useLayoutEffect(() => {
-    const el = ref.current;
+  const ref = useCallback((el: T | null) => {
+    cleanup.current?.();
+    cleanup.current = null;
     if (!el) return;
 
-    // Сколько занимает нижняя панель: значение CSS-переменной через пробник.
+    // Сколько занимает нижняя панель: CSS-переменная читается там, где она
+    // задана для этого экрана ([data-mobile-nav="off"] обнуляет запас под панель),
+    // а не у <body>, где всегда стоит значение «панель есть».
     const probe = document.createElement('div');
     probe.style.cssText =
       'position:fixed;visibility:hidden;pointer-events:none;height:var(--mobile-nav-clearance,0px)';
-    document.body.appendChild(probe);
+    (el.closest('[data-mobile-nav]') ?? document.body).appendChild(probe);
 
     const update = () => {
       const viewport = window.visualViewport?.height ?? window.innerHeight;
@@ -35,13 +44,15 @@ export function useFitViewportHeight<T extends HTMLElement>() {
     window.addEventListener('resize', update);
     const ro = typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(update);
     ro?.observe(document.documentElement);
-    return () => {
+    cleanup.current = () => {
       vv?.removeEventListener('resize', update);
       window.removeEventListener('resize', update);
       ro?.disconnect();
       probe.remove();
     };
   }, []);
+
+  useEffect(() => () => cleanup.current?.(), []);
 
   return ref;
 }

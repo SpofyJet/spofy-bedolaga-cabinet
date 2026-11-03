@@ -1504,8 +1504,6 @@
       "statusClosed": "Closed",
       "statusAnswered": "Replied",
       "statusWaiting": "Waiting for reply",
-      "emptyText": "You can attach a screenshot. We reply here and send a notification.",
-      "oneOpen": "While the request is open, write into it — the whole story stays in one place.",
       "noMessages": "No messages yet",
       "mediaMessage": "Photo or video",
       "you": "You: ",
@@ -1513,7 +1511,6 @@
       "tabCurrent": "Requests",
       "tabArchive": "Archive",
       "invite": "Hello! How can we help?",
-      "online": "online",
       "writeShort": "Write"
     }
   },
