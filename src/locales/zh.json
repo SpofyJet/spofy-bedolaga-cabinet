@@ -1013,7 +1013,10 @@
       "loadError": "加载银行卡失败，请稍后重试。",
       "sbpSection": "SBP 自动扣款",
       "sbpBinding": "SBP 绑定",
-      "sbpUnlink": "关闭 SBP 自动扣款"
+      "sbpUnlink": "关闭 SBP 自动扣款",
+      "cardsSection": "银行卡",
+      "emptyTitle": "暂无银行卡",
+      "sbpUnlinkShort": "关闭"
     },
     "paymentSuccess": {
       "title": "支付成功",
@@ -1030,7 +1033,8 @@
       "timeout": "处理时间较长",
       "timeoutDesc": "付款处理时间比平时长。您可以再次检查状态。",
       "goToBalance": "查看余额",
-      "tryAgain": "重试"
+      "tryAgain": "重试",
+      "toHome": "首页"
     },
     "top_up": "充值",
     "scanQrToPay": "请在银行应用中扫描二维码，或打开支付页面",
@@ -1047,10 +1051,14 @@
       "title": "续订",
       "until": "有效期至 {{date}}",
       "days_other": "{{count}} 天",
-      "perMonth": "{{amount}} {{currency}}/月"
+      "perMonth": "{{amount}} {{currency}}/月",
+      "untilShort": "至 {{date}}"
     },
     "referralEarned": "推荐奖励累计：{{amount}} {{currency}}。余额可用于续订。",
-    "methodFast": "快速"
+    "methodFast": "快速",
+    "noTransactionsHint": "充值和付款记录将显示在这里",
+    "afterTopUp": "充值后余额",
+    "topUpHintShort": "通常一分钟内到账"
   },
   "referral": {
     "title": "推荐计划",

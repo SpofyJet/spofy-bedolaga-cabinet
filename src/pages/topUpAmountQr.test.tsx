@@ -128,9 +128,9 @@ it('без QR — прежнее поведение', async () => {
   expect(screen.queryByTestId('topup-qr')).toBeNull();
 });
 
-it('в браузере есть своя кнопка «Назад», а в Telegram — нативная', async () => {
+it('своя кнопка «Назад» есть всегда, а в Telegram дополнительно включается нативная', async () => {
   renderPage();
-  expect(await screen.findByRole('button', { name: 'common.back' })).toBeTruthy();
+  expect(await screen.findByRole('button', { name: /common\.back|Назад/ })).toBeTruthy();
   expect(backButton.show).not.toHaveBeenCalled();
   cleanup();
 
@@ -139,7 +139,8 @@ it('в браузере есть своя кнопка «Назад», а в Tel
   try {
     renderPage();
     await waitFor(() => expect(backButton.show).toHaveBeenCalledTimes(1));
-    expect(screen.queryByRole('button', { name: 'common.back' })).toBeNull();
+    // Нативная кнопка есть не в каждом клиенте — своя «Назад» на странице остаётся.
+    expect(screen.getByRole('button', { name: /common\.back|Назад/ })).toBeTruthy();
   } finally {
     platformState.platform = 'web';
     platformState.hasBackButton = false;

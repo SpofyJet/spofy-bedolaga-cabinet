@@ -2,7 +2,13 @@ import { useState, useRef, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams, useSearchParams } from 'react-router';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { motion } from 'framer-motion';
+import {
+  PiArrowSquareOutBold,
+  PiCheckBold,
+  PiCheckCircleDuotone,
+  PiCopyDuotone,
+  PiWarningCircleDuotone,
+} from 'react-icons/pi';
 import { QRCodeSVG } from 'qrcode.react';
 
 import { useAuthStore } from '../store/auth';
@@ -11,7 +17,9 @@ import { useCurrency } from '../hooks/useCurrency';
 import { checkRateLimit, getRateLimitResetTime, RATE_LIMIT_KEYS } from '../utils/rateLimit';
 import { useCloseOnSuccessNotification } from '../store/successNotification';
 import { useHaptic, usePlatform } from '@/platform';
-import { staggerContainer, staggerItem } from '@/components/motion/transitions';
+import { PageHeader } from '@/components/layout/PageHeader';
+import { Button, Group, Page, RowIcon, SectionTitle, Surface } from '@/components/spofy/ui';
+import { cn } from '@/lib/utils';
 import type { PaymentMethod, PaymentMethodOption } from '../types';
 import PaymentMethodIcon, { spofyPaymentIcon } from '../components/PaymentMethodIcon';
 import { saveTopUpPendingInfo } from '../utils/topUpStorage';
@@ -20,13 +28,6 @@ import { openPaymentUrl } from '../utils/openPaymentUrl';
 import { getApiErrorMessage } from '../utils/api-error';
 import { copyToClipboard } from '@/utils/clipboard';
 import { Skeleton, SkeletonGroup } from '@/components/ui/skeleton';
-import {
-  BackIcon,
-  CheckIcon,
-  CopyIcon,
-  ExclamationIcon,
-  ExternalLinkIcon,
-} from '@/components/icons';
 
 const getPreferredOptionId = (options?: PaymentMethod['options']) => {
   if (!options || options.length === 0) return null;
@@ -144,6 +145,7 @@ export default function TopUpAmount() {
 
   const initialDisplayAmount = getInitialAmount();
   const userEmail = useAuthStore((state) => state.user?.email);
+  const userBalanceRubles = useAuthStore((state) => state.user?.balance_rubles ?? null);
   const [paymentEmail, setPaymentEmail] = useState<string | null>(null);
   const emailRef = useRef<HTMLInputElement>(null);
   const customerEmail = paymentEmail ?? userEmail ?? '';
@@ -322,9 +324,12 @@ export default function TopUpAmount() {
       return null;
     }
     return (
-      <SkeletonGroup className="space-y-3">
-        <Skeleton variant="card" count={3} className="h-16" />
-      </SkeletonGroup>
+      <Page>
+        <PageHeader title={t('balance.topUpBalance')} backTo="/balance/top-up" />
+        <SkeletonGroup className="space-y-3">
+          <Skeleton variant="card" count={3} className="h-16" />
+        </SkeletonGroup>
+      </Page>
     );
   }
 
@@ -467,85 +472,81 @@ export default function TopUpAmount() {
 
   const amountNumber = parseFloat(amount);
   const canSubmit = !isPending && !!amount && amountNumber > 0;
-  const methodTitle = methodName
-    .replace(/^(?:\p{Extended_Pictographic}|\uFE0F|\u200D|\s)+/u, '')
-    .trim();
+  const methodTitle = methodName.replace(/^(?:\p{Extended_Pictographic}|️|‍|\s)+/u, '').trim();
+  // Итог: сколько станет на балансе. Только когда сумма введена и баланс известен.
+  const amountRubForSummary =
+    quickRub ??
+    (Number.isNaN(amountNumber) || amountNumber <= 0 ? null : convertToRub(amountNumber));
+  const balanceAfter =
+    userBalanceRubles != null && amountRubForSummary != null && amountRubForSummary > 0
+      ? userBalanceRubles + amountRubForSummary
+      : null;
 
   return (
-    <motion.div
-      className="mx-auto max-w-lg space-y-4"
-      variants={staggerContainer}
-      initial="initial"
-      animate="animate"
-    >
-      {/* Назад + заголовок. В Telegram — нативная кнопка «Назад» (см. выше). */}
-      <motion.div variants={staggerItem} className="flex items-center gap-3">
-        {platform !== 'telegram' && (
-          <button
-            type="button"
-            onClick={handleNavigateBack}
-            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[10px] bg-dark-50/[0.05] text-dark-200 transition-colors hover:bg-dark-50/[0.08] hover:text-dark-50"
-            aria-label={t('common.back')}
-          >
-            <BackIcon className="h-5 w-5" />
-          </button>
-        )}
-        <h1 className="text-xl font-bold text-dark-50">{t('balance.topUpBalance')}</h1>
-      </motion.div>
+    <Page>
+      {/* «Назад» на странице есть всегда; в Telegram дополнительно работает нативная (см. выше). */}
+      <PageHeader title={t('balance.topUpBalance')} backTo="/balance/top-up" />
 
       {/* Выбранный способ */}
-      <motion.div variants={staggerItem} className="bento-card flex items-center gap-3 !p-4">
-        <PaymentMethodIcon method={spofyPaymentIcon(method.id)} className="h-12 w-12 shrink-0" />
-        <div className="min-w-0 flex-1">
-          <div className="truncate font-semibold text-dark-50">{methodTitle}</div>
-          <div className="text-sm text-dark-400">
-            {formatAmount(minRubles, 0)}
-            {'\u00A0–\u00A0'}
-            {formatAmount(maxRubles, 0)}
-            {'\u00A0'}
-            {currencySymbol}
-          </div>
+      <Group>
+        <div className="flex min-h-[60px] items-center gap-3 px-4 py-2.5">
+          <PaymentMethodIcon method={spofyPaymentIcon(method.id)} className="h-10 w-10 shrink-0" />
+          <span className="min-w-0 flex-1">
+            <span className="block truncate text-[15px] font-semibold text-dark-100">
+              {methodTitle}
+            </span>
+            <span className="mt-0.5 block text-[13px] text-dark-400">
+              {formatAmount(minRubles, 0)}
+              {' – '}
+              {formatAmount(maxRubles, 0)}
+              {' '}
+              {currencySymbol}
+            </span>
+          </span>
+          <Button
+            tone="ghost"
+            className="h-9 shrink-0 px-3 text-[13px]"
+            onClick={handleNavigateBack}
+          >
+            {t('balance.changeMethod')}
+          </Button>
         </div>
-        <button
-          type="button"
-          onClick={handleNavigateBack}
-          className="shrink-0 rounded-lg px-2 py-1.5 text-sm font-medium text-accent-400 transition-colors hover:text-accent-300"
-        >
-          {t('balance.changeMethod')}
-        </button>
-      </motion.div>
+      </Group>
 
-      {/* Payment options (if any) */}
+      {/* Варианты внутри способа (СБП / карта) — сегментом */}
       {hasOptions && orderedOptions.length > 0 && (
-        <motion.div variants={staggerItem} className="space-y-2">
-          <label className="text-sm font-medium text-dark-400">{t('balance.paymentMethod')}</label>
-          <div className="grid grid-cols-2 gap-2">
-            {orderedOptions.map((opt) => (
-              <button
-                key={opt.id}
-                type="button"
-                onClick={() => setSelectedOption(opt.id)}
-                className={`relative rounded-xl px-4 py-3 text-sm font-semibold transition-colors duration-150 ${
-                  selectedOption === opt.id
-                    ? 'bg-accent-500/12 text-accent-400 ring-2 ring-accent-500/50'
-                    : 'bg-dark-50/[0.04] text-dark-200 hover:bg-dark-50/[0.06]'
-                }`}
-              >
-                {opt.name}
-                {selectedOption === opt.id && (
-                  <span className="absolute right-1.5 top-1.5">
-                    <span className="block h-2 w-2 rounded-full bg-accent-500" />
-                  </span>
-                )}
-              </button>
-            ))}
+        <section>
+          <SectionTitle>{t('balance.paymentMethod')}</SectionTitle>
+          <div className="flex rounded-2xl bg-dark-900/70 p-1 ring-1 ring-inset ring-dark-800/80">
+            {orderedOptions.map((opt) => {
+              const active = selectedOption === opt.id;
+              return (
+                <button
+                  key={opt.id}
+                  type="button"
+                  aria-pressed={active}
+                  onClick={() => setSelectedOption(opt.id)}
+                  className={cn(
+                    'h-10 min-w-0 flex-1 truncate rounded-xl px-3 text-[13px] font-semibold transition-colors',
+                    active
+                      ? 'bg-dark-700 text-dark-50 shadow-sm'
+                      : 'text-dark-400 hover:text-dark-200',
+                  )}
+                >
+                  {opt.name}
+                </button>
+              );
+            })}
           </div>
-        </motion.div>
+        </section>
       )}
 
       {method.id === 'antilopay' && (
-        <motion.div variants={staggerItem} className="space-y-2">
-          <label htmlFor="payment-email" className="text-sm font-medium text-dark-400">
+        <Surface>
+          <label
+            htmlFor="payment-email"
+            className="block px-1 text-[13px] font-semibold text-dark-400"
+          >
             {t('balance.paymentEmail')}
           </label>
           <input
@@ -562,22 +563,29 @@ export default function TopUpAmount() {
               setError(null);
             }}
             aria-describedby="payment-email-help"
-            className="input w-full"
+            className="mt-2 h-12 w-full rounded-2xl bg-dark-800/60 px-4 text-[15px] text-dark-50 ring-1 ring-inset ring-dark-700/60 placeholder:text-dark-500 focus:outline-none focus:ring-2 focus:ring-accent-500/60"
           />
-          <p id="payment-email-help" className="text-sm text-dark-400">
+          <p id="payment-email-help" className="mt-2 px-1 text-[13px] leading-snug text-dark-400">
             {t('balance.paymentEmailHelp')}
           </p>
-        </motion.div>
+        </Surface>
       )}
+
       {/* Сумма */}
-      <motion.div variants={staggerItem} className="bento-card space-y-3 !p-4">
-        <label htmlFor="topup-amount" className="block text-sm font-medium text-dark-300">
+      <Surface>
+        <label
+          htmlFor="topup-amount"
+          className="block px-1 text-[13px] font-semibold text-dark-400"
+        >
           {t('balance.enterAmount')}
         </label>
         <div
-          className={`relative rounded-xl transition-shadow duration-150 ${
-            isInputFocused ? 'ring-2 ring-accent-500/60' : 'ring-1 ring-dark-50/[0.12]'
-          } bg-dark-50/[0.04]`}
+          className={cn(
+            'relative mt-2 rounded-2xl bg-dark-800/60 transition-shadow',
+            isInputFocused
+              ? 'ring-2 ring-inset ring-accent-500/60'
+              : 'ring-1 ring-inset ring-dark-700/60',
+          )}
         >
           <input
             id="topup-amount"
@@ -599,17 +607,18 @@ export default function TopUpAmount() {
               }
             }}
             placeholder="0"
-            className="h-14 w-full bg-transparent px-4 pr-12 text-2xl font-bold text-dark-50 placeholder:text-dark-600 focus:outline-none"
+            className="h-14 w-full bg-transparent px-4 pr-12 text-[26px] font-bold tracking-tight text-dark-50 placeholder:text-dark-600 focus:outline-none"
             autoComplete="off"
           />
-          <span className="absolute right-4 top-1/2 -translate-y-1/2 text-lg font-semibold text-dark-400">
+          <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-lg font-semibold text-dark-400">
             {currencySymbol}
           </span>
         </div>
 
         {quickAmounts.length > 0 && (
           <div
-            className={`grid gap-2 ${
+            className={cn(
+              'mt-3 grid gap-2',
               // Без одинокой кнопки на второй строке: 5 — в ряд, 6 — 3×2.
               (
                 {
@@ -619,8 +628,8 @@ export default function TopUpAmount() {
                   5: 'grid-cols-5',
                   6: 'grid-cols-3',
                 } as Record<number, string>
-              )[quickAmounts.length] ?? 'grid-cols-4'
-            }`}
+              )[quickAmounts.length] ?? 'grid-cols-4',
+            )}
           >
             {quickAmounts.map((a) => {
               const val = getQuickValue(a);
@@ -629,6 +638,7 @@ export default function TopUpAmount() {
                 <button
                   key={a}
                   type="button"
+                  aria-pressed={isSelected}
                   onClick={() => {
                     setAmount(val);
                     setQuickRub(a);
@@ -642,132 +652,152 @@ export default function TopUpAmount() {
                       return;
                     }
                   }}
-                  className={`h-10 rounded-[10px] text-sm font-semibold transition-colors duration-150 ${
+                  className={cn(
+                    'h-10 min-w-0 truncate rounded-xl px-1 text-[13px] font-semibold transition-colors',
                     isSelected
-                      ? 'bg-accent-500/15 text-accent-400 ring-1 ring-accent-500/50'
-                      : 'bg-dark-50/[0.04] text-dark-200 hover:bg-dark-50/[0.06]'
-                  }`}
+                      ? 'bg-accent-500/15 text-accent-400 ring-1 ring-inset ring-accent-500/50'
+                      : 'bg-dark-800/60 text-dark-200 hover:bg-dark-800',
+                  )}
                 >
                   {formatAmount(a, 0)}
-                  {'\u00A0'}
+                  {' '}
                   {currencySymbol}
                 </button>
               );
             })}
           </div>
         )}
-      </motion.div>
+
+        {balanceAfter != null && (
+          <div className="mt-4 flex items-center justify-between gap-3 border-t border-dark-800/70 px-1 pt-3 text-[13px]">
+            <span className="text-dark-400">{t('balance.afterTopUp', 'Станет на балансе')}</span>
+            <span className="whitespace-nowrap font-semibold text-dark-100">
+              {formatAmount(balanceAfter, 0)}
+              {' '}
+              {currencySymbol}
+            </span>
+          </div>
+        )}
+      </Surface>
 
       {/* Оплатить */}
-      <motion.div variants={staggerItem}>
-        <button
-          type="button"
-          onClick={handleSubmit}
-          disabled={!canSubmit}
-          className="flex h-14 w-full items-center justify-center gap-2 rounded-xl bg-accent-500 text-base font-bold text-on-accent transition-colors hover:bg-accent-400 active:bg-accent-600 disabled:cursor-not-allowed disabled:bg-dark-50/[0.08] disabled:text-dark-500"
-        >
-          {isPending ? (
-            <span className="h-5 w-5 animate-spin rounded-full border-2 border-white/30 border-t-white" />
-          ) : canSubmit ? (
-            t('balance.topUpFor', {
-              amount: `${formatAmount(amountNumber, 0)}\u00A0${currencySymbol}`,
-            })
-          ) : (
-            t('balance.topUp')
-          )}
-        </button>
-      </motion.div>
+      <Button
+        // Когда ссылка уже готова, главная кнопка — «Открыть страницу оплаты» ниже.
+        tone={paymentUrl ? 'secondary' : 'primary'}
+        onClick={handleSubmit}
+        disabled={!canSubmit}
+        className="w-full"
+      >
+        {isPending ? (
+          <span
+            aria-hidden
+            className="h-5 w-5 animate-spin rounded-full border-2 border-current border-t-transparent"
+          />
+        ) : canSubmit ? (
+          t('balance.topUpFor', {
+            amount: `${formatAmount(amountNumber, 0)} ${currencySymbol}`,
+          })
+        ) : (
+          t('balance.topUp')
+        )}
+      </Button>
 
-      {/* Error message */}
+      {/* Ошибка и «Попробуйте другой способ»: те же деньги можно внести иначе (как в боте) */}
       {error && (
-        <motion.div
-          variants={staggerItem}
-          className="flex items-center gap-2 rounded-xl border border-error-500/20 bg-error-500/10 p-3"
-        >
-          <ExclamationIcon className="h-5 w-5 shrink-0 text-error-400" />
-          <span className="text-sm text-error-400">{error}</span>
-        </motion.div>
+        <Surface className="space-y-3">
+          <p
+            role="alert"
+            className="flex items-start gap-2 text-[13px] leading-snug text-error-400"
+          >
+            <PiWarningCircleDuotone className="mt-px h-[18px] w-[18px] shrink-0" aria-hidden />
+            {error}
+          </p>
+          {alternativeMethods.length > 0 && (
+            <>
+              <p className="text-[13px] font-semibold text-dark-300">
+                {t('balance.errors.tryAnotherMethod')}
+              </p>
+              <div className="flex flex-wrap gap-2">
+                {alternativeMethods.map((alt) => (
+                  <button
+                    key={alt.id}
+                    type="button"
+                    onClick={() => goToAlternativeMethod(alt.id)}
+                    className="flex h-10 items-center gap-2 rounded-xl bg-dark-800/60 pl-1.5 pr-3 text-[13px] font-semibold text-dark-100 ring-1 ring-inset ring-dark-700/60 transition-colors hover:bg-dark-800"
+                  >
+                    <PaymentMethodIcon
+                      method={spofyPaymentIcon(alt.id)}
+                      className="h-7 w-7 shrink-0"
+                    />
+                    {alternativeMethodName(alt).replace(
+                      /^(?:\p{Extended_Pictographic}|️|‍|\s)+/u,
+                      '',
+                    )}
+                  </button>
+                ))}
+              </div>
+            </>
+          )}
+        </Surface>
       )}
 
-      {/* Не получилось оплатить: те же деньги можно внести другим способом (как в боте) */}
-      {error && alternativeMethods.length > 0 && (
-        <motion.div
-          variants={staggerItem}
-          className="space-y-3 rounded-xl border border-accent-500/30 bg-accent-500/5 p-4"
-        >
-          <div className="text-sm font-semibold text-dark-50">
-            {t('balance.errors.tryAnotherMethod')}
-          </div>
-          <div className="flex flex-wrap gap-2">
-            {alternativeMethods.map((alt) => (
-              <button
-                key={alt.id}
-                type="button"
-                onClick={() => goToAlternativeMethod(alt.id)}
-                className="rounded-xl border border-dark-600 bg-dark-800 px-4 py-2 text-sm font-medium text-dark-100 transition-colors hover:border-accent-500/50 hover:text-accent-300"
-              >
-                {alternativeMethodName(alt)}
-              </button>
-            ))}
-          </div>
-        </motion.div>
-      )}
-
-      {/* Payment link display - shown when URL is received */}
+      {/* Ссылка на оплату готова */}
       {paymentUrl && (
-        <motion.div
-          variants={staggerItem}
-          className="space-y-3 rounded-2xl border border-success-500/20 bg-success-500/10 p-4"
-        >
-          <div className="flex items-center gap-2 text-success-400">
-            <CheckIcon className="h-5 w-5" />
-            <span className="font-semibold">{t('balance.paymentReady')}</span>
+        <Surface className="space-y-4">
+          <div className="flex items-center gap-3">
+            <RowIcon tone="success">
+              <PiCheckCircleDuotone />
+            </RowIcon>
+            <div className="min-w-0">
+              <p className="text-[15px] font-semibold text-dark-100">{t('balance.paymentReady')}</p>
+              {!qrPayload && (
+                <p className="mt-0.5 text-[13px] leading-snug text-dark-400">
+                  {t('balance.clickToOpenPayment')}
+                </p>
+              )}
+            </div>
           </div>
 
-          {qrPayload ? (
+          {qrPayload && (
             <div className="flex flex-col items-center gap-2">
-              <div className="rounded-xl bg-white p-3" data-testid="topup-qr">
+              <div className="rounded-2xl bg-white p-3" data-testid="topup-qr">
                 <QRCodeSVG value={qrPayload} size={192} level="M" includeMargin={false} />
               </div>
-              <p className="text-center text-sm text-dark-400">
+              <p className="text-center text-[13px] leading-snug text-dark-400">
                 {t(
                   'balance.scanQrToPay',
                   'Отсканируйте QR-код в приложении банка или откройте оплату',
                 )}
               </p>
             </div>
-          ) : (
-            <p className="text-sm text-dark-400">{t('balance.clickToOpenPayment')}</p>
           )}
 
-          <button
-            type="button"
-            onClick={handleOpenPayment}
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-success-500 font-bold text-white transition-colors hover:bg-success-400 active:bg-success-600"
-          >
-            <ExternalLinkIcon />
-            <span>{t('balance.openPaymentPage')}</span>
-          </button>
+          <Button onClick={handleOpenPayment} className="w-full">
+            <PiArrowSquareOutBold className="h-[18px] w-[18px]" aria-hidden />
+            {t('balance.openPaymentPage')}
+          </Button>
 
           <div className="flex items-center gap-2">
-            <div className="min-w-0 flex-1 rounded-lg border border-dark-700/50 bg-dark-800/70 px-3 py-2">
-              <p className="truncate text-xs text-dark-500">{paymentUrl}</p>
+            <div className="min-w-0 flex-1 rounded-xl bg-dark-800/60 px-3 py-2.5 ring-1 ring-inset ring-dark-700/60">
+              <p className="truncate text-xs text-dark-400">{paymentUrl}</p>
             </div>
             <button
               type="button"
               onClick={handleCopyUrl}
-              className={`shrink-0 rounded-lg p-2.5 transition-colors ${
-                copied
-                  ? 'bg-success-500/20 text-success-400'
-                  : 'bg-dark-800/70 text-dark-400 hover:bg-dark-700 hover:text-dark-200'
-              }`}
+              aria-label={t('common.copy')}
               title={t('common.copy')}
+              className={cn(
+                'flex h-10 w-10 shrink-0 items-center justify-center rounded-xl transition-colors',
+                copied
+                  ? 'bg-success-500/15 text-success-400'
+                  : 'bg-dark-800/60 text-dark-300 hover:bg-dark-800 hover:text-dark-100',
+              )}
             >
-              {copied ? <CheckIcon className="h-5 w-5" /> : <CopyIcon className="h-5 w-5" />}
+              {copied ? <PiCheckBold className="h-5 w-5" /> : <PiCopyDuotone className="h-5 w-5" />}
             </button>
           </div>
-        </motion.div>
+        </Surface>
       )}
-    </motion.div>
+    </Page>
   );
 }

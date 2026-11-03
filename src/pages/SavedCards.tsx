@@ -2,8 +2,11 @@ import { uiLocale } from '@/utils/uiLocale';
 import { useState } from 'react';
 import { useQuery, useQueries, useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router';
-import { motion } from 'framer-motion';
+import {
+  PiArrowsClockwiseDuotone,
+  PiCreditCardDuotone,
+  PiWarningCircleDuotone,
+} from 'react-icons/pi';
 
 import { balanceApi } from '../api/balance';
 import { subscriptionApi } from '../api/subscription';
@@ -11,10 +14,8 @@ import { useToast } from '../components/Toast';
 import { useDestructiveConfirm } from '../platform/hooks/useNativeDialog';
 import type { SbpRecurringInfo, SubscriptionListItem } from '../types';
 
-import { Card } from '@/components/data-display/Card';
-import { Button } from '@/components/primitives/Button';
-import { BackIcon } from '@/components/icons';
-import { staggerContainer, staggerItem } from '@/components/motion/transitions';
+import { PageHeader } from '@/components/layout/PageHeader';
+import { Button, EmptyState, Group, Page, RowIcon } from '@/components/spofy/ui';
 import { Skeleton, SkeletonGroup } from '@/components/ui/skeleton';
 
 function formatCardDate(dateStr: string): string {
@@ -48,7 +49,6 @@ interface SbpBinding {
 
 export default function SavedCards() {
   const { t } = useTranslation();
-  const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { showToast } = useToast();
   const confirmDelete = useDestructiveConfirm();
@@ -170,115 +170,67 @@ export default function SavedCards() {
   };
 
   return (
-    // key: remount the container when loading resolves — stagger orchestration
-    // runs once on mount, so cards arriving from the API later would otherwise
-    // stay stuck at their initial variant (opacity 0) after a hard refresh
-    <motion.div
-      key={isLoading ? 'loading' : 'ready'}
-      className="space-y-6"
-      variants={staggerContainer}
-      initial="initial"
-      animate="animate"
-    >
-      {/* Header */}
-      <motion.div variants={staggerItem} className="flex items-center gap-3">
-        <button
-          onClick={() => navigate('/balance')}
-          className="flex h-10 w-10 items-center justify-center rounded-linear border border-dark-700/30 bg-dark-800/50 text-dark-300 transition-colors hover:bg-dark-700/50 hover:text-dark-100"
-        >
-          <BackIcon className="h-5 w-5" />
-        </button>
-        <h1 className="text-xl font-bold tracking-tight text-dark-50 sm:text-2xl">
-          {t('balance.savedCards.pageTitle')}
-        </h1>
-      </motion.div>
+    <Page>
+      <PageHeader title={t('balance.savedCards.pageTitle')} backTo="/balance" />
 
-      {/* Loading state */}
       {isLoading && (
-        <motion.div variants={staggerItem}>
-          <Card>
-            <SkeletonGroup className="space-y-3">
-              {[1, 2].map((i) => (
-                <div
-                  key={i}
-                  className="flex items-center justify-between rounded-linear border border-dark-700/30 bg-dark-800/30 p-4"
-                >
-                  <div className="flex items-center gap-3">
-                    <Skeleton className="h-6 w-6 shrink-0" />
-                    <div className="space-y-2">
-                      <Skeleton className="h-4 w-32" />
-                      <Skeleton className="h-3 w-24" />
-                    </div>
-                  </div>
-                  <Skeleton className="h-8 w-20 shrink-0" />
+        <Group>
+          <SkeletonGroup className="divide-y divide-dark-800/70">
+            {[1, 2].map((i) => (
+              <div key={i} className="flex min-h-[60px] items-center gap-3 px-4 py-2.5">
+                <Skeleton className="h-10 w-10 shrink-0 rounded-xl" />
+                <div className="flex-1 space-y-2">
+                  <Skeleton className="h-4 w-32" />
+                  <Skeleton className="h-3 w-24" />
                 </div>
-              ))}
-            </SkeletonGroup>
-          </Card>
-        </motion.div>
-      )}
-
-      {/* Error state */}
-      {isError && (
-        <motion.div variants={staggerItem}>
-          <Card>
-            <div className="py-12 text-center">
-              <div className="text-error-400">{t('balance.savedCards.loadError')}</div>
-            </div>
-          </Card>
-        </motion.div>
-      )}
-
-      {/* Cards List */}
-      {!isLoading && !isError && savedCards && savedCards.length > 0 ? (
-        <motion.div variants={staggerItem}>
-          <Card>
-            <div className="space-y-3">
-              {savedCards.map((card) => (
-                <div
-                  key={card.id}
-                  className="flex items-center justify-between gap-3 rounded-linear border border-dark-700/30 bg-dark-800/30 p-4"
-                >
-                  <div className="flex min-w-0 items-center gap-3">
-                    <span className="shrink-0 text-xl">💳</span>
-                    <div className="min-w-0">
-                      <div className="font-medium text-dark-100 [overflow-wrap:anywhere]">
-                        {card.title ||
-                          `${card.card_type || t('balance.savedCards.card')} ${card.card_last4 ? `*${card.card_last4}` : ''}`}
-                      </div>
-                      <div className="text-xs text-dark-500">
-                        {t('balance.savedCards.linkedAt', {
-                          date: formatCardDate(card.created_at),
-                        })}
-                      </div>
-                    </div>
-                  </div>
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    onClick={() => handleDeleteCard(card.id)}
-                    loading={deletingCardId === card.id}
-                    className="shrink-0 text-error-400 hover:text-error-300"
-                  >
-                    {t('balance.savedCards.unlink')}
-                  </Button>
-                </div>
-              ))}
-            </div>
-          </Card>
-        </motion.div>
-      ) : !isLoading && !isError && savedCards ? (
-        /* Empty state - only show when data loaded and empty */
-        <motion.div variants={staggerItem}>
-          <Card>
-            <div className="py-12 text-center">
-              <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-linear-lg bg-dark-800">
-                <span className="text-3xl">💳</span>
+                <Skeleton className="h-8 w-20 shrink-0" />
               </div>
-              <div className="text-dark-400">{t('balance.savedCards.empty')}</div>
+            ))}
+          </SkeletonGroup>
+        </Group>
+      )}
+
+      {isError && (
+        <EmptyState
+          icon={<PiWarningCircleDuotone />}
+          title={t('common.error')}
+          text={t('balance.savedCards.loadError')}
+        />
+      )}
+
+      {!isLoading && !isError && savedCards && savedCards.length > 0 ? (
+        <Group title={t('balance.savedCards.cardsSection', 'Карты')}>
+          {savedCards.map((card) => (
+            <div key={card.id} className="flex min-h-[60px] items-center gap-3 px-4 py-2.5">
+              <RowIcon>
+                <PiCreditCardDuotone />
+              </RowIcon>
+              <span className="min-w-0 flex-1">
+                <span className="block text-[15px] font-semibold text-dark-100 [overflow-wrap:anywhere]">
+                  {card.title ||
+                    `${card.card_type || t('balance.savedCards.card')} ${card.card_last4 ? `•${card.card_last4}` : ''}`}
+                </span>
+                <span className="mt-0.5 block text-[13px] text-dark-400">
+                  {card.title && card.card_last4 ? `•${card.card_last4} · ` : ''}
+                  {t('balance.savedCards.linkedAt', {
+                    date: formatCardDate(card.created_at),
+                  })}
+                </span>
+              </span>
+              <UnlinkButton
+                label={t('balance.savedCards.unlink')}
+                loading={deletingCardId === card.id}
+                onClick={() => handleDeleteCard(card.id)}
+              />
             </div>
-          </Card>
-        </motion.div>
+          ))}
+        </Group>
+      ) : !isLoading && !isError && savedCards ? (
+        <EmptyState
+          icon={<PiCreditCardDuotone />}
+          title={t('balance.savedCards.emptyTitle', 'Карт пока нет')}
+          text={t('balance.savedCards.noCards')}
+        />
       ) : null}
 
       {/* SBP (Platega) recurring bindings — convenience mirror of the
@@ -286,58 +238,75 @@ export default function SavedCards() {
           when at least one non-trial subscription has an active binding;
           hidden entirely when the feature is off or nothing is bound. */}
       {sbpBindings.length > 0 && (
-        <motion.div variants={staggerItem}>
-          <Card>
-            <h2 className="mb-3 text-sm font-semibold text-dark-100">
-              {t('balance.savedCards.sbpSection')}
-            </h2>
-            <div className="space-y-3">
-              {sbpBindings.map(({ sub, info }) => {
-                const statusKey = sbpStatusLabelKey(info.status);
-                return (
-                  <div
-                    key={sub.id}
-                    // Кнопка с длинной подписью на телефоне — под текстом: рядом
-                    // она сжималась в три строки и вываливалась из своей рамки.
-                    className="flex flex-col gap-3 rounded-linear border border-dark-700/30 bg-dark-800/30 p-4 sm:flex-row sm:items-center sm:justify-between"
-                  >
-                    <div className="flex min-w-0 items-center gap-3">
-                      <span className="shrink-0 text-xl">🔁</span>
-                      <div className="min-w-0">
-                        <div className="font-medium text-dark-100">
-                          {sub.tariff_name || `#${sub.id}`}
-                        </div>
-                        <div className="text-xs text-dark-500">
-                          {t('balance.savedCards.sbpBinding')}
-                          {statusKey ? ` · ${t(statusKey)}` : ''}
-                          {info.next_charge_at
-                            ? ` · ${t('subscription.sbpRecurring.nextCharge', {
-                                date: new Date(info.next_charge_at).toLocaleDateString(uiLocale(), {
-                                  day: '2-digit',
-                                  month: '2-digit',
-                                  year: 'numeric',
-                                }),
-                              })}`
-                            : ''}
-                        </div>
-                      </div>
-                    </div>
-                    <Button
-                      variant="secondary"
-                      size="sm"
-                      onClick={() => handleUnlinkSbp(sub.id)}
-                      loading={unlinkingSubId === sub.id}
-                      className="shrink-0 self-start whitespace-nowrap text-error-400 hover:text-error-300 sm:self-auto"
-                    >
-                      {t('balance.savedCards.sbpUnlink')}
-                    </Button>
-                  </div>
-                );
-              })}
-            </div>
-          </Card>
-        </motion.div>
+        <Group title={t('balance.savedCards.sbpSection')}>
+          {sbpBindings.map(({ sub, info }) => {
+            const statusKey = sbpStatusLabelKey(info.status);
+            return (
+              <div key={sub.id} className="flex min-h-[60px] items-center gap-3 px-4 py-2.5">
+                <RowIcon tone={info.status === 'PAST_DUE' ? 'warning' : 'accent'}>
+                  <PiArrowsClockwiseDuotone />
+                </RowIcon>
+                <span className="min-w-0 flex-1">
+                  <span className="block truncate text-[15px] font-semibold text-dark-100">
+                    {sub.tariff_name || `#${sub.id}`}
+                  </span>
+                  <span className="mt-0.5 block text-[13px] leading-snug text-dark-400">
+                    {t('balance.savedCards.sbpBinding')}
+                    {statusKey ? ` · ${t(statusKey)}` : ''}
+                    {info.next_charge_at
+                      ? ` · ${t('subscription.sbpRecurring.nextCharge', {
+                          date: new Date(info.next_charge_at).toLocaleDateString(uiLocale(), {
+                            day: '2-digit',
+                            month: '2-digit',
+                            year: 'numeric',
+                          }),
+                        })}`
+                      : ''}
+                  </span>
+                </span>
+                <UnlinkButton
+                  label={t('balance.savedCards.sbpUnlinkShort', 'Отключить')}
+                  ariaLabel={t('balance.savedCards.sbpUnlink')}
+                  loading={unlinkingSubId === sub.id}
+                  onClick={() => handleUnlinkSbp(sub.id)}
+                />
+              </div>
+            );
+          })}
+        </Group>
       )}
-    </motion.div>
+    </Page>
+  );
+}
+
+/** Небольшая кнопка «Отвязать» справа в строке. */
+function UnlinkButton({
+  label,
+  ariaLabel,
+  loading,
+  onClick,
+}: {
+  label: string;
+  ariaLabel?: string;
+  loading: boolean;
+  onClick: () => void;
+}) {
+  return (
+    <Button
+      tone="danger"
+      onClick={onClick}
+      disabled={loading}
+      aria-busy={loading}
+      aria-label={ariaLabel}
+      className="h-9 shrink-0 rounded-xl px-3 text-[13px]"
+    >
+      {loading && (
+        <span
+          aria-hidden
+          className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent"
+        />
+      )}
+      {label}
+    </Button>
   );
 }

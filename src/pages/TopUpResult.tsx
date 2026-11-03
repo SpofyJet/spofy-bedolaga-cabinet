@@ -1,19 +1,19 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
+import type { ReactNode } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
-import { motion } from 'framer-motion';
+import { PiCheckCircleDuotone, PiClockDuotone, PiXCircleDuotone } from 'react-icons/pi';
 
 import { balanceApi } from '../api/balance';
 import { useAuthStore } from '../store/auth';
 import { useCurrency } from '../hooks/useCurrency';
 import { useHaptic } from '@/platform';
-import { Spinner } from '@/components/ui/Spinner';
-import { AnimatedCheckmark } from '@/components/ui/AnimatedCheckmark';
-import { AnimatedCrossmark } from '@/components/ui/AnimatedCrossmark';
+import { PageHeader } from '@/components/layout/PageHeader';
+import { Button, Page, Surface } from '@/components/spofy/ui';
+import { cn } from '@/lib/utils';
 import { loadTopUpPendingInfo, clearTopUpPendingInfo } from '../utils/topUpStorage';
 import { isPaidStatus, isFailedStatus } from '../utils/paymentStatus';
-import { ClockIcon } from '@/components/icons';
 
 // ── Constants ────────────────────────────────────────────────
 const MAX_POLL_MS = 10 * 60 * 1000; // 10 minutes
@@ -21,17 +21,59 @@ const POLL_INTERVAL_MS = 3_000;
 
 // ── Sub-components ───────────────────────────────────────────
 
-function AmountDisplay({ amountKopeks, label }: { amountKopeks: number; label: string }) {
+type Tone = 'accent' | 'success' | 'error' | 'muted';
+
+/** Экран результата в стиле EmptyState: плитка-иконка, заголовок, текст, сумма, кнопки. */
+function ResultScreen({
+  tone,
+  icon,
+  title,
+  text,
+  amountKopeks,
+  actions,
+}: {
+  tone: Tone;
+  icon: ReactNode;
+  title: string;
+  text: string;
+  amountKopeks: number | null;
+  actions?: ReactNode;
+}) {
+  const { t } = useTranslation();
   const { formatAmount, currencySymbol } = useCurrency();
-  const amountRubles = amountKopeks / 100;
+  const toneClass = {
+    accent: 'bg-accent-500/10 text-accent-400',
+    success: 'bg-success-500/10 text-success-400',
+    error: 'bg-error-500/10 text-error-400',
+    muted: 'bg-dark-800/80 text-dark-300',
+  }[tone];
 
   return (
-    <div className="mt-4 rounded-xl bg-dark-800/50 px-6 py-4">
-      <p className="text-xs text-dark-400">{label}</p>
-      <p className="mt-1 text-2xl font-bold text-dark-50">
-        {formatAmount(amountRubles)} <span className="text-lg text-dark-400">{currencySymbol}</span>
-      </p>
-    </div>
+    <Surface className="flex flex-col items-center px-6 py-10 text-center [overflow-wrap:anywhere]">
+      <span
+        className={cn(
+          'flex h-16 w-16 items-center justify-center rounded-2xl [&>svg]:h-9 [&>svg]:w-9',
+          toneClass,
+        )}
+      >
+        {icon}
+      </span>
+      <h2 className="mt-4 text-lg font-bold tracking-tight text-dark-50">{title}</h2>
+      <p className="mt-1 max-w-sm text-[13px] leading-snug text-dark-400">{text}</p>
+      {amountKopeks != null && amountKopeks > 0 && (
+        <div className="mt-5">
+          <span className="block text-[13px] text-dark-400">
+            {t('balance.topUpResult.topUpAmount')}
+          </span>
+          <span className="mt-0.5 block text-[26px] font-bold leading-tight tracking-tight text-dark-50">
+            {formatAmount(amountKopeks / 100)}
+            {' '}
+            {currencySymbol}
+          </span>
+        </div>
+      )}
+      {actions && <div className="mt-6 flex w-full max-w-xs flex-col gap-2.5">{actions}</div>}
+    </Surface>
   );
 }
 
@@ -39,22 +81,18 @@ function PendingState({ amountKopeks }: { amountKopeks: number | null }) {
   const { t } = useTranslation();
 
   return (
-    <motion.div
-      initial={{ opacity: 0, scale: 0.9 }}
-      animate={{ opacity: 1, scale: 1 }}
-      className="flex flex-col items-center gap-6 text-center [overflow-wrap:anywhere]"
-    >
-      <Spinner className="h-16 w-16 border-[3px]" />
-      <div>
-        <h1 className="text-xl font-bold text-dark-50">
-          {t('balance.topUpResult.awaitingPayment')}
-        </h1>
-        <p className="mt-2 text-sm text-dark-400">{t('balance.topUpResult.awaitingPaymentDesc')}</p>
-      </div>
-      {amountKopeks != null && amountKopeks > 0 && (
-        <AmountDisplay amountKopeks={amountKopeks} label={t('balance.topUpResult.topUpAmount')} />
-      )}
-    </motion.div>
+    <ResultScreen
+      tone="accent"
+      icon={
+        <span
+          aria-hidden
+          className="h-8 w-8 animate-spin rounded-full border-[3px] border-current border-t-transparent"
+        />
+      }
+      title={t('balance.topUpResult.awaitingPayment')}
+      text={t('balance.topUpResult.awaitingPaymentDesc')}
+      amountKopeks={amountKopeks}
+    />
   );
 }
 
@@ -67,30 +105,21 @@ function SuccessState({ amountKopeks }: { amountKopeks: number | null }) {
   }, [navigate]);
 
   return (
-    <motion.div
-      initial={{ opacity: 0, scale: 0.9 }}
-      animate={{ opacity: 1, scale: 1 }}
-      className="flex flex-col items-center gap-6 text-center [overflow-wrap:anywhere]"
-    >
-      <AnimatedCheckmark />
-
-      <div>
-        <h1 className="text-xl font-bold text-dark-50">{t('balance.topUpResult.success')}</h1>
-        <p className="mt-2 text-sm text-dark-400">{t('balance.topUpResult.successDesc')}</p>
-      </div>
-
-      {amountKopeks != null && amountKopeks > 0 && (
-        <AmountDisplay amountKopeks={amountKopeks} label={t('balance.topUpResult.topUpAmount')} />
-      )}
-
-      <button
-        type="button"
-        onClick={handleGoToBalance}
-        className="flex w-full items-center justify-center gap-2 rounded-xl bg-accent-500 px-6 py-3 text-sm font-medium text-on-accent transition-colors hover:bg-accent-400"
-      >
-        {t('balance.topUpResult.goToBalance')}
-      </button>
-    </motion.div>
+    <ResultScreen
+      tone="success"
+      icon={<PiCheckCircleDuotone />}
+      title={t('balance.topUpResult.success')}
+      text={t('balance.topUpResult.successDesc')}
+      amountKopeks={amountKopeks}
+      actions={
+        <>
+          <Button onClick={handleGoToBalance}>{t('balance.topUpResult.goToBalance')}</Button>
+          <Button tone="secondary" onClick={() => navigate('/', { replace: true })}>
+            {t('balance.topUpResult.toHome', 'На главную')}
+          </Button>
+        </>
+      }
+    />
   );
 }
 
@@ -103,30 +132,24 @@ function FailedState({ amountKopeks }: { amountKopeks: number | null }) {
   }, [navigate]);
 
   return (
-    <motion.div
-      initial={{ opacity: 0, scale: 0.9 }}
-      animate={{ opacity: 1, scale: 1 }}
-      className="flex flex-col items-center gap-6 text-center [overflow-wrap:anywhere]"
-    >
-      <AnimatedCrossmark />
-
-      <div>
-        <h1 className="text-xl font-bold text-dark-50">{t('balance.topUpResult.failed')}</h1>
-        <p className="mt-2 text-sm text-dark-400">{t('balance.topUpResult.failedDesc')}</p>
-      </div>
-
-      {amountKopeks != null && amountKopeks > 0 && (
-        <AmountDisplay amountKopeks={amountKopeks} label={t('balance.topUpResult.topUpAmount')} />
-      )}
-
-      <button
-        type="button"
-        onClick={handleTryAgain}
-        className="flex w-full items-center justify-center gap-2 rounded-xl bg-dark-800/50 px-6 py-3 text-sm font-medium text-dark-200 transition-colors hover:bg-dark-700/50"
-      >
-        {t('balance.topUpResult.tryAgain')}
-      </button>
-    </motion.div>
+    <ResultScreen
+      tone="error"
+      icon={<PiXCircleDuotone />}
+      title={t('balance.topUpResult.failed')}
+      text={t('balance.topUpResult.failedDesc')}
+      amountKopeks={amountKopeks}
+      actions={
+        <>
+          {/* Способы оплаты теперь на своей странице — «ещё раз» ведёт сразу к ним. */}
+          <Button onClick={() => navigate('/balance/top-up', { replace: true })}>
+            {t('balance.topUpResult.tryAgain')}
+          </Button>
+          <Button tone="secondary" onClick={handleTryAgain}>
+            {t('balance.topUpResult.goToBalance')}
+          </Button>
+        </>
+      }
+    />
   );
 }
 
@@ -134,41 +157,28 @@ function TimeoutState({ onRetry, onGoBack }: { onRetry: () => void; onGoBack: ()
   const { t } = useTranslation();
 
   return (
-    <motion.div
-      initial={{ opacity: 0, scale: 0.9 }}
-      animate={{ opacity: 1, scale: 1 }}
-      className="flex flex-col items-center gap-6 text-center [overflow-wrap:anywhere]"
-    >
-      <div className="flex h-20 w-20 items-center justify-center rounded-full bg-dark-800/50">
-        <ClockIcon className="h-10 w-10 text-dark-400" />
-      </div>
-      <div>
-        <h1 className="text-xl font-bold text-dark-50">{t('balance.topUpResult.timeout')}</h1>
-        <p className="mt-2 text-sm text-dark-400">{t('balance.topUpResult.timeoutDesc')}</p>
-      </div>
-      <div className="flex w-full flex-col gap-3">
-        <button
-          type="button"
-          onClick={onRetry}
-          className="w-full rounded-xl bg-accent-500 px-6 py-3 text-sm font-medium text-on-accent transition-colors hover:bg-accent-400"
-        >
-          {t('common.retry')}
-        </button>
-        <button
-          type="button"
-          onClick={onGoBack}
-          className="w-full rounded-xl bg-dark-800/50 px-6 py-3 text-sm font-medium text-dark-200 transition-colors hover:bg-dark-700/50"
-        >
-          {t('balance.topUpResult.goToBalance')}
-        </button>
-      </div>
-    </motion.div>
+    <ResultScreen
+      tone="muted"
+      icon={<PiClockDuotone />}
+      title={t('balance.topUpResult.timeout')}
+      text={t('balance.topUpResult.timeoutDesc')}
+      amountKopeks={null}
+      actions={
+        <>
+          <Button onClick={onRetry}>{t('common.retry')}</Button>
+          <Button tone="secondary" onClick={onGoBack}>
+            {t('balance.topUpResult.goToBalance')}
+          </Button>
+        </>
+      }
+    />
   );
 }
 
 // ── Main Component ───────────────────────────────────────────
 
 export default function TopUpResult() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const queryClient = useQueryClient();
@@ -321,22 +331,21 @@ export default function TopUpResult() {
   }, [resolvedPaid, resolvedFailed, haptic]);
 
   return (
-    <div className="flex min-h-dvh items-center justify-center bg-dark-950 px-4">
-      <div
-        className="w-full max-w-md rounded-2xl border border-dark-800/50 bg-dark-900/50 p-8"
-        aria-live="polite"
-        aria-atomic="true"
-      >
-        {resolvedPaid ? (
-          <SuccessState amountKopeks={amountKopeks} />
-        ) : resolvedFailed ? (
-          <FailedState amountKopeks={amountKopeks} />
-        ) : pollTimedOut ? (
-          <TimeoutState onRetry={handleRetryPoll} onGoBack={handleGoBack} />
-        ) : (
-          <PendingState amountKopeks={amountKopeks} />
-        )}
-      </div>
+    <div className="min-h-dvh bg-dark-950 px-4 pb-10 pt-[max(1.25rem,env(safe-area-inset-top))] sm:pt-16">
+      <Page>
+        <PageHeader title={t('balance.topUpBalance')} backTo="/balance" />
+        <div aria-live="polite" aria-atomic="true">
+          {resolvedPaid ? (
+            <SuccessState amountKopeks={amountKopeks} />
+          ) : resolvedFailed ? (
+            <FailedState amountKopeks={amountKopeks} />
+          ) : pollTimedOut ? (
+            <TimeoutState onRetry={handleRetryPoll} onGoBack={handleGoBack} />
+          ) : (
+            <PendingState amountKopeks={amountKopeks} />
+          )}
+        </div>
+      </Page>
     </div>
   );
 }

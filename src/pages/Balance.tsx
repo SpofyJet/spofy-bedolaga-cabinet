@@ -1,10 +1,27 @@
 import { isLifetimePeriod, isLifetimeSubscription } from '@/utils/lifetime';
 import { uiLocale } from '@/utils/uiLocale';
 import { useState, useEffect, useRef } from 'react';
+import type { ReactNode } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 import { useSearchParams, useNavigate } from 'react-router';
-import { motion, AnimatePresence } from 'framer-motion';
+import {
+  PiArrowCounterClockwiseDuotone,
+  PiArrowDownLeftDuotone,
+  PiArrowUpRightDuotone,
+  PiCaretRightBold,
+  PiChartBarDuotone,
+  PiCheckCircleDuotone,
+  PiCreditCardDuotone,
+  PiGiftDuotone,
+  PiPlusBold,
+  PiReceiptDuotone,
+  PiShieldCheckDuotone,
+  PiTicketDuotone,
+  PiUsersThreeDuotone,
+  PiWarningCircleDuotone,
+  PiWarningDuotone,
+} from 'react-icons/pi';
 
 import { useAuthStore } from '../store/auth';
 import { balanceApi } from '../api/balance';
@@ -14,59 +31,48 @@ import { useCurrency } from '../hooks/useCurrency';
 import { API } from '../config/constants';
 import type { PaginatedResponse, RenewalOption, Transaction } from '../types';
 
-import { Card } from '@/components/data-display/Card';
-import { Button } from '@/components/primitives/Button';
-import { ChevronDownIcon, ChevronRightIcon, CreditCardIcon, WalletIcon } from '@/components/icons';
-import { staggerContainer, staggerItem } from '@/components/motion/transitions';
-import { isPaidStatus, isFailedStatus } from '../utils/paymentStatus';
-import { transactionTypeBadge, transactionTypeLabelKey } from '../utils/transactionType';
+import { PageHeader } from '@/components/layout/PageHeader';
+import {
+  Button,
+  EmptyState,
+  Group,
+  Page,
+  Row,
+  RowIcon,
+  Stat,
+  Surface,
+} from '@/components/spofy/ui';
 import { Skeleton, SkeletonGroup } from '@/components/ui/skeleton';
-import PaymentMethodIcon, { spofyPaymentIcon } from '@/components/PaymentMethodIcon';
+import { isPaidStatus, isFailedStatus } from '../utils/paymentStatus';
+import { transactionTypeLabelKey } from '../utils/transactionType';
 
-/**
- * Способы пополнения группами: человек сначала выбирает «чем платить»
- * (карта, крипта, звёзды), а уже потом провайдера. Карты — первыми: ими
- * платит большинство.
- */
-type MethodGroup = 'card' | 'crypto' | 'telegram' | 'other';
-const METHOD_GROUP_ORDER: MethodGroup[] = ['card', 'crypto', 'telegram', 'other'];
-const CRYPTO_METHODS = new Set(['cryptobot', 'heleket', 'xrocket']);
-const TELEGRAM_METHODS = new Set(['telegram_stars', 'tribute']);
-const CARD_METHODS = new Set([
-  'yookassa',
-  'wata',
-  'pal24',
-  'mulenpay',
-  'cloudpayments',
-  'cashera',
-  'lava',
-]);
+type Tone = 'accent' | 'success' | 'warning' | 'error' | 'muted';
 
-function methodGroup(id: string): MethodGroup {
-  if (CRYPTO_METHODS.has(id)) return 'crypto';
-  if (TELEGRAM_METHODS.has(id)) return 'telegram';
-  if (id.startsWith('platega') || id.startsWith('freekassa') || CARD_METHODS.has(id)) return 'card';
-  return 'other';
-}
+/** Иконка и цвет строки истории — по типу операции (типы бота, см. utils/transactionType). */
+const TX_ICONS: Record<string, { icon: ReactNode; tone: Tone }> = {
+  DEPOSIT: { icon: <PiArrowDownLeftDuotone />, tone: 'success' },
+  WITHDRAWAL: { icon: <PiArrowUpRightDuotone />, tone: 'error' },
+  SUBSCRIPTION_PAYMENT: { icon: <PiShieldCheckDuotone />, tone: 'accent' },
+  REFUND: { icon: <PiArrowCounterClockwiseDuotone />, tone: 'success' },
+  FAILED_REFUND: { icon: <PiWarningDuotone />, tone: 'error' },
+  REFERRAL_REWARD: { icon: <PiUsersThreeDuotone />, tone: 'warning' },
+  POLL_REWARD: { icon: <PiChartBarDuotone />, tone: 'warning' },
+  GIFT_PAYMENT: { icon: <PiGiftDuotone />, tone: 'accent' },
+};
+const TX_FALLBACK = { icon: <PiReceiptDuotone />, tone: 'muted' as Tone };
 
-/** Способ, которым платят 9 из 10: помечаем «Быстро» (карта / СБП через Platega). */
-const FAST_METHOD_ID = 'platega_m2';
-
-const LEADING_EMOJI = /^(?:\p{Extended_Pictographic}|\uFE0F|\u200D|\s)+/u;
-
-/** Имя без эмодзи-префикса (рядом есть иконка); в группе крипты — без «Криптовалюта (…)». */
-function methodTitle(name: string, group: MethodGroup): string {
-  let title = name.replace(LEADING_EMOJI, '').trim();
-  if (group === 'crypto') {
-    const inner = title.match(/^крипто\S*\s*\((.+)\)$/i);
-    if (inner) title = inner[1];
-  }
-  return title;
-}
-
-/** Плитка способа — по тому, чем платит человек (см. spofyPaymentIcon). */
-function MethodIcon({ id }: { id: string }) {
-  return <PaymentMethodIcon method={spofyPaymentIcon(id)} className="h-11 w-11 shrink-0" />;
+/** «2 нояб., 14:30» — коротко, чтобы строка истории не обрезалась на телефоне. */
+function txDate(iso: string): string {
+  const date = new Date(iso);
+  if (Number.isNaN(date.getTime())) return '';
+  const sameYear = date.getFullYear() === new Date().getFullYear();
+  const day = date.toLocaleDateString(uiLocale(), {
+    day: 'numeric',
+    month: 'short',
+    ...(sameYear ? {} : { year: 'numeric' }),
+  });
+  const time = date.toLocaleTimeString(uiLocale(), { hour: '2-digit', minute: '2-digit' });
+  return `${day}, ${time}`;
 }
 
 /** Какие периоды показать кнопками: 30 / 90 / 365 дней, если есть, иначе первые три. */
@@ -87,6 +93,20 @@ function perMonthInfo(option: RenewalOption, base: RenewalOption | undefined) {
   return { perMonth, saving: saving >= 5 ? saving : 0 };
 }
 
+function Spin() {
+  return (
+    <span
+      aria-hidden
+      className="h-5 w-5 animate-spin rounded-full border-2 border-current border-t-transparent"
+    />
+  );
+}
+
+/**
+ * Баланс: сумма и два действия (пополнить, промокод), продление в один шаг,
+ * сохранённые карты, история операций. Способы оплаты — на /balance/top-up,
+ * куда ведёт «Пополнить» (туда же ведёт быстрое действие на главной).
+ */
 export default function Balance() {
   const { t } = useTranslation();
   const refreshUser = useAuthStore((state) => state.refreshUser);
@@ -177,9 +197,9 @@ export default function Balance() {
   const deepSection = searchParams.get('section');
   const [promoOpen, setPromoOpen] = useState(deepSection === 'promo');
   const promoRef = useRef<HTMLDivElement>(null);
+  const promoInputRef = useRef<HTMLInputElement>(null);
   const historyRef = useRef<HTMLDivElement>(null);
   const [transactionsPage, setTransactionsPage] = useState(1);
-  const [isHistoryOpen, setIsHistoryOpen] = useState(deepSection === 'history');
   useEffect(() => {
     const target =
       deepSection === 'promo'
@@ -286,451 +306,309 @@ export default function Balance() {
     }
   };
 
+  const balanceRubles = balanceData?.balance_rubles || 0;
+  const promoVisible =
+    promoOpen || !!promocode || !!promocodeError || !!promocodeSuccess || !!promoSelectSubs;
+
+  const openPromo = () => {
+    setPromoOpen(true);
+    setTimeout(() => {
+      promoRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      promoInputRef.current?.focus({ preventScroll: true });
+    }, 60);
+  };
+
   return (
-    <motion.div
-      className="space-y-6"
-      variants={staggerContainer}
-      initial="initial"
-      animate="animate"
-    >
-      <motion.div variants={staggerItem}>
-        <h1 className="text-xl font-bold tracking-tight text-dark-50 sm:text-2xl">
-          {t('balance.title')}
-        </h1>
-      </motion.div>
+    <Page>
+      <PageHeader title={t('balance.title')} backTo="/" />
 
-      {/* Balance Card — flat surface; the giant numeric carries the
-          weight. The previous accent gradient + glow leaked accent into
-          decoration (DESIGN.md Tunable-but-Scarce Rule) and read as the
-          SaaS hero-metric template. */}
-      <motion.div variants={staggerItem}>
-        <div className="rounded-2xl border border-accent-500/20 bg-accent-500/[0.07] p-5 sm:p-6">
-          <div className="flex items-start justify-between gap-4">
-            <div className="min-w-0">
-              <div className="text-sm font-medium text-dark-300">{t('balance.currentBalance')}</div>
-              <div className="mt-1.5 text-[40px] font-bold leading-none text-dark-50 sm:text-5xl">
-                {formatAmount(balanceData?.balance_rubles || 0)}
-                <span className="ml-1.5 text-2xl font-semibold text-dark-400">
-                  {currencySymbol}
-                </span>
-              </div>
-            </div>
-            <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-accent-500 text-on-accent">
-              <WalletIcon className="h-[22px] w-[22px]" />
-            </span>
-          </div>
-          {referralEarnings > 0 && (balanceData?.balance_rubles || 0) > 0 && (
-            <p className="mt-3 border-t border-accent-500/15 pt-3 text-sm text-dark-300">
-              {t('balance.referralEarned', {
-                amount: formatAmount(referralEarnings, 0),
-                currency: currencySymbol,
-              })}
-            </p>
-          )}
+      <Surface>
+        <Stat
+          label={t('balance.currentBalance')}
+          value={`${formatAmount(balanceRubles, Number.isInteger(balanceRubles) ? 0 : 2)} ${currencySymbol}`}
+          hint={
+            referralEarnings > 0 && balanceRubles > 0
+              ? t('balance.referralEarned', {
+                  amount: formatAmount(referralEarnings, 0),
+                  currency: currencySymbol,
+                })
+              : undefined
+          }
+        />
+        <div className="mt-4 grid grid-cols-2 gap-2.5">
+          <Button onClick={() => navigate('/balance/top-up')}>
+            <PiPlusBold className="h-4 w-4" aria-hidden />
+            {t('balance.topUp')}
+          </Button>
+          <Button tone="secondary" onClick={openPromo} aria-expanded={promoVisible}>
+            <PiTicketDuotone className="h-5 w-5" aria-hidden />
+            {t('balance.promocode.title')}
+          </Button>
         </div>
-      </motion.div>
+      </Surface>
 
-      {/* Продление: периоды с ценой, один тап до страницы продления с уже выбранным сроком */}
-      {ownSubscription && shortcuts.length > 0 && (
-        <motion.div variants={staggerItem}>
-          <Card>
-            <h2 className="text-lg font-bold text-dark-50">{t('balance.renew.title')}</h2>
-            <p className="mt-0.5 text-sm text-dark-400">
-              {t('balance.renew.until', {
-                date: new Date(ownSubscription.end_date).toLocaleDateString(uiLocale(), {
-                  day: 'numeric',
-                  month: 'long',
-                }),
-              })}
-            </p>
-            <div className="mt-4 grid grid-cols-1 gap-2.5 sm:grid-cols-3">
-              {shortcuts.map((option) => {
-                const info = perMonthInfo(option, shortcuts[0]);
-                return (
-                  <button
-                    type="button"
-                    key={option.period_days}
-                    onClick={() =>
-                      navigate(
-                        `/subscriptions/${ownSubscription.id}/renew?period=${option.period_days}`,
-                      )
-                    }
-                    className="flex items-center justify-between gap-3 rounded-xl border border-dark-700/60 bg-dark-50/[0.03] px-3.5 py-3 text-left transition-colors hover:border-accent-500/50 hover:bg-accent-500/[0.06] sm:block sm:p-3.5"
-                  >
-                    <span className="block text-sm text-dark-300 sm:text-dark-300">
-                      {t('balance.renew.days', { count: option.period_days })}
-                      <span className="mt-0.5 block min-h-[1rem] text-xs text-dark-400 sm:hidden">
-                        {info
-                          ? t('balance.renew.perMonth', {
-                              amount: formatAmount(info.perMonth, 0),
-                              currency: currencySymbol,
-                            }) + (info.saving ? ` · −${info.saving}%` : '')
-                          : option.discount_percent > 0
-                            ? `−${option.discount_percent}%`
-                            : ''}
-                      </span>
-                    </span>
-                    <span className="block text-xl font-bold text-dark-50 sm:mt-0.5">
-                      {formatAmount(option.price_rubles, 0)}
-                      {'\u00A0'}
-                      {currencySymbol}
-                    </span>
-                    <span className="mt-1 hidden min-h-[1.25rem] text-xs text-dark-400 sm:block">
-                      {info
-                        ? t('balance.renew.perMonth', {
-                            amount: formatAmount(info.perMonth, 0),
-                            currency: currencySymbol,
-                          }) + (info.saving ? ` · −${info.saving}%` : '')
-                        : option.discount_percent > 0
-                          ? `−${option.discount_percent}%`
-                          : ''}
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
-          </Card>
-        </motion.div>
-      )}
-
-      {/* Payment Methods — self-animated: mounts after its query resolves, when
-          the parent stagger orchestration has already finished and would leave
-          it stuck at opacity 0 */}
-      {paymentMethods && paymentMethods.length > 0 && (
-        <motion.div variants={staggerItem} initial="initial" animate="animate">
-          <Card>
-            <h2 className="text-lg font-bold text-dark-50">{t('balance.topUpBalance')}</h2>
-            <p className="mt-0.5 text-sm text-dark-400">{t('balance.topUpHint')}</p>
-            <div className="mt-4 space-y-5">
-              {METHOD_GROUP_ORDER.map((group) => {
-                const methods = paymentMethods.filter((m) => methodGroup(m.id) === group);
-                if (methods.length === 0) return null;
-                return (
-                  <section key={group}>
-                    <h3 className="mb-1 text-[13px] font-medium text-dark-400">
-                      {t(`balance.methodGroups.${group}`)}
-                    </h3>
-                    <div className="-mx-2 grid grid-cols-1 gap-0.5 lg:grid-cols-2">
-                      {methods.map((method) => {
-                        const methodKey = method.id.toLowerCase().replace(/-/g, '_');
-                        const translatedName = t(`balance.paymentMethods.${methodKey}.name`, {
-                          defaultValue: '',
-                        });
-                        const translatedDesc = t(
-                          `balance.paymentMethods.${methodKey}.description`,
-                          {
-                            defaultValue: '',
-                          },
-                        );
-                        const description = method.description || translatedDesc;
-
-                        return (
-                          <button
-                            type="button"
-                            key={method.id}
-                            disabled={!method.is_available}
-                            onClick={() =>
-                              method.is_available && navigate(`/balance/top-up/${method.id}`)
-                            }
-                            className="group flex w-full items-center gap-3 rounded-xl px-2 py-2.5 text-left transition-colors hover:bg-dark-50/[0.05] disabled:cursor-not-allowed disabled:opacity-50"
-                          >
-                            <MethodIcon id={method.id} />
-                            <span className="min-w-0 flex-1">
-                              <span className="block font-semibold leading-snug text-dark-50">
-                                {methodTitle(method.name || translatedName, group)}
-                                {method.id === FAST_METHOD_ID && (
-                                  <span className="ml-2 rounded-md bg-success-500/15 px-1.5 py-0.5 align-middle text-[11px] font-semibold text-success-400">
-                                    {t('balance.methodFast')}
-                                  </span>
-                                )}
-                              </span>
-                              <span className="mt-0.5 block text-[13px] leading-snug text-dark-400">
-                                {description && <>{description} · </>}
-                                <span className="whitespace-nowrap">
-                                  {formatAmount(method.min_amount_kopeks / 100, 0)}
-                                  {'\u00A0–\u00A0'}
-                                  {formatAmount(method.max_amount_kopeks / 100, 0)}
-                                  {'\u00A0'}
-                                  {currencySymbol}
-                                </span>
-                              </span>
-                            </span>
-                            <ChevronRightIcon className="h-4 w-4 shrink-0 text-dark-500 transition-transform group-hover:translate-x-0.5" />
-                          </button>
-                        );
-                      })}
-                    </div>
-                  </section>
-                );
-              })}
-            </div>
-          </Card>
-        </motion.div>
-      )}
-
-      {/* Promo Code Section: свёрнут в ссылку, пока человек сам не откроет — не отвлекает от оплаты */}
-      {!promoOpen && !promocode && !promocodeError && !promocodeSuccess && !promoSelectSubs && (
-        <motion.div variants={staggerItem}>
-          <button
-            type="button"
-            onClick={() => setPromoOpen(true)}
-            className="text-sm font-medium text-accent-400 transition-colors hover:text-accent-300"
-          >
-            {t('balance.promocode.haveOne')}
-          </button>
-        </motion.div>
-      )}
-      {(promoOpen ||
-        !!promocode ||
-        !!promocodeError ||
-        !!promocodeSuccess ||
-        !!promoSelectSubs) && (
-        <motion.div variants={staggerItem} ref={promoRef} className="scroll-mt-6">
-          <Card>
-            <h2 className="mb-4 text-lg font-semibold text-dark-100">
+      {/* Промокод: открывается кнопкой выше или ссылкой ?section=promo */}
+      {promoVisible && (
+        <div ref={promoRef} className="scroll-mt-6">
+          <Surface>
+            <label htmlFor="balance-promocode" className="sr-only">
               {t('balance.promocode.title')}
-            </h2>
-            {/* На телефоне поле во всю ширину, кнопка под ним: рядом с «Активировать»
-              подсказка в поле обрезалась посреди слова. */}
-            <div className="flex flex-col gap-3 sm:flex-row">
+            </label>
+            <div className="flex flex-col gap-2.5 sm:flex-row">
               <input
+                ref={promoInputRef}
+                id="balance-promocode"
                 type="text"
                 value={promocode}
                 onChange={(e) => setPromocode(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handlePromocodeActivate()}
                 placeholder={t('balance.promocode.placeholder')}
-                className="input min-w-0 flex-1"
+                autoComplete="off"
+                autoCapitalize="characters"
+                className="h-12 w-full min-w-0 rounded-2xl sm:flex-1 bg-dark-800/60 px-4 text-[15px] font-semibold text-dark-50 ring-1 ring-inset ring-dark-700/60 transition-shadow placeholder:font-normal placeholder:text-dark-500 focus:outline-none focus:ring-2 focus:ring-accent-500/60 disabled:opacity-60"
                 disabled={promocodeLoading}
               />
               <Button
                 onClick={() => handlePromocodeActivate()}
-                disabled={!promocode.trim()}
-                loading={promocodeLoading}
+                disabled={!promocode.trim() || promocodeLoading}
+                aria-busy={promocodeLoading}
               >
+                {promocodeLoading && <Spin />}
                 {t('balance.promocode.activate')}
               </Button>
             </div>
-            <AnimatePresence mode="wait">
-              {promocodeError && (
-                <motion.div
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  className="mt-3 rounded-linear border border-error-500/30 bg-error-500/10 p-3 text-sm text-error-400"
-                >
-                  {promocodeError}
-                </motion.div>
-              )}
-              {promocodeSuccess && (
-                <motion.div
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  className="mt-3 rounded-linear border border-success-500/30 bg-success-500/10 p-3 text-sm text-success-400"
-                >
-                  <div className="font-medium">{promocodeSuccess.message}</div>
+
+            {promocodeError && (
+              <p
+                role="alert"
+                className="mt-3 flex items-start gap-2 px-1 text-[13px] leading-snug text-error-400"
+              >
+                <PiWarningCircleDuotone className="mt-px h-[18px] w-[18px] shrink-0" aria-hidden />
+                {promocodeError}
+              </p>
+            )}
+            {promocodeSuccess && (
+              <div
+                role="status"
+                className="mt-3 flex items-start gap-3 rounded-2xl bg-success-500/10 p-3"
+              >
+                <PiCheckCircleDuotone
+                  className="h-[22px] w-[22px] shrink-0 text-success-400"
+                  aria-hidden
+                />
+                <div className="min-w-0 text-[13px] leading-snug">
+                  <p className="font-semibold text-dark-100">{promocodeSuccess.message}</p>
                   {promocodeSuccess.amount > 0 && (
-                    <div className="mt-1">
+                    <p className="mt-0.5 text-dark-400">
                       {t('balance.promocode.balanceAdded', {
                         amount: promocodeSuccess.amount.toFixed(2),
                       })}
-                    </div>
+                    </p>
                   )}
-                </motion.div>
-              )}
-            </AnimatePresence>
+                </div>
+              </div>
+            )}
+
             {promoSelectSubs && promoSelectSubs.length > 0 && (
-              <motion.div
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="mt-3 space-y-2 rounded-linear border border-accent-500/30 bg-accent-500/10 p-3"
-              >
-                <div className="text-sm font-medium text-dark-200">
+              <div className="mt-4">
+                <p className="px-1 text-[13px] font-semibold text-dark-400">
                   {t(
                     'balance.promocode.selectSubscription',
                     'К какой подписке применить промокод?',
                   )}
+                </p>
+                <div className="mt-2 divide-y divide-dark-800/70 overflow-hidden rounded-2xl ring-1 ring-inset ring-dark-800/80">
+                  {promoSelectSubs.map((sub) => (
+                    <Row
+                      key={sub.id}
+                      icon={<PiShieldCheckDuotone />}
+                      label={sub.tariff_name}
+                      hint={
+                        isLifetimePeriod(sub.days_left)
+                          ? t('subscription.lifetime.forever')
+                          : t('balance.promocode.daysLeft', '{{count}} дн.', {
+                              count: sub.days_left,
+                            })
+                      }
+                      onClick={() => handlePromocodeActivate(sub.id)}
+                      disabled={promocodeLoading}
+                    />
+                  ))}
                 </div>
-                {promoSelectSubs.map((sub) => (
-                  <button
-                    key={sub.id}
-                    onClick={() => handlePromocodeActivate(sub.id)}
-                    disabled={promocodeLoading}
-                    className="flex w-full min-w-0 items-center justify-between gap-3 rounded-linear border border-dark-600 bg-dark-700 px-3 py-2 text-sm text-dark-200 transition-colors hover:border-accent-500/50 hover:bg-dark-600"
-                  >
-                    <span className="truncate">{sub.tariff_name}</span>
-                    <span className="shrink-0 text-dark-400">
-                      {isLifetimePeriod(sub.days_left)
-                        ? t('subscription.lifetime.forever')
-                        : t('balance.promocode.daysLeft', '{{count}} дн.', {
-                            count: sub.days_left,
-                          })}
-                    </span>
-                  </button>
-                ))}
-                <button
+                <Button
+                  tone="ghost"
+                  className="mt-2 h-10 px-3 text-[13px]"
                   onClick={() => {
                     setPromoSelectSubs(null);
                     setPromoSelectCode(null);
                   }}
-                  className="text-xs text-dark-400 hover:text-dark-200"
                 >
                   {t('common.cancel', 'Отмена')}
-                </button>
-              </motion.div>
+                </Button>
+              </div>
             )}
-          </Card>
-        </motion.div>
+          </Surface>
+        </div>
       )}
 
-      {/* Transaction History */}
-      <motion.div variants={staggerItem} ref={historyRef} className="scroll-mt-6">
-        <Card className="overflow-hidden">
-          <button
-            onClick={() => setIsHistoryOpen(!isHistoryOpen)}
-            className="flex w-full items-center justify-between text-left"
-          >
-            <h2 className="text-lg font-semibold text-dark-100">
+      {/* Продление: периоды с ценой, один тап до страницы продления с уже выбранным сроком */}
+      {ownSubscription && shortcuts.length > 0 && (
+        <Group
+          title={t('balance.renew.title')}
+          right={
+            <span className="text-[13px] text-dark-500">
+              {t('balance.renew.untilShort', 'до {{date}}', {
+                date: new Date(ownSubscription.end_date).toLocaleDateString(uiLocale(), {
+                  day: 'numeric',
+                  month: 'long',
+                }),
+              })}
+            </span>
+          }
+        >
+          {shortcuts.map((option) => {
+            const info = perMonthInfo(option, shortcuts[0]);
+            const note = info
+              ? t('balance.renew.perMonth', {
+                  amount: formatAmount(info.perMonth, 0),
+                  currency: currencySymbol,
+                }) + (info.saving ? ` · −${info.saving}%` : '')
+              : option.discount_percent > 0
+                ? `−${option.discount_percent}%`
+                : undefined;
+            return (
+              <Row
+                key={option.period_days}
+                label={t('balance.renew.days', { count: option.period_days })}
+                description={note}
+                onClick={() =>
+                  navigate(
+                    `/subscriptions/${ownSubscription.id}/renew?period=${option.period_days}`,
+                  )
+                }
+                trailing={
+                  <span className="flex shrink-0 items-center gap-2">
+                    <span className="whitespace-nowrap text-[15px] font-bold text-dark-50">
+                      {formatAmount(option.price_rubles, 0)}
+                      {' '}
+                      {currencySymbol}
+                    </span>
+                    <PiCaretRightBold className="h-3.5 w-3.5 text-dark-500" aria-hidden />
+                  </span>
+                }
+              />
+            );
+          })}
+        </Group>
+      )}
+
+      {savedCardsData?.recurrent_enabled && (
+        <Group>
+          <Row
+            to="/balance/saved-cards"
+            icon={<PiCreditCardDuotone />}
+            label={t('balance.savedCards.title')}
+            hint={savedCardsData.cards.length > 0 ? String(savedCardsData.cards.length) : undefined}
+          />
+        </Group>
+      )}
+
+      {/* История операций */}
+      <div ref={historyRef} className="scroll-mt-6">
+        {isLoading ? (
+          <Group title={t('balance.transactionHistory')}>
+            <SkeletonGroup className="space-y-2 p-4">
+              <Skeleton variant="card" count={3} className="h-12" />
+            </SkeletonGroup>
+          </Group>
+        ) : transactions?.items && transactions.items.length > 0 ? (
+          <Group title={t('balance.transactionHistory')}>
+            {transactions.items.map((tx) => (
+              <TransactionRow key={tx.id} tx={tx} />
+            ))}
+          </Group>
+        ) : (
+          <section>
+            <h2 className="mb-2 px-1 text-[13px] font-semibold text-dark-400">
               {t('balance.transactionHistory')}
             </h2>
-            <ChevronDownIcon
-              className={`h-5 w-5 text-dark-400 transition-transform duration-200 ${isHistoryOpen ? 'rotate-180' : ''}`}
+            <EmptyState
+              icon={<PiReceiptDuotone />}
+              title={t('balance.noTransactions')}
+              text={t('balance.noTransactionsHint', 'Здесь появятся пополнения и оплаты')}
             />
-          </button>
+          </section>
+        )}
 
-          <AnimatePresence>
-            {isHistoryOpen && (
-              <motion.div
-                initial={{ height: 0, opacity: 0 }}
-                animate={{ height: 'auto', opacity: 1 }}
-                exit={{ height: 0, opacity: 0 }}
-                transition={{ duration: 0.2 }}
-                className="overflow-hidden"
-              >
-                <div className="mt-4">
-                  {isLoading ? (
-                    <SkeletonGroup className="space-y-3">
-                      <Skeleton variant="card" count={3} className="h-16" />
-                    </SkeletonGroup>
-                  ) : transactions?.items && transactions.items.length > 0 ? (
-                    <motion.div
-                      className="space-y-3"
-                      variants={staggerContainer}
-                      initial="initial"
-                      animate="animate"
-                    >
-                      {transactions.items.map((tx) => {
-                        const isZero = tx.amount_rubles === 0;
-                        const isPositive = tx.amount_rubles > 0;
-                        const displayAmount = Math.abs(tx.amount_rubles);
-                        const sign = isZero ? '' : isPositive ? '+' : '-';
-                        const colorClass = isZero
-                          ? 'text-dark-400'
-                          : isPositive
-                            ? 'text-success-400'
-                            : 'text-error-400';
-
-                        return (
-                          <motion.div
-                            key={tx.id}
-                            variants={staggerItem}
-                            className="rounded-linear border border-dark-700/30 bg-dark-800/30 p-4"
-                          >
-                            {/* Сумма — в строке с типом и датой и держит свою ширину;
-                                описание — под ними во всю ширину. Рядом с суммой
-                                описание сжималось в узкий столбик, а без запрета
-                                сжатия сумму уводило за край карточки, и карточка
-                                её обрезала. */}
-                            <div className="flex items-start justify-between gap-3">
-                              <div className="flex min-w-0 flex-wrap items-center gap-x-3 gap-y-1">
-                                <span className={transactionTypeBadge(tx.type)}>
-                                  {t(transactionTypeLabelKey(tx.type))}
-                                </span>
-                                <span className="text-xs text-dark-500">
-                                  {new Date(tx.created_at).toLocaleDateString(uiLocale())}
-                                </span>
-                              </div>
-                              <div
-                                className={`shrink-0 whitespace-nowrap text-lg font-semibold ${colorClass}`}
-                              >
-                                {sign}
-                                {formatAmount(displayAmount)}
-                                {'\u00A0'}
-                                {currencySymbol}
-                              </div>
-                            </div>
-                            {/* Почта, ник, номер счёта — без пробелов, переносятся где угодно. */}
-                            {tx.description && (
-                              <div className="mt-2 text-sm text-dark-400 [overflow-wrap:anywhere]">
-                                {tx.description}
-                              </div>
-                            )}
-                          </motion.div>
-                        );
-                      })}
-                    </motion.div>
-                  ) : (
-                    <div className="py-12 text-center">
-                      <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-linear-lg bg-dark-800">
-                        <WalletIcon className="h-8 w-8 text-dark-500" />
-                      </div>
-                      <div className="text-dark-400">{t('balance.noTransactions')}</div>
-                    </div>
-                  )}
-
-                  {transactions && transactions.pages > 1 && (
-                    // Три колонки: «Далее» не уезжает отдельной строкой на всю ширину.
-                    <div className="mt-4 grid grid-cols-[1fr_auto_1fr] items-center gap-3 text-sm text-dark-500">
-                      <Button
-                        variant="secondary"
-                        size="sm"
-                        onClick={() => setTransactionsPage((prev) => Math.max(1, prev - 1))}
-                        disabled={transactions.page <= 1}
-                      >
-                        {t('common.back')}
-                      </Button>
-                      <div className="whitespace-nowrap text-center">
-                        {t('balance.page', {
-                          current: transactions.page,
-                          total: transactions.pages,
-                        })}
-                      </div>
-                      <Button
-                        variant="secondary"
-                        size="sm"
-                        onClick={() =>
-                          setTransactionsPage((prev) =>
-                            transactions.pages ? Math.min(transactions.pages, prev + 1) : prev + 1,
-                          )
-                        }
-                        disabled={transactions.page >= transactions.pages}
-                      >
-                        {t('common.next')}
-                      </Button>
-                    </div>
-                  )}
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </Card>
-      </motion.div>
-
-      {/* Saved Cards Navigation — self-animated: mounts after its query resolves
-          (see Payment Methods above) */}
-      {savedCardsData?.recurrent_enabled && (
-        <motion.div variants={staggerItem} initial="initial" animate="animate">
-          <Card interactive onClick={() => navigate('/balance/saved-cards')}>
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <CreditCardIcon className="h-5 w-5 text-dark-400" />
-                <span className="font-medium text-dark-100">{t('balance.savedCards.title')}</span>
-              </div>
-              <ChevronRightIcon className="h-5 w-5 text-dark-400" />
+        {transactions && transactions.pages > 1 && (
+          // Три колонки: «Далее» не уезжает отдельной строкой на всю ширину.
+          <div className="mt-3 grid grid-cols-[1fr_auto_1fr] items-center gap-3 text-[13px] text-dark-400">
+            <Button
+              tone="secondary"
+              className="h-10 text-[13px]"
+              onClick={() => setTransactionsPage((prev) => Math.max(1, prev - 1))}
+              disabled={transactions.page <= 1}
+            >
+              {t('common.back')}
+            </Button>
+            <div className="whitespace-nowrap text-center">
+              {t('balance.page', {
+                current: transactions.page,
+                total: transactions.pages,
+              })}
             </div>
-          </Card>
-        </motion.div>
-      )}
-    </motion.div>
+            <Button
+              tone="secondary"
+              className="h-10 text-[13px]"
+              onClick={() =>
+                setTransactionsPage((prev) =>
+                  transactions.pages ? Math.min(transactions.pages, prev + 1) : prev + 1,
+                )
+              }
+              disabled={transactions.page >= transactions.pages}
+            >
+              {t('common.next')}
+            </Button>
+          </div>
+        )}
+      </div>
+    </Page>
+  );
+}
+
+/** Строка истории: иконка типа, описание, тип и дата, сумма зелёная/красная. */
+function TransactionRow({ tx }: { tx: Transaction }) {
+  const { t } = useTranslation();
+  const { formatAmount, currencySymbol } = useCurrency();
+  const { icon, tone } = TX_ICONS[tx.type?.toUpperCase?.() ?? ''] ?? TX_FALLBACK;
+  const typeLabel = t(transactionTypeLabelKey(tx.type));
+  const isZero = tx.amount_rubles === 0;
+  const isPositive = tx.amount_rubles > 0;
+  const sign = isZero ? '' : isPositive ? '+' : '−';
+  const colorClass = isZero ? 'text-dark-400' : isPositive ? 'text-success-400' : 'text-error-400';
+  const date = txDate(tx.created_at);
+  const amount = Math.abs(tx.amount_rubles);
+  // «Пополнение · Пополнение» не повторяем: тип — только если описание о другом.
+  const showType = !!tx.description && tx.description.trim() !== typeLabel;
+
+  return (
+    <div className="flex min-h-[60px] items-center gap-3 px-4 py-2.5">
+      <RowIcon tone={tone}>{icon}</RowIcon>
+      <span className="min-w-0 flex-1">
+        {/* Почта, ник, номер счёта — без пробелов, переносятся где угодно. */}
+        <span className="line-clamp-2 text-[15px] font-semibold leading-snug text-dark-100 [overflow-wrap:anywhere]">
+          {tx.description || typeLabel}
+        </span>
+        <span className="mt-0.5 block truncate text-[13px] text-dark-400">
+          {showType ? `${typeLabel} · ${date}` : date}
+        </span>
+      </span>
+      <span className={`shrink-0 whitespace-nowrap text-[15px] font-bold ${colorClass}`}>
+        {sign}
+        {formatAmount(amount, Number.isInteger(amount) ? 0 : 2)}
+        {' '}
+        {currencySymbol}
+      </span>
+    </div>
   );
 }

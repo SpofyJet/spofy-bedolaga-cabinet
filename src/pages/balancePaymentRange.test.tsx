@@ -9,7 +9,7 @@ import ru from '@/locales/ru.json';
 import en from '@/locales/en.json';
 import zh from '@/locales/zh.json';
 import fa from '@/locales/fa.json';
-import Balance from './Balance';
+import TopUpMethodSelect from './TopUpMethodSelect';
 
 const translations = createInstance();
 await translations.init({
@@ -50,7 +50,8 @@ vi.mock('../api/balance', () => ({
 }));
 afterEach(cleanup);
 // Spofy-адаптация: кабинет Spofy показывает границы суммы компактным форматом
-// «min – max ¤» (без локализованной словесной обёртки) в карточке метода оплаты.
+// «min – max ¤» (без локализованной словесной обёртки) в строке способа оплаты.
+// С v10 список способов живёт на /balance/top-up, куда ведёт «Пополнить».
 // Числа во всех локалях идентичны, поэтому вместо таблицы фраз — одна проверка
 // на полную строку диапазона (NBSP нормализуется testing-library).
 it('renders both amount bounds as a complete phrase', async () => {
@@ -59,7 +60,7 @@ it('renders both amount bounds as a complete phrase', async () => {
     <QueryClientProvider client={new QueryClient()}>
       <PlatformProvider>
         <MemoryRouter>
-          <Balance />
+          <TopUpMethodSelect />
         </MemoryRouter>
       </PlatformProvider>
     </QueryClientProvider>,
