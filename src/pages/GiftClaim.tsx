@@ -10,8 +10,10 @@ import { copyToClipboard } from '@/utils/clipboard';
 import { Spinner } from '@/components/ui/Spinner';
 import { AnimatedCheckmark } from '@/components/ui/AnimatedCheckmark';
 import { cn } from '@/lib/utils';
+import { PageHeader } from '@/components/layout/PageHeader';
 import { CheckCircleIcon, CheckIcon, CopyIcon } from '@/components/icons';
 import { Skeleton, SkeletonGroup } from '@/components/ui/skeleton';
+import { PiGiftDuotone } from 'react-icons/pi';
 
 const MAX_POLL_MS = 10 * 60 * 1000; // poll an unsettled payment for up to 10 min
 
@@ -20,10 +22,14 @@ function isValidEmail(value: string): boolean {
 }
 
 function Shell({ children }: { children: React.ReactNode }) {
+  const { t } = useTranslation();
   return (
-    <div className="flex min-h-dvh items-center justify-center bg-dark-950 px-4 py-10">
-      <div className="w-full max-w-md rounded-2xl border border-dark-800/50 bg-dark-900/50 p-6 sm:p-8">
-        {children}
+    <div className="min-h-dvh bg-dark-950 px-4 py-6 sm:py-10">
+      <div className="mx-auto w-full max-w-md">
+        <PageHeader title={t('gift.claimPageTitle', 'Подарок')} backTo="/" />
+        <div className="rounded-3xl bg-dark-900/70 p-6 ring-1 ring-inset ring-dark-800/80 sm:p-8">
+          {children}
+        </div>
       </div>
     </div>
   );
@@ -239,7 +245,9 @@ export default function GiftClaim() {
         animate={{ opacity: 1, scale: 1 }}
         className="flex flex-col items-center gap-5 text-center [overflow-wrap:anywhere]"
       >
-        <div className="text-4xl">🎁</div>
+        <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-accent-500/10 text-accent-400">
+          <PiGiftDuotone className="h-7 w-7" />
+        </span>
         <div>
           <h1 className="text-xl font-bold text-dark-50">
             {t('landing.giftClaim.title', 'You have a gift!')}
@@ -253,13 +261,13 @@ export default function GiftClaim() {
         </div>
 
         {gift.gift_message && (
-          <div className="w-full rounded-xl border border-dark-700/30 bg-dark-800/40 p-4 text-left">
+          <div className="w-full rounded-2xl bg-dark-800/40 p-4 text-left">
             <p className="text-sm italic text-dark-200">&ldquo;{gift.gift_message}&rdquo;</p>
           </div>
         )}
 
         {willReplace && (
-          <p className="w-full rounded-lg border border-warning-500/20 bg-warning-500/5 p-3 text-xs text-warning-400">
+          <p className="w-full rounded-2xl bg-warning-500/10 p-3 text-xs text-warning-400 ring-1 ring-inset ring-warning-500/25">
             {t(
               'landing.giftClaim.replaceWarning',
               'You already have a subscription — activating this gift will replace it.',
@@ -271,7 +279,7 @@ export default function GiftClaim() {
         {gift.bot_claim_link && (
           <a
             href={gift.bot_claim_link}
-            className="flex w-full items-center justify-center gap-2 rounded-xl bg-accent-500 px-6 py-3.5 text-sm font-bold text-on-accent shadow-lg shadow-accent-500/25 transition-all hover:bg-accent-400 active:scale-[0.98]"
+            className="flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-accent-500 px-6 text-[15px] font-semibold text-on-accent transition-colors hover:bg-accent-600 active:scale-[0.98]"
           >
             {t('landing.giftClaim.activateTelegram', 'Activate in Telegram')}
           </a>
@@ -282,7 +290,7 @@ export default function GiftClaim() {
           <button
             type="button"
             onClick={() => setShowEmail(true)}
-            className="w-full rounded-xl border border-dark-700/50 px-6 py-3 text-sm font-medium text-dark-200 transition-colors hover:bg-dark-800/50"
+            className="h-12 w-full rounded-2xl bg-dark-800/70 px-6 text-[15px] font-semibold text-dark-100 ring-1 ring-inset ring-dark-700/60 transition-colors hover:bg-dark-700/70"
           >
             {t('landing.giftClaim.activateWeb', 'Activate by email')}
           </button>
@@ -300,7 +308,7 @@ export default function GiftClaim() {
                 setClaimError(null);
               }}
               placeholder="email@example.com"
-              className="w-full rounded-xl border border-dark-700/50 bg-dark-800/50 px-4 py-3 text-sm text-dark-50 placeholder-dark-500 outline-none focus:border-accent-500/50 focus:ring-1 focus:ring-accent-500/25"
+              className="h-12 w-full rounded-2xl bg-dark-800/60 px-4 text-[15px] text-dark-50 placeholder-dark-500 outline-none ring-1 ring-inset ring-dark-700/50 focus:ring-accent-500/50"
             />
             {claimError && <p className="text-sm text-error-400">{claimError}</p>}
             <button

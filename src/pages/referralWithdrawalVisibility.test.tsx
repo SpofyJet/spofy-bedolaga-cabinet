@@ -165,7 +165,7 @@ describe('вывод средств выключен', () => {
 
     // Дожидаемся отрисовки страницы, чтобы отсутствие раздела не оказалось
     // просто незагруженной страницей.
-    await screen.findByText(resolveRu('referral.yourLink') ?? 'referral.yourLink');
+    await screen.findByText(resolveRu('referral.cabinetLink') ?? 'referral.cabinetLink');
 
     await waitFor(() => {
       expect(screen.queryByText(DISABLED_REASON)).toBeNull();

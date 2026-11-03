@@ -6,7 +6,7 @@ import { PARTNER_STATS } from '../../constants/partner';
 import { useCurrency } from '../../hooks/useCurrency';
 import { DailyChart } from '../stats/DailyChart';
 import { PeriodComparison } from '../stats/PeriodComparison';
-import { StatCard } from '../stats/StatCard';
+import { MiniStat } from './MiniStat';
 import { TopReferrals } from './TopReferrals';
 import { Skeleton, SkeletonGroup } from '../ui/skeleton';
 
@@ -27,7 +27,7 @@ export function CampaignDetailStats({ campaignId }: CampaignDetailStatsProps) {
   if (isLoading) {
     return (
       <SkeletonGroup className="space-y-3 pt-2">
-        <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+        <div className="grid grid-cols-3 gap-2">
           <Skeleton
             variant="card"
             count={PARTNER_STATS.SKELETON_COUNT}
@@ -43,7 +43,10 @@ export function CampaignDetailStats({ campaignId }: CampaignDetailStatsProps) {
     return (
       <div className="pt-2 text-center">
         <div className="text-sm text-error-400">{t('referral.partner.stats.noData')}</div>
-        <button onClick={() => refetch()} className="btn-secondary mt-2 px-4 py-1 text-xs">
+        <button
+          onClick={() => refetch()}
+          className="mt-2 rounded-xl bg-dark-800/70 px-4 py-1.5 text-xs font-semibold text-dark-100 ring-1 ring-inset ring-dark-700/60"
+        >
           {t('common.retry')}
         </button>
       </div>
@@ -53,28 +56,28 @@ export function CampaignDetailStats({ campaignId }: CampaignDetailStatsProps) {
   return (
     <div className="space-y-3 pt-2">
       {/* Period earnings */}
-      <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
-        <StatCard
+      <div className="grid grid-cols-3 gap-2">
+        <MiniStat
           label={t('referral.partner.stats.today')}
           value={formatWithCurrency(data.earnings_today / PARTNER_STATS.KOPEKS_DIVISOR)}
-          valueClassName="text-success-400"
+          tone="success"
         />
-        <StatCard
+        <MiniStat
           label={t('referral.partner.stats.week')}
           value={formatWithCurrency(data.earnings_week / PARTNER_STATS.KOPEKS_DIVISOR)}
-          valueClassName="text-success-400"
+          tone="success"
         />
-        <StatCard
+        <MiniStat
           label={t('referral.partner.stats.month')}
           value={formatWithCurrency(data.earnings_month / PARTNER_STATS.KOPEKS_DIVISOR)}
-          valueClassName="text-success-400"
+          tone="success"
         />
       </div>
 
       {/* Conversion rate */}
-      <div className="rounded-xl bg-dark-800/30 p-3">
+      <div className="rounded-2xl bg-dark-800/40 p-3">
         <div className="flex items-center justify-between">
-          <span className="text-sm text-dark-500">
+          <span className="text-[13px] text-dark-400">
             {t('referral.partner.stats.conversionRate')}
           </span>
           <span className="text-lg font-semibold text-accent-400">{data.conversion_rate}%</span>

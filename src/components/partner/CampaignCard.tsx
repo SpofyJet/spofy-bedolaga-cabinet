@@ -1,19 +1,61 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { PiCaretDown } from 'react-icons/pi';
+import { PiCaretDownBold, PiCheckBold, PiCopyDuotone } from 'react-icons/pi';
 
-import { CheckIcon, CopyIcon } from '@/components/icons';
+import { Surface } from '@/components/spofy/ui';
+import { cn } from '@/lib/utils';
 import type { PartnerCampaignInfo } from '../../api/partners';
 import { PARTNER_STATS } from '../../constants/partner';
 import { useCurrency } from '../../hooks/useCurrency';
 import { useHaptic } from '../../platform';
 import { copyToClipboard } from '../../utils/clipboard';
 import { CampaignDetailStats } from './CampaignDetailStats';
-import { StatCard } from '../stats/StatCard';
+import { MiniStat } from './MiniStat';
 
 const ChevronIcon = ({ expanded }: { expanded: boolean }) => (
-  <PiCaretDown className={`h-5 w-5 transition-transform ${expanded ? 'rotate-180' : ''}`} />
+  <PiCaretDownBold className={`h-3.5 w-3.5 transition-transform ${expanded ? 'rotate-180' : ''}`} />
 );
+
+function CampaignLink({
+  label,
+  value,
+  copied,
+  onCopy,
+}: {
+  label: string;
+  value: string;
+  copied: boolean;
+  onCopy: () => void;
+}) {
+  const { t } = useTranslation();
+  return (
+    <div>
+      <div className="mb-1.5 px-1 text-[13px] font-medium text-dark-400">{label}</div>
+      <div className="flex min-h-12 items-center gap-2 rounded-2xl bg-dark-800/60 py-1.5 pl-4 pr-1.5 ring-1 ring-inset ring-dark-700/50">
+        <span className="min-w-0 flex-1 truncate text-sm text-dark-100" title={value}>
+          {value}
+        </span>
+        <button
+          type="button"
+          onClick={onCopy}
+          aria-label={copied ? t('referral.copied') : t('referral.copyLink')}
+          className={cn(
+            'flex h-9 w-9 shrink-0 items-center justify-center rounded-xl transition-colors',
+            copied
+              ? 'bg-success-500/15 text-success-400'
+              : 'bg-dark-700/60 text-dark-200 hover:bg-dark-700',
+          )}
+        >
+          {copied ? (
+            <PiCheckBold className="h-4 w-4" />
+          ) : (
+            <PiCopyDuotone className="h-[18px] w-[18px]" />
+          )}
+        </button>
+      </div>
+    </div>
+  );
+}
 
 interface CampaignCardProps {
   campaign: PartnerCampaignInfo;
@@ -56,10 +98,12 @@ export function CampaignCard({ campaign }: CampaignCardProps) {
   const webKey = `${campaign.id}-web`;
 
   return (
-    <div className="bento-card space-y-4">
+    <Surface className="space-y-4">
       {/* Campaign header */}
       <div className="flex items-center justify-between gap-2">
-        <h3 className="min-w-0 truncate text-base font-semibold text-dark-100">{campaign.name}</h3>
+        <h3 className="min-w-0 truncate text-[15px] font-semibold text-dark-100">
+          {campaign.name}
+        </h3>
         <button
           onClick={handleToggleExpand}
           aria-expanded={expanded}
@@ -76,27 +120,27 @@ export function CampaignCard({ campaign }: CampaignCardProps) {
       </div>
 
       {/* Basic stats -- always visible */}
-      <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
-        <StatCard
+      <div className="grid grid-cols-3 gap-2">
+        <MiniStat
           label={t('referral.partner.stats.registrations')}
           value={campaign.registrations_count}
         />
-        <StatCard
+        <MiniStat
           label={t('referral.partner.stats.referrals')}
           value={campaign.referrals_count}
-          valueClassName="text-accent-400"
+          tone="accent"
         />
-        <StatCard
+        <MiniStat
           label={t('referral.partner.stats.earnings')}
           value={formatPositive(campaign.earnings_kopeks / PARTNER_STATS.KOPEKS_DIVISOR)}
-          valueClassName="text-success-400"
+          tone="success"
         />
       </div>
 
       {/* Bonus info */}
       {campaign.bonus_type !== 'none' && (
-        <div className="rounded-lg bg-success-500/10 p-3">
-          <div className="mb-1 text-xs font-medium text-success-500">
+        <div className="rounded-2xl bg-success-500/10 p-3 ring-1 ring-inset ring-success-500/20">
+          <div className="mb-0.5 text-xs font-medium text-success-400">
             {t('referral.partner.campaignBonus.title')}
           </div>
           <div className="text-sm font-semibold text-success-400">
@@ -121,58 +165,28 @@ export function CampaignCard({ campaign }: CampaignCardProps) {
 
       {/* Bot link */}
       {campaign.deep_link && (
-        <div>
-          <div className="mb-1 text-xs font-medium text-dark-500">
-            {t('referral.partner.campaignLinks.bot')}
-          </div>
-          <div className="flex items-center gap-2">
-            <input
-              type="text"
-              readOnly
-              value={campaign.deep_link}
-              className="input min-w-0 flex-1 text-xs"
-            />
-            <button
-              onClick={() => handleCopy(campaign.deep_link!, botKey)}
-              className={`btn-primary shrink-0 px-3 py-2.5 ${
-                copiedLink === botKey ? 'bg-success-500 hover:bg-success-500' : ''
-              }`}
-            >
-              {copiedLink === botKey ? <CheckIcon /> : <CopyIcon />}
-            </button>
-          </div>
-        </div>
+        <CampaignLink
+          label={t('referral.partner.campaignLinks.bot')}
+          value={campaign.deep_link}
+          copied={copiedLink === botKey}
+          onCopy={() => handleCopy(campaign.deep_link ?? '', botKey)}
+        />
       )}
 
       {/* Web link */}
       {campaign.web_link && (
-        <div>
-          <div className="mb-1 text-xs font-medium text-dark-500">
-            {t('referral.partner.campaignLinks.web')}
-          </div>
-          <div className="flex items-center gap-2">
-            <input
-              type="text"
-              readOnly
-              value={campaign.web_link}
-              className="input min-w-0 flex-1 text-xs"
-            />
-            <button
-              onClick={() => handleCopy(campaign.web_link!, webKey)}
-              className={`btn-primary shrink-0 px-3 py-2.5 ${
-                copiedLink === webKey ? 'bg-success-500 hover:bg-success-500' : ''
-              }`}
-            >
-              {copiedLink === webKey ? <CheckIcon /> : <CopyIcon />}
-            </button>
-          </div>
-        </div>
+        <CampaignLink
+          label={t('referral.partner.campaignLinks.web')}
+          value={campaign.web_link}
+          copied={copiedLink === webKey}
+          onCopy={() => handleCopy(campaign.web_link ?? '', webKey)}
+        />
       )}
 
       {/* Expanded detail stats */}
       <div id={`campaign-detail-${campaign.id}`}>
         {expanded && <CampaignDetailStats campaignId={campaign.id} />}
       </div>
-    </div>
+    </Surface>
   );
 }

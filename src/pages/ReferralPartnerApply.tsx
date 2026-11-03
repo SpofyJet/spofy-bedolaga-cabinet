@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 import { partnerApi, type PartnerApplicationRequest } from '../api/partners';
+import { PageHeader } from '@/components/layout/PageHeader';
+import { Button, Page, Surface } from '@/components/spofy/ui';
 
 export default function ReferralPartnerApply() {
   const { t } = useTranslation();
@@ -58,16 +60,18 @@ export default function ReferralPartnerApply() {
   };
 
   return (
-    <div className="animate-fade-in space-y-6">
-      <h1 className="text-2xl font-bold text-dark-50">{t('referral.partner.applyTitle')}</h1>
-      <p className="text-sm text-dark-400">{t('referral.partner.applyDesc')}</p>
+    <Page>
+      <PageHeader title={t('referral.partner.applyTitle')} backTo="/referral" />
+      <p className="-mt-3 px-1 text-[13px] leading-snug text-dark-400">
+        {t('referral.partner.applyDesc')}
+      </p>
 
       <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="bento-card space-y-4">
+        <Surface className="space-y-4">
           <div>
             <label
               htmlFor="rp-company-name"
-              className="mb-1 block text-sm font-medium text-dark-300"
+              className="mb-1.5 block px-1 text-[13px] font-semibold text-dark-400"
             >
               {t('referral.partner.fields.companyName')}
             </label>
@@ -83,7 +87,7 @@ export default function ReferralPartnerApply() {
           <div>
             <label
               htmlFor="rp-telegram-channel"
-              className="mb-1 block text-sm font-medium text-dark-300"
+              className="mb-1.5 block px-1 text-[13px] font-semibold text-dark-400"
             >
               {t('referral.partner.fields.telegramChannel')}
             </label>
@@ -99,7 +103,7 @@ export default function ReferralPartnerApply() {
           <div>
             <label
               htmlFor="rp-website-url"
-              className="mb-1 block text-sm font-medium text-dark-300"
+              className="mb-1.5 block px-1 text-[13px] font-semibold text-dark-400"
             >
               {t('referral.partner.fields.websiteUrl')}
             </label>
@@ -115,7 +119,7 @@ export default function ReferralPartnerApply() {
           <div>
             <label
               htmlFor="rp-description"
-              className="mb-1 block text-sm font-medium text-dark-300"
+              className="mb-1.5 block px-1 text-[13px] font-semibold text-dark-400"
             >
               {t('referral.partner.fields.description')}
             </label>
@@ -130,7 +134,7 @@ export default function ReferralPartnerApply() {
           <div>
             <label
               htmlFor="rp-expected-referrals"
-              className="mb-1 block text-sm font-medium text-dark-300"
+              className="mb-1.5 block px-1 text-[13px] font-semibold text-dark-400"
             >
               {t('referral.partner.fields.expectedReferrals')}
             </label>
@@ -153,7 +157,7 @@ export default function ReferralPartnerApply() {
           <div>
             <label
               htmlFor="rp-desired-commission"
-              className="mb-1 block text-sm font-medium text-dark-300"
+              className="mb-1.5 block px-1 text-[13px] font-semibold text-dark-400"
             >
               {t('referral.partner.fields.desiredCommission')}
             </label>
@@ -173,33 +177,25 @@ export default function ReferralPartnerApply() {
               placeholder={t('referral.partner.fields.desiredCommissionPlaceholder')}
             />
           </div>
-        </div>
+        </Surface>
 
         {applyMutation.isError && (
-          <div className="rounded-lg bg-error-500/10 p-3 text-sm text-error-400">
+          <div className="rounded-2xl bg-error-500/10 p-3 text-sm text-error-400 ring-1 ring-inset ring-error-500/25">
             {t('referral.partner.applyError')}
           </div>
         )}
 
-        <div className="flex gap-3">
-          <button
-            type="button"
-            onClick={() => navigate('/referral')}
-            className="btn-secondary flex-1 px-5"
-          >
+        <div className="grid grid-cols-2 gap-2">
+          <Button tone="secondary" onClick={() => navigate('/referral')}>
             {t('common.cancel')}
-          </button>
-          <button
-            type="submit"
-            disabled={applyMutation.isPending}
-            className={`btn-primary flex-1 px-5 ${applyMutation.isPending ? 'opacity-50' : ''}`}
-          >
+          </Button>
+          <Button type="submit" disabled={applyMutation.isPending}>
             {applyMutation.isPending
               ? t('referral.partner.applying')
               : t('referral.partner.submitApplication')}
-          </button>
+          </Button>
         </div>
       </form>
-    </div>
+    </Page>
   );
 }

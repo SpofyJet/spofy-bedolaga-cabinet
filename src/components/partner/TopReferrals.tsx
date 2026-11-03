@@ -1,3 +1,4 @@
+import { Chip } from '@/components/spofy/ui';
 import { useTranslation } from 'react-i18next';
 
 import type { CampaignReferralItem } from '../../api/partners';
@@ -17,12 +18,12 @@ function StatusBadge({ hasPaid, isActive }: StatusBadgeProps) {
   const { t } = useTranslation();
 
   if (isActive) {
-    return <span className="badge-success">{t('referral.partner.stats.active')}</span>;
+    return <Chip tone="success">{t('referral.partner.stats.active')}</Chip>;
   }
   if (hasPaid) {
-    return <span className="badge-info">{t('referral.partner.stats.paid')}</span>;
+    return <Chip>{t('referral.partner.stats.paid')}</Chip>;
   }
-  return <span className="badge-neutral">{t('referral.partner.stats.pending')}</span>;
+  return <Chip tone="muted">{t('referral.partner.stats.pending')}</Chip>;
 }
 
 export function TopReferrals({ referrals }: TopReferralsProps) {
@@ -31,14 +32,14 @@ export function TopReferrals({ referrals }: TopReferralsProps) {
 
   if (referrals.length === 0) {
     return (
-      <div className="bento-card py-6 text-center">
+      <div className="rounded-2xl bg-dark-800/40 py-6 text-center">
         <div className="text-sm text-dark-400">{t('referral.partner.stats.noReferrals')}</div>
       </div>
     );
   }
 
   return (
-    <div className="bento-card">
+    <div className="rounded-2xl bg-dark-800/40 p-3">
       <h4 className="mb-3 text-sm font-semibold text-dark-200">
         {t('referral.partner.stats.topReferrals')}
       </h4>
@@ -48,7 +49,7 @@ export function TopReferrals({ referrals }: TopReferralsProps) {
             key={ref.id}
             // Имя не режется до «Ма…»: переносится, бейдж при нехватке места
             // уходит строкой ниже; сумма отделена зазором и не сжимается.
-            className="flex items-center justify-between gap-3 rounded-xl border border-dark-700/30 bg-dark-800/30 p-3"
+            className="flex items-center justify-between gap-3 rounded-xl bg-dark-900/60 p-3"
           >
             <div className="min-w-0 flex-1">
               <div className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1">

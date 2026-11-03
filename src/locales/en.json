@@ -1195,7 +1195,8 @@
       "text": "Invite a friend with your link. When they connect VPN for the first time, you both get extra days. As many friends, as many rewards.",
       "badgeYou": "You get +{{days}} days",
       "badgeFriend": "Friend gets +{{days}} days",
-      "badgeNoLimit": "No limit"
+      "badgeNoLimit": "No limit",
+      "short": "For you and your friend when they first connect VPN. No limit"
     },
     "botLink": "Bot link",
     "cabinetLink": "Cabinet link",
@@ -1213,7 +1214,9 @@
       "chainDepth": "Network depth",
       "levelsValue": "up to {{count}} lvl.",
       "yourLevel": "Your level",
-      "levelNotReached": "not reached"
+      "levelNotReached": "not reached",
+      "invited": "Invited",
+      "earned": "Earned"
     },
     "terms": {
       "title": "Program Terms",
@@ -1328,7 +1331,8 @@
         "expectedReferralsPlaceholder": "Estimated number per month",
         "desiredCommission": "Desired Commission (%)",
         "desiredCommissionPlaceholder": "From 1 to 100%"
-      }
+      },
+      "sectionTitle": "Partnership"
     },
     "withdrawal": {
       "title": "Withdrawal",
@@ -1385,6 +1389,9 @@
       "saveError": "Could not save the setting",
       "kindMoneyHint": "The reward arrives as an amount on your balance",
       "kindDaysHint": "The reward extends your subscription"
+    },
+    "invite": {
+      "title": "Invite a friend"
     }
   },
   "support": {
@@ -7876,8 +7883,8 @@
     "tabBuy": "Buy",
     "tabActivate": "Activate",
     "tabMyGifts": "My Gifts",
-    "selectTariff": "SELECT TARIFF",
-    "selectPeriod": "SUBSCRIPTION PERIOD",
+    "selectTariff": "Select tariff",
+    "selectPeriod": "Subscription period",
     "deviceCount": "{{count}} device",
     "deviceCount_other": "{{count}} devices",
     "activateTitle": "Enter gift code",
@@ -7895,16 +7902,16 @@
     "activeGiftsTitle": "Active gifts",
     "activatedGiftsTitle": "Activated",
     "receivedGiftsTitle": "Received",
-    "statusAvailable": "AVAILABLE",
-    "statusActivated": "ACTIVATED",
-    "statusPending": "PENDING",
-    "statusDelivered": "DELIVERED",
-    "statusFailed": "FAILED",
-    "statusExpired": "EXPIRED",
-    "statusPendingActivation": "PENDING ACTIVATION",
-    "copyCode": "COPY",
+    "statusAvailable": "Available",
+    "statusActivated": "Activated",
+    "statusPending": "Pending",
+    "statusDelivered": "Delivered",
+    "statusFailed": "Failed",
+    "statusExpired": "Expired",
+    "statusPendingActivation": "Pending activation",
+    "copyCode": "Copy",
     "codeCopied": "Code copied!",
-    "shareGift": "SHARE",
+    "shareGift": "Share",
     "shareText": "I have a gift for you! Activate it here:",
     "codeReadyTitle": "Gift code is ready!",
     "codeLabel": "Gift code",
@@ -7926,7 +7933,8 @@
     "scanDescription": "Point the camera at the gift QR code",
     "scanNotRecognized": "No gift code in this QR",
     "scanError": "Could not scan",
-    "scanNoCamera": "Camera unavailable — enter the code manually"
+    "scanNoCamera": "Camera unavailable — enter the code manually",
+    "claimPageTitle": "Gift"
   },
   "news": {
     "title": "News & Updates",
