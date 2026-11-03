@@ -3,7 +3,10 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 import { pollsApi, type PollInfo, type PollQuestion } from '../api/polls';
 import { useFocusTrap } from '../hooks/useFocusTrap';
-import { ClipboardIcon, GiftIcon, CheckIcon, CloseIcon } from '@/components/icons';
+import { CheckIcon, CloseIcon } from '@/components/icons';
+import { PiClipboardTextDuotone, PiWarningCircleDuotone } from 'react-icons/pi';
+import { PageHeader } from '@/components/layout/PageHeader';
+import { Button, Chip, EmptyState, Page, Surface } from '@/components/spofy/ui';
 import { PageSkeleton, Skeleton } from '@/components/ui/skeleton';
 
 export default function Polls() {
@@ -90,26 +93,26 @@ export default function Polls() {
 
   if (isLoading) {
     return (
-      <PageSkeleton leading={1} titleWidth="w-40">
-        <Skeleton variant="card" count={3} className="h-32" />
-      </PageSkeleton>
+      <Page>
+        <PageSkeleton leading={['h-10 w-10 rounded-2xl']} titleWidth="w-40">
+          <Skeleton variant="card" count={3} className="h-32 rounded-3xl" />
+        </PageSkeleton>
+      </Page>
     );
   }
 
   if (error) {
     return (
-      <div className="card border-error-500/20 bg-error-500/10">
-        <p className="text-error-400">{t('polls.error')}</p>
-      </div>
+      <Page>
+        <PageHeader title={t('polls.title')} backTo="/" />
+        <EmptyState icon={<PiWarningCircleDuotone />} title={t('polls.error')} />
+      </Page>
     );
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center gap-3">
-        <ClipboardIcon className="h-6 w-6" />
-        <h1 className="text-xl font-bold tracking-tight text-dark-50 sm:text-2xl">{t('polls.title')}</h1>
-      </div>
+    <Page>
+      <PageHeader title={t('polls.title')} backTo="/" />
 
       {/* Poll Modal */}
       {selectedPoll && (
@@ -117,7 +120,7 @@ export default function Polls() {
           {/* Окно поверх списка — сплошное, подложка размыта: сквозь
               полупрозрачную карточку текст страницы ложился на текст вопроса. */}
           <div
-            className="absolute inset-0 bg-dark-950/70 backdrop-blur-sm"
+            className="absolute inset-0 bg-dark-950/80"
             onClick={handleClosePoll}
             aria-hidden="true"
           />
@@ -127,18 +130,18 @@ export default function Polls() {
             aria-modal="true"
             aria-labelledby="poll-dialog-title"
             tabIndex={-1}
-            className="card relative max-h-[80vh] w-full max-w-lg overflow-y-auto bg-dark-900"
+            className="relative max-h-[80vh] w-full max-w-lg overflow-y-auto rounded-3xl bg-dark-900 p-5 ring-1 ring-inset ring-dark-800"
           >
             <div className="mb-4 flex items-center justify-between">
-              <h2 id="poll-dialog-title" className="text-xl font-bold">
+              <h2 id="poll-dialog-title" className="text-lg font-bold text-dark-50">
                 {selectedPoll.title}
               </h2>
               <button
                 onClick={handleClosePoll}
                 aria-label={t('common.close')}
-                className="text-dark-400 hover:text-dark-200"
+                className="flex h-9 w-9 items-center justify-center rounded-xl text-dark-400 transition-colors hover:bg-dark-800 hover:text-dark-200"
               >
-                <CloseIcon className="h-6 w-6" />
+                <CloseIcon className="h-5 w-5" />
               </button>
             </div>
 
@@ -150,7 +153,7 @@ export default function Polls() {
 
             {completionMessage && (
               <div className="space-y-4">
-                <div className="rounded-lg bg-success-500/20 p-4 text-center text-success-400">
+                <div className="flex flex-col items-center rounded-2xl bg-success-500/10 p-4 text-center text-success-400 ring-1 ring-inset ring-success-500/25">
                   <CheckIcon className="h-5 w-5" />
                   <p className="mt-2 font-medium">{completionMessage.message}</p>
                   {completionMessage.reward && (
@@ -159,25 +162,25 @@ export default function Polls() {
                     </p>
                   )}
                 </div>
-                <button onClick={handleClosePoll} className="btn-secondary w-full">
+                <Button tone="secondary" onClick={handleClosePoll} className="w-full">
                   {t('common.close')}
-                </button>
+                </Button>
               </div>
             )}
 
             {currentQuestion && !completionMessage && (
               <div className="space-y-4">
-                <div className="text-sm text-dark-400">
+                <div className="text-[13px] text-dark-400">
                   {t('polls.question')} {questionIndex + 1} {t('polls.of')} {totalQuestions}
                 </div>
-                <div className="h-2 w-full rounded-full bg-dark-700">
+                <div className="h-2 w-full rounded-full bg-dark-800">
                   <div
                     className="h-2 rounded-full bg-accent-500 transition-all"
                     style={{ width: `${((questionIndex + 1) / totalQuestions) * 100}%` }}
                   />
                 </div>
 
-                <p className="text-lg font-medium">{currentQuestion.text}</p>
+                <p className="text-[17px] font-semibold text-dark-50">{currentQuestion.text}</p>
 
                 <div className="space-y-2">
                   {currentQuestion.options.map((option) => (
@@ -185,7 +188,7 @@ export default function Polls() {
                       key={option.id}
                       onClick={() => handleAnswer(option.id)}
                       disabled={answerMutation.isPending}
-                      className="w-full rounded-lg bg-dark-700 p-4 text-left transition-colors hover:bg-dark-600 disabled:opacity-50"
+                      className="min-h-12 w-full rounded-2xl bg-dark-800/70 px-4 py-3 text-left text-[15px] text-dark-100 ring-1 ring-inset ring-dark-700/60 transition-colors hover:bg-dark-700/70 disabled:opacity-50"
                     >
                       {option.text}
                     </button>
@@ -205,18 +208,20 @@ export default function Polls() {
 
       {/* Polls List */}
       {polls && polls.length > 0 ? (
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <div className="grid grid-cols-1 gap-3">
           {polls.map((poll) => (
-            <div key={poll.id} className="card">
+            <Surface key={poll.id}>
               <div className="flex items-start justify-between gap-2">
                 <div className="min-w-0 flex-1">
-                  <h3 className="break-words text-lg font-semibold">{poll.title}</h3>
+                  <h3 className="break-words text-[15px] font-semibold text-dark-100">
+                    {poll.title}
+                  </h3>
                   {poll.description && (
-                    <p className="mt-1 text-sm text-dark-400 [overflow-wrap:anywhere]">
+                    <p className="mt-1 text-[13px] leading-snug text-dark-400 [overflow-wrap:anywhere]">
                       {poll.description}
                     </p>
                   )}
-                  <div className="mt-2 flex items-center gap-4 text-sm text-dark-400">
+                  <div className="mt-2 flex items-center gap-4 text-[13px] text-dark-400">
                     <span>
                       {poll.answered_questions}/
                       {t('polls.questions', { count: poll.total_questions })}
@@ -224,34 +229,30 @@ export default function Polls() {
                   </div>
                 </div>
                 {poll.reward_amount && (
-                  <div className="flex shrink-0 items-center gap-1 text-accent-400">
-                    <GiftIcon className="h-5 w-5" />
-                    <span className="text-sm font-medium">+{poll.reward_amount}</span>
-                  </div>
+                  <span className="shrink-0">
+                    <Chip tone="success">+{poll.reward_amount}</Chip>
+                  </span>
                 )}
               </div>
 
               <div className="mt-4">
                 {poll.is_completed ? (
-                  <button disabled className="btn-secondary w-full cursor-not-allowed opacity-50">
+                  <Button tone="secondary" disabled className="w-full opacity-60">
                     <CheckIcon className="h-5 w-5" />
-                    <span className="ml-2">{t('polls.completed')}</span>
-                  </button>
+                    {t('polls.completed')}
+                  </Button>
                 ) : (
-                  <button onClick={() => handleStartPoll(poll)} className="btn-primary w-full">
+                  <Button onClick={() => handleStartPoll(poll)} className="w-full">
                     {poll.answered_questions > 0 ? t('polls.continue') : t('polls.start')}
-                  </button>
+                  </Button>
                 )}
               </div>
-            </div>
+            </Surface>
           ))}
         </div>
       ) : (
-        <div className="card py-12 text-center">
-          <ClipboardIcon className="h-6 w-6" />
-          <p className="mt-4 text-dark-400">{t('polls.noPolls')}</p>
-        </div>
+        <EmptyState icon={<PiClipboardTextDuotone />} title={t('polls.noPolls')} />
       )}
-    </div>
+    </Page>
   );
 }

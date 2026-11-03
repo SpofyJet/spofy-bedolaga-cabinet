@@ -1481,7 +1481,7 @@
     "subscriptionDays": "Subscription days",
     "day": "Day",
     "spinCost": "Spin cost",
-    "spin": "SPIN!",
+    "spin": "Spin",
     "spinning": "Spinning...",
     "history": "History",
     "recentSpins": "Recent spins",
@@ -1519,7 +1519,8 @@
       "description": "Spin the wheel and win prizes: subscription days, balance, traffic and more!",
       "button": "Go to wheel"
     },
-    "selectSubscription": "Select subscription"
+    "selectSubscription": "Select subscription",
+    "starsCost": "{{count}} ⭐"
   },
   "admin": {
     "backgrounds": {
@@ -8005,7 +8006,8 @@
         "imageUrlPrompt": "Image URL:",
         "linkUrlPrompt": "URL:"
       }
-    }
+    },
+    "articleTitle": "News"
   },
   "subscriptions": {
     "buy": "Buy subscription",
@@ -8211,5 +8213,16 @@
   "legal": {
     "serviceRules": "Service rules",
     "privacy": "Privacy policy"
+  },
+  "errors": {
+    "boundary": {
+      "title": "Something went wrong",
+      "appText": "An unexpected error occurred. Please reload the page.",
+      "reload": "Reload",
+      "widget": "Failed to load this section",
+      "retry": "Try again",
+      "updated": "App was updated. Reloading…",
+      "pageText": "An unexpected error occurred"
+    }
   }
 }

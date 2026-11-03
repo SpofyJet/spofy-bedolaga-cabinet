@@ -164,12 +164,11 @@ export default function DeepLinkRedirect() {
   return (
     <div className="min-h-viewport flex items-center justify-center p-4">
       {/* Background */}
-      <div className="fixed inset-0 bg-gradient-to-br from-dark-950 via-dark-900 to-dark-950" />
-      <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-accent-500/10 via-transparent to-transparent" />
+      <div className="fixed inset-0 bg-dark-950" />
 
       <div className="relative w-full max-w-sm text-center">
         {/* Logo with pulse animation */}
-        <div className="mx-auto mb-6 flex h-20 w-20 animate-pulse items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-br from-accent-400 to-accent-600 shadow-lg shadow-accent-500/30">
+        <div className="mx-auto mb-6 flex h-20 w-20 animate-pulse items-center justify-center overflow-hidden rounded-2xl bg-accent-500/10 ring-1 ring-inset ring-accent-500/25">
           {branding?.has_custom_logo && logoUrl ? (
             <img src={logoUrl} alt={projectName || 'Logo'} className="h-full w-full object-cover" />
           ) : (
@@ -187,7 +186,7 @@ export default function DeepLinkRedirect() {
 
         {/* Countdown State */}
         {status === 'countdown' && (
-          <div className="card !bg-dark-800/80 p-6 backdrop-blur-sm">
+          <div className="rounded-3xl bg-dark-900/70 ring-1 ring-inset ring-dark-800/80 p-6">
             {/* App icon */}
             <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-accent-500/20">
               <span className="text-2xl font-bold text-accent-400">{appIcon}</span>
@@ -208,7 +207,7 @@ export default function DeepLinkRedirect() {
             {/* Progress bar */}
             <div className="mb-4 h-1.5 w-full overflow-hidden rounded-full bg-dark-700">
               <div
-                className="h-full rounded-full bg-gradient-to-r from-accent-400 to-accent-600 transition-all duration-1000 ease-linear"
+                className="h-full rounded-full bg-accent-500 transition-all duration-1000 ease-linear"
                 style={{ width: `${progress}%` }}
               />
             </div>
@@ -218,7 +217,7 @@ export default function DeepLinkRedirect() {
             {/* Open now button */}
             <button
               onClick={openDeepLink}
-              className="btn-primary flex w-full items-center justify-center gap-2 py-3"
+              className="inline-flex h-12 items-center justify-center gap-2 rounded-2xl bg-accent-500 px-5 text-[15px] font-semibold text-on-accent transition-colors hover:bg-accent-600 active:scale-[0.98] disabled:cursor-not-allowed disabled:bg-accent-500/40 w-full"
             >
               <ExternalLinkIcon className="h-5 w-5" />
               {t('deepLink.openApp')}
@@ -228,7 +227,7 @@ export default function DeepLinkRedirect() {
 
         {/* Fallback State - App didn't open */}
         {status === 'fallback' && (
-          <div className="card !bg-dark-800/80 p-6 backdrop-blur-sm">
+          <div className="rounded-3xl bg-dark-900/70 ring-1 ring-inset ring-dark-800/80 p-6">
             {/* App icon */}
             <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-accent-500/20">
               <span className="text-2xl font-bold text-accent-400">{appIcon}</span>
@@ -238,7 +237,7 @@ export default function DeepLinkRedirect() {
               {/* Copy subscription link */}
               <button
                 onClick={handleCopyLink}
-                className="btn-primary flex w-full items-center justify-center gap-2 py-3"
+                className="inline-flex h-12 items-center justify-center gap-2 rounded-2xl bg-accent-500 px-5 text-[15px] font-semibold text-on-accent transition-colors hover:bg-accent-600 active:scale-[0.98] disabled:cursor-not-allowed disabled:bg-accent-500/40 w-full"
               >
                 {copied ? (
                   <>
@@ -256,7 +255,7 @@ export default function DeepLinkRedirect() {
               {/* Try again button */}
               <button
                 onClick={openDeepLink}
-                className="btn-secondary flex w-full items-center justify-center gap-2"
+                className="inline-flex h-12 items-center justify-center gap-2 rounded-2xl bg-dark-800/70 px-5 text-[15px] font-semibold text-dark-100 ring-1 ring-inset ring-dark-700/60 transition-colors hover:bg-dark-700/70 disabled:cursor-not-allowed disabled:opacity-50 w-full"
               >
                 <ExternalLinkIcon className="h-5 w-5" />
                 {t('deepLink.tryAgain')}
@@ -288,13 +287,16 @@ export default function DeepLinkRedirect() {
 
         {/* Error State */}
         {status === 'error' && (
-          <div className="card !bg-dark-800/80 p-6 backdrop-blur-sm">
+          <div className="rounded-3xl bg-dark-900/70 ring-1 ring-inset ring-dark-800/80 p-6">
             <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-error-500/20">
               <ExclamationIcon className="h-8 w-8 text-error-400" />
             </div>
             <p className="mb-2 font-medium text-dark-200">{t('deepLink.errorTitle')}</p>
             <p className="mb-6 text-sm text-dark-400">{t('deepLink.errorDesc')}</p>
-            <button onClick={() => navigate('/subscriptions')} className="btn-primary w-full">
+            <button
+              onClick={() => navigate('/subscriptions')}
+              className="inline-flex h-12 items-center justify-center gap-2 rounded-2xl bg-accent-500 px-5 text-[15px] font-semibold text-on-accent transition-colors hover:bg-accent-600 active:scale-[0.98] disabled:cursor-not-allowed disabled:bg-accent-500/40 w-full"
+            >
               {t('deepLink.goToSubscription')}
             </button>
           </div>

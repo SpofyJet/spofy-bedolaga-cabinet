@@ -1,5 +1,20 @@
 import { Component, type ErrorInfo, type ReactNode } from 'react';
+import { PiWarningCircleDuotone } from 'react-icons/pi';
+import i18n from '../i18n';
 import { safeSession } from '../utils/safeStorage';
+
+const tr = (key: string, fallback: string) => i18n.t(key, { defaultValue: fallback });
+
+const PRIMARY_BUTTON =
+  'inline-flex h-12 items-center justify-center rounded-2xl bg-accent-500 px-6 text-[15px] font-semibold text-on-accent transition-colors hover:bg-accent-600 active:scale-[0.98]';
+
+function ErrorIcon() {
+  return (
+    <span className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-error-500/10 text-error-400">
+      <PiWarningCircleDuotone className="h-7 w-7" />
+    </span>
+  );
+}
 
 interface ErrorBoundaryProps {
   children: ReactNode;
@@ -67,18 +82,21 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
 
     if (level === 'app') {
       return (
-        <div className="min-h-viewport flex items-center justify-center bg-dark-900 p-4">
-          <div className="max-w-md text-center">
-            <div className="mb-4 text-4xl">⚠️</div>
-            <h1 className="mb-2 text-xl font-bold text-dark-50">Something went wrong</h1>
-            <p className="mb-6 text-dark-400">
-              An unexpected error occurred. Please try reloading the page.
+        <div className="min-h-viewport flex items-center justify-center bg-dark-950 p-4">
+          <div className="w-full max-w-md rounded-3xl bg-dark-900/70 p-6 text-center ring-1 ring-inset ring-dark-800/80">
+            <ErrorIcon />
+            <h1 className="mb-2 text-xl font-bold text-dark-50">
+              {tr('errors.boundary.title', 'Что-то пошло не так')}
+            </h1>
+            <p className="mb-6 text-[15px] text-dark-400">
+              {tr('errors.boundary.appText', 'Произошла ошибка. Перезагрузите страницу.')}
             </p>
             <button
+              type="button"
               onClick={() => window.location.reload()}
-              className="rounded-xl bg-accent-500 px-6 py-3 font-medium text-on-accent transition-colors hover:bg-accent-600"
+              className={PRIMARY_BUTTON}
             >
-              Reload page
+              {tr('errors.boundary.reload', 'Перезагрузить')}
             </button>
           </div>
         </div>
@@ -87,13 +105,16 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
 
     if (level === 'widget') {
       return (
-        <div className="rounded-xl border border-error-500/30 bg-error-500/10 p-4 text-center">
-          <p className="text-sm text-error-400">Failed to load this section</p>
+        <div className="rounded-2xl bg-error-500/10 p-4 text-center ring-1 ring-inset ring-error-500/25">
+          <p className="text-sm text-error-400">
+            {tr('errors.boundary.widget', 'Не удалось загрузить этот блок')}
+          </p>
           <button
+            type="button"
             onClick={this.handleReset}
-            className="mt-2 text-sm text-accent-400 hover:text-accent-300"
+            className="mt-2 text-sm font-semibold text-accent-400 hover:text-accent-300"
           >
-            Try again
+            {tr('errors.boundary.retry', 'Повторить')}
           </button>
         </div>
       );
@@ -102,19 +123,20 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
     // level === 'page' (default)
     return (
       <div className="flex min-h-[50vh] items-center justify-center p-4">
-        <div className="max-w-md text-center">
-          <div className="mb-4 text-4xl">⚠️</div>
-          <h1 className="mb-2 text-xl font-bold text-dark-50">Something went wrong</h1>
+        <div className="w-full max-w-md rounded-3xl bg-dark-900/70 p-6 text-center ring-1 ring-inset ring-dark-800/80">
+          <ErrorIcon />
+          <h1 className="mb-2 text-xl font-bold text-dark-50">
+            {tr('errors.boundary.title', 'Что-то пошло не так')}
+          </h1>
           <p className="mb-6 text-sm text-dark-400">
             {isChunk
-              ? 'App was updated. Reloading...'
-              : this.state.error?.message || 'An unexpected error occurred'}
+              ? tr('errors.boundary.updated', 'Приложение обновилось. Перезагружаем…')
+              : this.state.error?.message || tr('errors.boundary.pageText', 'Произошла ошибка')}
           </p>
-          <button
-            onClick={() => window.location.reload()}
-            className="rounded-xl bg-accent-500 px-6 py-3 font-medium text-on-accent transition-colors hover:bg-accent-600"
-          >
-            {isChunk ? 'Reload' : 'Try again'}
+          <button type="button" onClick={() => window.location.reload()} className={PRIMARY_BUTTON}>
+            {isChunk
+              ? tr('errors.boundary.reload', 'Перезагрузить')
+              : tr('errors.boundary.retry', 'Повторить')}
           </button>
         </div>
       </div>

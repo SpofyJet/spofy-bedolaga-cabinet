@@ -1388,7 +1388,8 @@
     "payWithDays": "پرداخت با روز",
     "starsPaymentSuccessCheckHistory": "پرداخت موفق! تاریخچه یا تلگرام را بررسی کنید.",
     "youWon": "شما برنده شدید",
-    "selectSubscription": "اشتراک را انتخاب کنید"
+    "selectSubscription": "اشتراک را انتخاب کنید",
+    "starsCost": "{{count}} ⭐"
   },
   "admin": {
     "backgrounds": {
@@ -7499,7 +7500,8 @@
         "imageUrlPrompt": "آدرس تصویر:",
         "linkUrlPrompt": "آدرس پیوند:"
       }
-    }
+    },
+    "articleTitle": "خبر"
   },
   "subscriptions": {
     "buy": "خرید اشتراک",
@@ -7705,5 +7707,16 @@
   "legal": {
     "serviceRules": "قوانین سرویس",
     "privacy": "حریم خصوصی"
+  },
+  "errors": {
+    "boundary": {
+      "title": "مشکلی پیش آمد",
+      "appText": "خطایی رخ داد. صفحه را دوباره بارگذاری کنید.",
+      "reload": "بارگذاری مجدد",
+      "widget": "بارگذاری این بخش ناموفق بود",
+      "retry": "تلاش دوباره",
+      "updated": "برنامه به‌روز شد. در حال بارگذاری…",
+      "pageText": "خطایی رخ داد"
+    }
   }
 }

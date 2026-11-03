@@ -1381,7 +1381,8 @@
       "description": "转动转盘赢取奖品：订阅天数、余额、流量等！",
       "button": "前往转盘"
     },
-    "selectSubscription": "选择订阅"
+    "selectSubscription": "选择订阅",
+    "starsCost": "{{count}} ⭐"
   },
   "admin": {
     "backgrounds": {
@@ -7443,7 +7444,8 @@
         "imageUrlPrompt": "图片URL：",
         "linkUrlPrompt": "URL："
       }
-    }
+    },
+    "articleTitle": "新闻"
   },
   "subscriptions": {
     "buy": "购买订阅",
@@ -7649,5 +7651,16 @@
   "legal": {
     "serviceRules": "服务条款",
     "privacy": "隐私政策"
+  },
+  "errors": {
+    "boundary": {
+      "title": "出了点问题",
+      "appText": "发生错误，请重新加载页面。",
+      "reload": "重新加载",
+      "widget": "无法加载此部分",
+      "retry": "重试",
+      "updated": "应用已更新，正在重新加载…",
+      "pageText": "发生意外错误"
+    }
   }
 }

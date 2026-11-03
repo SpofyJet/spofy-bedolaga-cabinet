@@ -60,12 +60,12 @@ export default function ResetPassword() {
   if (!token) {
     return (
       <div className="min-h-viewport flex items-center justify-center px-4 py-8 sm:py-12">
-        <div className="fixed inset-0 bg-gradient-to-br from-dark-950 via-dark-900 to-dark-950" />
+        <div className="fixed inset-0 bg-dark-950" />
         <div className="fixed right-4 top-4 z-50">
           <LanguageSwitcher />
         </div>
         <div className="relative w-full max-w-md text-center">
-          <div className="card">
+          <div className="rounded-3xl bg-dark-900/70 p-6 ring-1 ring-inset ring-dark-800/80">
             <div className="mb-4 text-5xl text-error-400">!</div>
             <h2 className="mb-2 text-xl font-semibold text-dark-50">
               {t('resetPassword.invalidToken', 'Invalid reset link')}
@@ -76,7 +76,10 @@ export default function ResetPassword() {
                 'This password reset link is invalid or has expired.',
               )}
             </p>
-            <Link to="/login" className="btn-primary inline-block w-full">
+            <Link
+              to="/login"
+              className="inline-flex h-12 items-center justify-center gap-2 rounded-2xl bg-accent-500 px-5 text-[15px] font-semibold text-on-accent transition-colors hover:bg-accent-600 active:scale-[0.98] disabled:cursor-not-allowed disabled:bg-accent-500/40 w-full"
+            >
               {t('auth.backToLogin', 'Back to login')}
             </Link>
           </div>
@@ -87,14 +90,13 @@ export default function ResetPassword() {
 
   return (
     <div className="min-h-viewport flex items-center justify-center px-4 py-8 sm:py-12">
-      <div className="fixed inset-0 bg-gradient-to-br from-dark-950 via-dark-900 to-dark-950" />
-      <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-accent-500/10 via-transparent to-transparent" />
+      <div className="fixed inset-0 bg-dark-950" />
       <div className="fixed right-4 top-4 z-50">
         <LanguageSwitcher />
       </div>
 
       <div className="relative w-full max-w-md">
-        <div className="card">
+        <div className="rounded-3xl bg-dark-900/70 p-6 ring-1 ring-inset ring-dark-800/80">
           {status === 'success' ? (
             <div className="text-center">
               <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-success-500/20">
@@ -162,7 +164,7 @@ export default function ResetPassword() {
                 <button
                   type="submit"
                   disabled={status === 'loading'}
-                  className="btn-primary w-full"
+                  className="inline-flex h-12 items-center justify-center gap-2 rounded-2xl bg-accent-500 px-5 text-[15px] font-semibold text-on-accent transition-colors hover:bg-accent-600 active:scale-[0.98] disabled:cursor-not-allowed disabled:bg-accent-500/40 w-full"
                 >
                   {status === 'loading' ? (
                     <span className="flex items-center justify-center gap-2">

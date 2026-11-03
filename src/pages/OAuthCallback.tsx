@@ -162,9 +162,9 @@ export default function OAuthCallback() {
   if (pendingServerLink && !error) {
     return (
       <div className="min-h-viewport flex items-center justify-center px-4 py-8">
-        <div className="fixed inset-0 bg-gradient-to-br from-dark-950 via-dark-900 to-dark-950" />
+        <div className="fixed inset-0 bg-dark-950" />
         <div className="relative w-full max-w-md text-center">
-          <div className="card">
+          <div className="rounded-3xl bg-dark-900/70 p-6 ring-1 ring-inset ring-dark-800/80">
             <h2 className="mb-2 text-lg font-semibold text-dark-50">
               {t('profile.accounts.confirmLinkTitle', 'Confirm account linking')}
             </h2>
@@ -187,7 +187,7 @@ export default function OAuthCallback() {
             <button
               onClick={confirmServerLink}
               disabled={confirmingServerLink}
-              className="btn-primary mb-3 w-full"
+              className="inline-flex h-12 items-center justify-center gap-2 rounded-2xl bg-accent-500 px-5 text-[15px] font-semibold text-on-accent transition-colors hover:bg-accent-600 active:scale-[0.98] disabled:cursor-not-allowed disabled:bg-accent-500/40 mb-3 w-full"
             >
               {t('profile.accounts.confirmLinkButton', 'Yes, this is my account — link')}
             </button>
@@ -198,7 +198,7 @@ export default function OAuthCallback() {
                 setError(t('profile.accounts.linkCancelled', 'Linking cancelled'));
               }}
               disabled={confirmingServerLink}
-              className="btn-secondary w-full"
+              className="inline-flex h-12 items-center justify-center gap-2 rounded-2xl bg-dark-800/70 px-5 text-[15px] font-semibold text-dark-100 ring-1 ring-inset ring-dark-700/60 transition-colors hover:bg-dark-700/70 disabled:cursor-not-allowed disabled:opacity-50 w-full"
             >
               {t('common.cancel', 'Cancel')}
             </button>
@@ -220,9 +220,9 @@ export default function OAuthCallback() {
 
     return (
       <div className="min-h-viewport flex items-center justify-center px-4 py-8">
-        <div className="fixed inset-0 bg-gradient-to-br from-dark-950 via-dark-900 to-dark-950" />
+        <div className="fixed inset-0 bg-dark-950" />
         <div className="relative w-full max-w-md text-center">
-          <div className="card">
+          <div className="rounded-3xl bg-dark-900/70 p-6 ring-1 ring-inset ring-dark-800/80">
             <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-success-500/20">
               <CheckIcon className="h-8 w-8 text-success-400" />
             </div>
@@ -233,7 +233,7 @@ export default function OAuthCallback() {
             {telegramLink && (
               <a
                 href={telegramLink}
-                className="btn-primary inline-block w-full rounded-lg bg-accent-500 px-6 py-3 text-center font-medium text-dark-950 no-underline transition-colors hover:bg-accent-400"
+                className="inline-flex h-12 items-center justify-center gap-2 rounded-2xl bg-accent-500 px-5 text-[15px] font-semibold text-on-accent transition-colors hover:bg-accent-600 active:scale-[0.98] disabled:cursor-not-allowed disabled:bg-accent-500/40 w-full text-center no-underline"
               >
                 {t('profile.accounts.openTelegram')}
               </a>
@@ -254,21 +254,21 @@ export default function OAuthCallback() {
       isServerMode && telegramLink ? (
         <a
           href={telegramLink}
-          className="btn-primary inline-block w-full rounded-lg bg-accent-500 px-6 py-3 text-center font-medium text-dark-950 no-underline transition-colors hover:bg-accent-400"
+          className="inline-flex h-12 items-center justify-center gap-2 rounded-2xl bg-accent-500 px-5 text-[15px] font-semibold text-on-accent transition-colors hover:bg-accent-600 active:scale-[0.98] disabled:cursor-not-allowed disabled:bg-accent-500/40 w-full text-center no-underline"
         >
           {t('profile.accounts.openTelegram')}
         </a>
       ) : isLinkBrowserMode ? (
         <button
           onClick={() => navigate('/profile/accounts', { replace: true })}
-          className="btn-primary w-full"
+          className="inline-flex h-12 items-center justify-center gap-2 rounded-2xl bg-accent-500 px-5 text-[15px] font-semibold text-on-accent transition-colors hover:bg-accent-600 active:scale-[0.98] disabled:cursor-not-allowed disabled:bg-accent-500/40 w-full"
         >
           {t('profile.accounts.backToAccounts', 'Back to accounts')}
         </button>
       ) : (
         <button
           onClick={() => navigate('/login', { replace: true })}
-          className="btn-primary w-full"
+          className="inline-flex h-12 items-center justify-center gap-2 rounded-2xl bg-accent-500 px-5 text-[15px] font-semibold text-on-accent transition-colors hover:bg-accent-600 active:scale-[0.98] disabled:cursor-not-allowed disabled:bg-accent-500/40 w-full"
         >
           {t('auth.backToLogin', 'Back to login')}
         </button>
@@ -276,9 +276,9 @@ export default function OAuthCallback() {
 
     return (
       <div className="min-h-viewport flex items-center justify-center px-4 py-8">
-        <div className="fixed inset-0 bg-gradient-to-br from-dark-950 via-dark-900 to-dark-950" />
+        <div className="fixed inset-0 bg-dark-950" />
         <div className="relative w-full max-w-md text-center">
-          <div className="card">
+          <div className="rounded-3xl bg-dark-900/70 p-6 ring-1 ring-inset ring-dark-800/80">
             <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-error-500/20">
               <ExclamationIcon className="h-8 w-8 text-error-400" />
             </div>
@@ -293,7 +293,7 @@ export default function OAuthCallback() {
 
   return (
     <div className="min-h-viewport flex items-center justify-center">
-      <div className="fixed inset-0 bg-gradient-to-br from-dark-950 via-dark-900 to-dark-950" />
+      <div className="fixed inset-0 bg-dark-950" />
       <div className="relative text-center">
         <div className="mx-auto mb-4 h-10 w-10 animate-spin rounded-full border-2 border-accent-500 border-t-transparent" />
         <h2 className="text-lg font-semibold text-dark-50">{t('auth.authenticating')}</h2>
