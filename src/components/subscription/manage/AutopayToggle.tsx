@@ -4,20 +4,22 @@ import { useTranslation } from 'react-i18next';
 import { subscriptionApi } from '@/api/subscription';
 import type { Subscription } from '@/types';
 import { showsAutopayToggle } from '@/utils/legacySubscription';
+import { PiArrowsClockwiseDuotone } from 'react-icons/pi';
+import { RowIcon } from '@/components/spofy/ui';
 
 export interface AutopayToggleProps {
   subscription: Subscription;
   subscriptionId: number | undefined;
-  /** Цвет включённого тумблера — акцент зоны трафика на полной странице. */
-  accentColor: string;
-  /** Цвет выключенного тумблера. */
-  offColor: string;
-  /** Фон и рамка плашки; без них компонент рисуется без подложки. */
+  /** Устарело: тумблер берёт цвета из токенов темы. Оставлено для совместимости. */
+  accentColor?: string;
+  /** Устарело, см. accentColor. */
+  offColor?: string;
+  /** Устарело: строка рисуется без своей подложки, фон даёт группа. */
   surface?: { background: string; border: string };
 }
 
 /**
- * Тумблер автоплатежа с баланса.
+ * Тумблер автоплатежа с баланса — строкой группы (как в профиле).
  *
  * Вынесен из тела страницы подписки, чтобы тем же тумблером мог пользоваться
  * простой вид. Мутация живёт здесь: она инвалидирует ещё и состояние
@@ -25,16 +27,10 @@ export interface AutopayToggleProps {
  * сервера, и без этого сброса блок СБП продолжал бы показывать протухшее
  * «активен».
  *
- * Возвращает null, когда тумблер неуместен (пробные, суточные и старые
- * подписки) — решение принимает общий помощник, а не вызывающий экран.
+ * Возвращает null, когда тумблер неуместен (пробные, суточные, старые и
+ * вечные подписки) — решение принимает общий помощник, а не вызывающий экран.
  */
-export function AutopayToggle({
-  subscription,
-  subscriptionId,
-  accentColor,
-  offColor,
-  surface,
-}: AutopayToggleProps) {
+export function AutopayToggle({ subscription, subscriptionId }: AutopayToggleProps) {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
 
@@ -52,40 +48,37 @@ export function AutopayToggle({
 
   if (!showsAutopayToggle(subscription)) return null;
 
+  const on = subscription.autopay_enabled;
+
   return (
-    <div
-      className="flex items-center justify-between rounded-[14px] p-3.5"
-      style={
-        surface
-          ? { background: surface.background, border: `1px solid ${surface.border}` }
-          : undefined
-      }
-    >
-      <div>
-        <div className="text-sm font-semibold text-dark-50">{t('subscription.autoRenewal')}</div>
-        <div className="mt-0.5 text-[11px] text-dark-400">
-          {t('subscription.daysBeforeExpiry', { count: subscription.autopay_days_before })}
-        </div>
-      </div>
+    <div className="flex min-h-[60px] w-full items-center gap-3 px-4 py-2.5">
+      <RowIcon>
+        <PiArrowsClockwiseDuotone />
+      </RowIcon>
+      <span className="min-w-0 flex-1">
+        <span className="block truncate text-[15px] font-semibold text-dark-100">
+          {t('subscription.autoRenewal')}
+        </span>
+        <span className="mt-0.5 block text-[13px] leading-snug text-dark-400">
+          {t('subscription.v10.autopayHint', 'С баланса за {{count}} дн. до конца срока', {
+            count: subscription.autopay_days_before,
+          })}
+        </span>
+      </span>
       <button
         type="button"
-        onClick={() => autopayMutation.mutate(!subscription.autopay_enabled)}
+        onClick={() => autopayMutation.mutate(!on)}
         disabled={autopayMutation.isPending}
         role="switch"
-        aria-checked={subscription.autopay_enabled}
+        aria-checked={on}
         aria-label={t('subscription.autopay', 'Auto-payment')}
-        className="relative h-7 w-[52px] rounded-full transition-colors duration-300"
-        style={{ background: subscription.autopay_enabled ? accentColor : offColor }}
+        className={`relative h-7 w-12 shrink-0 rounded-full transition-colors duration-200 disabled:opacity-60 ${
+          on ? 'bg-accent-500' : 'bg-dark-700'
+        }`}
       >
-        {/* translateX (compositor) instead of left (layout-thrash).
-            Resting position pinned at left:3px; on toggles a 23px
-            slide on the GPU. */}
         <span
-          className="absolute left-[3px] top-[3px] h-[22px] w-[22px] rounded-full bg-white transition-transform duration-300"
-          style={{
-            transform: subscription.autopay_enabled ? 'translateX(23px)' : 'translateX(0)',
-            boxShadow: '0 1px 3px rgba(0,0,0,0.3)',
-          }}
+          className="absolute left-[3px] top-[3px] h-[22px] w-[22px] rounded-full bg-white shadow-sm transition-transform duration-200"
+          style={{ transform: on ? 'translateX(20px)' : 'translateX(0)' }}
         />
       </button>
     </div>

@@ -17,6 +17,19 @@ vi.mock('react-i18next', () => ({
 vi.mock('@/hooks/useCurrency', () => ({
   useCurrency: () => ({ formatAmount: String, currencySymbol: '¤' }),
 }));
+// Шит докупки трафика — ResponsiveSheet: ему нужен matchMedia, которого нет в jsdom.
+if (!window.matchMedia) {
+  window.matchMedia = ((query: string) => ({
+    matches: false,
+    media: query,
+    onchange: null,
+    addListener: () => {},
+    removeListener: () => {},
+    addEventListener: () => {},
+    removeEventListener: () => {},
+    dispatchEvent: () => false,
+  })) as unknown as typeof window.matchMedia;
+}
 vi.mock('@/hooks/useTheme', () => ({ useTheme: () => ({ isDark: true }) }));
 vi.mock('@/api/subscription', () => ({
   subscriptionApi: {

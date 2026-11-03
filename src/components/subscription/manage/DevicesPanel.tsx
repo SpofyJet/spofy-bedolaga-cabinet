@@ -3,14 +3,19 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 
 import { subscriptionApi } from '@/api/subscription';
-import { CheckIcon, PencilIcon, PhoneIcon, TrashIcon, XIcon } from '@/components/icons';
+import {
+  PiCheckBold,
+  PiDeviceMobileDuotone,
+  PiPencilSimpleBold,
+  PiTrashBold,
+  PiXBold,
+} from 'react-icons/pi';
+import { RowIcon, SectionTitle } from '@/components/spofy/ui';
 import { Skeleton, SkeletonGroup } from '@/components/ui/skeleton';
 import { DEVICE_ALIAS_MAX_LENGTH } from '@/constants/devices';
 import { useHaptic } from '@/platform';
 import { useDestructiveConfirm } from '@/platform/hooks/useNativeDialog';
 import type { Subscription } from '@/types';
-import { getGlassColors } from '@/utils/glassTheme';
-import { useTheme } from '@/hooks/useTheme';
 
 export interface DevicesPanelProps {
   subscription: Subscription;
@@ -32,8 +37,6 @@ export function DevicesPanel({ subscription, subscriptionId }: DevicesPanelProps
   const queryClient = useQueryClient();
   const haptic = useHaptic();
   const destructiveConfirm = useDestructiveConfirm();
-  const { isDark } = useTheme();
-  const g = getGlassColors(isDark);
 
   const { data: devicesData, isLoading: devicesLoading } = useQuery({
     queryKey: ['devices', subscriptionId],
@@ -77,127 +80,100 @@ export function DevicesPanel({ subscription, subscriptionId }: DevicesPanelProps
   });
 
   return (
-    <>
-      <div className="mb-4 flex items-center justify-between">
-        <h2 className="text-base font-bold tracking-tight text-dark-50">
-          {t('subscription.myDevices')}
-        </h2>
-        {devicesData && devicesData.devices.length > 0 && (
-          <button
-            onClick={async () => {
-              // Platform-aware destructive confirm: Telegram native popup
-              // in Mini App, inline panel on web. Replaces the bare
-              // browser confirm() which broke premium frame + lost
-              // haptic / theming inside Telegram.
-              const confirmed = await destructiveConfirm(
-                t('subscription.confirmDeleteAllDevices'),
-                t('subscription.deleteAllDevices'),
-                t('subscription.deleteAllDevices'),
-              );
-              if (confirmed) deleteAllDevicesMutation.mutate();
-            }}
-            disabled={deleteAllDevicesMutation.isPending}
-            className="text-[11px] font-medium transition-colors"
-            style={{ color: 'rgb(var(--color-critical-500))' }}
-          >
-            {t('subscription.deleteAllDevices')}
-          </button>
-        )}
-      </div>
+    <section>
+      <SectionTitle
+        right={
+          devicesData && devicesData.devices.length > 0 ? (
+            <button
+              type="button"
+              onClick={async () => {
+                // Platform-aware destructive confirm: Telegram native popup
+                // in Mini App, inline panel on web.
+                const confirmed = await destructiveConfirm(
+                  t('subscription.confirmDeleteAllDevices'),
+                  t('subscription.deleteAllDevices'),
+                  t('subscription.deleteAllDevices'),
+                );
+                if (confirmed) deleteAllDevicesMutation.mutate();
+              }}
+              disabled={deleteAllDevicesMutation.isPending}
+              className="text-[13px] font-medium text-error-400 transition-colors hover:text-error-300 disabled:opacity-50"
+            >
+              {t('subscription.deleteAllDevices')}
+            </button>
+          ) : undefined
+        }
+      >
+        {t('subscription.myDevices')}
+      </SectionTitle>
 
       {devicesLoading ? (
-        <SkeletonGroup className="space-y-3">
-          <Skeleton variant="card" count={3} className="h-16" />
+        <SkeletonGroup className="space-y-2">
+          <Skeleton variant="card" count={2} className="h-[60px] rounded-3xl" />
         </SkeletonGroup>
       ) : devicesData && devicesData.devices.length > 0 ? (
-        <div className="space-y-2">
-          <div className="mb-2 font-mono text-[11px] text-dark-400">
-            {devicesData.device_limit === 0
-              ? `${devicesData.total} · ∞`
-              : `${devicesData.total} / ${t('subscription.devices', { count: devicesData.device_limit })}`}
-          </div>
+        <div className="divide-y divide-dark-800/70 overflow-hidden rounded-3xl bg-dark-900/70 ring-1 ring-inset ring-dark-800/80">
           {devicesData.devices.map((device) => {
             const isEditing = editingDeviceHwid === device.hwid;
             // Display priority: user alias → device model → platform.
             const displayName = device.local_name?.trim() || device.device_model || device.platform;
+            const save = () => {
+              const trimmed = editingDeviceName.trim();
+              renameDeviceMutation.mutate({ hwid: device.hwid, name: trimmed || null });
+            };
+            const iconBtn =
+              'flex h-9 w-9 items-center justify-center rounded-xl text-dark-400 transition-colors hover:bg-dark-800/70 hover:text-dark-100 disabled:opacity-50';
 
             return (
-              <div
-                key={device.hwid}
-                className="flex items-center justify-between rounded-[12px] p-3.5"
-                style={{
-                  background: g.innerBg,
-                  border: `1px solid ${g.innerBorder}`,
-                }}
-              >
-                <div className="flex min-w-0 flex-1 items-center gap-3">
-                  <div
-                    className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-[10px]"
-                    style={{ background: g.trackBg, color: g.textSecondary }}
-                  >
-                    <PhoneIcon className="h-4 w-4" />
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    {isEditing ? (
-                      <input
-                        type="text"
-                        autoFocus
-                        value={editingDeviceName}
-                        maxLength={DEVICE_ALIAS_MAX_LENGTH}
-                        placeholder={device.device_model || device.platform}
-                        onChange={(e) => setEditingDeviceName(e.target.value)}
-                        onKeyDown={(e) => {
-                          if (e.key === 'Enter') {
-                            e.preventDefault();
-                            const trimmed = editingDeviceName.trim();
-                            renameDeviceMutation.mutate({
-                              hwid: device.hwid,
-                              name: trimmed || null,
-                            });
-                          } else if (e.key === 'Escape') {
-                            e.preventDefault();
-                            setEditingDeviceHwid(null);
-                            setEditingDeviceName('');
-                          }
-                        }}
-                        className="w-full rounded-md border-none bg-transparent px-2 py-1 text-sm font-semibold text-dark-50 outline-none focus:ring-1"
-                        style={{
-                          background: g.trackBg,
-                          boxShadow: `inset 0 0 0 1px ${g.innerBorder}`,
-                        }}
-                      />
-                    ) : (
-                      <div className="truncate text-sm font-semibold text-dark-50">
-                        {displayName}
-                      </div>
-                    )}
-                    <div className="mt-0.5 flex flex-wrap items-center gap-1.5 text-[11px] text-dark-400">
-                      <span className="truncate">{device.platform}</span>
-                      <span className="min-w-0 select-all break-all font-mono text-dark-400">
-                        {device.hwid}
-                      </span>
+              <div key={device.hwid} className="flex min-h-[60px] items-center gap-3 px-4 py-2.5">
+                <RowIcon tone="muted">
+                  <PiDeviceMobileDuotone />
+                </RowIcon>
+                <div className="min-w-0 flex-1">
+                  {isEditing ? (
+                    <input
+                      type="text"
+                      autoFocus
+                      value={editingDeviceName}
+                      maxLength={DEVICE_ALIAS_MAX_LENGTH}
+                      placeholder={device.device_model || device.platform}
+                      onChange={(e) => setEditingDeviceName(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          e.preventDefault();
+                          save();
+                        } else if (e.key === 'Escape') {
+                          e.preventDefault();
+                          setEditingDeviceHwid(null);
+                          setEditingDeviceName('');
+                        }
+                      }}
+                      className="w-full rounded-xl bg-dark-800 px-3 py-1.5 text-[15px] font-semibold text-dark-50 outline-none ring-1 ring-inset ring-dark-700 focus:ring-accent-500"
+                    />
+                  ) : (
+                    <div className="truncate text-[15px] font-semibold text-dark-100">
+                      {displayName}
                     </div>
+                  )}
+                  <div className="mt-0.5 flex flex-wrap items-center gap-x-1.5 text-[12px] text-dark-400">
+                    <span className="truncate">{device.platform}</span>
+                    <span className="min-w-0 select-all break-all text-dark-500">
+                      {device.hwid}
+                    </span>
                   </div>
                 </div>
-                <div className="flex flex-shrink-0 items-center gap-1">
+                <div className="flex shrink-0 items-center">
                   {isEditing ? (
                     <>
                       <button
                         type="button"
-                        onClick={() => {
-                          const trimmed = editingDeviceName.trim();
-                          renameDeviceMutation.mutate({
-                            hwid: device.hwid,
-                            name: trimmed || null,
-                          });
-                        }}
+                        onClick={save}
                         disabled={renameDeviceMutation.isPending}
-                        className="p-2 transition-colors"
-                        style={{ color: g.textSecondary }}
+                        className={iconBtn}
                         title={t('subscription.renameDeviceSave', 'Сохранить')}
                         aria-label={t('subscription.renameDeviceSave', 'Сохранить')}
                       >
-                        <CheckIcon className="h-4 w-4" />
+                        <PiCheckBold className="h-4 w-4" />
                       </button>
                       <button
                         type="button"
@@ -206,12 +182,11 @@ export function DevicesPanel({ subscription, subscriptionId }: DevicesPanelProps
                           setEditingDeviceName('');
                         }}
                         disabled={renameDeviceMutation.isPending}
-                        className="p-2 transition-colors"
-                        style={{ color: g.textFaint }}
+                        className={iconBtn}
                         title={t('subscription.renameDeviceCancel', 'Отмена')}
                         aria-label={t('subscription.renameDeviceCancel', 'Отмена')}
                       >
-                        <XIcon className="h-4 w-4" />
+                        <PiXBold className="h-4 w-4" />
                       </button>
                     </>
                   ) : (
@@ -222,12 +197,11 @@ export function DevicesPanel({ subscription, subscriptionId }: DevicesPanelProps
                           setEditingDeviceHwid(device.hwid);
                           setEditingDeviceName(device.local_name || '');
                         }}
-                        className="p-2 transition-colors"
-                        style={{ color: g.textFaint }}
+                        className={iconBtn}
                         title={t('subscription.renameDevice', 'Переименовать')}
                         aria-label={t('subscription.renameDevice', 'Переименовать')}
                       >
-                        <PencilIcon className="h-4 w-4" />
+                        <PiPencilSimpleBold className="h-4 w-4" />
                       </button>
                       <button
                         type="button"
@@ -240,12 +214,11 @@ export function DevicesPanel({ subscription, subscriptionId }: DevicesPanelProps
                           if (confirmed) deleteDeviceMutation.mutate(device.hwid);
                         }}
                         disabled={deleteDeviceMutation.isPending}
-                        className="p-2 transition-colors"
-                        style={{ color: g.textFaint }}
+                        className={iconBtn}
                         title={t('subscription.deleteDevice')}
                         aria-label={t('subscription.deleteDevice')}
                       >
-                        <TrashIcon className="h-4 w-4" />
+                        <PiTrashBold className="h-4 w-4" />
                       </button>
                     </>
                   )}
@@ -255,11 +228,11 @@ export function DevicesPanel({ subscription, subscriptionId }: DevicesPanelProps
           })}
         </div>
       ) : (
-        <div className="py-8 text-center text-[12px] text-dark-400">
+        <div className="rounded-3xl bg-dark-900/70 px-4 py-6 text-center text-[13px] text-dark-400 ring-1 ring-inset ring-dark-800/80">
           {t('subscription.noDevices')}
         </div>
       )}
-    </>
+    </section>
   );
 }
 

@@ -180,6 +180,8 @@ describe('выделенный тариф в списке', () => {
     renderGrid([{ id: 2, name: 'Про', is_highlighted: true }], { currentTariffId: 2 });
 
     expect(screen.queryByText(ru('subscription.bestValue'))).toBeNull();
-    expect(tariffCard('Про').className).toContain('border-accent-500');
+    // Текущий обведён кольцом выбора, жёлтой рамки «Выгодно» у него нет.
+    expect(tariffCard('Про').className).toContain('ring-accent-500');
+    expect(tariffCard('Про').className).not.toContain('border-urgent-400');
   });
 });

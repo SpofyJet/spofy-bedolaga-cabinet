@@ -633,7 +633,17 @@
       "qrTitle": "Subscription QR Code",
       "qrScanHint": "Scan to connect",
       "qrButton": "QR Code",
-      "openQr": "Open QR code"
+      "openQr": "Open QR code",
+      "v10": {
+        "personalKey": "This is your personal key — do not share it",
+        "tvHint": "On a TV it is easier to scan the QR code",
+        "steps": "Steps",
+        "copied": "Copied",
+        "stepDone": "done",
+        "notOpened": "The app did not open?",
+        "notOpenedText": "Make sure it is installed (step 1). Or copy the link and paste it in the app via «+».",
+        "copyManual": "Your phone did not allow copying. Press and hold the link, then choose «Copy»."
+      }
     },
     "myDevices": "My Devices",
     "noDevices": "No connected devices",
@@ -952,6 +962,21 @@
     "lifetime": {
       "forever": "Forever",
       "term": "Term"
+    },
+    "v10": {
+      "autopayHint": "From balance {{count}} d. before the end",
+      "pickPackage": "Choose a package",
+      "ended": "Ended",
+      "until": "until {{date}}",
+      "devicesOf": "{{used}} of {{max}}",
+      "connected": "connected",
+      "trafficUnlimited": "No data cap",
+      "linkTitle": "Subscription link",
+      "paymentTitle": "Auto-payment",
+      "addonsTitle": "Add more",
+      "currentTariffLabel": "Current",
+      "lifetimeNoRenew": "No need to renew it.",
+      "toSubscription": "To subscription"
     }
   },
   "balance": {
@@ -7801,7 +7826,8 @@
       "nMonths_other": "{{count}} months",
       "nDays": "{{count}} days",
       "nMonths": "{{count}} months"
-    }
+    },
+    "resultTitle": "Purchase"
   },
   "coupon": {
     "title": "Subscription coupon",

@@ -9,13 +9,40 @@ import { landingApi } from '../api/landings';
 import { authApi } from '../api/auth';
 import { useAuthStore } from '../store/auth';
 import { copyToClipboard } from '../utils/clipboard';
-import { CheckIcon, ClipboardIcon, ClockIcon, ExclamationIcon } from '@/components/icons';
+import {
+  PiCheckBold,
+  PiClockCountdownDuotone,
+  PiCopyBold,
+  PiWarningCircleDuotone,
+} from 'react-icons/pi';
+import { PageHeader } from '@/components/layout/PageHeader';
+import { Surface } from '@/components/spofy/ui';
 import { Spinner } from '@/components/ui/Spinner';
 import { AnimatedCheckmark } from '@/components/ui/AnimatedCheckmark';
 import { AnimatedCrossmark } from '@/components/ui/AnimatedCrossmark';
 import { cn } from '../lib/utils';
 
 const MAX_POLL_MS = 10 * 60 * 1000; // 10 minutes
+
+// Кнопки экрана в стиле v10 (как Button из блоков Spofy).
+const primaryBtn =
+  'flex h-12 w-full items-center justify-center gap-2 rounded-2xl px-5 text-[15px] font-semibold text-on-accent transition-colors active:scale-[0.98]';
+const secondaryBtn =
+  'flex h-12 w-full items-center justify-center gap-2 rounded-2xl px-5 text-[15px] font-semibold ring-1 ring-inset transition-colors active:scale-[0.98]';
+
+/** Крупная иконка состояния (вместо анимированной галочки там, где её нет). */
+function StateIcon({ tone, children }: { tone: 'warning' | 'muted'; children: React.ReactNode }) {
+  return (
+    <span
+      className={cn(
+        'flex h-16 w-16 items-center justify-center rounded-3xl [&>svg]:h-8 [&>svg]:w-8',
+        tone === 'warning' ? 'bg-warning-500/10 text-warning-400' : 'bg-dark-800/80 text-dark-300',
+      )}
+    >
+      {children}
+    </span>
+  );
+}
 
 function PendingState() {
   const { t } = useTranslation();
@@ -28,10 +55,12 @@ function PendingState() {
     >
       <Spinner className="h-16 w-16 border-[3px]" />
       <div>
-        <h1 className="text-xl font-bold text-dark-50">
+        <h2 className="text-xl font-bold tracking-tight text-dark-50">
           {t('landing.awaitingPayment', 'Awaiting payment')}
-        </h1>
-        <p className="mt-2 text-sm text-dark-400">{t('landing.awaitingPaymentDesc')}</p>
+        </h2>
+        <p className="mt-2 text-[15px] leading-snug text-dark-400">
+          {t('landing.awaitingPaymentDesc')}
+        </p>
       </div>
     </motion.div>
   );
@@ -60,21 +89,22 @@ function CopyableField({ label, value }: { label: string; value: string }) {
   }, [value]);
 
   return (
-    <div className="flex items-center gap-2 rounded-xl bg-dark-800/50 px-4 py-3">
+    <div className="flex w-full items-center gap-3 rounded-2xl bg-dark-800/50 px-4 py-3 ring-1 ring-inset ring-dark-700/50">
       <div className="min-w-0 flex-1 text-left">
-        <p className="text-xs text-dark-400">{label}</p>
-        <p className="mt-0.5 break-all font-mono text-sm text-dark-100">{value}</p>
+        <p className="text-[13px] text-dark-400">{label}</p>
+        <p className="mt-0.5 select-all break-all text-[15px] font-medium text-dark-50">{value}</p>
       </div>
       <button
         type="button"
         onClick={handleCopy}
         className={cn(
-          'shrink-0 rounded-lg px-3 py-1.5 text-xs font-medium transition-colors',
+          'inline-flex h-9 shrink-0 items-center gap-1.5 rounded-xl px-3 text-[13px] font-semibold transition-colors',
           copied
-            ? 'bg-success-500/10 text-success-500'
-            : 'bg-dark-700/50 text-dark-300 hover:bg-dark-600/50',
+            ? 'bg-success-500/10 text-success-400'
+            : 'bg-dark-700/60 text-dark-100 hover:bg-dark-700',
         )}
       >
+        {copied ? <PiCheckBold className="h-3.5 w-3.5" /> : <PiCopyBold className="h-3.5 w-3.5" />}
         {copied ? t('landing.copied', 'Copied!') : t('landing.copy', 'Copy')}
       </button>
     </div>
@@ -129,9 +159,11 @@ function CabinetCredentialsState({
 
       {/* Title */}
       <div>
-        <h1 className="text-xl font-bold text-dark-50">{t('landing.cabinetReady')}</h1>
+        <h2 className="text-xl font-bold tracking-tight text-dark-50">
+          {t('landing.cabinetReady')}
+        </h2>
         {tariffName && periodDays !== null && (
-          <p className="mt-1 text-sm text-dark-300">
+          <p className="mt-1 text-[15px] text-dark-300">
             {tariffName} —{' '}
             {isLifetimePeriod(periodDays)
               ? t('subscription.lifetime.forever')
@@ -146,9 +178,11 @@ function CabinetCredentialsState({
         {cabinetPassword && (
           <CopyableField label={t('landing.cabinetPassword')} value={cabinetPassword} />
         )}
-        {cabinetPassword && <p className="text-xs text-dark-400">{t('landing.saveCredentials')}</p>}
+        {cabinetPassword && (
+          <p className="text-[13px] text-dark-400">{t('landing.saveCredentials')}</p>
+        )}
         {!cabinetPassword && (
-          <p className="text-xs text-dark-400">{t('landing.credentialsSentToEmail')}</p>
+          <p className="text-[13px] text-dark-400">{t('landing.credentialsSentToEmail')}</p>
         )}
       </div>
 
@@ -158,8 +192,8 @@ function CabinetCredentialsState({
         onClick={handleGoToCabinet}
         disabled={isLoggingIn}
         className={cn(
-          'flex w-full items-center justify-center gap-2 rounded-xl px-6 py-3 text-sm font-medium text-white transition-colors',
-          isLoggingIn ? 'cursor-not-allowed bg-accent-500/50' : 'bg-accent-500 hover:bg-accent-400',
+          primaryBtn,
+          isLoggingIn ? 'cursor-not-allowed bg-accent-500/50' : 'bg-accent-500 hover:bg-accent-600',
         )}
       >
         {isLoggingIn ? (
@@ -171,7 +205,7 @@ function CabinetCredentialsState({
           t('landing.goToCabinet')
         )}
       </button>
-      {loginError && <p className="text-xs text-error-400">{t('landing.autoLoginFailed')}</p>}
+      {loginError && <p className="text-[13px] text-error-400">{t('landing.autoLoginFailed')}</p>}
     </motion.div>
   );
 }
@@ -238,11 +272,11 @@ function SuccessState({
 
       {/* Title */}
       <div>
-        <h1 className="text-xl font-bold text-dark-50">
+        <h2 className="text-xl font-bold tracking-tight text-dark-50">
           {isGift ? t('landing.giftSentSuccess') : t('landing.purchaseSuccess')}
-        </h1>
+        </h2>
         {tariffName && periodDays !== null && (
-          <p className="mt-1 text-sm text-dark-300">
+          <p className="mt-1 text-[15px] text-dark-300">
             {tariffName} —{' '}
             {isLifetimePeriod(periodDays)
               ? t('subscription.lifetime.forever')
@@ -250,20 +284,24 @@ function SuccessState({
           </p>
         )}
         {isGift && contactType === 'telegram' && recipientInBot === true && (
-          <p className="mt-2 text-sm text-dark-400">{t('landing.giftTelegramSent')}</p>
+          <p className="mt-2 text-[15px] leading-snug text-dark-400">
+            {t('landing.giftTelegramSent')}
+          </p>
         )}
         {isGift && contactType === 'telegram' && recipientInBot !== true && (
-          <p className="mt-2 text-sm text-dark-400">{t('landing.giftTelegramNotInBot')}</p>
+          <p className="mt-2 text-[15px] leading-snug text-dark-400">
+            {t('landing.giftTelegramNotInBot')}
+          </p>
         )}
         {!(isGift && contactType === 'telegram') && displayContact && (
-          <p className="mt-2 text-sm text-dark-400">
+          <p className="mt-2 text-[15px] leading-snug text-dark-400">
             {isGift
               ? t('landing.giftSentTo', { contact: displayContact })
               : t('landing.keySentTo', { contact: displayContact })}
           </p>
         )}
         {isGift && giftMessage && (
-          <p className="mt-2 text-sm italic text-dark-400">
+          <p className="mt-2 text-[15px] italic text-dark-400">
             {t('landing.giftMessage')}: {giftMessage}
           </p>
         )}
@@ -275,7 +313,7 @@ function SuccessState({
           href={botLink}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex w-full items-center justify-center gap-2 rounded-xl bg-accent-500 px-6 py-3 text-sm font-medium text-on-accent transition-colors hover:bg-accent-400"
+          className={cn(primaryBtn, 'bg-accent-500 hover:bg-accent-600')}
         >
           {t('landing.openBot')}
         </a>
@@ -283,8 +321,8 @@ function SuccessState({
 
       {/* QR Code */}
       {displayUrl && (
-        <div className="space-y-4">
-          <div className="rounded-2xl bg-white p-5">
+        <div className="flex w-full flex-col items-center space-y-4">
+          <div className="rounded-2xl bg-white p-4">
             <QRCodeSVG
               value={displayUrl}
               size={200}
@@ -299,20 +337,20 @@ function SuccessState({
             type="button"
             onClick={handleCopy}
             className={cn(
-              'flex w-full items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-medium transition-all duration-200',
+              secondaryBtn,
               copied
-                ? 'bg-success-500/10 text-success-500'
-                : 'bg-dark-800/50 text-dark-200 hover:bg-dark-700/50',
+                ? 'bg-success-500/10 text-success-400 ring-success-500/25'
+                : 'bg-dark-800/70 text-dark-100 ring-dark-700/60 hover:bg-dark-700/70',
             )}
           >
             {copied ? (
               <>
-                <CheckIcon className="h-4 w-4" />
+                <PiCheckBold className="h-4 w-4" />
                 {t('landing.copied', 'Copied!')}
               </>
             ) : (
               <>
-                <ClipboardIcon className="h-4 w-4" />
+                <PiCopyBold className="h-4 w-4" />
                 {t('landing.copyLink', 'Copy link')}
               </>
             )}
@@ -370,23 +408,27 @@ function PendingActivationState({
       className="flex flex-col items-center gap-6 text-center"
     >
       {/* Warning icon */}
-      <div className="flex h-20 w-20 items-center justify-center rounded-full bg-warning-500/10">
-        <ExclamationIcon className="h-10 w-10 text-warning-400" />
-      </div>
+      <StateIcon tone="warning">
+        <PiWarningCircleDuotone />
+      </StateIcon>
 
       <div>
-        <h1 className="text-xl font-bold text-dark-50">{t('landing.pendingActivation')}</h1>
+        <h2 className="text-xl font-bold tracking-tight text-dark-50">
+          {t('landing.pendingActivation')}
+        </h2>
         {tariffName && periodDays !== null && (
-          <p className="mt-1 text-sm text-dark-300">
+          <p className="mt-1 text-[15px] text-dark-300">
             {tariffName} —{' '}
             {isLifetimePeriod(periodDays)
               ? t('subscription.lifetime.forever')
               : `${periodDays} ${t('landing.daysAccess')}`}
           </p>
         )}
-        <p className="mt-2 text-sm text-dark-400">{t('landing.pendingActivationDesc')}</p>
+        <p className="mt-2 text-[15px] leading-snug text-dark-400">
+          {t('landing.pendingActivationDesc')}
+        </p>
         {isGift && giftMessage && (
-          <p className="mt-2 text-sm italic text-dark-400">
+          <p className="mt-2 text-[15px] italic text-dark-400">
             {t('landing.giftMessage')}: {giftMessage}
           </p>
         )}
@@ -398,10 +440,10 @@ function PendingActivationState({
           onClick={onActivate}
           disabled={isActivating}
           className={cn(
-            'flex items-center justify-center gap-2 rounded-xl px-6 py-3 text-sm font-medium text-white transition-colors',
+            primaryBtn,
             isActivating
               ? 'cursor-not-allowed bg-accent-500/50'
-              : 'bg-accent-500 hover:bg-accent-400',
+              : 'bg-accent-500 hover:bg-accent-600',
           )}
         >
           {isActivating ? (
@@ -420,10 +462,10 @@ function PendingActivationState({
             onClick={handleGoToCabinet}
             disabled={isLoggingIn}
             className={cn(
-              'flex items-center justify-center gap-2 rounded-xl px-6 py-3 text-sm font-medium transition-colors',
+              secondaryBtn,
               isLoggingIn
-                ? 'cursor-not-allowed bg-dark-800/30 text-dark-400'
-                : 'bg-dark-800/50 text-dark-200 hover:bg-dark-700/50',
+                ? 'cursor-not-allowed bg-dark-800/30 text-dark-400 ring-dark-800/60'
+                : 'bg-dark-800/70 text-dark-100 ring-dark-700/60 hover:bg-dark-700/70',
             )}
           >
             {isLoggingIn ? (
@@ -469,9 +511,11 @@ function GiftPendingActivationState({
       <AnimatedCheckmark />
 
       <div>
-        <h1 className="text-xl font-bold text-dark-50">{t('landing.giftSentSuccess')}</h1>
+        <h2 className="text-xl font-bold tracking-tight text-dark-50">
+          {t('landing.giftSentSuccess')}
+        </h2>
         {tariffName && periodDays !== null && (
-          <p className="mt-1 text-sm text-dark-300">
+          <p className="mt-1 text-[15px] text-dark-300">
             {tariffName} —{' '}
             {isLifetimePeriod(periodDays)
               ? t('subscription.lifetime.forever')
@@ -479,21 +523,27 @@ function GiftPendingActivationState({
           </p>
         )}
         {contactType === 'telegram' && recipientInBot === true && (
-          <p className="mt-2 text-sm text-dark-400">{t('landing.giftTelegramPendingSent')}</p>
+          <p className="mt-2 text-[15px] leading-snug text-dark-400">
+            {t('landing.giftTelegramPendingSent')}
+          </p>
         )}
         {contactType === 'telegram' && recipientInBot !== true && (
-          <p className="mt-2 text-sm text-dark-400">{t('landing.giftTelegramPendingNotInBot')}</p>
+          <p className="mt-2 text-[15px] leading-snug text-dark-400">
+            {t('landing.giftTelegramPendingNotInBot')}
+          </p>
         )}
         {contactType !== 'telegram' && (
-          <p className="mt-2 text-sm text-dark-400">{t('landing.giftPendingActivationDesc')}</p>
+          <p className="mt-2 text-[15px] leading-snug text-dark-400">
+            {t('landing.giftPendingActivationDesc')}
+          </p>
         )}
         {contactType !== 'telegram' && recipientContactValue && (
-          <p className="mt-2 text-sm text-dark-400">
+          <p className="mt-2 text-[15px] leading-snug text-dark-400">
             {t('landing.giftSentTo', { contact: recipientContactValue })}
           </p>
         )}
         {giftMessage && (
-          <p className="mt-2 text-sm italic text-dark-400">
+          <p className="mt-2 text-[15px] italic text-dark-400">
             {t('landing.giftMessage')}: {giftMessage}
           </p>
         )}
@@ -505,7 +555,7 @@ function GiftPendingActivationState({
           href={botLink}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex w-full items-center justify-center gap-2 rounded-xl bg-accent-500 px-6 py-3 text-sm font-medium text-on-accent transition-colors hover:bg-accent-400"
+          className={cn(primaryBtn, 'bg-accent-500 hover:bg-accent-600')}
         >
           {t('landing.openBot')}
         </a>
@@ -525,8 +575,12 @@ function FailedState() {
     >
       <AnimatedCrossmark />
       <div>
-        <h1 className="text-xl font-bold text-dark-50">{t('landing.purchaseFailed')}</h1>
-        <p className="mt-2 text-sm text-dark-400">{t('landing.purchaseFailedDesc')}</p>
+        <h2 className="text-xl font-bold tracking-tight text-dark-50">
+          {t('landing.purchaseFailed')}
+        </h2>
+        <p className="mt-2 text-[15px] leading-snug text-dark-400">
+          {t('landing.purchaseFailedDesc')}
+        </p>
       </div>
     </motion.div>
   );
@@ -541,14 +595,14 @@ function PollTimedOutState({ onRetry }: { onRetry: () => void }) {
       animate={{ opacity: 1, scale: 1 }}
       className="flex flex-col items-center gap-6 text-center"
     >
-      <div className="flex h-20 w-20 items-center justify-center rounded-full bg-dark-800/50">
-        <ClockIcon className="h-10 w-10 text-dark-400" />
-      </div>
+      <StateIcon tone="muted">
+        <PiClockCountdownDuotone />
+      </StateIcon>
       <div>
-        <h1 className="text-xl font-bold text-dark-50">
+        <h2 className="text-xl font-bold tracking-tight text-dark-50">
           {t('landing.pollTimedOut', 'Taking longer than expected')}
-        </h1>
-        <p className="mt-2 text-sm text-dark-400">
+        </h2>
+        <p className="mt-2 text-[15px] leading-snug text-dark-400">
           {t(
             'landing.pollTimedOutDesc',
             'Payment processing is taking longer than usual. You can try checking again.',
@@ -558,7 +612,7 @@ function PollTimedOutState({ onRetry }: { onRetry: () => void }) {
       <button
         type="button"
         onClick={onRetry}
-        className="rounded-xl bg-accent-500 px-6 py-3 text-sm font-medium text-on-accent transition-colors hover:bg-accent-400"
+        className={cn(primaryBtn, 'bg-accent-500 hover:bg-accent-600')}
       >
         {t('common.retry', 'Retry')}
       </button>
@@ -611,11 +665,11 @@ function GiftLinkShareState({
     >
       <AnimatedCheckmark />
       <div>
-        <h1 className="text-xl font-bold text-dark-50">
+        <h2 className="text-xl font-bold tracking-tight text-dark-50">
           {t('landing.giftLink.title', 'Gift is ready!')}
-        </h1>
+        </h2>
         {tariffName && periodDays !== null && (
-          <p className="mt-1 text-sm text-dark-300">
+          <p className="mt-1 text-[15px] text-dark-300">
             {tariffName} —{' '}
             {isLifetimePeriod(periodDays)
               ? t('subscription.lifetime.forever')
@@ -624,7 +678,7 @@ function GiftLinkShareState({
         )}
       </div>
 
-      <p className="text-sm text-dark-300">
+      <p className="text-[15px] leading-snug text-dark-300">
         {t(
           'landing.giftLink.subtitle',
           'Send this link to whoever you want to receive the gift — they activate it themselves.',
@@ -642,7 +696,7 @@ function GiftLinkShareState({
       )}
 
       {recipientContactValue && contactType === 'email' && (
-        <p className="text-xs text-dark-500">
+        <p className="text-[13px] text-dark-500">
           {t('landing.giftLink.alsoSent', {
             contact: recipientContactValue,
             defaultValue: 'We also emailed it to {{contact}}.',
@@ -654,20 +708,20 @@ function GiftLinkShareState({
         type="button"
         onClick={handleCopy}
         className={cn(
-          'flex w-full items-center justify-center gap-2 rounded-xl px-4 py-3.5 text-sm font-bold transition-all duration-200 active:scale-[0.98]',
+          'flex h-12 w-full items-center justify-center gap-2 rounded-2xl px-5 text-[15px] font-semibold transition-colors active:scale-[0.98]',
           copied
-            ? 'bg-success-500/20 text-success-400'
-            : 'bg-accent-500 text-on-accent shadow-lg shadow-accent-500/25 hover:bg-accent-400',
+            ? 'bg-success-500/15 text-success-400'
+            : 'bg-accent-500 text-on-accent hover:bg-accent-600',
         )}
       >
         {copied ? (
           <>
-            <CheckIcon className="h-4 w-4" />
+            <PiCheckBold className="h-4 w-4" />
             {t('landing.copied', 'Copied!')}
           </>
         ) : (
           <>
-            <ClipboardIcon className="h-4 w-4" />
+            <PiCopyBold className="h-4 w-4" />
             {t('landing.giftLink.copyMessage', 'Copy message')}
           </>
         )}
@@ -799,77 +853,80 @@ export default function PurchaseSuccess() {
     // py-10 — карточка выше экрана не липнет к его краям (как у подарка и купона).
     // anywhere — почта получателя в центрованной колонке переносится, а не
     // растягивает колонку шире карточки (наследуется всеми состояниями).
-    <div className="flex min-h-dvh items-center justify-center bg-dark-950 px-4 py-10">
-      <div
-        className="w-full max-w-md rounded-2xl border border-dark-800/50 bg-dark-900/50 p-8 [overflow-wrap:anywhere]"
-        aria-live="polite"
-        aria-atomic="true"
-      >
-        {isError ? (
-          <FailedState />
-        ) : isBuyerGiftLink ? (
-          <GiftLinkShareState
-            claimUrl={purchaseStatus.claim_url}
-            botClaimLink={purchaseStatus.bot_claim_link}
-            tariffName={purchaseStatus.tariff_name}
-            periodDays={purchaseStatus.period_days}
-            recipientContactValue={purchaseStatus.recipient_contact_value}
-            contactType={purchaseStatus.contact_type}
-          />
-        ) : isEmailSelfPurchase ? (
-          <CabinetCredentialsState
-            cabinetEmail={purchaseStatus.cabinet_email!}
-            cabinetPassword={purchaseStatus.cabinet_password}
-            autoLoginToken={purchaseStatus.auto_login_token}
-            tariffName={purchaseStatus.tariff_name}
-            periodDays={purchaseStatus.period_days}
-          />
-        ) : isSuccess ? (
-          <SuccessState
-            subscriptionUrl={purchaseStatus.subscription_url}
-            cryptoLink={purchaseStatus.subscription_crypto_link}
-            contactValue={purchaseStatus.contact_value}
-            recipientContactValue={purchaseStatus.recipient_contact_value}
-            tariffName={purchaseStatus.tariff_name}
-            periodDays={purchaseStatus.period_days}
-            isGift={purchaseStatus.is_gift}
-            giftMessage={purchaseStatus.gift_message}
-            recipientInBot={purchaseStatus.recipient_in_bot}
-            botLink={purchaseStatus.bot_link}
-            contactType={purchaseStatus.contact_type}
-          />
-        ) : isGiftPendingActivation ? (
-          <GiftPendingActivationState
-            tariffName={purchaseStatus.tariff_name}
-            periodDays={purchaseStatus.period_days}
-            recipientContactValue={purchaseStatus.recipient_contact_value}
-            giftMessage={purchaseStatus.gift_message}
-            recipientInBot={purchaseStatus.recipient_in_bot}
-            botLink={purchaseStatus.bot_link}
-            contactType={purchaseStatus.contact_type}
-          />
-        ) : isPendingActivation ? (
-          <div className="space-y-4">
-            <PendingActivationState
-              tariffName={purchaseStatus.tariff_name}
-              periodDays={purchaseStatus.period_days}
-              giftMessage={purchaseStatus.gift_message}
-              isGift={purchaseStatus.is_gift}
-              isActivating={isActivating}
-              onActivate={handleActivate}
-              autoLoginToken={purchaseStatus.auto_login_token}
-            />
-            {activationError && (
-              <p className="text-center text-sm text-error-400">{t('landing.activationFailed')}</p>
+    <div className="min-h-dvh bg-dark-950 px-4 py-6 sm:py-10">
+      <div className="mx-auto w-full max-w-md">
+        <PageHeader title={t('landing.resultTitle', 'Покупка')} backTo="/" />
+        <Surface className="p-6 [overflow-wrap:anywhere] sm:p-7">
+          <div aria-live="polite" aria-atomic="true">
+            {isError ? (
+              <FailedState />
+            ) : isBuyerGiftLink ? (
+              <GiftLinkShareState
+                claimUrl={purchaseStatus.claim_url}
+                botClaimLink={purchaseStatus.bot_claim_link}
+                tariffName={purchaseStatus.tariff_name}
+                periodDays={purchaseStatus.period_days}
+                recipientContactValue={purchaseStatus.recipient_contact_value}
+                contactType={purchaseStatus.contact_type}
+              />
+            ) : isEmailSelfPurchase ? (
+              <CabinetCredentialsState
+                cabinetEmail={purchaseStatus.cabinet_email!}
+                cabinetPassword={purchaseStatus.cabinet_password}
+                autoLoginToken={purchaseStatus.auto_login_token}
+                tariffName={purchaseStatus.tariff_name}
+                periodDays={purchaseStatus.period_days}
+              />
+            ) : isSuccess ? (
+              <SuccessState
+                subscriptionUrl={purchaseStatus.subscription_url}
+                cryptoLink={purchaseStatus.subscription_crypto_link}
+                contactValue={purchaseStatus.contact_value}
+                recipientContactValue={purchaseStatus.recipient_contact_value}
+                tariffName={purchaseStatus.tariff_name}
+                periodDays={purchaseStatus.period_days}
+                isGift={purchaseStatus.is_gift}
+                giftMessage={purchaseStatus.gift_message}
+                recipientInBot={purchaseStatus.recipient_in_bot}
+                botLink={purchaseStatus.bot_link}
+                contactType={purchaseStatus.contact_type}
+              />
+            ) : isGiftPendingActivation ? (
+              <GiftPendingActivationState
+                tariffName={purchaseStatus.tariff_name}
+                periodDays={purchaseStatus.period_days}
+                recipientContactValue={purchaseStatus.recipient_contact_value}
+                giftMessage={purchaseStatus.gift_message}
+                recipientInBot={purchaseStatus.recipient_in_bot}
+                botLink={purchaseStatus.bot_link}
+                contactType={purchaseStatus.contact_type}
+              />
+            ) : isPendingActivation ? (
+              <div className="space-y-4">
+                <PendingActivationState
+                  tariffName={purchaseStatus.tariff_name}
+                  periodDays={purchaseStatus.period_days}
+                  giftMessage={purchaseStatus.gift_message}
+                  isGift={purchaseStatus.is_gift}
+                  isActivating={isActivating}
+                  onActivate={handleActivate}
+                  autoLoginToken={purchaseStatus.auto_login_token}
+                />
+                {activationError && (
+                  <p className="text-center text-sm text-error-400">
+                    {t('landing.activationFailed')}
+                  </p>
+                )}
+              </div>
+            ) : isFailed ? (
+              <FailedState />
+            ) : pollTimedOut ? (
+              <PollTimedOutState onRetry={handleRetryPoll} />
+            ) : (
+              <PendingState />
             )}
           </div>
-        ) : isFailed ? (
-          <FailedState />
-        ) : pollTimedOut ? (
-          <PollTimedOutState onRetry={handleRetryPoll} />
-        ) : (
-          <PendingState />
-        )}
+        </Surface>
       </div>
     </div>
   );

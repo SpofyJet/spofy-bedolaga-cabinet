@@ -1,19 +1,20 @@
-import { isLifetimePeriod } from '@/utils/lifetime';
+import { isLifetimePeriod, isLifetimeSubscription } from '@/utils/lifetime';
 import { isUncertainPurchaseOutcome } from '@/utils/api-error';
 import { useEffect, useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 import { Link, Navigate, useNavigate, useParams, useSearchParams } from 'react-router';
 import { subscriptionApi } from '../api/subscription';
-import { useTheme } from '../hooks/useTheme';
-import { getGlassColors } from '../utils/glassTheme';
 import { getMonthlyPriceKopeks } from '../utils/pricing';
 import { pickBestValue } from '../utils/bestValue';
 import { useCurrency } from '../hooks/useCurrency';
 import { useHaptic } from '../platform';
 import InsufficientBalancePrompt from '../components/InsufficientBalancePrompt';
-import { WebBackButton } from '../components/WebBackButton';
-import { BEST_VALUE_BORDER, BestValueBadge } from '../components/subscription/BestValueBadge';
+import { BestValueBadge, bestValueFrame } from '../components/subscription/BestValueBadge';
+import { PageHeader } from '@/components/layout/PageHeader';
+import { Button, Chip, EmptyState, Page, SectionTitle, Surface } from '@/components/spofy/ui';
+import { cn } from '@/lib/utils';
+import { PiCalendarXDuotone, PiInfinityDuotone } from 'react-icons/pi';
 import { PageSkeleton, Skeleton } from '../components/ui/skeleton';
 import { DailyPausePanel } from '../components/subscription/manage/DailyPausePanel';
 import { canOpenTariffSwitch, needsTariff, tariffSelectionPath } from '../utils/legacySubscription';
@@ -28,8 +29,6 @@ export default function RenewSubscription() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const { isDark } = useTheme();
-  const g = getGlassColors(isDark);
   const { formatAmount, currencySymbol } = useCurrency();
   const { impact } = useHaptic();
 
@@ -138,182 +137,198 @@ export default function RenewSubscription() {
   const insufficientMatch = error?.match(/^insufficient:(\d+)$/);
   const missingAmount = insufficientMatch ? Number(insufficientMatch[1]) : null;
 
+  // Целые суммы без «,00»: «299 ₽», а не «299,00 ₽».
+  const money = (kopeks: number) =>
+    `${formatAmount(kopeks / 100).replace(/[.,]00$/, '')} ${currencySymbol}`;
+  const selectedOption = options?.find((o) => o.period_days === selectedPeriod) ?? null;
+  const isDailyRenewal = Boolean(subscription?.is_daily && !subscription.is_trial);
+  const isLifetime = Boolean(subscription && isLifetimeSubscription(subscription));
+
   return (
-    <div className="space-y-5">
-      {/* Title */}
-      <div className="flex items-center gap-3">
-        <WebBackButton to={`/subscriptions/${subId}`} />
-        <div>
-          <h1 className="text-2xl font-bold" style={{ color: g.text }}>
-            {t('subscription.extend', 'Продлить подписку')}
-          </h1>
-          {subscription?.tariff_name && (
-            <p className="mt-1 text-sm" style={{ color: g.textSecondary }}>
-              {subscription.tariff_name}
-            </p>
-          )}
-        </div>
-      </div>
+    <Page>
+      <PageHeader
+        title={t('subscription.extend', 'Продлить подписку')}
+        subtitle={subscription?.tariff_name || undefined}
+        backTo={`/subscriptions/${subId}`}
+      />
 
-      {/* Balance */}
-      <div
-        className="flex items-center justify-between rounded-2xl p-4"
-        style={{ background: g.cardBg, border: `1px solid ${g.cardBorder}` }}
-      >
-        <span className="text-sm" style={{ color: g.textSecondary }}>
-          {t('common.balance', 'Баланс')}
-        </span>
-        <span className="text-base font-semibold" style={{ color: g.text }}>
-          {formatAmount(balanceKopeks / 100)}
-          {'\u00A0'}
-          {currencySymbol}
-        </span>
-      </div>
-
-      {/* Daily subscriptions use daily billing, not period renewal. */}
-      {subscription?.is_daily && !subscription.is_trial ? (
-        <section
-          className="space-y-4 rounded-2xl p-6"
-          style={{ background: g.cardBg, border: `1px solid ${g.cardBorder}` }}
-        >
-          <p className="text-sm text-dark-300">{t('subscription.dailyRenewalExplanation')}</p>
-          <p className="text-base font-semibold text-dark-50">
+      {/* Вечную подписку продлевать не нужно: «Продлить» на неё нигде не ведёт,
+          но по прямой ссылке объясняем это вместо списка периодов. */}
+      {isLifetime ? (
+        <EmptyState
+          icon={<PiInfinityDuotone />}
+          title={t('lite.status.lifetime', 'Подписка работает навсегда')}
+          text={t('subscription.v10.lifetimeNoRenew', 'Продлевать её не нужно.')}
+          action={
+            <Link
+              className="inline-flex h-12 items-center justify-center rounded-2xl bg-dark-800/70 px-5 text-[15px] font-semibold text-dark-100 ring-1 ring-inset ring-dark-700/60 transition-colors hover:bg-dark-700/70"
+              to={`/subscriptions/${subId}`}
+            >
+              {t('subscription.v10.toSubscription', 'К подписке')}
+            </Link>
+          }
+        />
+      ) : /* Daily subscriptions use daily billing, not period renewal. */
+      isDailyRenewal && subscription ? (
+        <Surface className="space-y-4">
+          <p className="text-[13px] leading-snug text-dark-400">
+            {t('subscription.dailyRenewalExplanation')}
+          </p>
+          <p className="text-[15px] font-semibold text-dark-50">
             {t('subscription.dailyRenewalPrice', {
-              price: `${formatAmount((subscription.daily_price_kopeks ?? 0) / 100)}\u00A0${currencySymbol}`,
+              price: money(subscription.daily_price_kopeks ?? 0),
             })}
           </p>
           <DailyPausePanel subscription={subscription} subscriptionId={subId} />
           {canOpenTariffSwitch(subscription) && (
-            <Link className="btn-secondary w-full" to={tariffSelectionPath(subId)}>
+            <Link
+              className="flex h-12 w-full items-center justify-center rounded-2xl bg-dark-800/70 text-[15px] font-semibold text-dark-100 ring-1 ring-inset ring-dark-700/60 transition-colors hover:bg-dark-700/70"
+              to={tariffSelectionPath(subId)}
+            >
               {t('subscription.switchTariff.title')}
             </Link>
           )}
-        </section>
+        </Surface>
       ) : !options || options.length === 0 ? (
-        <div
-          className="rounded-2xl p-6 text-center"
-          style={{ background: g.cardBg, border: `1px solid ${g.cardBorder}` }}
-        >
-          <p style={{ color: g.textSecondary }}>
-            {t('subscription.noRenewalOptions', 'Нет доступных вариантов продления')}
-          </p>
-        </div>
+        <EmptyState
+          icon={<PiCalendarXDuotone />}
+          title={t('subscription.noRenewalOptions', 'Нет доступных вариантов продления')}
+        />
       ) : (
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-          {options.map((option) => {
-            const isSelected = selectedPeriod === option.period_days;
-            const canAfford = balanceKopeks >= option.price_kopeks;
-            const perMonth = getMonthlyPriceKopeks(option.price_kopeks, option.period_days);
-            // Выбранный вариант важнее подсказки: рамка выделения уступает
-            // рамке выбора, чтобы не было двух «активных» карточек сразу.
-            const isBestValue = Boolean(option.is_highlighted);
+        <section>
+          <SectionTitle>{t('subscription.selectPeriod', 'Выберите период')}</SectionTitle>
+          <div className="space-y-2">
+            {options.map((option) => {
+              const isSelected = selectedPeriod === option.period_days;
+              const perMonth = isLifetimePeriod(option.period_days)
+                ? null
+                : getMonthlyPriceKopeks(option.price_kopeks, option.period_days);
+              // Выгодный вариант несёт жёлтую рамку и тогда, когда выбран: выбор
+              // виден заливкой и внутренним кольцом, подсказка не пропадает.
+              const isBestValue = Boolean(option.is_highlighted);
 
-            return (
-              <button
-                key={option.period_days}
-                onClick={() => {
-                  impact('light');
-                  setSelectedPeriod(option.period_days);
-                  setError(null);
-                }}
-                className={`w-full rounded-2xl p-4 text-left transition-all duration-200 ${
-                  isBestValue ? 'border-2' : 'border'
-                }`}
-                style={{
-                  background: isSelected
-                    ? isDark
-                      ? 'rgba(var(--color-accent-400), 0.08)'
-                      : 'rgba(var(--color-accent-400), 0.05)'
-                    : g.cardBg,
-                  borderColor: isBestValue
-                    ? BEST_VALUE_BORDER
-                    : isSelected
-                      ? 'rgb(var(--color-accent-400))'
-                      : g.cardBorder,
-                  // Выбранный выгодный вариант несёт обе метки: жёлтый контур
-                  // снаружи и контур выбора внутри — иначе подсказка пропадала
-                  // ровно тогда, когда человек ей последовал.
-                  boxShadow:
-                    isSelected && isBestValue
-                      ? 'inset 0 0 0 2px rgb(var(--color-accent-400))'
-                      : undefined,
-                }}
-              >
-                {isBestValue && <BestValueBadge className="mb-2" />}
-                <div className="flex items-center justify-between">
-                  <div>
-                    <span className="text-base font-semibold" style={{ color: g.text }}>
-                      {isLifetimePeriod(option.period_days)
-                        ? t('subscription.lifetime.forever')
-                        : `${option.period_days} ${t('subscription.days', 'дней')}`}
+              return (
+                <button
+                  key={option.period_days}
+                  type="button"
+                  aria-pressed={isSelected}
+                  onClick={() => {
+                    impact('light');
+                    setSelectedPeriod(option.period_days);
+                    setError(null);
+                  }}
+                  className={cn(
+                    'flex min-h-[64px] w-full items-center gap-3 rounded-3xl px-4 py-3 text-left transition-colors',
+                    isBestValue
+                      ? `${bestValueFrame(isSelected)} ${isSelected ? 'bg-accent-500/10' : 'bg-dark-900/70'}`
+                      : isSelected
+                        ? 'bg-accent-500/10 ring-2 ring-inset ring-accent-500'
+                        : 'bg-dark-900/70 ring-1 ring-inset ring-dark-800/80 hover:bg-dark-800/50',
+                  )}
+                >
+                  <span
+                    className={cn(
+                      'flex h-5 w-5 shrink-0 items-center justify-center rounded-full ring-2 ring-inset',
+                      isSelected ? 'bg-accent-500 ring-accent-500' : 'ring-dark-600',
+                    )}
+                    aria-hidden
+                  >
+                    {isSelected && <span className="h-2 w-2 rounded-full bg-white" />}
+                  </span>
+                  <span className="min-w-0 flex-1">
+                    <span className="flex flex-wrap items-center gap-2">
+                      <span className="text-[15px] font-semibold text-dark-100">
+                        {isLifetimePeriod(option.period_days)
+                          ? t('subscription.lifetime.forever')
+                          : `${option.period_days} ${t('subscription.days', 'дней')}`}
+                      </span>
+                      {isBestValue && <BestValueBadge />}
+                      {option.discount_percent > 0 && (
+                        <Chip tone="success">-{option.discount_percent}%</Chip>
+                      )}
                     </span>
-                    {option.discount_percent > 0 && (
-                      <span className="ml-2 rounded-full bg-success-400/15 px-2 py-0.5 text-[10px] font-semibold text-success-400">
-                        -{option.discount_percent}%
+                    {perMonth !== null && (
+                      <span className="mt-0.5 block text-[13px] text-dark-400">
+                        {money(perMonth)}/{t('subscription.month', 'мес')}
                       </span>
                     )}
-                  </div>
-                  <div className="text-right">
-                    <div className="text-base font-semibold" style={{ color: g.text }}>
+                  </span>
+                  <span className="flex shrink-0 flex-col items-end">
+                    <span className="whitespace-nowrap text-[15px] font-bold tabular-nums text-dark-50">
                       {option.price_kopeks === 0
                         ? t('subscription.free', 'Бесплатно')
-                        : `${formatAmount(option.price_kopeks / 100)}\u00A0${currencySymbol}`}
-                    </div>
-                    {perMonth !== null && (
-                      <div className="text-[11px]" style={{ color: g.textSecondary }}>
-                        {formatAmount(perMonth / 100)}
-                        {'\u00A0'}
-                        {currencySymbol}/{t('subscription.month', 'мес')}
-                      </div>
-                    )}
+                        : money(option.price_kopeks)}
+                    </span>
                     {option.original_price_kopeks && (
-                      <div className="text-[11px] line-through" style={{ color: g.textSecondary }}>
-                        {formatAmount(option.original_price_kopeks / 100)}
-                        {'\u00A0'}
-                        {currencySymbol}
-                      </div>
+                      <span className="whitespace-nowrap text-[12px] text-dark-500 line-through">
+                        {money(option.original_price_kopeks)}
+                      </span>
                     )}
-                  </div>
-                </div>
-                {!canAfford && (
-                  <div className="mt-1 text-[11px] text-error-400">
-                    {t(
-                      'subscription.insufficientBalanceAmount',
-                      'Недостаточно средств. Не хватает {{missing}}',
-                      {
-                        missing: `${formatAmount((option.price_kopeks - balanceKopeks) / 100)}\u00A0${currencySymbol}`,
-                      },
-                    )}
-                  </div>
-                )}
-              </button>
-            );
-          })}
-        </div>
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        </section>
       )}
 
-      {/* Insufficient balance prompt */}
-      {missingAmount && <InsufficientBalancePrompt missingAmountKopeks={missingAmount} compact />}
+      {/* Итог: баланс, сумма, кнопка */}
+      {!isDailyRenewal && !isLifetime && options && options.length > 0 && (
+        <Surface className="space-y-4">
+          <div className="flex items-center justify-between gap-3 text-[14px]">
+            <span className="text-dark-400">{t('common.balance', 'Баланс')}</span>
+            <span className="font-semibold tabular-nums text-dark-100">
+              {formatAmount(balanceKopeks / 100)}
+              {' '}
+              {currencySymbol}
+            </span>
+          </div>
+          {selectedOption && (
+            <div className="flex items-end justify-between gap-3 border-t border-dark-800/70 pt-4">
+              <span className="text-[15px] font-medium text-dark-300">
+                {t('subscription.total', 'К оплате')}
+              </span>
+              <span className="whitespace-nowrap text-[26px] font-bold leading-tight tracking-tight text-dark-50">
+                {selectedOption.price_kopeks === 0
+                  ? t('subscription.free', 'Бесплатно')
+                  : money(selectedOption.price_kopeks)}
+              </span>
+            </div>
+          )}
+          {selectedOption && balanceKopeks < selectedOption.price_kopeks && !missingAmount && (
+            <p className="text-[13px] text-error-400">
+              {t(
+                'subscription.insufficientBalanceAmount',
+                'Недостаточно средств. Не хватает {{missing}}',
+                { missing: money(selectedOption.price_kopeks - balanceKopeks) },
+              )}
+            </p>
+          )}
 
-      {/* Error */}
-      {error && !missingAmount && (
-        <div className="rounded-xl bg-error-400/10 p-3 text-center text-sm text-error-400">
-          {error}
-        </div>
-      )}
+          {/* Insufficient balance prompt */}
+          {missingAmount && (
+            <InsufficientBalancePrompt missingAmountKopeks={missingAmount} compact />
+          )}
 
-      {/* Renew button */}
-      {!(subscription?.is_daily && !subscription.is_trial) && selectedPeriod && (
-        <button
-          onClick={() => handleRenew(selectedPeriod)}
-          disabled={renewMutation.isPending}
-          className="w-full rounded-2xl bg-accent-500 py-3.5 text-base font-semibold text-on-accent transition-colors hover:bg-accent-600 disabled:opacity-50"
-        >
-          {renewMutation.isPending
-            ? t('common.processing', 'Обработка...')
-            : t('subscription.extend', 'Продлить подписку')}
-        </button>
+          {error && !missingAmount && (
+            <p className="rounded-2xl bg-error-500/10 p-3 text-center text-[13px] text-error-400">
+              {error}
+            </p>
+          )}
+
+          <Button
+            className="w-full"
+            onClick={() => selectedPeriod && handleRenew(selectedPeriod)}
+            disabled={!selectedPeriod || renewMutation.isPending}
+          >
+            {renewMutation.isPending
+              ? t('common.processing', 'Обработка...')
+              : selectedPeriod
+                ? t('subscription.extend', 'Продлить подписку')
+                : t('subscription.selectPeriod', 'Выберите период')}
+          </Button>
+        </Surface>
       )}
-    </div>
+    </Page>
   );
 }

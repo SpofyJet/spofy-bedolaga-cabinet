@@ -7,8 +7,8 @@ import { useDestructiveConfirm } from '@/platform/hooks/useNativeDialog';
 import { useToast } from '@/components/Toast';
 import type { Subscription } from '@/types';
 import { useCurrency } from '@/hooks/useCurrency';
-import { useTheme } from '@/hooks/useTheme';
-import { getGlassColors } from '@/utils/glassTheme';
+import { PiCreditCardDuotone } from 'react-icons/pi';
+import { RowIcon } from '@/components/spofy/ui';
 import { openPaymentUrl } from '@/utils/openPaymentUrl';
 import { uiLocale } from '@/utils/uiLocale';
 import {
@@ -56,8 +56,6 @@ export function RecurringPanels({ subscription, subscriptionId }: RecurringPanel
   const destructiveConfirm = useDestructiveConfirm();
   const { showToast } = useToast();
   const { formatAmount } = useCurrency();
-  const { isDark } = useTheme();
-  const g = getGlassColors(isDark);
 
   // Вечной подписке включать автосписание не предлагаем — продлевать нечего.
   // Уже подключённое (active/pending/past_due) остаётся видно, чтобы его можно
@@ -307,66 +305,65 @@ export function RecurringPanels({ subscription, subscriptionId }: RecurringPanel
            is_trial + uiState — daily-tariff subscriptions must see
            this block too (backend supports a day-interval charge). */}
       {!subscription.is_trial && sbpUiStateValue !== 'hidden' && (
-        <div
-          className="mt-3 rounded-[14px] p-3.5"
-          style={{
-            background: g.innerBg,
-            border: `1px solid ${g.innerBorder}`,
-          }}
-        >
+        <div className="px-4 py-3">
           {/* Заголовок и статус слева, компактное действие справа —
               зеркально соседнему тогглу «Автопродление». На мобиле
               кнопка падает вниз на всю ширину (w-full sm:w-auto). */}
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <div className="min-w-0">
-              <div className="text-sm font-semibold text-dark-50">
-                {t('subscription.sbpRecurring.title')}
-              </div>
+            <div className="flex min-w-0 items-center gap-3">
+              <RowIcon>
+                <PiCreditCardDuotone />
+              </RowIcon>
+              <div className="min-w-0">
+                <div className="text-[15px] font-semibold text-dark-100">
+                  {t('subscription.sbpRecurring.title')}
+                </div>
 
-              {sbpUiStateValue === 'off' && (
-                <div className="mt-0.5 text-[11px] text-dark-400">
-                  {t('subscription.sbpRecurring.autopayHint')}
-                </div>
-              )}
-              {sbpUiStateValue === 'pending' && (
-                <div className="mt-0.5 text-[11px] text-dark-400">
-                  {t('subscription.sbpRecurring.statusPending')}
-                </div>
-              )}
-              {sbpUiStateValue === 'active' && sbpInfo && (
-                <>
-                  <div className="mt-0.5 text-[11px] text-dark-400">
-                    {t('subscription.sbpRecurring.amountPerInterval', {
-                      amount: formatAmount((sbpInfo.amount_kopeks ?? 0) / 100),
-                      interval: t(sbpIntervalLabelKey(sbpInfo.interval)),
-                    })}
+                {sbpUiStateValue === 'off' && (
+                  <div className="mt-0.5 text-[13px] leading-snug text-dark-400">
+                    {t('subscription.sbpRecurring.autopayHint')}
                   </div>
-                  {sbpInfo.next_charge_at && (
-                    <div className="mt-0.5 text-[11px] text-dark-400">
-                      {t('subscription.sbpRecurring.nextCharge', {
-                        date: new Date(sbpInfo.next_charge_at).toLocaleDateString(uiLocale(), {
-                          day: '2-digit',
-                          month: '2-digit',
-                          year: 'numeric',
-                        }),
+                )}
+                {sbpUiStateValue === 'pending' && (
+                  <div className="mt-0.5 text-[13px] leading-snug text-dark-400">
+                    {t('subscription.sbpRecurring.statusPending')}
+                  </div>
+                )}
+                {sbpUiStateValue === 'active' && sbpInfo && (
+                  <>
+                    <div className="mt-0.5 text-[13px] leading-snug text-dark-400">
+                      {t('subscription.sbpRecurring.amountPerInterval', {
+                        amount: formatAmount((sbpInfo.amount_kopeks ?? 0) / 100),
+                        interval: t(sbpIntervalLabelKey(sbpInfo.interval)),
                       })}
                     </div>
-                  )}
-                </>
-              )}
-              {sbpUiStateValue === 'past_due' && (
-                <div className="mt-0.5 text-[11px] font-medium text-warning-400">
-                  {t('subscription.sbpRecurring.statusPastDue')}
-                </div>
-              )}
+                    {sbpInfo.next_charge_at && (
+                      <div className="mt-0.5 text-[13px] leading-snug text-dark-400">
+                        {t('subscription.sbpRecurring.nextCharge', {
+                          date: new Date(sbpInfo.next_charge_at).toLocaleDateString(uiLocale(), {
+                            day: '2-digit',
+                            month: '2-digit',
+                            year: 'numeric',
+                          }),
+                        })}
+                      </div>
+                    )}
+                  </>
+                )}
+                {sbpUiStateValue === 'past_due' && (
+                  <div className="mt-0.5 text-[13px] font-medium text-warning-400">
+                    {t('subscription.sbpRecurring.statusPastDue')}
+                  </div>
+                )}
+              </div>
             </div>
 
-            <div className="flex shrink-0 flex-col gap-2 sm:items-end">
+            <div className="flex shrink-0 flex-col gap-2 pl-[52px] sm:items-end sm:pl-0">
               {sbpUiStateValue === 'off' && (
                 <button
                   onClick={() => enableSbpMutation.mutate()}
                   disabled={enableSbpMutation.isPending}
-                  className="w-full whitespace-nowrap rounded-xl bg-accent-500 px-5 py-2.5 text-sm font-medium text-on-accent transition-opacity disabled:opacity-50 sm:w-auto"
+                  className="w-full whitespace-nowrap rounded-2xl bg-accent-500 px-4 py-2.5 text-sm font-semibold text-on-accent transition-opacity disabled:opacity-50 sm:w-auto"
                 >
                   {enableSbpMutation.isPending ? (
                     <span className="mx-auto block h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
@@ -385,7 +382,7 @@ export function RecurringPanels({ subscription, subscriptionId }: RecurringPanel
                           openPaymentUrl(sbpInfo.redirect_url, platform, openLink);
                         }
                       }}
-                      className="w-full whitespace-nowrap rounded-xl bg-accent-500 px-5 py-2.5 text-sm font-medium text-on-accent transition-opacity sm:w-auto"
+                      className="w-full whitespace-nowrap rounded-2xl bg-accent-500 px-4 py-2.5 text-sm font-semibold text-on-accent transition-opacity sm:w-auto"
                     >
                       {t('subscription.sbpRecurring.confirmInBank')}
                     </button>
@@ -393,8 +390,7 @@ export function RecurringPanels({ subscription, subscriptionId }: RecurringPanel
                   <button
                     onClick={handleCancelSbp}
                     disabled={cancelSbpMutation.isPending}
-                    className="text-[11px] font-medium transition-colors disabled:opacity-50 sm:text-right"
-                    style={{ color: 'rgb(var(--color-critical-500))' }}
+                    className="text-left text-[13px] font-medium text-error-400 transition-colors disabled:opacity-50 sm:text-right"
                   >
                     {t('subscription.sbpRecurring.cancel')}
                   </button>
@@ -405,7 +401,7 @@ export function RecurringPanels({ subscription, subscriptionId }: RecurringPanel
                 <button
                   onClick={handleCancelSbp}
                   disabled={cancelSbpMutation.isPending}
-                  className="w-full whitespace-nowrap rounded-xl border border-error-500/30 bg-error-500/10 px-5 py-2.5 text-sm font-medium text-error-400 transition-colors hover:bg-error-500/20 disabled:opacity-50 sm:w-auto"
+                  className="w-full whitespace-nowrap rounded-2xl bg-error-500/10 px-4 py-2.5 text-sm font-semibold text-error-400 ring-1 ring-inset ring-error-500/25 transition-colors hover:bg-error-500/20 disabled:opacity-50 sm:w-auto"
                 >
                   {t('subscription.sbpRecurring.cancel')}
                 </button>
@@ -420,72 +416,71 @@ export function RecurringPanels({ subscription, subscriptionId }: RecurringPanel
            состояния. Период задан продуктом в кабинете Lava и приезжает
            числом дней, поэтому подпись строится из charge_days. */}
       {!subscription.is_trial && lavaUiStateValue !== 'hidden' && (
-        <div
-          className="mt-3 rounded-[14px] p-3.5"
-          style={{
-            background: g.innerBg,
-            border: `1px solid ${g.innerBorder}`,
-          }}
-        >
+        <div className="px-4 py-3">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <div className="min-w-0">
-              <div className="text-sm font-semibold text-dark-50">
-                {t('subscription.lavaRecurring.title')}
-              </div>
+            <div className="flex min-w-0 items-center gap-3">
+              <RowIcon>
+                <PiCreditCardDuotone />
+              </RowIcon>
+              <div className="min-w-0">
+                <div className="text-[15px] font-semibold text-dark-100">
+                  {t('subscription.lavaRecurring.title')}
+                </div>
 
-              {lavaUiStateValue === 'off' && (
-                <div className="mt-0.5 text-[11px] text-dark-400">
-                  {t('subscription.lavaRecurring.autopayHint')}
-                </div>
-              )}
-              {lavaUiStateValue === 'pending' && (
-                <div className="mt-0.5 text-[11px] text-dark-400">
-                  {t('subscription.lavaRecurring.statusPending')}
-                </div>
-              )}
-              {lavaUiStateValue === 'active' && lavaInfo && (
-                <>
-                  <div className="mt-0.5 text-[11px] text-dark-400">
-                    {(() => {
-                      const periodKey = lavaPeriodLabelKey(lavaInfo.charge_days);
-                      const amount = formatAmount((lavaInfo.amount_kopeks ?? 0) / 100);
-                      return periodKey
-                        ? t('subscription.lavaRecurring.amountPerPeriod', {
-                            amount,
-                            period: t(periodKey),
-                          })
-                        : t('subscription.lavaRecurring.amountPerDays', {
-                            amount,
-                            days: lavaInfo.charge_days ?? 0,
-                          });
-                    })()}
+                {lavaUiStateValue === 'off' && (
+                  <div className="mt-0.5 text-[13px] leading-snug text-dark-400">
+                    {t('subscription.lavaRecurring.autopayHint')}
                   </div>
-                  {lavaInfo.next_charge_at && (
-                    <div className="mt-0.5 text-[11px] text-dark-400">
-                      {t('subscription.lavaRecurring.nextCharge', {
-                        date: new Date(lavaInfo.next_charge_at).toLocaleDateString(uiLocale(), {
-                          day: '2-digit',
-                          month: '2-digit',
-                          year: 'numeric',
-                        }),
-                      })}
+                )}
+                {lavaUiStateValue === 'pending' && (
+                  <div className="mt-0.5 text-[13px] leading-snug text-dark-400">
+                    {t('subscription.lavaRecurring.statusPending')}
+                  </div>
+                )}
+                {lavaUiStateValue === 'active' && lavaInfo && (
+                  <>
+                    <div className="mt-0.5 text-[13px] leading-snug text-dark-400">
+                      {(() => {
+                        const periodKey = lavaPeriodLabelKey(lavaInfo.charge_days);
+                        const amount = formatAmount((lavaInfo.amount_kopeks ?? 0) / 100);
+                        return periodKey
+                          ? t('subscription.lavaRecurring.amountPerPeriod', {
+                              amount,
+                              period: t(periodKey),
+                            })
+                          : t('subscription.lavaRecurring.amountPerDays', {
+                              amount,
+                              days: lavaInfo.charge_days ?? 0,
+                            });
+                      })()}
                     </div>
-                  )}
-                </>
-              )}
-              {lavaUiStateValue === 'past_due' && (
-                <div className="mt-0.5 text-[11px] font-medium text-warning-400">
-                  {t('subscription.lavaRecurring.statusPastDue')}
-                </div>
-              )}
+                    {lavaInfo.next_charge_at && (
+                      <div className="mt-0.5 text-[13px] leading-snug text-dark-400">
+                        {t('subscription.lavaRecurring.nextCharge', {
+                          date: new Date(lavaInfo.next_charge_at).toLocaleDateString(uiLocale(), {
+                            day: '2-digit',
+                            month: '2-digit',
+                            year: 'numeric',
+                          }),
+                        })}
+                      </div>
+                    )}
+                  </>
+                )}
+                {lavaUiStateValue === 'past_due' && (
+                  <div className="mt-0.5 text-[13px] font-medium text-warning-400">
+                    {t('subscription.lavaRecurring.statusPastDue')}
+                  </div>
+                )}
+              </div>
             </div>
 
-            <div className="flex shrink-0 flex-col gap-2 sm:items-end">
+            <div className="flex shrink-0 flex-col gap-2 pl-[52px] sm:items-end sm:pl-0">
               {lavaUiStateValue === 'off' && (
                 <button
                   onClick={() => enableLavaMutation.mutate()}
                   disabled={enableLavaMutation.isPending}
-                  className="w-full whitespace-nowrap rounded-xl bg-accent-500 px-5 py-2.5 text-sm font-medium text-on-accent transition-opacity disabled:opacity-50 sm:w-auto"
+                  className="w-full whitespace-nowrap rounded-2xl bg-accent-500 px-4 py-2.5 text-sm font-semibold text-on-accent transition-opacity disabled:opacity-50 sm:w-auto"
                 >
                   {enableLavaMutation.isPending ? (
                     <span className="mx-auto block h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
@@ -504,7 +499,7 @@ export function RecurringPanels({ subscription, subscriptionId }: RecurringPanel
                           openPaymentUrl(lavaInfo.redirect_url, platform, openLink);
                         }
                       }}
-                      className="w-full whitespace-nowrap rounded-xl bg-accent-500 px-5 py-2.5 text-sm font-medium text-on-accent transition-opacity sm:w-auto"
+                      className="w-full whitespace-nowrap rounded-2xl bg-accent-500 px-4 py-2.5 text-sm font-semibold text-on-accent transition-opacity sm:w-auto"
                     >
                       {t('subscription.lavaRecurring.payFirst')}
                     </button>
@@ -512,8 +507,7 @@ export function RecurringPanels({ subscription, subscriptionId }: RecurringPanel
                   <button
                     onClick={handleCancelLava}
                     disabled={cancelLavaMutation.isPending}
-                    className="text-[11px] font-medium transition-colors disabled:opacity-50 sm:text-right"
-                    style={{ color: 'rgb(var(--color-critical-500))' }}
+                    className="text-left text-[13px] font-medium text-error-400 transition-colors disabled:opacity-50 sm:text-right"
                   >
                     {t('subscription.lavaRecurring.cancel')}
                   </button>
@@ -524,7 +518,7 @@ export function RecurringPanels({ subscription, subscriptionId }: RecurringPanel
                 <button
                   onClick={handleCancelLava}
                   disabled={cancelLavaMutation.isPending}
-                  className="w-full whitespace-nowrap rounded-xl border border-error-500/30 bg-error-500/10 px-5 py-2.5 text-sm font-medium text-error-400 transition-colors hover:bg-error-500/20 disabled:opacity-50 sm:w-auto"
+                  className="w-full whitespace-nowrap rounded-2xl bg-error-500/10 px-4 py-2.5 text-sm font-semibold text-error-400 ring-1 ring-inset ring-error-500/25 transition-colors hover:bg-error-500/20 disabled:opacity-50 sm:w-auto"
                 >
                   {t('subscription.lavaRecurring.cancel')}
                 </button>
@@ -537,63 +531,65 @@ export function RecurringPanels({ subscription, subscriptionId }: RecurringPanel
            Третий движок с теми же состояниями. Интервал задаётся при
            оформлении и приезжает строкой (daily/weekly/monthly/yearly). */}
       {!subscription.is_trial && casheraUiStateValue !== 'hidden' && (
-        <div
-          className="mt-3 rounded-[14px] p-3.5"
-          style={{
-            background: g.innerBg,
-            border: `1px solid ${g.innerBorder}`,
-          }}
-        >
+        <div className="px-4 py-3">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <div className="min-w-0">
-              <div className="text-sm font-semibold text-dark-50">
-                {t('subscription.casheraRecurring.title')}
-              </div>
+            <div className="flex min-w-0 items-center gap-3">
+              <RowIcon>
+                <PiCreditCardDuotone />
+              </RowIcon>
+              <div className="min-w-0">
+                <div className="text-[15px] font-semibold text-dark-100">
+                  {t('subscription.casheraRecurring.title')}
+                </div>
 
-              {casheraUiStateValue === 'off' && (
-                <div className="mt-0.5 text-[11px] text-dark-400">
-                  {t('subscription.casheraRecurring.autopayHint')}
-                </div>
-              )}
-              {casheraUiStateValue === 'pending' && (
-                <div className="mt-0.5 text-[11px] text-dark-400">
-                  {t('subscription.casheraRecurring.statusPending')}
-                </div>
-              )}
-              {casheraUiStateValue === 'active' && casheraInfo && (
-                <>
-                  <div className="mt-0.5 text-[11px] text-dark-400">
-                    {t('subscription.casheraRecurring.amountPerInterval', {
-                      amount: formatAmount((casheraInfo.amount_kopeks ?? 0) / 100),
-                      interval: t(casheraIntervalLabelKey(casheraInfo.interval)),
-                    })}
+                {casheraUiStateValue === 'off' && (
+                  <div className="mt-0.5 text-[13px] leading-snug text-dark-400">
+                    {t('subscription.casheraRecurring.autopayHint')}
                   </div>
-                  {casheraInfo.next_charge_at && (
-                    <div className="mt-0.5 text-[11px] text-dark-400">
-                      {t('subscription.casheraRecurring.nextCharge', {
-                        date: new Date(casheraInfo.next_charge_at).toLocaleDateString(uiLocale(), {
-                          day: '2-digit',
-                          month: '2-digit',
-                          year: 'numeric',
-                        }),
+                )}
+                {casheraUiStateValue === 'pending' && (
+                  <div className="mt-0.5 text-[13px] leading-snug text-dark-400">
+                    {t('subscription.casheraRecurring.statusPending')}
+                  </div>
+                )}
+                {casheraUiStateValue === 'active' && casheraInfo && (
+                  <>
+                    <div className="mt-0.5 text-[13px] leading-snug text-dark-400">
+                      {t('subscription.casheraRecurring.amountPerInterval', {
+                        amount: formatAmount((casheraInfo.amount_kopeks ?? 0) / 100),
+                        interval: t(casheraIntervalLabelKey(casheraInfo.interval)),
                       })}
                     </div>
-                  )}
-                </>
-              )}
-              {casheraUiStateValue === 'past_due' && (
-                <div className="mt-0.5 text-[11px] font-medium text-warning-400">
-                  {t('subscription.casheraRecurring.statusPastDue')}
-                </div>
-              )}
+                    {casheraInfo.next_charge_at && (
+                      <div className="mt-0.5 text-[13px] leading-snug text-dark-400">
+                        {t('subscription.casheraRecurring.nextCharge', {
+                          date: new Date(casheraInfo.next_charge_at).toLocaleDateString(
+                            uiLocale(),
+                            {
+                              day: '2-digit',
+                              month: '2-digit',
+                              year: 'numeric',
+                            },
+                          ),
+                        })}
+                      </div>
+                    )}
+                  </>
+                )}
+                {casheraUiStateValue === 'past_due' && (
+                  <div className="mt-0.5 text-[13px] font-medium text-warning-400">
+                    {t('subscription.casheraRecurring.statusPastDue')}
+                  </div>
+                )}
+              </div>
             </div>
 
-            <div className="flex shrink-0 flex-col gap-2 sm:items-end">
+            <div className="flex shrink-0 flex-col gap-2 pl-[52px] sm:items-end sm:pl-0">
               {casheraUiStateValue === 'off' && (
                 <button
                   onClick={() => enableCasheraMutation.mutate()}
                   disabled={enableCasheraMutation.isPending}
-                  className="w-full whitespace-nowrap rounded-xl bg-accent-500 px-5 py-2.5 text-sm font-medium text-on-accent transition-opacity disabled:opacity-50 sm:w-auto"
+                  className="w-full whitespace-nowrap rounded-2xl bg-accent-500 px-4 py-2.5 text-sm font-semibold text-on-accent transition-opacity disabled:opacity-50 sm:w-auto"
                 >
                   {enableCasheraMutation.isPending ? (
                     <span className="mx-auto block h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
@@ -612,7 +608,7 @@ export function RecurringPanels({ subscription, subscriptionId }: RecurringPanel
                           openPaymentUrl(casheraInfo.redirect_url, platform, openLink);
                         }
                       }}
-                      className="w-full whitespace-nowrap rounded-xl bg-accent-500 px-5 py-2.5 text-sm font-medium text-on-accent transition-opacity sm:w-auto"
+                      className="w-full whitespace-nowrap rounded-2xl bg-accent-500 px-4 py-2.5 text-sm font-semibold text-on-accent transition-opacity sm:w-auto"
                     >
                       {t('subscription.casheraRecurring.confirm')}
                     </button>
@@ -620,8 +616,7 @@ export function RecurringPanels({ subscription, subscriptionId }: RecurringPanel
                   <button
                     onClick={handleCancelCashera}
                     disabled={cancelCasheraMutation.isPending}
-                    className="text-[11px] font-medium transition-colors disabled:opacity-50 sm:text-right"
-                    style={{ color: 'rgb(var(--color-critical-500))' }}
+                    className="text-left text-[13px] font-medium text-error-400 transition-colors disabled:opacity-50 sm:text-right"
                   >
                     {t('subscription.casheraRecurring.cancel')}
                   </button>
@@ -632,7 +627,7 @@ export function RecurringPanels({ subscription, subscriptionId }: RecurringPanel
                 <button
                   onClick={handleCancelCashera}
                   disabled={cancelCasheraMutation.isPending}
-                  className="w-full whitespace-nowrap rounded-xl border border-error-500/30 bg-error-500/10 px-5 py-2.5 text-sm font-medium text-error-400 transition-colors hover:bg-error-500/20 disabled:opacity-50 sm:w-auto"
+                  className="w-full whitespace-nowrap rounded-2xl bg-error-500/10 px-4 py-2.5 text-sm font-semibold text-error-400 ring-1 ring-inset ring-error-500/25 transition-colors hover:bg-error-500/20 disabled:opacity-50 sm:w-auto"
                 >
                   {t('subscription.casheraRecurring.cancel')}
                 </button>

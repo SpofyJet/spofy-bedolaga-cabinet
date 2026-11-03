@@ -3,9 +3,11 @@ import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 import { useSearchParams } from 'react-router';
 import { subscriptionApi } from '../api/subscription';
-import { WebBackButton } from '../components/WebBackButton';
-import { getGlassColors } from '../utils/glassTheme';
-import { useTheme } from '../hooks/useTheme';
+import { PageHeader } from '@/components/layout/PageHeader';
+import { Button, EmptyState, Page, RowIcon, Surface } from '@/components/spofy/ui';
+import { cn } from '@/lib/utils';
+import type { ReactNode } from 'react';
+import { PiInfoDuotone, PiSparkleDuotone, PiWarningDuotone } from 'react-icons/pi';
 import type { Tariff, ClassicPurchaseOptions } from '../types';
 import { useCloseOnSuccessNotification } from '../store/successNotification';
 import { SwitchTariffSheet } from '../components/subscription/sheets/SwitchTariffSheet';
@@ -17,7 +19,6 @@ import { formatLiteDate } from '@/utils/liteDate';
 import { isLifetimeSubscription } from '@/utils/lifetime';
 import { useLiteMode } from '../hooks/useLiteMode';
 import { ClassicPurchaseWizard } from '../components/subscription/purchase/ClassicPurchaseWizard';
-import { ExclamationIcon, SparklesIcon } from '@/components/icons';
 import { PageSkeleton, Skeleton } from '@/components/ui/skeleton';
 
 export default function SubscriptionPurchase() {
@@ -26,8 +27,6 @@ export default function SubscriptionPurchase() {
   const subscriptionId = searchParams.get('subscriptionId')
     ? parseInt(searchParams.get('subscriptionId')!, 10)
     : undefined;
-  const { isDark } = useTheme();
-  const g = getGlassColors(isDark);
   // Витрина тарифов в двух видах. Обработчики и данные общие, различается
   // только подача; что делает нажатие — решает tariffAction() внутри обеих.
   const { lite } = useLiteMode();
@@ -107,6 +106,8 @@ export default function SubscriptionPurchase() {
 
   // (classic-mode helpers moved into <ClassicPurchaseWizard>)
 
+  const backTo = subscriptionId ? `/subscriptions/${subscriptionId}` : '/subscriptions';
+
   if (isLoading || optionsLoading) {
     return (
       <PageSkeleton leading={1} titleWidth="w-56">
@@ -118,26 +119,14 @@ export default function SubscriptionPurchase() {
 
   if (optionsError || (!purchaseOptions && !optionsLoading)) {
     return (
-      <div className="space-y-6">
-        <h1 className="text-xl font-bold tracking-tight text-dark-50 sm:text-2xl">{t('subscription.extend')}</h1>
-        <div
-          className="rounded-3xl p-6 text-center"
-          style={{
-            background: g.cardBg,
-            border: `1px solid ${g.cardBorder}`,
-          }}
-        >
-          <p className="mb-4 text-dark-300">
-            {t('subscription.loadError', 'Не удалось загрузить варианты подписки')}
-          </p>
-          <button
-            onClick={() => refetchOptions()}
-            className="rounded-xl bg-accent-500 px-6 py-2 text-sm font-medium text-on-accent transition-colors hover:bg-accent-600"
-          >
-            {t('common.retry')}
-          </button>
-        </div>
-      </div>
+      <Page>
+        <PageHeader title={t('subscription.extend')} backTo={backTo} />
+        <EmptyState
+          icon={<PiWarningDuotone />}
+          title={t('subscription.loadError', 'Не удалось загрузить варианты подписки')}
+          action={<Button onClick={() => refetchOptions()}>{t('common.retry')}</Button>}
+        />
+      </Page>
     );
   }
 
@@ -153,34 +142,32 @@ export default function SubscriptionPurchase() {
 
   if (isScopedSwitch && subscription && !showTariffPurchase) {
     return (
-      <div className="space-y-6">
-        <header className="flex items-start gap-3">
-          <WebBackButton to={`/subscriptions/${subscription.id}`} />
-          <div className="min-w-0">
-            <h1 className="text-xl font-bold tracking-tight text-dark-50 sm:text-2xl">
-              {t('subscription.switchTariff.title')}
-            </h1>
-            <p className="mt-2 break-words text-sm text-dark-400">
-              {t('subscription.switchTariff.sourceContext', { name: subscription.tariff_name })}
-              {!subscription.is_daily && subscription.end_date && (
-                <span className="mt-1 block">
-                  {isLifetimeSubscription(subscription)
-                    ? `${t('subscription.lifetime.term')}: ${t('subscription.lifetime.forever')}`
-                    : t('subscription.switchTariff.validUntil', {
-                        date: formatLiteDate(subscription.end_date),
-                      })}
-                </span>
-              )}
+      <Page>
+        <PageHeader
+          title={t('subscription.switchTariff.title')}
+          backTo={`/subscriptions/${subscription.id}`}
+        />
+        <Surface>
+          <p className="text-[13px] font-medium text-dark-400">
+            {t('subscription.v10.currentTariffLabel', 'Сейчас')}
+          </p>
+          <p className="mt-0.5 break-words text-[17px] font-bold text-dark-50">
+            {subscription.tariff_name}
+          </p>
+          {!subscription.is_daily && subscription.end_date && (
+            <p className="mt-1 text-[13px] text-dark-400">
+              {isLifetimeSubscription(subscription)
+                ? `${t('subscription.lifetime.term')}: ${t('subscription.lifetime.forever')}`
+                : t('subscription.switchTariff.validUntil', {
+                    date: formatLiteDate(subscription.end_date),
+                  })}
             </p>
-          </div>
-        </header>
-        <div
-          className="relative overflow-hidden rounded-3xl p-5 sm:px-7 sm:py-6"
-          style={{ background: g.cardBg, border: `1px solid ${g.cardBorder}`, boxShadow: g.shadow }}
-        >
+          )}
+        </Surface>
+        <div>
           {switchTariffId === null ? (
             <>
-              <p className="mb-5 text-sm text-dark-400">
+              <p className="mb-3 px-1 text-[13px] text-dark-400">
                 {t('subscription.switchTariff.chooseHint')}
               </p>
               {tariffs.some(
@@ -200,9 +187,7 @@ export default function SubscriptionPurchase() {
                   onSwitchTariff={setSwitchTariffId}
                 />
               ) : (
-                <p className="py-4 text-sm text-dark-400">
-                  {t('subscription.switchTariff.noAlternatives')}
-                </p>
+                <EmptyState title={t('subscription.switchTariff.noAlternatives')} />
               )}
             </>
           ) : (
@@ -220,19 +205,16 @@ export default function SubscriptionPurchase() {
             />
           )}
         </div>
-      </div>
+      </Page>
     );
   }
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center gap-3">
-        <WebBackButton
-          to={subscriptionId ? `/subscriptions/${subscriptionId}` : '/subscriptions'}
-        />
-        <h1 className="text-xl font-bold tracking-tight text-dark-50 sm:text-2xl">
-          {needsTariff(subscription)
+    <Page>
+      <PageHeader
+        backTo={backTo}
+        title={
+          needsTariff(subscription)
             ? t('subscription.cta.moveToTariff')
             : isTariffsMode && subscriptionId && canOpenTariffSwitch(subscription)
               ? t('subscription.switchTariff.title')
@@ -244,21 +226,13 @@ export default function SubscriptionPurchase() {
                     ? t('subscription.switchTariff.title')
                     : subscription && !subscription.is_trial
                       ? t('subscription.extend')
-                      : t('subscription.getSubscription')}
-        </h1>
-      </div>
+                      : t('subscription.getSubscription')
+        }
+      />
 
       {/* Tariffs Section */}
       {isTariffsMode && tariffs.length > 0 && (
-        <div
-          className="relative overflow-hidden rounded-3xl"
-          style={{
-            background: g.cardBg,
-            border: `1px solid ${g.cardBorder}`,
-            boxShadow: g.shadow,
-            padding: '24px 28px',
-          }}
-        >
+        <div className="space-y-6">
           {/* Trial upgrade prompt — hidden when expired banner is active */}
           {subscription?.is_trial &&
             !(
@@ -267,37 +241,12 @@ export default function SubscriptionPurchase() {
               'subscription_is_expired' in purchaseOptions &&
               purchaseOptions.subscription_is_expired
             ) && (
-              <div
-                className="mb-6 rounded-[14px] p-4"
-                style={{
-                  background:
-                    'linear-gradient(135deg, rgba(255,184,0,0.08), rgba(var(--color-accent-400),0.06))',
-                  border: '1px solid rgba(255,184,0,0.15)',
-                }}
-              >
-                <div className="flex items-start gap-3">
-                  <div
-                    className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-[10px]"
-                    style={{
-                      background: 'rgba(255,184,0,0.12)',
-                      color: 'rgb(var(--color-urgent-400))',
-                    }}
-                  >
-                    <SparklesIcon className="h-4 w-4" />
-                  </div>
-                  <div>
-                    <div
-                      className="text-sm font-semibold"
-                      style={{ color: 'rgb(var(--color-urgent-400))' }}
-                    >
-                      {t('subscription.trialUpgrade.title')}
-                    </div>
-                    <div className="mt-1 text-[12px] text-dark-400">
-                      {t('subscription.trialUpgrade.description')}
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <Notice
+                tone="accent"
+                icon={<PiSparkleDuotone />}
+                title={t('subscription.trialUpgrade.title')}
+                text={t('subscription.trialUpgrade.description')}
+              />
             )}
 
           {/* Expired subscription notice */}
@@ -305,51 +254,22 @@ export default function SubscriptionPurchase() {
             purchaseOptions &&
             'subscription_is_expired' in purchaseOptions &&
             purchaseOptions.subscription_is_expired && (
-              <div
-                className="mb-6 rounded-[14px] p-4"
-                style={{
-                  background: 'linear-gradient(135deg, rgba(255,59,92,0.08), rgba(255,184,0,0.06))',
-                  border: '1px solid rgba(255,59,92,0.15)',
-                }}
-              >
-                <div className="flex items-start gap-3">
-                  <div
-                    className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-[10px]"
-                    style={{
-                      background: 'rgba(255,59,92,0.12)',
-                      color: 'rgb(var(--color-critical-500))',
-                    }}
-                  >
-                    <ExclamationIcon className="h-4 w-4" />
-                  </div>
-                  <div>
-                    <div
-                      className="text-sm font-semibold"
-                      style={{ color: 'rgb(var(--color-critical-500))' }}
-                    >
-                      {t('subscription.expiredBanner.title')}
-                    </div>
-                    <div className="mt-1 text-[12px] text-dark-400">
-                      {t('subscription.expiredBanner.selectTariff')}
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <Notice
+                tone="error"
+                icon={<PiWarningDuotone />}
+                title={t('subscription.expiredBanner.title')}
+                text={t('subscription.expiredBanner.selectTariff')}
+              />
             )}
 
           {/* Старая подписка (куплена в классике, тарифа нет): тариф надевается на неё же */}
           {needsTariff(subscription) && (
-            <div className="mb-6 rounded-xl border border-accent-500/30 bg-accent-500/10 p-4">
-              <div className="mb-2 font-medium text-accent-400">
-                {t('subscription.legacy.selectTariffTitle')}
-              </div>
-              <div className="text-sm text-dark-300">
-                {t('subscription.legacy.selectTariffDescription')}
-              </div>
-              <div className="mt-2 text-xs text-dark-500">
-                {t('subscription.legacy.currentSubContinues')}
-              </div>
-            </div>
+            <Notice
+              tone="accent"
+              icon={<PiInfoDuotone />}
+              title={t('subscription.legacy.selectTariffTitle')}
+              text={`${t('subscription.legacy.selectTariffDescription')} ${t('subscription.legacy.currentSubContinues')}`}
+            />
           )}
 
           {/* Switch Tariff Preview Modal */}
@@ -429,24 +349,41 @@ export default function SubscriptionPurchase() {
         !optionsLoading &&
         !(isTariffsMode && tariffs.length > 0) &&
         !(classicOptions && classicOptions.periods.length > 0) && (
-          <div
-            className="rounded-3xl p-6 text-center"
-            style={{
-              background: g.cardBg,
-              border: `1px solid ${g.cardBorder}`,
-            }}
-          >
-            <p className="mb-4 text-dark-300">
-              {t('subscription.noOptionsAvailable', 'Нет доступных вариантов подписки')}
-            </p>
-            <button
-              onClick={() => refetchOptions()}
-              className="rounded-xl bg-accent-500 px-6 py-2 text-sm font-medium text-on-accent transition-colors hover:bg-accent-600"
-            >
-              {t('common.retry')}
-            </button>
-          </div>
+          <EmptyState
+            title={t('subscription.noOptionsAvailable', 'Нет доступных вариантов подписки')}
+            action={<Button onClick={() => refetchOptions()}>{t('common.retry')}</Button>}
+          />
         )}
-    </div>
+    </Page>
+  );
+}
+
+/** Пояснение над витриной: пробный период, истёкшая подписка, старая подписка. */
+function Notice({
+  tone,
+  icon,
+  title,
+  text,
+}: {
+  tone: 'accent' | 'error';
+  icon: ReactNode;
+  title: ReactNode;
+  text: ReactNode;
+}) {
+  return (
+    <Surface
+      className={cn(
+        'flex items-start gap-3',
+        tone === 'error'
+          ? 'bg-error-500/5 ring-error-500/20'
+          : 'bg-accent-500/5 ring-accent-500/20',
+      )}
+    >
+      <RowIcon tone={tone}>{icon}</RowIcon>
+      <div className="min-w-0">
+        <p className="text-[15px] font-semibold text-dark-100">{title}</p>
+        <p className="mt-0.5 text-[13px] leading-snug text-dark-400">{text}</p>
+      </div>
+    </Surface>
   );
 }

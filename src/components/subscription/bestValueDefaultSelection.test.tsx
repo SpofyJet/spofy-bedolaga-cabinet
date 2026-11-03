@@ -91,8 +91,8 @@ afterEach(() => {
 // остаётся жёлтой, если оператор отметил его выгодным.
 const SELECTED = 'bg-accent-500/10';
 const BEST_VALUE_RING = 'border-urgent-400';
-// Продление красит рамку и заливку инлайновым стилем, а не классом.
-const SELECTED_BORDER = '--color-accent-400';
+// Продление: выбор — заливка accent и внутреннее кольцо, выгода — жёлтая рамка.
+const SELECTED_RING = 'ring-accent-500';
 
 // ==================== покупка тарифа ====================
 
@@ -162,9 +162,10 @@ describe('продление: выбранный по умолчанию пер�
 
     // Рамка выбранного выгодного остаётся жёлтой, выбор виден заливкой и
     // внутренним контуром — обе метки сразу.
-    expect(cardFor(360).style.borderColor).toContain('--color-urgent-400');
-    expect(cardFor(360).style.background).toContain(SELECTED_BORDER);
-    expect(cardFor(30).style.background).not.toContain(SELECTED_BORDER);
+    expect(cardFor(360).className).toContain(BEST_VALUE_RING);
+    expect(cardFor(360).className).toContain(SELECTED);
+    expect(cardFor(360).className).toContain(SELECTED_RING);
+    expect(cardFor(30).className).not.toContain(SELECTED);
   });
 
   it('без отметки оператора не выбирает ничего — как было', async () => {
@@ -173,7 +174,7 @@ describe('продление: выбранный по умолчанию пер�
     await renderRenew();
     await screen.findByText(/^30 /);
 
-    expect(cardFor(30).style.background).not.toContain(SELECTED_BORDER);
-    expect(cardFor(360).style.background).not.toContain(SELECTED_BORDER);
+    expect(cardFor(30).className).not.toContain(SELECTED);
+    expect(cardFor(360).className).not.toContain(SELECTED);
   });
 });

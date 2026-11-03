@@ -30,28 +30,24 @@ export default function BypassSuspendedBanner({
 }: BypassSuspendedBannerProps) {
   const { t } = useTranslation();
   const primary =
-    'inline-flex min-h-[40px] items-center justify-center rounded-xl bg-accent-500 px-4 text-sm font-semibold text-on-accent transition-colors hover:bg-accent-400';
+    'inline-flex h-11 items-center justify-center rounded-2xl bg-accent-500 px-4 text-sm font-semibold text-on-accent transition-colors hover:bg-accent-600';
   const secondary =
-    'inline-flex min-h-[40px] items-center justify-center rounded-xl border border-dark-700/60 px-4 text-sm font-medium text-dark-100 transition-colors hover:bg-dark-700/40';
+    'inline-flex h-11 items-center justify-center rounded-2xl bg-dark-800/70 px-4 text-sm font-semibold text-dark-100 ring-1 ring-inset ring-dark-700/60 transition-colors hover:bg-dark-700/70';
 
   return (
     <div
       role="status"
       data-testid="bypass-suspended-banner"
-      className={`rounded-[14px] p-4 ${className}`}
-      style={{
-        background: 'rgba(var(--color-warning-400), 0.06)',
-        border: '1px solid rgba(var(--color-warning-400), 0.18)',
-      }}
+      className={`rounded-3xl bg-warning-500/5 p-4 ring-1 ring-inset ring-warning-500/20 sm:p-5 ${className}`}
     >
-      <p className="text-sm font-semibold text-dark-50">
+      <p className="text-[15px] font-semibold text-dark-50">
         {t(
           isTrial
             ? 'subscription.bypassSuspended.trialTitle'
             : 'subscription.bypassSuspended.title',
         )}
       </p>
-      <p className="mt-1 text-xs leading-relaxed text-dark-400">
+      <p className="mt-1 text-[13px] leading-snug text-dark-400">
         {t(
           isTrial
             ? 'subscription.bypassSuspended.trialDescription'

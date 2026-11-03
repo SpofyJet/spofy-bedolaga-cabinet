@@ -73,7 +73,6 @@ describe('старая подписка в списке', () => {
 
     const move = await screen.findByRole('link', { name: 'subscription.cta.moveToTariff' });
     expect(move.getAttribute('href')).toBe('/subscription/purchase?subscriptionId=42');
-    expect(move.className).toContain('btn-');
     expect(screen.queryByText('subscription.autopay')).toBeNull();
   });
 

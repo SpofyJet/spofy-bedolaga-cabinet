@@ -12,6 +12,12 @@ vi.mock('react-i18next', () => ({
   initReactI18next: { type: '3rdParty', init: () => {} },
 }));
 
+// Шапка страницы (PageHeader) даёт тактильный отклик на «Назад».
+vi.mock('@/platform', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('@/platform')>()),
+  useHaptic: () => ({ impact: () => {}, notification: () => {}, selection: () => {} }),
+}));
+
 function delivered(): PurchaseStatus {
   return {
     status: 'delivered',

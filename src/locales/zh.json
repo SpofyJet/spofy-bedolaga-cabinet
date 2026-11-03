@@ -548,7 +548,17 @@
       "qrTitle": "订阅二维码",
       "qrScanHint": "使用相机扫描以连接",
       "qrButton": "二维码",
-      "openQr": "打开二维码"
+      "openQr": "打开二维码",
+      "v10": {
+        "personalKey": "这是您的个人密钥，请勿转发给他人",
+        "tvHint": "在电视上扫描二维码更方便",
+        "steps": "步骤",
+        "copied": "已复制",
+        "stepDone": "已完成",
+        "notOpened": "应用没有打开？",
+        "notOpenedText": "请确认已安装应用（第 1 步）。或复制链接，在应用中通过「+」粘贴。",
+        "copyManual": "手机不允许复制。请长按链接，然后选择「复制」。"
+      }
     },
     "additionalOptions": {
       "title": "附加选项",
@@ -862,6 +872,21 @@
     "lifetime": {
       "forever": "永久",
       "term": "期限"
+    },
+    "v10": {
+      "autopayHint": "到期前 {{count}} 天从余额扣款",
+      "pickPackage": "选择套餐包",
+      "ended": "已结束",
+      "until": "至 {{date}}",
+      "devicesOf": "{{used}} / {{max}}",
+      "connected": "已连接",
+      "trafficUnlimited": "不限流量",
+      "linkTitle": "订阅链接",
+      "paymentTitle": "自动续费",
+      "addonsTitle": "加购",
+      "currentTariffLabel": "当前",
+      "lifetimeNoRenew": "无需续费。",
+      "toSubscription": "返回订阅"
     }
   },
   "balance": {
@@ -7289,7 +7314,8 @@
       "hours": "小时",
       "minutes": "分钟",
       "seconds": "秒"
-    }
+    },
+    "resultTitle": "购买"
   },
   "gift": {
     "title": "赠送订阅",

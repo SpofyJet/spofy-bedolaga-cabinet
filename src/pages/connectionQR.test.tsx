@@ -5,7 +5,10 @@ import { afterEach, expect, it, vi } from 'vitest';
 import ConnectionQR from './ConnectionQR';
 
 vi.mock('../hooks/useBranding', () => ({ useBranding: () => ({ appName: 'Example' }) }));
-vi.mock('../platform', () => ({ usePlatform: () => ({ platform: 'web' }) }));
+vi.mock('../platform', () => ({
+  usePlatform: () => ({ platform: 'web' }),
+  useHaptic: () => ({ impact: () => {} }),
+}));
 vi.mock('react-i18next', () => ({ useTranslation: () => ({ t: (key: string) => key }) }));
 const url = `happ://crypt4/${'aB09'.repeat(175)}`;
 const writeText = vi.fn();

@@ -1,17 +1,17 @@
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router';
-import { useTheme } from '../../hooks/useTheme';
-import { getGlassColors } from '../../utils/glassTheme';
+import type { ReactNode } from 'react';
 import { useHaptic } from '../../platform';
 import {
-  CalendarIcon,
-  CheckIcon,
-  ChevronRightIcon,
-  DevicesIcon,
-  InfinityIcon,
-  StarIcon,
-  XIcon,
-} from '@/components/icons';
+  PiCalendarDuotone,
+  PiCaretRightBold,
+  PiCheckBold,
+  PiDevicesDuotone,
+  PiInfinityDuotone,
+  PiXBold,
+} from 'react-icons/pi';
+import { Chip } from '@/components/spofy/ui';
+import { cn } from '@/lib/utils';
 import type { SubscriptionListItem } from '../../types';
 import { needsTariff, tariffSelectionPath } from '@/utils/legacySubscription';
 import { isLifetimeSubscription } from '@/utils/lifetime';
@@ -29,55 +29,6 @@ function formatDate(iso: string | null, locale?: string): string {
   } catch {
     return '—';
   }
-}
-
-function StatusBadge({
-  status,
-  isTrial,
-  t,
-}: {
-  status: string;
-  isTrial: boolean;
-  t: (key: string, fallback: string) => string;
-}) {
-  const isActive = status === 'active' || status === 'trial';
-  const isLimited = status === 'limited';
-  const isExpired = status === 'expired' || status === 'disabled';
-
-  if (isTrial) {
-    return (
-      <span className="inline-flex items-center gap-1 rounded-full border border-warning-400/25 bg-warning-400/10 px-2 py-0.5 text-[10px] font-semibold text-warning-400">
-        <StarIcon filled className="h-2.5 w-2.5" />
-        {t('subscription.statusTrial', 'Тестовая')}
-      </span>
-    );
-  }
-
-  // Подложка и рамка берут шейд 500, а текст — 400. В светлой теме 300/400
-  // ремапятся в тёмный шейд (иначе статусный текст на белом не читается), и
-  // подложка из того же 400 темнела вместе с текстом: контраст надписи падал до
-  // 4.2. Шейд 500 в ремап не входит, поэтому плашка остаётся светлой подкраской.
-  const color = isActive
-    ? 'bg-success-500/15 text-success-400 border-success-500/20'
-    : isLimited
-      ? 'bg-warning-500/15 text-warning-400 border-warning-500/20'
-      : 'bg-error-500/15 text-error-400 border-error-500/20';
-
-  const label = isActive
-    ? t('subscription.statusActive', 'Активна')
-    : isLimited
-      ? t('subscription.statusLimited', 'Ограничена')
-      : isExpired
-        ? t('subscription.statusExpired', 'Истекла')
-        : status;
-
-  return (
-    <span
-      className={`inline-flex items-center rounded-full border px-2 py-0.5 text-[10px] font-semibold ${color}`}
-    >
-      {label}
-    </span>
-  );
 }
 
 export default function SubscriptionListCard({
@@ -99,8 +50,6 @@ export default function SubscriptionListCard({
   };
 }) {
   const { t, i18n } = useTranslation();
-  const { isDark } = useTheme();
-  const g = getGlassColors(isDark);
   const { impact } = useHaptic();
 
   const handleClick = () => {
@@ -114,6 +63,7 @@ export default function SubscriptionListCard({
     subscription.status === 'active' ||
     subscription.status === 'trial' ||
     subscription.status === 'limited';
+  const isLimitedStatus = subscription.status === 'limited';
   const isExpired = subscription.status === 'expired' || subscription.status === 'disabled';
   const trafficLimit = subscription.traffic_limit_gb;
   const trafficUsed = subscription.traffic_used_gb;
@@ -128,27 +78,17 @@ export default function SubscriptionListCard({
       ? 'bg-error-400'
       : trafficPercent >= 70
         ? 'bg-warning-400'
-        : 'bg-success-400';
+        : 'bg-accent-500';
 
-  const isLimitedStatus = subscription.status === 'limited';
-
-  const borderColor =
-    isTrial || isLimitedStatus
-      ? 'rgba(251,191,36,0.2)'
-      : isExpired
-        ? 'rgba(255,59,92,0.15)'
-        : g.cardBorder;
-
-  const bgColor =
-    isTrial || isLimitedStatus
-      ? isDark
-        ? 'rgba(251,191,36,0.04)'
-        : 'rgba(251,191,36,0.03)'
-      : isExpired
-        ? isDark
-          ? 'rgba(255,59,92,0.04)'
-          : 'rgba(255,59,92,0.03)'
-        : g.cardBg;
+  const status = isTrial
+    ? { tone: 'accent' as const, label: t('subscription.statusTrial', 'Тестовая') }
+    : isLimitedStatus
+      ? { tone: 'warning' as const, label: t('subscription.statusLimited', 'Ограничена') }
+      : isActive
+        ? { tone: 'success' as const, label: t('subscription.statusActive', 'Активна') }
+        : isExpired
+          ? { tone: 'error' as const, label: t('subscription.statusExpired', 'Истекла') }
+          : { tone: 'muted' as const, label: subscription.status };
 
   const footer = connect
     ? connectFooterState({
@@ -159,40 +99,79 @@ export default function SubscriptionListCard({
       })
     : { kind: 'hidden' as const };
 
+  const facts: ReactNode[] = [];
+  if (footer.kind === 'hidden') {
+    facts.push(
+      <span key="dev" className="flex items-center gap-1">
+        <PiDevicesDuotone className="h-4 w-4 text-dark-500" />
+        {subscription.device_limit === 0 ? '∞' : subscription.device_limit}
+      </span>,
+    );
+  }
+  facts.push(
+    isLifetime ? (
+      <span key="term" className="flex items-center gap-1">
+        <PiInfinityDuotone className="h-4 w-4 text-dark-500" />
+        {t('subscription.lifetime.forever')}
+      </span>
+    ) : (
+      <span key="term" className="flex items-center gap-1">
+        <PiCalendarDuotone className="h-4 w-4 text-dark-500" />
+        {formatDate(subscription.end_date, i18n.language)}
+      </span>
+    ),
+  );
+  // Старая подписка (куплена в классике, тарифа нет): автоплатёж ей
+  // недоступен — статус не показываем, кнопка перехода ниже.
+  // Вечной подписке продлевать нечего — автопродления тоже нет.
+  if (!needsTariff(subscription) && !isTrial && !isLifetime) {
+    const isDaily = subscription.is_daily;
+    const enabled = isDaily ? !subscription.is_daily_paused : subscription.autopay_enabled;
+    const label = isDaily
+      ? t('subscription.dailyAutoCharge', 'Автосписание')
+      : t('subscription.autopay', 'Автопродление');
+    facts.push(
+      <span
+        key="autopay"
+        className={cn('flex items-center gap-1', enabled ? 'text-success-400' : 'text-dark-500')}
+      >
+        {enabled ? <PiCheckBold className="h-3 w-3" /> : <PiXBold className="h-3 w-3" />}
+        {label}
+      </span>,
+    );
+  }
+
   // Подвал — своя зона нажатия, поэтому карточка снаружи не `<button>`:
   // вложенные кнопки невалидны и ведут себя в браузерах непредсказуемо.
   return (
-    <div
-      className="overflow-hidden rounded-2xl border transition-all duration-200 hover:scale-[1.01] active:scale-[0.99]"
-      style={{ background: bgColor, borderColor }}
-    >
-      <button onClick={handleClick} className="w-full p-4 text-left">
-        {/* Header: tariff name + status badge + chevron */}
+    <div className="overflow-hidden rounded-3xl bg-dark-900/70 ring-1 ring-inset ring-dark-800/80">
+      <button
+        type="button"
+        onClick={handleClick}
+        className="w-full p-4 text-left transition-colors hover:bg-dark-800/30 active:bg-dark-800/50 sm:p-5"
+      >
         <div className="flex items-center justify-between gap-2">
-          <div className="flex min-w-0 items-center gap-2">
-            <span className="truncate text-base font-semibold" style={{ color: g.text }}>
-              {subscription.tariff_name || t('subscription.defaultName', 'Подписка')}
-            </span>
-            <StatusBadge status={subscription.status} isTrial={isTrial} t={t} />
-          </div>
-          <ChevronRightIcon className="h-4 w-4 shrink-0 opacity-30" />
+          <span className="min-w-0 truncate text-[17px] font-bold tracking-tight text-dark-50">
+            {subscription.tariff_name || t('subscription.defaultName', 'Подписка')}
+          </span>
+          <span className="flex shrink-0 items-center gap-2">
+            <Chip tone={status.tone}>{status.label}</Chip>
+            <PiCaretRightBold className="h-3.5 w-3.5 text-dark-500" aria-hidden />
+          </span>
         </div>
 
-        {/* Traffic mini progress bar */}
         {isActive && (
           <div className="mt-3">
-            <div className="mb-1 flex items-baseline justify-between">
-              <span className="text-[11px] font-medium" style={{ color: g.textSecondary }}>
-                {t('subscription.traffic', 'Трафик')}
-              </span>
-              <span className="text-[11px] tabular-nums" style={{ color: g.textSecondary }}>
+            <div className="mb-1.5 flex items-baseline justify-between text-[13px] text-dark-400">
+              <span>{t('subscription.traffic', 'Трафик')}</span>
+              <span className="tabular-nums text-dark-300">
                 {isUnlimited
                   ? '∞'
                   : `${trafficUsed.toFixed(1)} / ${trafficLimit} ${t('common.units.gb', 'ГБ')}`}
               </span>
             </div>
             {!isUnlimited && (
-              <div className="h-1.5 overflow-hidden rounded-full" style={{ background: g.innerBg }}>
+              <div className="h-1.5 overflow-hidden rounded-full bg-dark-800">
                 <div
                   className={`h-full rounded-full transition-all ${trafficColor}`}
                   style={{ width: `${Math.max(1, trafficPercent)}%` }}
@@ -202,51 +181,8 @@ export default function SubscriptionListCard({
           </div>
         )}
 
-        {/* Stats row */}
-        <div
-          className="mt-2.5 flex items-center gap-4 text-[12px]"
-          style={{ color: g.textSecondary }}
-        >
-          {footer.kind === 'hidden' && (
-            <span className="flex items-center gap-1">
-              <DevicesIcon className="h-3.5 w-3.5 opacity-50" />
-              {subscription.device_limit}
-            </span>
-          )}
-          {isLifetime ? (
-            <span className="flex items-center gap-1">
-              <InfinityIcon className="h-3.5 w-3.5 opacity-50" />
-              {t('subscription.lifetime.forever')}
-            </span>
-          ) : (
-            <span className="flex items-center gap-1">
-              <CalendarIcon className="h-3.5 w-3.5 opacity-50" />
-              {formatDate(subscription.end_date, i18n.language)}
-            </span>
-          )}
-          {/* Старая подписка (куплена в классике, тарифа нет): автоплатёж ей
-              недоступен — статус не показываем, кнопка перехода ниже.
-              Вечной подписке продлевать нечего — автопродления тоже нет. */}
-          {!needsTariff(subscription) &&
-            !isTrial &&
-            !isLifetime &&
-            (() => {
-              const isDaily = subscription.is_daily;
-              const enabled = isDaily
-                ? !subscription.is_daily_paused
-                : subscription.autopay_enabled;
-              const label = isDaily
-                ? t('subscription.dailyAutoCharge', 'Автосписание')
-                : t('subscription.autopay', 'Автопродление');
-              return (
-                <span
-                  className={`flex items-center gap-1 ${enabled ? 'text-success-400' : 'text-error-400'}`}
-                >
-                  {enabled ? <CheckIcon className="h-3 w-3" /> : <XIcon className="h-3 w-3" />}
-                  {label}
-                </span>
-              );
-            })()}
+        <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-[13px] text-dark-400">
+          {facts}
         </div>
       </button>
 
@@ -257,17 +193,17 @@ export default function SubscriptionListCard({
         <Link
           to={tariffSelectionPath(subscription.id)}
           onClick={() => impact('light')}
-          className="btn-primary mx-4 mb-4 flex items-center justify-center gap-2 py-2.5 text-sm"
+          className="mx-4 mb-4 flex h-11 items-center justify-center gap-2 rounded-2xl bg-accent-500 text-sm font-semibold text-on-accent transition-colors hover:bg-accent-600"
         >
           {t('subscription.cta.moveToTariff')}
-          <ChevronRightIcon className="h-4 w-4" />
+          <PiCaretRightBold className="h-3.5 w-3.5" />
         </Link>
       )}
 
       <SubscriptionConnectFooter
         state={footer}
-        borderColor={borderColor}
-        mutedColor={g.textSecondary}
+        borderColor="rgba(var(--color-dark-800), 0.7)"
+        mutedColor="rgb(var(--color-dark-400))"
         onConnect={() => connect?.onConnect()}
         onManage={() => connect?.onManage()}
       />

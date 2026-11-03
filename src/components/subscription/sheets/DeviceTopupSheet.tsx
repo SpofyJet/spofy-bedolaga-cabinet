@@ -6,7 +6,10 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { subscriptionApi } from '../../../api/subscription';
 import { getErrorMessage } from '../../../utils/subscriptionHelpers';
 import InsufficientBalancePrompt from '../../InsufficientBalancePrompt';
-import { ChevronRightIcon } from '../../icons';
+import { PiPlusCircleDuotone } from 'react-icons/pi';
+import { Button, Chip, Row } from '@/components/spofy/ui';
+import { ResponsiveSheet } from '@/components/ui/ResponsiveSheet';
+import { SheetBody, SheetNote, Spinner, Stepper, TotalLine } from './sheetParts';
 import type { PurchaseOptions, Subscription } from '../../../types';
 
 // ──────────────────────────────────────────────────────────────────
@@ -39,7 +42,6 @@ export function DeviceTopupSheet({
   devicesToAdd,
   onDevicesToAddChange,
   purchaseOptions,
-  isDark,
 }: DeviceTopupSheetProps) {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
@@ -71,190 +73,148 @@ export function DeviceTopupSheet({
     },
   });
 
-  if (!open) {
-    return (
-      <button
-        onClick={onOpen}
-        className={`w-full rounded-xl border p-4 text-left transition-colors ${isDark ? 'border-dark-700/50 bg-dark-800/50 hover:border-dark-600' : 'border-champagne-300/60 bg-champagne-200/40 hover:border-champagne-400'}`}
-      >
-        <div className="flex items-center justify-between">
-          <div>
-            <div className="font-medium text-dark-100">
-              {t('subscription.additionalOptions.buyDevices')}
-            </div>
-            <div className="mt-1 text-sm text-dark-400">
-              {t('subscription.additionalOptions.currentDeviceLimit', {
-                count: subscription.device_limit,
-              })}
-            </div>
-          </div>
-          <ChevronRightIcon className="text-dark-400" />
-        </div>
-      </button>
-    );
-  }
+  const insufficient = !!(
+    devicePriceData?.available &&
+    purchaseOptions &&
+    devicePriceData.total_price_kopeks &&
+    devicePriceData.total_price_kopeks > purchaseOptions.balance_kopeks
+  );
+  const hasDiscount =
+    devicePriceData?.discount_percent != null && devicePriceData.discount_percent > 0;
 
   return (
-    <div
-      className={`rounded-xl border p-5 ${isDark ? 'border-dark-700/50 bg-dark-800/50' : 'border-champagne-300/60 bg-champagne-200/40'}`}
-    >
-      <div className="mb-4 flex items-center justify-between">
-        <h3 className="font-medium text-dark-100">{t('subscription.buyDevices')}</h3>
-        <button
-          onClick={onClose}
-          className="text-sm text-dark-400 hover:text-dark-200"
-          aria-label={t('common.close', 'Close')}
-        >
-          ✕
-        </button>
-      </div>
-
-      {devicePriceData?.available === false ? (
-        <div className="py-4 text-center text-sm text-dark-400">
-          {deviceUnavailableText(
-            t,
-            devicePriceData,
-            'subscription.additionalOptions.devicesUnavailable',
-          )}
-        </div>
-      ) : (
-        <div className="space-y-4">
-          {/* Device counter */}
-          <div className="flex items-center justify-center gap-6">
-            <button
-              onClick={() => onDevicesToAddChange(Math.max(1, devicesToAdd - 1))}
-              disabled={devicesToAdd <= 1}
-              className="btn-secondary flex h-12 w-12 items-center justify-center !p-0 text-2xl"
-              aria-label={t('subscription.additionalOptions.decrementDevices', 'Уменьшить')}
-            >
-              -
-            </button>
-            <div className="text-center">
-              <div className="text-4xl font-bold text-dark-100">{devicesToAdd}</div>
-              <div className="text-sm text-dark-500">
-                {t('subscription.additionalOptions.devicesUnit')}
-              </div>
-            </div>
-            <button
-              onClick={() => onDevicesToAddChange(devicesToAdd + 1)}
-              disabled={
-                devicePriceData?.max_device_limit
-                  ? (devicePriceData.current_device_limit || 0) + devicesToAdd >=
-                    devicePriceData.max_device_limit
-                  : false
-              }
-              className="btn-secondary flex h-12 w-12 items-center justify-center !p-0 text-2xl"
-              aria-label={t('subscription.additionalOptions.incrementDevices', 'Увеличить')}
-            >
-              +
-            </button>
-          </div>
-
-          {devicePriceData?.max_device_limit && (
-            <div className="text-center text-sm text-dark-400">
-              {t('subscription.additionalOptions.currentDeviceLimit', {
-                count: devicePriceData.current_device_limit || subscription.device_limit,
-              })}{' '}
-              /{' '}
-              {t('subscription.additionalOptions.maxDevices', {
-                count: devicePriceData.max_device_limit,
-              })}
-            </div>
-          )}
-
-          {/* Price info */}
-          {devicePriceData?.available && devicePriceData.price_per_device_label && (
-            <div className="text-center">
-              <div className="mb-2 text-sm text-dark-400">
-                {devicePriceData.discount_percent != null &&
-                devicePriceData.discount_percent > 0 &&
-                devicePriceData.original_price_per_device_kopeks ? (
-                  <span>
-                    <span className="text-dark-500 line-through">
-                      {formatPrice(devicePriceData.original_price_per_device_kopeks)}
-                    </span>
-                    <span className="mx-1">{devicePriceData.price_per_device_label}</span>
-                  </span>
-                ) : (
-                  devicePriceData.price_per_device_label
-                )}
-                /{t('subscription.perDevice').replace('/ ', '')} (
-                {isLifetimePeriod(devicePriceData.days_left)
-                  ? t('subscription.lifetime.forever')
-                  : t('subscription.days', { count: devicePriceData.days_left })}
-                )
-              </div>
-              {devicePriceData.discount_percent != null && devicePriceData.discount_percent > 0 && (
-                <div className="mb-2">
-                  <span className="inline-block rounded-full bg-success-500/20 px-2.5 py-0.5 text-sm font-medium text-success-400">
-                    -{devicePriceData.discount_percent}%
-                  </span>
-                </div>
+    <>
+      <Row
+        icon={<PiPlusCircleDuotone />}
+        label={t('subscription.additionalOptions.buyDevices')}
+        description={t('subscription.additionalOptions.currentDeviceLimit', {
+          count: subscription.device_limit,
+        })}
+        onClick={onOpen}
+      />
+      <ResponsiveSheet isOpen={open} onClose={onClose} title={t('subscription.buyDevices')}>
+        <SheetBody>
+          {devicePriceData?.available === false ? (
+            <SheetNote>
+              {deviceUnavailableText(
+                t,
+                devicePriceData,
+                'subscription.additionalOptions.devicesUnavailable',
               )}
-              {devicePriceData.total_price_kopeks === 0 ? (
-                <div className="text-2xl font-bold text-success-400">
-                  {t('subscription.switchTariff.free')}
-                </div>
-              ) : (
-                <div className="text-2xl font-bold text-accent-400">
-                  {devicePriceData.discount_percent != null &&
-                    devicePriceData.discount_percent > 0 &&
-                    devicePriceData.base_total_price_kopeks && (
-                      <span className="mr-2 text-lg text-dark-500 line-through">
-                        {formatPrice(devicePriceData.base_total_price_kopeks)}
-                      </span>
-                    )}
-                  {devicePriceData.total_price_label}
-                </div>
-              )}
-            </div>
-          )}
-
-          {/* Insufficient balance */}
-          {devicePriceData?.available &&
-            purchaseOptions &&
-            devicePriceData.total_price_kopeks &&
-            devicePriceData.total_price_kopeks > purchaseOptions.balance_kopeks && (
-              <InsufficientBalancePrompt
-                missingAmountKopeks={
-                  devicePriceData.total_price_kopeks - purchaseOptions.balance_kopeks
+            </SheetNote>
+          ) : (
+            <>
+              <Stepper
+                value={devicesToAdd}
+                unit={t('subscription.additionalOptions.devicesUnit')}
+                onDecrement={() => onDevicesToAddChange(Math.max(1, devicesToAdd - 1))}
+                onIncrement={() => onDevicesToAddChange(devicesToAdd + 1)}
+                decrementDisabled={devicesToAdd <= 1}
+                incrementDisabled={
+                  devicePriceData?.max_device_limit
+                    ? (devicePriceData.current_device_limit || 0) + devicesToAdd >=
+                      devicePriceData.max_device_limit
+                    : false
                 }
-                compact
-                onBeforeTopUp={async () => {
-                  await subscriptionApi.saveDevicesCart(devicesToAdd, subscriptionId);
-                }}
+                decrementLabel={t('subscription.additionalOptions.decrementDevices', 'Уменьшить')}
+                incrementLabel={t('subscription.additionalOptions.incrementDevices', 'Увеличить')}
               />
-            )}
 
-          <button
-            onClick={() => devicePurchaseMutation.mutate()}
-            disabled={
-              devicePurchaseMutation.isPending ||
-              !devicePriceData?.available ||
-              !!(
-                devicePriceData?.total_price_kopeks &&
-                purchaseOptions &&
-                devicePriceData.total_price_kopeks > purchaseOptions.balance_kopeks
-              )
-            }
-            className="btn-primary w-full py-3"
-          >
-            {devicePurchaseMutation.isPending ? (
-              <span className="flex items-center justify-center gap-2">
-                <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
-              </span>
-            ) : (
-              t('subscription.additionalOptions.buy')
-            )}
-          </button>
+              {devicePriceData?.max_device_limit && (
+                <p className="text-center text-[13px] text-dark-400">
+                  {t('subscription.additionalOptions.currentDeviceLimit', {
+                    count: devicePriceData.current_device_limit || subscription.device_limit,
+                  })}{' '}
+                  ·{' '}
+                  {t('subscription.additionalOptions.maxDevices', {
+                    count: devicePriceData.max_device_limit,
+                  })}
+                </p>
+              )}
 
-          {devicePurchaseMutation.isError && (
-            <div className="text-center text-sm text-error-400">
-              {getErrorMessage(devicePurchaseMutation.error)}
-            </div>
+              {devicePriceData?.available && devicePriceData.price_per_device_label && (
+                <div className="space-y-2 rounded-3xl bg-dark-800/40 p-4 ring-1 ring-inset ring-dark-800/80">
+                  <div className="flex items-center justify-between gap-3 px-1 text-[13px] text-dark-400">
+                    <span>
+                      {hasDiscount && devicePriceData.original_price_per_device_kopeks ? (
+                        <>
+                          <span className="text-dark-500 line-through">
+                            {formatPrice(devicePriceData.original_price_per_device_kopeks)}
+                          </span>{' '}
+                        </>
+                      ) : null}
+                      {devicePriceData.price_per_device_label}
+                      {t('subscription.perDevice').replace('/ ', ' / ')}
+                    </span>
+                    <span>
+                      {isLifetimePeriod(devicePriceData.days_left)
+                        ? t('subscription.lifetime.forever')
+                        : t('subscription.days', { count: devicePriceData.days_left })}
+                    </span>
+                  </div>
+                  <TotalLine
+                    label={
+                      <span className="flex items-center gap-2">
+                        {t('subscription.total')}
+                        {hasDiscount && (
+                          <Chip tone="success">-{devicePriceData.discount_percent}%</Chip>
+                        )}
+                      </span>
+                    }
+                  >
+                    {devicePriceData.total_price_kopeks === 0 ? (
+                      <span className="text-success-400">
+                        {t('subscription.switchTariff.free')}
+                      </span>
+                    ) : (
+                      <>
+                        {hasDiscount && devicePriceData.base_total_price_kopeks && (
+                          <span className="mr-2 text-sm font-medium text-dark-500 line-through">
+                            {formatPrice(devicePriceData.base_total_price_kopeks)}
+                          </span>
+                        )}
+                        {devicePriceData.total_price_label}
+                      </>
+                    )}
+                  </TotalLine>
+                </div>
+              )}
+
+              {insufficient && purchaseOptions && devicePriceData?.total_price_kopeks && (
+                <InsufficientBalancePrompt
+                  missingAmountKopeks={
+                    devicePriceData.total_price_kopeks - purchaseOptions.balance_kopeks
+                  }
+                  compact
+                  onBeforeTopUp={async () => {
+                    await subscriptionApi.saveDevicesCart(devicesToAdd, subscriptionId);
+                  }}
+                />
+              )}
+
+              <Button
+                className="w-full"
+                onClick={() => devicePurchaseMutation.mutate()}
+                disabled={
+                  devicePurchaseMutation.isPending || !devicePriceData?.available || insufficient
+                }
+              >
+                {devicePurchaseMutation.isPending ? (
+                  <Spinner />
+                ) : (
+                  t('subscription.additionalOptions.buy')
+                )}
+              </Button>
+
+              {devicePurchaseMutation.isError && (
+                <p className="text-center text-[13px] text-error-400">
+                  {getErrorMessage(devicePurchaseMutation.error)}
+                </p>
+              )}
+            </>
           )}
-        </div>
-      )}
-    </div>
+        </SheetBody>
+      </ResponsiveSheet>
+    </>
   );
 }

@@ -3,7 +3,8 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 
 import { subscriptionApi } from '@/api/subscription';
-import { ArrowPathIcon } from '@/components/icons';
+import { PiArrowsCounterClockwiseDuotone, PiCaretRightBold } from 'react-icons/pi';
+import { RowIcon } from '@/components/spofy/ui';
 import { useHaptic } from '@/platform';
 import { useDestructiveConfirm } from '@/platform/hooks/useNativeDialog';
 import type { Subscription } from '@/types';
@@ -108,36 +109,37 @@ export function ReissueLinkButton({ subscription, subscriptionId }: ReissueLinkB
         type="button"
         onClick={handleRevoke}
         disabled={revokeMutation.isPending || cooldown > 0}
-        className="w-full rounded-xl border border-warning-500/30 bg-warning-500/10 p-4 text-left transition-colors hover:bg-warning-500/20 disabled:opacity-50"
+        className="flex min-h-[60px] w-full items-center gap-3 px-4 py-2.5 text-left transition-colors hover:bg-dark-800/40 active:bg-dark-800/60 disabled:opacity-50"
       >
-        <div className="flex items-center justify-between">
-          <div>
-            <div className="font-medium text-warning-400">{t('subscription.revoke.button')}</div>
-            <div className="mt-1 text-sm text-dark-400">
-              {cooldown > 0
-                ? t('subscription.revoke.cooldown', {
-                    minutes: Math.floor(cooldown / 60),
-                    seconds: cooldown % 60,
-                  })
-                : t('subscription.revoke.description')}
-            </div>
-          </div>
-          <div className="text-warning-400">
-            {revokeMutation.isPending ? (
-              <div className="h-5 w-5 animate-spin rounded-full border-2 border-warning-400/30 border-t-amber-400" />
-            ) : (
-              <ArrowPathIcon className="h-5 w-5" />
-            )}
-          </div>
-        </div>
+        <RowIcon tone="warning">
+          <PiArrowsCounterClockwiseDuotone
+            className={revokeMutation.isPending ? 'animate-spin' : undefined}
+          />
+        </RowIcon>
+        <span className="min-w-0 flex-1">
+          <span className="block truncate text-[15px] font-semibold text-dark-100">
+            {t('subscription.revoke.button')}
+          </span>
+          <span className="mt-0.5 block text-[13px] leading-snug text-dark-400">
+            {cooldown > 0
+              ? t('subscription.revoke.cooldown', {
+                  minutes: Math.floor(cooldown / 60),
+                  seconds: cooldown % 60,
+                })
+              : t('subscription.revoke.description')}
+          </span>
+        </span>
+        <PiCaretRightBold className="h-3.5 w-3.5 shrink-0 text-dark-500" aria-hidden />
       </button>
       {failedResetStorageKey === storageKey && (
-        <p role="status" className="mt-2 text-sm text-warning-400">
+        <p role="status" className="px-4 pb-3 text-[13px] text-warning-400">
           {t('subscription.revoke.partialWarning')}
         </p>
       )}
       {revokeMutation.error && (
-        <p className="mt-2 text-sm text-error-400">{getErrorMessage(revokeMutation.error)}</p>
+        <p className="px-4 pb-3 text-[13px] text-error-400">
+          {getErrorMessage(revokeMutation.error)}
+        </p>
       )}
     </>
   );
