@@ -58,7 +58,7 @@ export function CheckEmailCard({ email, onBackToLogin, onChangeEmail }: CheckEma
   };
 
   return (
-    <div className="card text-center">
+    <div className="rounded-3xl bg-dark-900/70 p-6 ring-1 ring-inset ring-dark-800/80 text-center">
       <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-success-500/20">
         <EmailIcon className="h-7 w-7 text-success-400" />
       </div>
@@ -67,7 +67,7 @@ export function CheckEmailCard({ email, onBackToLogin, onChangeEmail }: CheckEma
       <p className="mb-4 text-sm font-medium text-accent-400">{email}</p>
       <p className="mb-4 text-xs text-dark-500">{t('auth.clickLinkToVerify')}</p>
 
-      <p className="mb-5 rounded-xl border border-dark-700 bg-dark-800/60 p-3 text-left text-xs leading-relaxed text-dark-400">
+      <p className="mb-5 rounded-2xl bg-dark-800/60 p-3 text-left text-xs leading-relaxed text-dark-400">
         {t('auth.spamHint')}
       </p>
 
@@ -84,7 +84,7 @@ export function CheckEmailCard({ email, onBackToLogin, onChangeEmail }: CheckEma
         type="button"
         onClick={handleResend}
         disabled={cooldown > 0 || sending}
-        className="btn-primary w-full disabled:cursor-not-allowed disabled:opacity-50"
+        className="inline-flex h-12 items-center justify-center gap-2 rounded-2xl bg-accent-500 px-5 text-[15px] font-semibold text-on-accent transition-colors hover:bg-accent-600 active:scale-[0.98] disabled:cursor-not-allowed disabled:bg-accent-500/40 w-full"
       >
         {cooldown > 0 ? t('auth.resendIn', { seconds: cooldown }) : t('auth.resendVerification')}
       </button>
@@ -97,7 +97,10 @@ export function CheckEmailCard({ email, onBackToLogin, onChangeEmail }: CheckEma
         {t('auth.useAnotherEmail')}
       </button>
 
-      <button onClick={onBackToLogin} className="btn-secondary mt-4 w-full">
+      <button
+        onClick={onBackToLogin}
+        className="inline-flex h-12 items-center justify-center gap-2 rounded-2xl bg-dark-800/70 px-5 text-[15px] font-semibold text-dark-100 ring-1 ring-inset ring-dark-700/60 transition-colors hover:bg-dark-700/70 disabled:cursor-not-allowed disabled:opacity-50 mt-4 w-full"
+      >
         {t('auth.backToLogin')}
       </button>
     </div>
