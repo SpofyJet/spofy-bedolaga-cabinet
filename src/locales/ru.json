@@ -464,7 +464,8 @@
       "addSlot": "Добавить место",
       "buyTraffic": "Докупить ГБ",
       "manage": "Мои устройства",
-      "noLimit": "Без лимита"
+      "noLimit": "Без лимита",
+      "addSlotShort": "Ещё место"
     }
   },
   "subscription": {

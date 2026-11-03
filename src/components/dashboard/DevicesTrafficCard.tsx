@@ -8,13 +8,23 @@ import {
   PiPlusBold,
   PiCaretRightBold,
   PiWarningCircleFill,
-  PiDevicesBold,
 } from 'react-icons/pi';
 import type { IconType } from 'react-icons';
 
 import { cn } from '@/lib/utils';
 import { formatTraffic } from '@/utils/formatTraffic';
 import type { Device } from '@/types';
+
+const PANEL = 'flex min-w-0 flex-col rounded-2xl bg-dark-800/45 p-2.5 min-[360px]:p-3';
+const TILE =
+  'flex aspect-square w-full max-w-[32px] items-center justify-center rounded-lg min-[360px]:rounded-[10px]';
+const VALUE =
+  'mt-3 truncate text-base font-bold leading-tight tracking-tight text-dark-50 min-[360px]:text-lg';
+const CAPTION = 'mt-0.5 text-xs leading-snug';
+const ACTION =
+  'mt-3 flex h-10 items-center justify-center gap-1.5 whitespace-nowrap rounded-xl px-2 text-[13px] font-semibold transition-colors min-[360px]:text-sm';
+const ACTION_HOT = 'bg-accent-500 text-on-accent hover:bg-accent-600';
+const ACTION_QUIET = 'bg-dark-700/60 text-dark-100 hover:bg-dark-700';
 
 /** Сколько плиток помещается в половину карточки на телефоне (4 × 32px + зазоры). */
 const MAX_TILES = 4;
@@ -128,61 +138,78 @@ export default function DevicesTrafficCard({
         <PiCaretRightBold className="h-4 w-4 text-dark-500 transition-transform group-hover:translate-x-0.5 group-hover:text-dark-300" />
       </Link>
 
-      <div className="grid grid-cols-2 gap-3">
-        {/* Устройства */}
-        <div className="flex min-w-0 flex-col">
-          {/* Плитки резиновые: четыре колонки по ширине своей половины карточки,
-              но не больше 32px — на узком экране Telegram ряд не наезжает на
-              колонку трафика. */}
-          <div className="grid h-9 max-w-[146px] grid-cols-4 items-center gap-1.5" aria-hidden>
-            {tiles.map((tile, i) => {
-              if (tile.kind === 'free')
+      {/* Две панели вместо линии-разделителя: у каждой своя подложка и своя
+          кнопка внутри — видно, что к чему относится, и на узком экране
+          колонкам не нужно ничего делить. */}
+      <div className="grid grid-cols-2 gap-2">
+        {/* Устройства: верх панели ведёт в «Мои устройства», кнопка — докупить место */}
+        <div className={PANEL}>
+          <Link
+            to="/subscription?section=devices"
+            aria-label={t('dashboard.devicesTraffic.manage', 'Мои устройства')}
+            className="-m-1 block rounded-xl p-1 transition-opacity hover:opacity-80"
+          >
+            {/* Плитки резиновые: четыре колонки по ширине панели, но не больше
+                32px — на узком экране Telegram ряд не вылезает за панель. */}
+            <div
+              className="grid h-8 max-w-[146px] grid-cols-4 items-center gap-1 min-[360px]:gap-1.5"
+              aria-hidden
+            >
+              {tiles.map((tile, i) => {
+                if (tile.kind === 'free')
+                  return (
+                    <span key={i} className={cn(TILE, 'border border-dashed border-dark-600/70')} />
+                  );
+                if (tile.kind === 'more')
+                  return (
+                    <span
+                      key={i}
+                      className={cn(TILE, 'bg-accent-500/15 text-[11px] font-bold text-accent-300')}
+                    >
+                      +{tile.count}
+                    </span>
+                  );
+                const Icon = platformIcon(tile.device?.platform);
                 return (
-                  <span
-                    key={i}
-                    className="aspect-square w-full max-w-[32px] rounded-[10px] border border-dashed border-dark-600/70"
-                  />
-                );
-              if (tile.kind === 'more')
-                return (
-                  <span
-                    key={i}
-                    className="flex aspect-square w-full max-w-[32px] items-center justify-center rounded-[10px] bg-accent-500/15 text-xs font-bold text-accent-300"
-                  >
-                    +{tile.count}
+                  <span key={i} className={cn(TILE, 'bg-accent-500/15 text-accent-300')}>
+                    <Icon className="h-4 w-4" />
                   </span>
                 );
-              const Icon = platformIcon(tile.device?.platform);
-              return (
-                <span
-                  key={i}
-                  className="flex aspect-square w-full max-w-[32px] items-center justify-center rounded-[10px] bg-accent-500/15 text-accent-300"
-                >
-                  <Icon className="h-4 w-4" />
-                </span>
-              );
-            })}
-          </div>
-          <div className="mt-3 text-lg font-bold leading-tight tracking-tight text-dark-50">
-            {unlimitedDevices
-              ? connectedDevices
-              : t('dashboard.devicesTraffic.ofDevices', '{{used}} из {{limit}}', {
-                  used: connectedDevices,
-                  limit: deviceLimit,
-                })}
-          </div>
-          <div className={cn('text-xs', atLimit ? 'text-warning-400' : 'text-dark-400')}>
-            {atLimit
-              ? t('dashboard.devicesTraffic.allSlotsBusy', 'все места заняты')
-              : t('dashboard.devicesTraffic.devices', 'устройств подключено')}
-          </div>
+              })}
+            </div>
+            <div className={VALUE}>
+              {unlimitedDevices
+                ? connectedDevices
+                : t('dashboard.devicesTraffic.ofDevices', '{{used}} из {{limit}}', {
+                    used: connectedDevices,
+                    limit: deviceLimit,
+                  })}
+            </div>
+            <div className={cn(CAPTION, atLimit ? 'text-warning-400' : 'text-dark-400')}>
+              {atLimit
+                ? t('dashboard.devicesTraffic.allSlotsBusy', 'все места заняты')
+                : t('dashboard.devicesTraffic.devices', 'устройств подключено')}
+            </div>
+          </Link>
+          <span className="flex-1" aria-hidden />
+          <Link to={devicesTo} className={cn(ACTION, atLimit ? ACTION_HOT : ACTION_QUIET)}>
+            <PiPlusBold className="hidden h-3.5 w-3.5 shrink-0 min-[360px]:block" />
+            {/* на узком экране — короткая подпись: панель и так про устройства */}
+            <span className="hidden min-[360px]:inline">
+              {t('dashboard.devicesTraffic.addSlot', 'Добавить место')}
+            </span>
+            <span className="min-[360px]:hidden">
+              {t('dashboard.devicesTraffic.addSlotShort', 'Ещё место')}
+            </span>
+          </Link>
         </div>
 
-        {/* Трафик */}
-        <div className="flex min-w-0 flex-col border-l border-dark-700/50 pl-3">
-          <div className="flex h-9 items-center">
+        {/* Трафик. Безлимиту докупать нечего — кнопки нет, и панель не тянет
+            пустоту снизу: значок и подпись стоят по центру. */}
+        <div className={cn(PANEL, unlimitedTraffic && 'items-center justify-center text-center')}>
+          <div className="flex h-8 items-center">
             {unlimitedTraffic ? (
-              // та же плитка, что у устройств: ряды двух колонок на одной высоте
+              // та же плитка, что у устройств: ряды двух панелей на одной высоте
               <span
                 className="flex h-8 w-8 items-center justify-center rounded-[10px] bg-accent-500/15 text-lg font-bold leading-none text-accent-300"
                 aria-hidden
@@ -207,25 +234,32 @@ export default function DevicesTrafficCard({
               </div>
             )}
           </div>
-          <div className="mt-3 truncate text-lg font-bold leading-tight tracking-tight text-dark-50">
+          <div className={VALUE}>
             {unlimitedTraffic
               ? t('dashboard.devicesTraffic.noLimit', 'Без лимита')
               : t('dashboard.devicesTraffic.ofTraffic', '{{used}} из {{limit}}', {
                   ...trafficPair(trafficUsedGb, trafficLimitGb),
                 })}
           </div>
-          <div className={cn('text-xs', bypassSuspended ? 'text-warning-400' : 'text-dark-400')}>
+          <div className={cn(CAPTION, bypassSuspended ? 'text-warning-400' : 'text-dark-400')}>
             {bypassSuspended
               ? t('dashboard.devicesTraffic.bypassOff', 'обходы выключены')
               : bypassQuota
                 ? t('dashboard.devicesTraffic.bypassTraffic', 'трафик обходов')
                 : t('dashboard.devicesTraffic.traffic', 'трафик')}
           </div>
+          {!unlimitedTraffic && <span className="flex-1" aria-hidden />}
+          {!unlimitedTraffic && (
+            <Link to={trafficTo} className={cn(ACTION, trafficLow ? ACTION_HOT : ACTION_QUIET)}>
+              <PiPlusBold className="hidden h-3.5 w-3.5 shrink-0 min-[360px]:block" />
+              {t('dashboard.devicesTraffic.buyTraffic', 'Докупить ГБ')}
+            </Link>
+          )}
         </div>
       </div>
 
       {bypassSuspended && (
-        <p className="mt-3 flex items-start gap-2 rounded-xl bg-warning-500/10 px-3 py-2 text-xs leading-relaxed text-warning-300">
+        <p className="mt-2.5 flex items-start gap-2 rounded-xl bg-warning-500/10 px-3 py-2 text-xs leading-relaxed text-warning-300">
           <PiWarningCircleFill className="mt-px h-4 w-4 shrink-0" />
           {t(
             'dashboard.devicesTraffic.bypassOffHint',
@@ -233,43 +267,6 @@ export default function DevicesTrafficCard({
           )}
         </p>
       )}
-
-      <div className="mt-4 grid grid-cols-2 gap-3">
-        <Link
-          to={devicesTo}
-          className={cn(
-            'flex h-11 items-center justify-center gap-1.5 whitespace-nowrap rounded-xl px-2 text-[13px] font-semibold transition-colors min-[360px]:text-sm',
-            atLimit
-              ? 'bg-accent-500 text-on-accent hover:bg-accent-600'
-              : 'bg-dark-800/80 text-dark-100 hover:bg-dark-700/80',
-          )}
-        >
-          <PiPlusBold className="hidden h-3.5 w-3.5 shrink-0 min-[360px]:block" />
-          {t('dashboard.devicesTraffic.addSlot', 'Добавить место')}
-        </Link>
-        {unlimitedTraffic ? (
-          <Link
-            to={`/subscription?section=devices`}
-            className="flex h-11 items-center justify-center gap-1.5 whitespace-nowrap rounded-xl bg-dark-800/80 px-2 text-[13px] font-semibold text-dark-100 transition-colors hover:bg-dark-700/80 min-[360px]:text-sm"
-          >
-            <PiDevicesBold className="hidden h-4 w-4 shrink-0 min-[360px]:block" />
-            {t('dashboard.devicesTraffic.manage', 'Мои устройства')}
-          </Link>
-        ) : (
-          <Link
-            to={trafficTo}
-            className={cn(
-              'flex h-11 items-center justify-center gap-1.5 whitespace-nowrap rounded-xl px-2 text-[13px] font-semibold transition-colors min-[360px]:text-sm',
-              trafficLow
-                ? 'bg-accent-500 text-on-accent hover:bg-accent-600'
-                : 'bg-dark-800/80 text-dark-100 hover:bg-dark-700/80',
-            )}
-          >
-            <PiPlusBold className="hidden h-3.5 w-3.5 shrink-0 min-[360px]:block" />
-            {t('dashboard.devicesTraffic.buyTraffic', 'Докупить ГБ')}
-          </Link>
-        )}
-      </div>
     </section>
   );
 }

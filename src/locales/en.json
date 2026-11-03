@@ -454,7 +454,8 @@
       "addSlot": "Add a slot",
       "buyTraffic": "Buy GB",
       "manage": "My devices",
-      "noLimit": "No limit"
+      "noLimit": "No limit",
+      "addSlotShort": "Add slot"
     }
   },
   "subscription": {

@@ -419,7 +419,8 @@
       "addSlot": "增加名额",
       "buyTraffic": "购买流量",
       "manage": "我的设备",
-      "noLimit": "不限量"
+      "noLimit": "不限量",
+      "addSlotShort": "加名额"
     }
   },
   "subscription": {

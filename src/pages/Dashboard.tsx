@@ -19,7 +19,6 @@ import { isLifetimeSubscription } from '../utils/lifetime';
 import TrialOfferCard from '../components/dashboard/TrialOfferCard';
 import ReminderCards from '../components/dashboard/ReminderCards';
 import { giftApi } from '../api/gift';
-import { promoApi } from '../api/promo';
 import PendingGiftCard from '../components/dashboard/PendingGiftCard';
 import SubscriptionListCard from '../components/subscription/SubscriptionListCard';
 import { DeviceLimitSheet } from '../components/subscription/DeviceLimitSheet';
@@ -30,7 +29,7 @@ import { StoryRail } from '../components/stories';
 import { useBranding } from '../hooks/useBranding';
 import { useFeatureFlags } from '@/hooks/useFeatureFlags';
 import { API } from '../config/constants';
-import { ChevronRightIcon, GiftIcon, StarIcon } from '@/components/icons';
+import { ChevronRightIcon, GiftIcon } from '@/components/icons';
 import { WheelIcon } from '@/components/layout/AppShell/icons';
 import { Skeleton, SkeletonGroup } from '@/components/ui/skeleton';
 import { safeLocal } from '../utils/safeStorage';
@@ -137,13 +136,6 @@ export default function Dashboard() {
     queryKey: ['pending-gifts'],
     queryFn: giftApi.getPendingGifts,
     staleTime: 30_000,
-    retry: false,
-  });
-
-  const { data: promoGroupData } = useQuery({
-    queryKey: ['promo-group-discounts'],
-    queryFn: promoApi.getGroupDiscounts,
-    staleTime: 60_000,
     retry: false,
   });
 
@@ -342,46 +334,31 @@ export default function Dashboard() {
 
   return (
     <div className="mx-auto w-full max-w-[600px] space-y-5">
-      {/* Шапка профиля, как в топовых VPN-клиентах: аватар — тап в профиль,
-          рядом имя и ID, справа подарок (по флагу) и статус-пилюля. */}
+      {/* Шапка профиля: в профиль ведёт только сама аватарка (раньше ссылкой
+          была вся полоса до подарка — уводило даже от касания рядом с именем).
+          Под именем только ID: пилюля промогруппы («Пользователь») — лишний статус. */}
       <div className="flex items-center gap-3" data-onboarding="welcome">
         <Link
           to="/profile"
-          className="flex min-w-0 flex-1 items-center gap-3 rounded-2xl transition-opacity hover:opacity-85"
+          aria-label={t('nav.profile')}
+          className="relative flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-accent-500/10 ring-1 ring-inset ring-dark-800/80 transition-opacity hover:opacity-85"
         >
-          <span className="relative flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-accent-500/10 ring-1 ring-inset ring-dark-800/80">
-            {avatarUrl ? (
-              <img src={avatarUrl} alt="" className="h-full w-full object-cover" />
-            ) : showAvatarLetter ? (
-              <span className="font-display text-lg font-bold text-accent-300">
-                {logoLetter.toUpperCase()}
-              </span>
-            ) : null}
-          </span>
-          <span className="min-w-0">
-            <span className="block truncate text-lg font-bold tracking-tight text-dark-50">
-              {userName || appName}
+          {avatarUrl ? (
+            <img src={avatarUrl} alt="" className="h-full w-full object-cover" />
+          ) : showAvatarLetter ? (
+            <span className="font-display text-lg font-bold text-accent-300">
+              {logoLetter.toUpperCase()}
             </span>
-            <span className="mt-1 flex items-center gap-2">
-              {user?.id != null && (
-                <span className="text-xs font-medium text-dark-400">ID {user.id}</span>
-              )}
-              {promoGroupData?.group_name && (
-                <span
-                  className="inline-flex max-w-[140px] items-center gap-1 rounded-full px-2 py-px text-[10px] font-semibold"
-                  style={{
-                    background: 'rgba(var(--color-accent-400), 0.1)',
-                    border: '1px solid rgba(var(--color-accent-400), 0.2)',
-                    color: 'rgb(var(--color-accent-400))',
-                  }}
-                >
-                  <StarIcon filled className="h-2 w-2 shrink-0" />
-                  <span className="truncate">{promoGroupData.group_name}</span>
-                </span>
-              )}
-            </span>
-          </span>
+          ) : null}
         </Link>
+        <div className="min-w-0 flex-1">
+          <span className="block truncate text-lg font-bold tracking-tight text-dark-50">
+            {userName || appName}
+          </span>
+          {user?.id != null && (
+            <span className="mt-1 block text-xs font-medium text-dark-400">ID {user.id}</span>
+          )}
+        </div>
         {giftEnabled && (
           <Link
             to="/gift"

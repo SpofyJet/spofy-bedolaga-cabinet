@@ -424,7 +424,8 @@
       "addSlot": "افزودن جا",
       "buyTraffic": "خرید گیگ",
       "manage": "دستگاه‌های من",
-      "noLimit": "بدون محدودیت"
+      "noLimit": "بدون محدودیت",
+      "addSlotShort": "افزودن"
     }
   },
   "subscription": {
