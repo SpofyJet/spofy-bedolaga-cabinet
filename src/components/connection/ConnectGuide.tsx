@@ -358,6 +358,10 @@ function ChoiceGroup({
   // 2 → две половины, 3 → один ряд, 4 → 2 × 2, 5–7 → по 3 в ряд
   const n = items.length;
   const cols = variant === 'app' ? Math.min(2, n) : n <= 3 ? n : n === 4 ? 2 : 3;
+  // короткий последний ряд (5, 7 систем) делит ширину, а не оставляет дыру справа:
+  // сетка из 6 колонок, плитка занимает 2
+  const rest = cols === 3 ? n % 3 : 0;
+  const spanOf = (index: number) => (rest && index >= n - rest ? 6 / rest : 2);
 
   return (
     <div
@@ -365,9 +369,9 @@ function ChoiceGroup({
       aria-label={label}
       onKeyDown={onKeys}
       className="grid gap-2"
-      style={{ gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))` }}
+      style={{ gridTemplateColumns: `repeat(${rest ? 6 : cols}, minmax(0, 1fr))` }}
     >
-      {items.map((item) => {
+      {items.map((item, index) => {
         const checked = item.key === value;
         return (
           <button
@@ -380,6 +384,7 @@ function ChoiceGroup({
             aria-checked={checked}
             tabIndex={checked ? 0 : -1}
             onClick={() => onSelect(item.key)}
+            style={rest ? { gridColumn: `span ${spanOf(index)}` } : undefined}
             className={cn(
               'min-w-0 rounded-2xl ring-inset transition-colors active:scale-[0.98]',
               variant === 'tile'
@@ -677,7 +682,7 @@ function Steps({
               )}
               {failed?.key.startsWith(`${index}:`) && <ManualCopy text={failed.text} />}
               {anyCopy && !failed?.key.startsWith(`${index}:`) && (
-                <p className="mt-2 text-xs text-dark-500">
+                <p className="mt-2 text-[12.5px] leading-snug text-dark-400">
                   {t(
                     'subscription.connection.v10.personalKey',
                     'Это ваш личный ключ — никому его не пересылайте',
