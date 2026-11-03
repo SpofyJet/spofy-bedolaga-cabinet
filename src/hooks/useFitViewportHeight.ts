@@ -24,7 +24,11 @@ export function useFitViewportHeight<T extends HTMLElement>() {
       const top = el.getBoundingClientRect().top + window.scrollY;
       const isDesktop = window.matchMedia?.('(min-width: 1024px)').matches ?? false;
       // +8 — нижний отступ main (pb: clearance + 0.5rem), чтобы документ не прокручивался.
-      const bottom = (isDesktop ? 24 : probe.getBoundingClientRect().height) + 8;
+      const clearance = probe.getBoundingClientRect().height;
+      // Круглая кнопка «Подключить» выступает над панелью примерно на 28px —
+      // поле ввода не должно уходить под неё (панель видна, если просвет > 40px).
+      const fab = clearance > 40 ? 22 : 0;
+      const bottom = (isDesktop ? 24 : clearance + fab) + 8;
       el.style.height = `${Math.max(320, Math.floor(viewport - top - bottom))}px`;
     };
 
