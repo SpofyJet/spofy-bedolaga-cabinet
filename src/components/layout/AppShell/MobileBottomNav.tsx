@@ -5,7 +5,6 @@ import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { usePlatform } from '@/platform';
 import { HIDDEN_UNDER_KEYBOARD, useVirtualKeyboard } from '@/hooks/useVirtualKeyboard';
-import { PowerIcon } from '@/components/icons';
 
 import { HomeIcon, WheelIcon, UsersIcon, ChatIcon, UserIcon } from './icons';
 import type { MobileNavItem, MobileNavKey } from './mobileNavRoutes';
@@ -23,20 +22,13 @@ const ICONS: Record<MobileNavKey, NavIcon> = {
 interface MobileBottomNavProps {
   /** Экраны панели — из mobileNavItems(); AppShell рендерит панель только на них. */
   items: readonly MobileNavItem[];
-  /** Центральная кнопка подключения — первый маршрут подключения из AppShell. */
-  connectTo?: string;
   /** Открыто выезжающее меню шапки: у него есть все те же пункты, панель поверх него лишняя. */
   isMenuOpen?: boolean;
   /** Точка на пункте — например, непрочитанный ответ поддержки. */
   badges?: Partial<Record<MobileNavKey, boolean>>;
 }
 
-export function MobileBottomNav({
-  items,
-  connectTo,
-  isMenuOpen = false,
-  badges = {},
-}: MobileBottomNavProps) {
+export function MobileBottomNav({ items, isMenuOpen = false, badges = {} }: MobileBottomNavProps) {
   const { t } = useTranslation();
   const location = useLocation();
   const { haptic } = usePlatform();
@@ -114,32 +106,6 @@ export function MobileBottomNav({
           );
         })}
       </div>
-
-      {/* Центральная кнопка подключения — главный жест VPN, как у топовых
-          клиентов: круг с иконкой питания на верхней кромке панели. */}
-      {connectTo && (
-        // Сдвиг к центру — через x/y самой анимации: Tailwind-классы translate
-        // затирались inline-transform'ом от whileTap, и кнопка при нажатии
-        // отскакивала на полкнопки вправо-вниз («улетала»).
-        <motion.div
-          whileTap={{ scale: 0.9 }}
-          style={{ x: '-50%', y: '-50%' }}
-          className="absolute left-1/2 top-0 z-10"
-        >
-          <Link
-            to={connectTo}
-            onClick={handleNavClick}
-            aria-label={t('dashboard.quick.connect')}
-            className="flex h-14 w-14 items-center justify-center rounded-full border border-accent-300/60 bg-gradient-to-b from-accent-400 to-accent-600 text-on-accent transition-shadow duration-200 hover:shadow-[0_0_32px_-6px_rgba(var(--color-accent-500),0.7)]"
-            style={{
-              boxShadow:
-                'inset 0 1px 0 rgba(255,255,255,0.25), 0 6px 20px -6px rgba(var(--color-accent-500),0.55), 0 0 0 4px rgb(var(--color-dark-950))',
-            }}
-          >
-            <PowerIcon className="h-6 w-6" />
-          </Link>
-        </motion.div>
-      )}
     </nav>
   );
 }

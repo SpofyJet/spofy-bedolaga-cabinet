@@ -107,7 +107,7 @@ export function AppShell({ children }: AppShellProps) {
   const navItems = mobileNavItems({ wheelEnabled, referralEnabled, lite });
   const showMobileNav = isMobileNavScreen(location.pathname, navItems);
 
-  // Центральная кнопка панели ведёт сразу на маршрут подключения активной
+  // Кнопка «Подключить» в шапке ведёт сразу на маршрут подключения активной
   // подписки. Те же queryKey, что на дашборде — оболочка и главная делят кэш.
   const { data: navMultiSub } = useQuery({
     queryKey: ['subscriptions-list'],
@@ -365,7 +365,6 @@ export function AppShell({ children }: AppShellProps) {
       {showMobileNav && (
         <MobileBottomNav
           items={navItems}
-          connectTo={connectTo}
           isMenuOpen={mobileMenuOpen}
           badges={{ support: supportUnread > 0 }}
         />
