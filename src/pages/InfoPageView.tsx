@@ -4,11 +4,14 @@ import { useTranslation } from 'react-i18next';
 import { useQuery } from '@tanstack/react-query';
 import DOMPurify from 'dompurify';
 import { PiCaretDown } from 'react-icons/pi';
-import { BackIcon, SearchIcon } from '@/components/icons';
+import { SearchIcon } from '@/components/icons';
 import { infoPagesApi } from '../api/infoPages';
 import { usePlatform } from '../platform/hooks/usePlatform';
 import type { FaqItem } from '../api/infoPages';
 import { Skeleton, SkeletonGroup } from '@/components/ui/skeleton';
+import { PiFileXDuotone } from 'react-icons/pi';
+import { PageHeader } from '@/components/layout/PageHeader';
+import { EmptyState, Page } from '@/components/spofy/ui';
 
 /**
  * Sanitization config — same strict allowlist as NewsArticlePage.
@@ -162,7 +165,7 @@ function sanitizeHtml(html: string): string {
 // --- FAQ Accordion ---
 const ChevronIcon = ({ open }: { open: boolean }) => (
   <PiCaretDown
-    className={`h-5 w-5 text-dark-400 transition-transform duration-300 ${open ? 'rotate-180' : ''}`}
+    className={`h-3.5 w-3.5 shrink-0 text-dark-500 transition-transform duration-300 ${open ? 'rotate-180' : ''}`}
   />
 );
 
@@ -197,21 +200,21 @@ function FaqAccordionItem({
   const sanitizedAnswer = useMemo(() => sanitizeHtml(item.a), [item.a]);
 
   return (
-    <div className="overflow-hidden rounded-xl border border-dark-700 bg-dark-800/50 transition-all hover:border-dark-600">
+    <div className="overflow-hidden">
       <button
         type="button"
         onClick={onToggle}
-        className="flex min-h-[52px] w-full items-center justify-between gap-3 px-5 py-4 text-left"
+        className="flex min-h-[60px] w-full items-center justify-between gap-3 px-4 py-3 text-left transition-colors hover:bg-dark-800/40"
         aria-expanded={isOpen}
       >
-        <span className="text-sm font-medium text-dark-100 sm:text-base">{item.q}</span>
+        <span className="text-[15px] font-semibold text-dark-100">{item.q}</span>
         <ChevronIcon open={isOpen} />
       </button>
       <div
         style={{ height }}
         className="overflow-hidden transition-[height] duration-300 ease-in-out"
       >
-        <div ref={contentRef} className="border-t border-dark-700/50 px-5 pb-4 pt-3">
+        <div ref={contentRef} className="px-4 pb-4 pt-0">
           <div
             className="prose prose-sm max-w-none text-dark-300"
             dangerouslySetInnerHTML={{ __html: sanitizedAnswer }}
@@ -260,11 +263,11 @@ function FaqView({ items }: { items: FaqItem[] }) {
 
       {/* Accordion items */}
       {filteredItems.length === 0 ? (
-        <div className="rounded-xl border border-dark-700 bg-dark-800/50 p-6 text-center text-sm text-dark-400">
+        <div className="rounded-3xl bg-dark-900/70 p-6 text-center text-[13px] text-dark-400 ring-1 ring-inset ring-dark-800/80">
           {search ? t('admin.infoPages.faq.noResults') : t('admin.infoPages.faq.noQuestions')}
         </div>
       ) : (
-        <div className="space-y-2">
+        <div className="divide-y divide-dark-800/70 overflow-hidden rounded-3xl bg-dark-900/70 ring-1 ring-inset ring-dark-800/80">
           {filteredItems.map((item, index) => {
             const key = `${index}-${item.q.slice(0, 50)}`;
             return (
@@ -343,10 +346,9 @@ export default function InfoPageView() {
 
   if (isLoading) {
     return (
-      <SkeletonGroup className="space-y-6">
-        <Skeleton className="h-8 w-32 rounded-lg" />
-        <Skeleton className="h-10 w-3/4 rounded-lg" />
-        <Skeleton className="h-64 w-full rounded-xl" />
+      <SkeletonGroup className="mx-auto w-full max-w-[600px] space-y-6">
+        <Skeleton className="h-10 w-3/4 rounded-xl" />
+        <Skeleton className="h-64 w-full rounded-3xl" />
         <div className="space-y-3">
           <Skeleton className="h-4 w-full rounded" />
           <Skeleton className="h-4 w-5/6 rounded" />
@@ -358,44 +360,19 @@ export default function InfoPageView() {
 
   if (isError || !page) {
     return (
-      <div className="space-y-6">
-        {!capabilities.hasBackButton && (
-          <button
-            onClick={() => navigate('/info')}
-            className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-xl border border-dark-700 bg-dark-800 transition-colors hover:border-dark-600"
-            aria-label={t('common.back')}
-          >
-            <BackIcon />
-          </button>
-        )}
-        <div className="rounded-xl border border-dark-700 bg-dark-800/50 p-8 text-center text-dark-400">
-          {t('admin.infoPages.notFound')}
-        </div>
-      </div>
+      <Page>
+        <PageHeader title={t('info.title')} backTo="/info" />
+        <EmptyState icon={<PiFileXDuotone />} title={t('admin.infoPages.notFound')} />
+      </Page>
     );
   }
 
   return (
-    <div className="space-y-6">
-      {/* Back button */}
-      {!capabilities.hasBackButton && (
-        <button
-          onClick={() => navigate(-1)}
-          className="flex min-h-[44px] items-center gap-2 rounded-xl border border-dark-700 bg-dark-800 px-4 text-sm text-dark-400 transition-colors hover:border-dark-600 hover:text-dark-200"
-          aria-label={t('common.back')}
-        >
-          <BackIcon />
-          <span>{t('common.back')}</span>
-        </button>
-      )}
-
-      {/* Page header */}
-      <div>
-        {page.icon && <span className="mb-2 inline-block text-3xl">{page.icon}</span>}
-        <h1 className="text-2xl font-extrabold leading-tight text-dark-50 sm:text-3xl">
-          {resolvedTitle}
-        </h1>
-      </div>
+    <Page>
+      <PageHeader
+        title={page.icon ? `${page.icon} ${resolvedTitle}` : resolvedTitle}
+        backTo="/info"
+      />
 
       {/* Page content */}
       {isFaq ? (
@@ -403,10 +380,10 @@ export default function InfoPageView() {
       ) : (
         /* Regular page content - sanitized with DOMPurify (strict allowlist) */
         <div
-          className="prose max-w-none overflow-x-auto lg:max-w-3xl"
+          className="prose max-w-none overflow-x-auto rounded-3xl bg-dark-900/70 p-4 ring-1 ring-inset ring-dark-800/80 sm:p-5"
           dangerouslySetInnerHTML={{ __html: sanitizedContent }}
         />
       )}
-    </div>
+    </Page>
   );
 }

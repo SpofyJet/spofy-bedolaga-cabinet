@@ -1068,7 +1068,8 @@
       "text": "通过您的链接邀请好友。好友首次连接 VPN 后，你们都将获得额外订阅天数。好友越多，奖励越多。",
       "badgeYou": "您 +{{days}} 天",
       "badgeFriend": "好友 +{{days}} 天",
-      "badgeNoLimit": "不设上限"
+      "badgeNoLimit": "不设上限",
+      "short": "好友首次连接 VPN 后，你和好友各得。无上限"
     },
     "botLink": "机器人链接",
     "cabinetLink": "面板链接",
@@ -1086,7 +1087,9 @@
       "chainDepth": "网络深度",
       "levelsValue": "最多 {{count}} 级",
       "yourLevel": "您的等级",
-      "levelNotReached": "尚未达到"
+      "levelNotReached": "尚未达到",
+      "invited": "已邀请",
+      "earned": "已赚取"
     },
     "terms": {
       "title": "计划条款",
@@ -1201,7 +1204,8 @@
         "expectedReferralsPlaceholder": "每月预估数量",
         "desiredCommission": "期望佣金比例 (%)",
         "desiredCommissionPlaceholder": "1 到 100%"
-      }
+      },
+      "sectionTitle": "合作伙伴"
     },
     "withdrawal": {
       "title": "提现",
@@ -1258,6 +1262,9 @@
       "saveError": "设置保存失败",
       "kindMoneyHint": "奖励以金额计入余额",
       "kindDaysHint": "奖励延长您的订阅"
+    },
+    "invite": {
+      "title": "邀请好友"
     }
   },
   "support": {
@@ -1382,7 +1389,8 @@
       "description": "转动转盘赢取奖品：订阅天数、余额、流量等！",
       "button": "前往转盘"
     },
-    "selectSubscription": "选择订阅"
+    "selectSubscription": "选择订阅",
+    "starsCost": "{{count}} ⭐"
   },
   "admin": {
     "backgrounds": {
@@ -7383,7 +7391,8 @@
     "scanDescription": "将摄像头对准礼物二维码",
     "scanNotRecognized": "该二维码中没有礼物码",
     "scanError": "扫描失败",
-    "scanNoCamera": "摄像头不可用 — 请手动输入代码"
+    "scanNoCamera": "摄像头不可用 — 请手动输入代码",
+    "claimPageTitle": "礼物"
   },
   "news": {
     "title": "新闻与更新",
@@ -7443,7 +7452,8 @@
         "imageUrlPrompt": "图片URL：",
         "linkUrlPrompt": "URL："
       }
-    }
+    },
+    "articleTitle": "新闻"
   },
   "subscriptions": {
     "buy": "购买订阅",
@@ -7649,5 +7659,16 @@
   "legal": {
     "serviceRules": "服务条款",
     "privacy": "隐私政策"
+  },
+  "errors": {
+    "boundary": {
+      "title": "出了点问题",
+      "appText": "发生错误，请重新加载页面。",
+      "reload": "重新加载",
+      "widget": "无法加载此部分",
+      "retry": "重试",
+      "updated": "应用已更新，正在重新加载…",
+      "pageText": "发生意外错误"
+    }
   }
 }

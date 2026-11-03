@@ -2,7 +2,10 @@ import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 import { contestsApi, type ContestInfo, type ContestGameData } from '../api/contests';
-import { GamepadIcon, TrophyIcon, XIcon } from '@/components/icons';
+import { XIcon } from '@/components/icons';
+import { PiGameControllerDuotone, PiWarningCircleDuotone } from 'react-icons/pi';
+import { PageHeader } from '@/components/layout/PageHeader';
+import { Button, Chip, EmptyState, Page, Surface } from '@/components/spofy/ui';
 import { PageSkeleton, Skeleton } from '@/components/ui/skeleton';
 
 export default function Contests() {
@@ -57,38 +60,43 @@ export default function Contests() {
 
   if (isLoading) {
     return (
-      <PageSkeleton leading={1} titleWidth="w-40">
-        <Skeleton variant="card" count={3} className="h-32" />
-      </PageSkeleton>
+      <Page>
+        <PageSkeleton leading={['h-10 w-10 rounded-2xl']} titleWidth="w-40">
+          <Skeleton variant="card" count={3} className="h-32 rounded-3xl" />
+        </PageSkeleton>
+      </Page>
     );
   }
 
   if (error) {
     return (
-      <div className="card border-error-500/20 bg-error-500/10">
-        <p className="text-error-400">{t('contests.error')}</p>
-      </div>
+      <Page>
+        <PageHeader title={t('contests.title')} backTo="/" />
+        <EmptyState icon={<PiWarningCircleDuotone />} title={t('contests.error')} />
+      </Page>
     );
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center gap-3">
-        <GamepadIcon className="h-6 w-6" />
-        <h1 className="text-xl font-bold tracking-tight text-dark-50 sm:text-2xl">{t('contests.title')}</h1>
-      </div>
+    <Page>
+      <PageHeader title={t('contests.title')} backTo="/" />
 
       {/* Game Modal */}
       {selectedContest && (
-        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-dark-950/70 p-4 backdrop-blur-sm">
+        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-dark-950/80 p-4">
           <div
-            className="bento-card max-h-[80vh] w-full max-w-lg overflow-y-auto bg-dark-900"
+            className="max-h-[80vh] w-full max-w-lg overflow-y-auto rounded-3xl bg-dark-900 p-5 ring-1 ring-inset ring-dark-800"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="mb-4 flex items-center justify-between">
-              <h2 className="text-xl font-bold">{selectedContest.name}</h2>
-              <button onClick={handleCloseGame} className="text-dark-400 hover:text-dark-200">
-                <XIcon className="h-6 w-6" />
+              <h2 className="text-lg font-bold text-dark-50">{selectedContest.name}</h2>
+              <button
+                type="button"
+                onClick={handleCloseGame}
+                aria-label={t('common.close')}
+                className="flex h-9 w-9 items-center justify-center rounded-xl text-dark-400 transition-colors hover:bg-dark-800 hover:text-dark-200"
+              >
+                <XIcon className="h-5 w-5" />
               </button>
             </div>
 
@@ -100,7 +108,7 @@ export default function Contests() {
 
             {result && (
               <div
-                className={`mb-4 rounded-lg p-4 ${result.is_winner ? 'bg-success-500/20 text-success-400' : 'bg-error-500/20 text-error-400'}`}
+                className={`mb-4 rounded-2xl p-4 ring-1 ring-inset ${result.is_winner ? 'bg-success-500/10 text-success-400 ring-success-500/25' : 'bg-error-500/10 text-error-400 ring-error-500/25'}`}
               >
                 <p className="font-medium">{result.message}</p>
               </div>
@@ -120,7 +128,7 @@ export default function Contests() {
                         key={i}
                         onClick={() => handleSubmitAnswer(String(i))}
                         disabled={submitAnswerMutation.isPending}
-                        className="flex aspect-square items-center justify-center rounded-lg bg-dark-700 text-2xl transition-colors hover:bg-dark-600"
+                        className="flex aspect-square items-center justify-center rounded-2xl bg-dark-800 text-2xl transition-colors hover:bg-dark-700"
                       >
                         {gameData.game_type === 'locks' ? '🔒' : '🎛'}
                       </button>
@@ -135,7 +143,7 @@ export default function Contests() {
                         key={i}
                         onClick={() => handleSubmitAnswer(flag)}
                         disabled={submitAnswerMutation.isPending}
-                        className="rounded-lg bg-dark-700 p-3 text-2xl transition-colors hover:bg-dark-600"
+                        className="rounded-2xl bg-dark-800 p-3 text-2xl transition-colors hover:bg-dark-700"
                       >
                         {flag}
                       </button>
@@ -147,7 +155,7 @@ export default function Contests() {
                   <button
                     onClick={() => handleSubmitAnswer('blitz')}
                     disabled={submitAnswerMutation.isPending}
-                    className="w-full rounded-lg bg-accent-500 py-4 text-lg font-bold transition-colors hover:bg-accent-600"
+                    className="h-14 w-full rounded-2xl bg-accent-500 text-[17px] font-bold text-on-accent transition-colors hover:bg-accent-600"
                   >
                     {gameData.game_data.button_text || t('contests.imHere')}
                   </button>
@@ -164,31 +172,31 @@ export default function Contests() {
                     }}
                     className="space-y-3"
                   >
-                    <div className="rounded-lg bg-dark-700 p-4 text-center font-mono text-2xl">
+                    <div className="rounded-2xl bg-dark-800 p-4 text-center text-2xl font-semibold tracking-wide text-dark-50">
                       {gameData.game_data.question || gameData.game_data.letters}
                     </div>
                     <input
                       name="answer"
                       type="text"
                       placeholder={t('contests.enterAnswer')}
-                      className="w-full rounded-lg border border-dark-600 bg-dark-700 px-4 py-3 focus:border-accent-500 focus:outline-none"
+                      className="input"
                     />
-                    <button
+                    <Button
                       type="submit"
                       disabled={submitAnswerMutation.isPending}
-                      className="btn-primary w-full"
+                      className="w-full"
                     >
                       {t('contests.submit')}
-                    </button>
+                    </Button>
                   </form>
                 )}
               </div>
             )}
 
             {result && (
-              <button onClick={handleCloseGame} className="btn-secondary mt-4 w-full">
+              <Button tone="secondary" onClick={handleCloseGame} className="mt-4 w-full">
                 {t('common.close')}
-              </button>
+              </Button>
             )}
           </div>
         </div>
@@ -198,46 +206,42 @@ export default function Contests() {
       {contests && contests.length > 0 ? (
         // grid-cols-1 = minmax(0,1fr): без него колонка росла по самой длинной
         // ссылке в описании, и вся страница листалась вбок.
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <div className="grid grid-cols-1 gap-3">
           {contests.map((contest) => (
-            <div key={contest.id} className="card">
+            <Surface key={contest.id}>
               <div className="flex items-start justify-between gap-2">
                 <div className="min-w-0">
-                  <h3 className="break-words text-lg font-semibold">{contest.name}</h3>
+                  <h3 className="break-words text-[15px] font-semibold text-dark-100">
+                    {contest.name}
+                  </h3>
                   {contest.description && (
-                    <p className="mt-1 text-sm text-dark-400 [overflow-wrap:anywhere]">
+                    <p className="mt-1 text-[13px] leading-snug text-dark-400 [overflow-wrap:anywhere]">
                       {contest.description}
                     </p>
                   )}
                 </div>
-                <div className="flex shrink-0 items-center gap-1 text-accent-400">
-                  <TrophyIcon />
-                  <span className="text-sm font-medium">
-                    +{t('contests.days', { count: contest.prize_days })}
-                  </span>
-                </div>
+                <span className="shrink-0">
+                  <Chip tone="success">+{t('contests.days', { count: contest.prize_days })}</Chip>
+                </span>
               </div>
 
               <div className="mt-4">
                 {contest.already_played ? (
-                  <button disabled className="btn-secondary w-full cursor-not-allowed opacity-50">
+                  <Button tone="secondary" disabled className="w-full opacity-60">
                     {t('contests.alreadyPlayed')}
-                  </button>
+                  </Button>
                 ) : (
-                  <button onClick={() => handlePlayContest(contest)} className="btn-primary w-full">
+                  <Button onClick={() => handlePlayContest(contest)} className="w-full">
                     {t('contests.play')}
-                  </button>
+                  </Button>
                 )}
               </div>
-            </div>
+            </Surface>
           ))}
         </div>
       ) : (
-        <div className="card py-12 text-center">
-          <GamepadIcon className="h-6 w-6" />
-          <p className="mt-4 text-dark-400">{t('contests.noContests')}</p>
-        </div>
+        <EmptyState icon={<PiGameControllerDuotone />} title={t('contests.noContests')} />
       )}
-    </div>
+    </Page>
   );
 }

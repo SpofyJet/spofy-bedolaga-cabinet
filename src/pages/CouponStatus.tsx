@@ -10,12 +10,18 @@ import { formatShortDate } from '../utils/format';
 import { AnimatedCheckmark } from '@/components/ui/AnimatedCheckmark';
 import { TicketIcon } from '@/components/icons';
 import { Skeleton, SkeletonGroup } from '@/components/ui/skeleton';
+import { PageHeader } from '@/components/layout/PageHeader';
+import { Button } from '@/components/spofy/ui';
 
 function Shell({ children }: { children: React.ReactNode }) {
+  const { t } = useTranslation();
   return (
-    <div className="flex min-h-dvh items-center justify-center bg-dark-950 px-4 py-10">
-      <div className="w-full max-w-md rounded-2xl border border-dark-800/50 bg-dark-900/50 p-6 sm:p-8">
-        {children}
+    <div className="min-h-dvh bg-dark-950 px-4 py-6 sm:py-10">
+      <div className="mx-auto w-full max-w-md">
+        <PageHeader title={t('coupon.title')} backTo="/" />
+        <div className="rounded-3xl bg-dark-900/70 p-6 ring-1 ring-inset ring-dark-800/80 sm:p-8">
+          {children}
+        </div>
       </div>
     </div>
   );
@@ -121,13 +127,14 @@ export default function CouponStatus() {
   return (
     <Shell>
       <div className="text-center">
-        <div className="mb-4 flex justify-center text-accent-400">
-          <TicketIcon className="h-10 w-10" />
+        <div className="mb-4 flex justify-center">
+          <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-accent-500/10 text-accent-400">
+            <TicketIcon className="h-7 w-7" />
+          </span>
         </div>
-        <h1 className="mb-1 text-lg font-semibold text-dark-100">{t('coupon.title')}</h1>
         <p className="mb-6 text-sm text-dark-400">{t('coupon.subtitle')}</p>
 
-        <div className="mb-6 space-y-2 rounded-xl border border-dark-800 bg-dark-900 p-4 text-left text-sm">
+        <div className="mb-6 space-y-2 rounded-2xl bg-dark-800/40 p-4 text-left text-sm">
           <div className="flex justify-between gap-4">
             <span className="text-dark-400">{t('coupon.tariff')}</span>
             <span className="font-medium text-dark-100">{coupon.tariff_name}</span>
@@ -151,7 +158,7 @@ export default function CouponStatus() {
         </div>
 
         {redeemError && (
-          <div className="mb-4 rounded-xl border border-error-500/30 bg-error-500/10 p-3 text-sm text-error-400">
+          <div className="mb-4 rounded-2xl bg-error-500/10 p-3 text-sm text-error-400 ring-1 ring-inset ring-error-500/25">
             {redeemError}
           </div>
         )}
@@ -162,19 +169,20 @@ export default function CouponStatus() {
               href={coupon.bot_link}
               target="_blank"
               rel="noopener noreferrer"
-              className="btn-primary block w-full text-center"
+              className="flex h-12 w-full items-center justify-center rounded-2xl bg-accent-500 px-5 text-[15px] font-semibold text-on-accent transition-colors hover:bg-accent-600"
             >
               {t('coupon.openBot')}
             </a>
           )}
           {isAuthenticated ? (
-            <button
+            <Button
+              tone={coupon.bot_link ? 'secondary' : 'primary'}
               onClick={() => redeemMutation.mutate()}
               disabled={redeemMutation.isPending}
-              className={`btn-secondary w-full ${redeemMutation.isPending ? 'cursor-not-allowed opacity-50' : ''}`}
+              className="w-full"
             >
               {redeemMutation.isPending ? t('coupon.redeeming') : t('coupon.redeemCabinet')}
-            </button>
+            </Button>
           ) : (
             <p className="text-xs text-dark-500">{t('coupon.needAuth')}</p>
           )}

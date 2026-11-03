@@ -11,6 +11,8 @@ import { Spinner } from '@/components/ui/Spinner';
 import { AnimatedCheckmark } from '@/components/ui/AnimatedCheckmark';
 import { AnimatedCrossmark } from '@/components/ui/AnimatedCrossmark';
 import { cn } from '@/lib/utils';
+import { PageHeader } from '@/components/layout/PageHeader';
+import { Page } from '@/components/spofy/ui';
 import { copyToClipboard } from '@/utils/clipboard';
 import { CheckIcon, CopyIcon, InfoIcon, ExclamationIcon, ClockIcon } from '@/components/icons';
 
@@ -119,23 +121,23 @@ function CodeOnlySuccessState({
       </div>
 
       {/* Gift code display */}
-      <div className="w-full rounded-xl border border-accent-500/20 bg-accent-500/5 p-4">
-        <p className="mb-1 text-xs font-medium uppercase tracking-wider text-dark-400">
+      <div className="w-full rounded-2xl bg-accent-500/10 p-4 ring-1 ring-inset ring-accent-500/25">
+        <p className="mb-1 text-[13px] font-medium text-dark-400">
           {t('gift.codeLabel', 'Gift code')}
         </p>
-        <p className="select-all font-mono text-lg font-bold text-accent-400">{giftCode}</p>
+        <p className="select-all text-lg font-bold tracking-wide text-accent-400">{giftCode}</p>
       </div>
 
       {/* QR — получателю проще отсканировать, чем копировать ссылку.
           Кодируем bot-ссылку, если она есть: активация в боте — основной путь,
           иначе ссылку кабинета. */}
-      <div className="flex w-full flex-col items-center gap-2 rounded-xl border border-dark-700/30 bg-white p-4">
+      <div className="flex w-full flex-col items-center gap-2 rounded-2xl bg-white p-4">
         <QRCodeSVG value={botLink ?? cabinetLink} size={180} level="M" includeMargin={false} />
       </div>
       <p className="-mt-3 text-xs text-dark-400">{t('gift.qrHint', 'Scan to activate the gift')}</p>
 
       {/* Share message preview */}
-      <div className="w-full rounded-xl border border-dark-700/30 bg-dark-800/40 p-4 text-left">
+      <div className="w-full rounded-2xl bg-dark-800/40 p-4 text-left">
         <p className="mb-3 text-sm font-medium text-dark-100">
           {t('gift.shareText', 'I have a gift for you! Activate it here:')}
         </p>
@@ -145,7 +147,7 @@ function CodeOnlySuccessState({
             <p className="mb-1 text-xs font-medium text-dark-400">
               {t('gift.shareModalActivateVia', 'Activate via bot:')}
             </p>
-            <p className="truncate rounded-lg bg-dark-900/60 px-3 py-2 text-sm text-accent-400">
+            <p className="truncate rounded-xl bg-dark-900/60 px-3 py-2 text-sm text-accent-400">
               {botLink}
             </p>
           </div>
@@ -155,7 +157,7 @@ function CodeOnlySuccessState({
           <p className="mb-1 text-xs font-medium text-dark-400">
             {t('gift.shareModalActivateViaCabinet', 'Or via website:')}
           </p>
-          <p className="truncate rounded-lg bg-dark-900/60 px-3 py-2 text-sm text-accent-400">
+          <p className="truncate rounded-xl bg-dark-900/60 px-3 py-2 text-sm text-accent-400">
             {cabinetLink}
           </p>
         </div>
@@ -166,10 +168,10 @@ function CodeOnlySuccessState({
         type="button"
         onClick={handleCopy}
         className={cn(
-          'flex w-full items-center justify-center gap-2 rounded-xl px-4 py-3.5 text-sm font-bold transition-all duration-200 active:scale-[0.98]',
+          'flex h-12 w-full items-center justify-center gap-2 rounded-2xl px-4 text-[15px] font-semibold transition-colors duration-200 active:scale-[0.98]',
           copied
             ? 'bg-success-500/20 text-success-400'
-            : 'bg-accent-500 text-on-accent shadow-lg shadow-accent-500/25 hover:bg-accent-400',
+            : 'bg-accent-500 text-on-accent hover:bg-accent-600',
         )}
       >
         {copied ? (
@@ -188,7 +190,7 @@ function CodeOnlySuccessState({
       <button
         type="button"
         onClick={() => navigate('/gift?tab=myGifts')}
-        className="w-full rounded-xl border border-dark-700/50 px-6 py-3 text-sm font-medium text-dark-300 transition-colors hover:bg-dark-800/50"
+        className="h-12 w-full rounded-2xl bg-dark-800/70 px-6 text-[15px] font-semibold text-dark-100 ring-1 ring-inset ring-dark-700/60 transition-colors hover:bg-dark-700/70"
       >
         {t('gift.tabMyGifts', 'My Gifts')}
       </button>
@@ -244,7 +246,7 @@ function DeliveredState({
       </div>
 
       {warning && (
-        <div className="w-full rounded-xl border border-warning-500/20 bg-warning-500/5 p-3">
+        <div className="w-full rounded-2xl bg-warning-500/10 p-3 ring-1 ring-inset ring-warning-500/25">
           <p className="text-sm text-warning-400">{t(`gift.warning.${warning}`)}</p>
         </div>
       )}
@@ -252,7 +254,7 @@ function DeliveredState({
       <button
         type="button"
         onClick={() => navigate('/')}
-        className="flex w-full items-center justify-center rounded-xl bg-accent-500 px-6 py-3 text-sm font-medium text-on-accent transition-colors hover:bg-accent-400"
+        className="flex h-12 w-full items-center justify-center rounded-2xl bg-accent-500 px-6 text-[15px] font-semibold text-on-accent transition-colors hover:bg-accent-600 active:scale-[0.98]"
       >
         {t('gift.backToDashboard', 'Back to dashboard')}
       </button>
@@ -281,8 +283,8 @@ function PendingActivationState({
       className="flex flex-col items-center gap-6 text-center [overflow-wrap:anywhere]"
     >
       {/* Info icon */}
-      <div className="flex h-20 w-20 items-center justify-center rounded-full bg-warning-500/10">
-        <InfoIcon className="h-10 w-10 text-warning-400" />
+      <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-warning-500/10">
+        <InfoIcon className="h-8 w-8 text-warning-400" />
       </div>
 
       <div>
@@ -314,7 +316,7 @@ function PendingActivationState({
       </div>
 
       {warning && (
-        <div className="w-full rounded-xl border border-warning-500/20 bg-warning-500/5 p-3">
+        <div className="w-full rounded-2xl bg-warning-500/10 p-3 ring-1 ring-inset ring-warning-500/25">
           <p className="text-sm text-warning-400">{t(`gift.warning.${warning}`)}</p>
         </div>
       )}
@@ -322,7 +324,7 @@ function PendingActivationState({
       <button
         type="button"
         onClick={() => navigate('/')}
-        className="flex w-full items-center justify-center rounded-xl bg-accent-500 px-6 py-3 text-sm font-medium text-on-accent transition-colors hover:bg-accent-400"
+        className="flex h-12 w-full items-center justify-center rounded-2xl bg-accent-500 px-6 text-[15px] font-semibold text-on-accent transition-colors hover:bg-accent-600 active:scale-[0.98]"
       >
         {t('gift.backToDashboard', 'Back to dashboard')}
       </button>
@@ -354,7 +356,7 @@ function FailedState() {
       <button
         type="button"
         onClick={() => navigate('/gift')}
-        className="flex w-full items-center justify-center rounded-xl bg-accent-500 px-6 py-3 text-sm font-medium text-on-accent transition-colors hover:bg-accent-400"
+        className="flex h-12 w-full items-center justify-center rounded-2xl bg-accent-500 px-6 text-[15px] font-semibold text-on-accent transition-colors hover:bg-accent-600 active:scale-[0.98]"
       >
         {t('gift.tryAgain', 'Try again')}
       </button>
@@ -372,8 +374,8 @@ function PollErrorState() {
       animate={{ opacity: 1, scale: 1 }}
       className="flex flex-col items-center gap-6 text-center [overflow-wrap:anywhere]"
     >
-      <div className="flex h-20 w-20 items-center justify-center rounded-full bg-warning-500/10">
-        <ExclamationIcon className="h-10 w-10 text-warning-400" />
+      <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-warning-500/10">
+        <ExclamationIcon className="h-8 w-8 text-warning-400" />
       </div>
 
       <div>
@@ -391,7 +393,7 @@ function PollErrorState() {
       <button
         type="button"
         onClick={() => navigate('/')}
-        className="flex w-full items-center justify-center rounded-xl bg-accent-500 px-6 py-3 text-sm font-medium text-on-accent transition-colors hover:bg-accent-400"
+        className="flex h-12 w-full items-center justify-center rounded-2xl bg-accent-500 px-6 text-[15px] font-semibold text-on-accent transition-colors hover:bg-accent-600 active:scale-[0.98]"
       >
         {t('gift.backToDashboard', 'Back to dashboard')}
       </button>
@@ -408,8 +410,8 @@ function PollTimedOutState({ onRetry }: { onRetry: () => void }) {
       animate={{ opacity: 1, scale: 1 }}
       className="flex flex-col items-center gap-6 text-center [overflow-wrap:anywhere]"
     >
-      <div className="flex h-20 w-20 items-center justify-center rounded-full bg-dark-800/50">
-        <ClockIcon className="h-10 w-10 text-dark-400" />
+      <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-dark-800/70">
+        <ClockIcon className="h-8 w-8 text-dark-400" />
       </div>
       <div>
         <h1 className="text-xl font-bold text-dark-50">
@@ -425,7 +427,7 @@ function PollTimedOutState({ onRetry }: { onRetry: () => void }) {
       <button
         type="button"
         onClick={onRetry}
-        className="rounded-xl bg-accent-500 px-6 py-3 text-sm font-medium text-on-accent transition-colors hover:bg-accent-400"
+        className="h-12 rounded-2xl bg-accent-500 px-6 text-[15px] font-semibold text-on-accent transition-colors hover:bg-accent-600 active:scale-[0.98]"
       >
         {t('gift.retry', 'Retry')}
       </button>
@@ -443,8 +445,8 @@ function NoTokenState() {
       animate={{ opacity: 1, scale: 1 }}
       className="flex flex-col items-center gap-6 text-center [overflow-wrap:anywhere]"
     >
-      <div className="flex h-20 w-20 items-center justify-center rounded-full bg-dark-800/50">
-        <ExclamationIcon className="h-10 w-10 text-dark-400" />
+      <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-dark-800/70">
+        <ExclamationIcon className="h-8 w-8 text-dark-400" />
       </div>
       <div>
         <h1 className="text-xl font-bold text-dark-50">{t('gift.noToken', 'Invalid link')}</h1>
@@ -455,7 +457,7 @@ function NoTokenState() {
       <button
         type="button"
         onClick={() => navigate('/gift')}
-        className="rounded-xl bg-accent-500 px-6 py-3 text-sm font-medium text-on-accent transition-colors hover:bg-accent-400"
+        className="h-12 rounded-2xl bg-accent-500 px-6 text-[15px] font-semibold text-on-accent transition-colors hover:bg-accent-600 active:scale-[0.98]"
       >
         {t('gift.backToGift', 'Go back')}
       </button>
@@ -468,6 +470,7 @@ function NoTokenState() {
 // ============================================================
 
 export default function GiftResult() {
+  const { t } = useTranslation();
   const [searchParams] = useSearchParams();
   const token = searchParams.get('token');
   const mode = searchParams.get('mode');
@@ -519,15 +522,16 @@ export default function GiftResult() {
   // No token
   if (!token) {
     return (
-      <div className="flex min-h-dvh items-center justify-center px-4">
+      <Page>
+        <PageHeader title={t('gift.pageTitle')} backTo="/gift" />
         <div
-          className="w-full max-w-md rounded-2xl border border-dark-800/50 bg-dark-900/50 p-8"
+          className="rounded-3xl bg-dark-900/70 p-6 ring-1 ring-inset ring-dark-800/80 sm:p-8"
           aria-live="polite"
           aria-atomic="true"
         >
           <NoTokenState />
         </div>
-      </div>
+      </Page>
     );
   }
 
@@ -543,9 +547,10 @@ export default function GiftResult() {
   const warning = statusWarning ?? urlWarning;
 
   return (
-    <div className="flex min-h-dvh items-center justify-center px-4">
+    <Page>
+      <PageHeader title={t('gift.pageTitle')} backTo="/gift" />
       <div
-        className="w-full max-w-md rounded-2xl border border-dark-800/50 bg-dark-900/50 p-8"
+        className="rounded-3xl bg-dark-900/70 p-6 ring-1 ring-inset ring-dark-800/80 sm:p-8"
         aria-live="polite"
         aria-atomic="true"
       >
@@ -580,6 +585,6 @@ export default function GiftResult() {
           <PendingState />
         )}
       </div>
-    </div>
+    </Page>
   );
 }

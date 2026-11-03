@@ -154,12 +154,11 @@ export default function TelegramRedirect() {
   return (
     <div className="min-h-viewport flex items-center justify-center p-4">
       {/* Background */}
-      <div className="fixed inset-0 bg-gradient-to-br from-dark-950 via-dark-900 to-dark-950" />
-      <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-accent-500/10 via-transparent to-transparent" />
+      <div className="fixed inset-0 bg-dark-950" />
 
       <div className="relative w-full max-w-sm text-center">
         {/* Logo */}
-        <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-br from-accent-400 to-accent-600 shadow-lg shadow-accent-500/30">
+        <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center overflow-hidden rounded-2xl bg-accent-500/10 ring-1 ring-inset ring-accent-500/25">
           {branding?.has_custom_logo && logoUrl ? (
             <img src={logoUrl} alt={appName} className="h-full w-full object-cover" />
           ) : (
@@ -198,10 +197,16 @@ export default function TelegramRedirect() {
             <p className="mb-2 text-dark-200">{t('auth.loginFailed')}</p>
             <p className="mb-6 text-sm text-error-400">{errorMessage}</p>
             <div className="flex flex-col gap-3">
-              <button onClick={handleRetry} className="btn-primary w-full">
+              <button
+                onClick={handleRetry}
+                className="inline-flex h-12 items-center justify-center gap-2 rounded-2xl bg-accent-500 px-5 text-[15px] font-semibold text-on-accent transition-colors hover:bg-accent-600 active:scale-[0.98] disabled:cursor-not-allowed disabled:bg-accent-500/40 w-full"
+              >
                 {t('auth.tryAgain')}
               </button>
-              <button onClick={() => navigate('/login')} className="btn-secondary w-full">
+              <button
+                onClick={() => navigate('/login')}
+                className="inline-flex h-12 items-center justify-center gap-2 rounded-2xl bg-dark-800/70 px-5 text-[15px] font-semibold text-dark-100 ring-1 ring-inset ring-dark-700/60 transition-colors hover:bg-dark-700/70 disabled:cursor-not-allowed disabled:opacity-50 w-full"
+              >
                 {t('telegramRedirect.loginAlternative')}
               </button>
             </div>

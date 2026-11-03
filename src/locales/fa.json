@@ -1075,7 +1075,8 @@
       "text": "دوستی را با لینک خود دعوت کنید. وقتی او برای اولین بار VPN را وصل کند، هر دوی شما روزهای اضافه می‌گیرید. هر چه دوستان بیشتر، پاداش بیشتر.",
       "badgeYou": "شما {{days}}+ روز",
       "badgeFriend": "دوست {{days}}+ روز",
-      "badgeNoLimit": "بدون محدودیت"
+      "badgeNoLimit": "بدون محدودیت",
+      "short": "برای شما و دوستتان، وقتی برای اولین بار VPN را وصل کند. بدون محدودیت"
     },
     "botLink": "لینک ربات",
     "cabinetLink": "لینک کابینت",
@@ -1093,7 +1094,9 @@
       "chainDepth": "عمق شبکه",
       "levelsValue": "تا {{count}} سطح",
       "yourLevel": "سطح شما",
-      "levelNotReached": "هنوز باز نشده"
+      "levelNotReached": "هنوز باز نشده",
+      "invited": "دعوت‌شده",
+      "earned": "درآمد"
     },
     "terms": {
       "title": "شرایط برنامه",
@@ -1208,7 +1211,8 @@
         "expectedReferralsPlaceholder": "تعداد تخمینی در ماه",
         "desiredCommission": "درصد کمیسیون مورد نظر",
         "desiredCommissionPlaceholder": "از ۱ تا ۱۰۰٪"
-      }
+      },
+      "sectionTitle": "همکاری"
     },
     "withdrawal": {
       "title": "برداشت",
@@ -1265,6 +1269,9 @@
       "saveError": "ذخیره تنظیمات ممکن نشد",
       "kindMoneyHint": "پاداش به صورت مبلغ به موجودی شما اضافه می‌شود",
       "kindDaysHint": "پاداش اشتراک شما را تمدید می‌کند"
+    },
+    "invite": {
+      "title": "دوست خود را دعوت کنید"
     }
   },
   "support": {
@@ -1389,7 +1396,8 @@
     "payWithDays": "پرداخت با روز",
     "starsPaymentSuccessCheckHistory": "پرداخت موفق! تاریخچه یا تلگرام را بررسی کنید.",
     "youWon": "شما برنده شدید",
-    "selectSubscription": "اشتراک را انتخاب کنید"
+    "selectSubscription": "اشتراک را انتخاب کنید",
+    "starsCost": "{{count}} ⭐"
   },
   "admin": {
     "backgrounds": {
@@ -7439,7 +7447,8 @@
     "scanDescription": "دوربین را روی کد QR هدیه بگیرید",
     "scanNotRecognized": "در این QR کد هدیه‌ای نیست",
     "scanError": "اسکن ناموفق بود",
-    "scanNoCamera": "دوربین در دسترس نیست — کد را دستی وارد کنید"
+    "scanNoCamera": "دوربین در دسترس نیست — کد را دستی وارد کنید",
+    "claimPageTitle": "هدیه"
   },
   "news": {
     "title": "اخبار و به‌روزرسانی‌ها",
@@ -7499,7 +7508,8 @@
         "imageUrlPrompt": "آدرس تصویر:",
         "linkUrlPrompt": "آدرس پیوند:"
       }
-    }
+    },
+    "articleTitle": "خبر"
   },
   "subscriptions": {
     "buy": "خرید اشتراک",
@@ -7705,5 +7715,16 @@
   "legal": {
     "serviceRules": "قوانین سرویس",
     "privacy": "حریم خصوصی"
+  },
+  "errors": {
+    "boundary": {
+      "title": "مشکلی پیش آمد",
+      "appText": "خطایی رخ داد. صفحه را دوباره بارگذاری کنید.",
+      "reload": "بارگذاری مجدد",
+      "widget": "بارگذاری این بخش ناموفق بود",
+      "retry": "تلاش دوباره",
+      "updated": "برنامه به‌روز شد. در حال بارگذاری…",
+      "pageText": "خطایی رخ داد"
+    }
   }
 }

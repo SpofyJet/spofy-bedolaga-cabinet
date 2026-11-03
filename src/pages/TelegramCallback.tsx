@@ -91,7 +91,10 @@ export default function TelegramCallback() {
           <div className="mb-4 text-5xl text-error-500">✗</div>
           <h2 className="mb-2 text-lg font-semibold text-dark-50">{t('auth.loginFailed')}</h2>
           <p className="mb-6 text-sm text-dark-400">{error}</p>
-          <button onClick={() => navigate('/login')} className="btn-primary">
+          <button
+            onClick={() => navigate('/login')}
+            className="inline-flex h-12 items-center justify-center gap-2 rounded-2xl bg-accent-500 px-5 text-[15px] font-semibold text-on-accent transition-colors hover:bg-accent-600 active:scale-[0.98] disabled:cursor-not-allowed disabled:bg-accent-500/40"
+          >
             {t('auth.tryAgain')}
           </button>
         </div>

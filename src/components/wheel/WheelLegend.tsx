@@ -23,26 +23,23 @@ const WheelLegend = memo(function WheelLegend({ prizes }: WheelLegendProps) {
   };
 
   return (
-    <div className="space-y-2">
+    <div className="divide-y divide-dark-800/70 overflow-hidden rounded-3xl bg-dark-900/70 ring-1 ring-inset ring-dark-800/80">
       {prizes.map((prize, index) => {
         const color = getSectorColor(index, prize.color);
         return (
-          <div
-            key={prize.id}
-            className="flex items-center gap-3 rounded-lg border border-dark-700/30 bg-dark-800/50 p-2.5 transition-colors hover:bg-dark-800"
-          >
-            {/* Color indicator */}
-            <div className="h-8 w-1 shrink-0 rounded-full" style={{ backgroundColor: color }} />
-
-            {/* Emoji */}
-            <div className="flex h-8 w-8 shrink-0 items-center justify-center text-xl">
+          <div key={prize.id} className="flex min-h-[56px] items-center gap-3 px-4 py-2">
+            {/* Emoji в плитке, цвет сектора — точкой в углу плитки */}
+            <span className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-dark-800/80 text-xl">
               {prize.emoji}
-            </div>
-
-            {/* Prize name */}
-            <div className="min-w-0 flex-1">
-              <div className="truncate text-sm font-medium text-dark-100">{prize.display_name}</div>
-            </div>
+              <span
+                aria-hidden
+                className="absolute -right-0.5 -top-0.5 h-3 w-3 rounded-full ring-2 ring-dark-900"
+                style={{ backgroundColor: color }}
+              />
+            </span>
+            <span className="min-w-0 flex-1 truncate text-[15px] font-semibold text-dark-100">
+              {prize.display_name}
+            </span>
           </div>
         );
       })}

@@ -1235,7 +1235,8 @@
       "text": "Пригласите друга по своей ссылке. Когда он впервые подключит VPN, вы оба получите дни к подписке. Сколько друзей, столько и наград.",
       "badgeYou": "Вам +{{days}} дня",
       "badgeFriend": "Другу +{{days}} дня",
-      "badgeNoLimit": "Без ограничений"
+      "badgeNoLimit": "Без ограничений",
+      "short": "Вам и другу, когда он впервые подключит VPN. Без ограничений"
     },
     "botLink": "Ссылка на бота",
     "cabinetLink": "Ссылка на кабинет",
@@ -1253,7 +1254,9 @@
       "chainDepth": "Глубина сети",
       "levelsValue": "до {{count}} ур.",
       "yourLevel": "Ваш уровень",
-      "levelNotReached": "не открыт"
+      "levelNotReached": "не открыт",
+      "invited": "Приглашено",
+      "earned": "Заработано"
     },
     "terms": {
       "title": "Условия программы",
@@ -1368,7 +1371,8 @@
         "expectedReferralsPlaceholder": "Примерное количество в месяц",
         "desiredCommission": "Желаемый процент комиссии",
         "desiredCommissionPlaceholder": "От 1 до 100%"
-      }
+      },
+      "sectionTitle": "Партнёрство"
     },
     "withdrawal": {
       "title": "Вывод средств",
@@ -1425,6 +1429,9 @@
       "saveError": "Не удалось сохранить настройку",
       "kindMoneyHint": "Награда приходит суммой на баланс",
       "kindDaysHint": "Награда продлевает подписку"
+    },
+    "invite": {
+      "title": "Пригласите друга"
     }
   },
   "support": {
@@ -1515,7 +1522,7 @@
     "subscriptionDays": "Дни подписки",
     "day": "День",
     "spinCost": "Стоимость вращения",
-    "spin": "КРУТИТЬ!",
+    "spin": "Крутить",
     "spinning": "Крутится...",
     "history": "История",
     "recentSpins": "Последние вращения",
@@ -1553,7 +1560,8 @@
       "description": "Крути колесо и выигрывай призы: дни подписки, баланс, трафик и многое другое!",
       "button": "Перейти к колесу"
     },
-    "selectSubscription": "Выберите подписку"
+    "selectSubscription": "Выберите подписку",
+    "starsCost": "{{count}} ⭐"
   },
   "admin": {
     "backgrounds": {
@@ -8496,8 +8504,8 @@
     "tabBuy": "Купить",
     "tabActivate": "Активировать",
     "tabMyGifts": "Мои подарки",
-    "selectTariff": "ВЫБЕРИТЕ ТАРИФ",
-    "selectPeriod": "ПЕРИОД ПОДПИСКИ",
+    "selectTariff": "Выберите тариф",
+    "selectPeriod": "Период подписки",
     "deviceCount": "{{count}} устройств",
     "deviceCount_one": "{{count}} устройство",
     "deviceCount_few": "{{count}} устройства",
@@ -8517,16 +8525,16 @@
     "activeGiftsTitle": "Активные подарки",
     "activatedGiftsTitle": "Активированные",
     "receivedGiftsTitle": "Полученные",
-    "statusAvailable": "ДОСТУПЕН",
-    "statusActivated": "АКТИВИРОВАН",
-    "statusPending": "ОЖИДАЕТ",
-    "statusDelivered": "ДОСТАВЛЕН",
-    "statusFailed": "ОШИБКА",
-    "statusExpired": "ПРОСРОЧЕН",
-    "statusPendingActivation": "ОЖИДАЕТ АКТИВАЦИИ",
-    "copyCode": "КОПИРОВАТЬ",
+    "statusAvailable": "Доступен",
+    "statusActivated": "Активирован",
+    "statusPending": "Ожидает",
+    "statusDelivered": "Доставлен",
+    "statusFailed": "Ошибка",
+    "statusExpired": "Просрочен",
+    "statusPendingActivation": "Ожидает активации",
+    "copyCode": "Копировать",
     "codeCopied": "Код скопирован!",
-    "shareGift": "ПОДЕЛИТЬСЯ",
+    "shareGift": "Поделиться",
     "shareText": "У меня есть подарок для тебя! Активируй его здесь:",
     "codeReadyTitle": "Код подарка готов!",
     "codeLabel": "Код подарка",
@@ -8551,7 +8559,8 @@
     "scanDescription": "Наведите камеру на QR-код подарка",
     "scanNotRecognized": "В QR-коде нет кода подарка",
     "scanError": "Не удалось отсканировать",
-    "scanNoCamera": "Камера недоступна — введите код вручную"
+    "scanNoCamera": "Камера недоступна — введите код вручную",
+    "claimPageTitle": "Подарок"
   },
   "news": {
     "title": "Новости и обновления",
@@ -8622,7 +8631,8 @@
         "imageUrlPrompt": "URL изображения:",
         "linkUrlPrompt": "URL ссылки:"
       }
-    }
+    },
+    "articleTitle": "Новость"
   },
   "subscriptions": {
     "buy": "Купить подписку",
@@ -8828,5 +8838,16 @@
   "legal": {
     "serviceRules": "Правила сервиса",
     "privacy": "Политика конфиденциальности"
+  },
+  "errors": {
+    "boundary": {
+      "title": "Что-то пошло не так",
+      "appText": "Произошла ошибка. Перезагрузите страницу.",
+      "reload": "Перезагрузить",
+      "widget": "Не удалось загрузить этот блок",
+      "retry": "Повторить",
+      "updated": "Приложение обновилось. Перезагружаем…",
+      "pageText": "Произошла ошибка"
+    }
   }
 }

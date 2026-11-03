@@ -487,7 +487,7 @@ export default function Login() {
           />
         ) : (
           /* Main auth card */
-          <div className="card">
+          <div className="rounded-3xl bg-dark-900/70 p-6 ring-1 ring-inset ring-dark-800/80">
             {error && (
               <div
                 role="alert"
@@ -508,7 +508,7 @@ export default function Login() {
                 <div className="space-y-3 text-center">
                   <button
                     onClick={handleRetryTelegramAuth}
-                    className="btn-primary mx-auto flex items-center gap-2 px-5 py-2.5"
+                    className="inline-flex h-12 items-center justify-center gap-2 rounded-2xl bg-accent-500 px-5 text-[15px] font-semibold text-on-accent transition-colors hover:bg-accent-600 active:scale-[0.98] disabled:cursor-not-allowed disabled:bg-accent-500/40 mx-auto"
                   >
                     <RefreshIcon className="h-4 w-4" />
                     {t('auth.tryAgain')}
@@ -643,7 +643,7 @@ export default function Login() {
                               <button
                                 type="submit"
                                 disabled={forgotPasswordLoading}
-                                className="btn-primary w-full py-2.5"
+                                className="inline-flex h-12 items-center justify-center gap-2 rounded-2xl bg-accent-500 px-5 text-[15px] font-semibold text-on-accent transition-colors hover:bg-accent-600 active:scale-[0.98] disabled:cursor-not-allowed disabled:bg-accent-500/40 w-full"
                               >
                                 {forgotPasswordLoading ? (
                                   <span className="flex items-center justify-center gap-2">
@@ -796,7 +796,7 @@ export default function Login() {
                               disabled={
                                 isLoading || (authMode === 'register' && !consent.allAccepted)
                               }
-                              className="btn-primary w-full py-2.5"
+                              className="inline-flex h-12 items-center justify-center gap-2 rounded-2xl bg-accent-500 px-5 text-[15px] font-semibold text-on-accent transition-colors hover:bg-accent-600 active:scale-[0.98] disabled:cursor-not-allowed disabled:bg-accent-500/40 w-full"
                             >
                               {isLoading ? (
                                 <span className="flex items-center justify-center gap-2">

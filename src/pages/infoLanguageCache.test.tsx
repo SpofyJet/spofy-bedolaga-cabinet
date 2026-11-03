@@ -1,6 +1,7 @@
 // @vitest-environment jsdom
 import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import type { ReactNode } from 'react';
 import { MemoryRouter } from 'react-router';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import Info from './Info';
@@ -11,6 +12,10 @@ vi.mock('react-i18next', () => ({
   useTranslation: () => ({ t: (key: string) => key, i18n: { language: state.language } }),
 }));
 vi.mock('../components/LanguageSwitcher', () => ({ default: () => null }));
+// PageHeader needs Router/PlatformProvider; this test is about language caching only.
+vi.mock('../components/layout/PageHeader', () => ({
+  PageHeader: ({ title }: { title: ReactNode }) => <h1>{title}</h1>,
+}));
 vi.mock('../api/client', () => ({ default: { get: (...args: unknown[]) => state.get(...args) } }));
 vi.mock('../api/infoPages', () => ({
   infoPagesApi: { getTabReplacements: async () => ({}), getPages: async () => [] },

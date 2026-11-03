@@ -1,7 +1,7 @@
 import { uiLocale } from '@/utils/uiLocale';
 import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router';
+import { PageHeader } from '@/components/layout/PageHeader';
 import { infoApi } from '../api/info';
 import { formatContent } from '../utils/legalContent';
 import LanguageSwitcher from '../components/LanguageSwitcher';
@@ -60,23 +60,19 @@ export default function PublicLegal({ doc }: PublicLegalProps) {
 
   return (
     <div className="min-h-viewport bg-dark-950 px-4 py-8 sm:py-12">
-      <div className="fixed right-4 top-4 z-50">
-        <LanguageSwitcher />
-      </div>
-
-      <div className="mx-auto w-full max-w-3xl">
-        <h1 className="mb-6 text-2xl font-semibold text-dark-100">{title}</h1>
+      <div className="mx-auto w-full max-w-[600px]">
+        <PageHeader title={title} backTo="/login" right={<LanguageSwitcher />} />
 
         {isLoading ? (
           <SkeletonGroup className="space-y-3">
-            <Skeleton variant="card" count={3} className="h-16" />
+            <Skeleton variant="card" count={3} className="h-16 rounded-3xl" />
           </SkeletonGroup>
         ) : isError || !data?.content ? (
-          <div className="bento-card text-dark-400">
+          <div className="rounded-3xl bg-dark-900/70 p-5 text-dark-400 ring-1 ring-inset ring-dark-800/80">
             {t('info.documentUnavailable', 'Документ пока недоступен.')}
           </div>
         ) : (
-          <div className="bento-card prose prose-invert max-w-none">
+          <div className="prose prose-invert max-w-none rounded-3xl bg-dark-900/70 p-5 ring-1 ring-inset ring-dark-800/80">
             <div dangerouslySetInnerHTML={{ __html: formatContent(data.content) }} />
             {data.updated_at && (
               <p className="mt-4 text-xs text-dark-500">
@@ -86,12 +82,6 @@ export default function PublicLegal({ doc }: PublicLegalProps) {
             )}
           </div>
         )}
-
-        <div className="mt-6">
-          <Link to="/login" className="btn-secondary">
-            {t('auth.backToLogin', 'Вернуться ко входу')}
-          </Link>
-        </div>
       </div>
     </div>
   );

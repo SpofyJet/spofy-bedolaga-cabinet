@@ -1203,7 +1203,8 @@
       "text": "Invite a friend with your link. When they connect VPN for the first time, you both get extra days. As many friends, as many rewards.",
       "badgeYou": "You get +{{days}} days",
       "badgeFriend": "Friend gets +{{days}} days",
-      "badgeNoLimit": "No limit"
+      "badgeNoLimit": "No limit",
+      "short": "For you and your friend when they first connect VPN. No limit"
     },
     "botLink": "Bot link",
     "cabinetLink": "Cabinet link",
@@ -1221,7 +1222,9 @@
       "chainDepth": "Network depth",
       "levelsValue": "up to {{count}} lvl.",
       "yourLevel": "Your level",
-      "levelNotReached": "not reached"
+      "levelNotReached": "not reached",
+      "invited": "Invited",
+      "earned": "Earned"
     },
     "terms": {
       "title": "Program Terms",
@@ -1336,7 +1339,8 @@
         "expectedReferralsPlaceholder": "Estimated number per month",
         "desiredCommission": "Desired Commission (%)",
         "desiredCommissionPlaceholder": "From 1 to 100%"
-      }
+      },
+      "sectionTitle": "Partnership"
     },
     "withdrawal": {
       "title": "Withdrawal",
@@ -1393,6 +1397,9 @@
       "saveError": "Could not save the setting",
       "kindMoneyHint": "The reward arrives as an amount on your balance",
       "kindDaysHint": "The reward extends your subscription"
+    },
+    "invite": {
+      "title": "Invite a friend"
     }
   },
   "support": {
@@ -1482,7 +1489,7 @@
     "subscriptionDays": "Subscription days",
     "day": "Day",
     "spinCost": "Spin cost",
-    "spin": "SPIN!",
+    "spin": "Spin",
     "spinning": "Spinning...",
     "history": "History",
     "recentSpins": "Recent spins",
@@ -1520,7 +1527,8 @@
       "description": "Spin the wheel and win prizes: subscription days, balance, traffic and more!",
       "button": "Go to wheel"
     },
-    "selectSubscription": "Select subscription"
+    "selectSubscription": "Select subscription",
+    "starsCost": "{{count}} ⭐"
   },
   "admin": {
     "backgrounds": {
@@ -7884,8 +7892,8 @@
     "tabBuy": "Buy",
     "tabActivate": "Activate",
     "tabMyGifts": "My Gifts",
-    "selectTariff": "SELECT TARIFF",
-    "selectPeriod": "SUBSCRIPTION PERIOD",
+    "selectTariff": "Select tariff",
+    "selectPeriod": "Subscription period",
     "deviceCount": "{{count}} device",
     "deviceCount_other": "{{count}} devices",
     "activateTitle": "Enter gift code",
@@ -7903,16 +7911,16 @@
     "activeGiftsTitle": "Active gifts",
     "activatedGiftsTitle": "Activated",
     "receivedGiftsTitle": "Received",
-    "statusAvailable": "AVAILABLE",
-    "statusActivated": "ACTIVATED",
-    "statusPending": "PENDING",
-    "statusDelivered": "DELIVERED",
-    "statusFailed": "FAILED",
-    "statusExpired": "EXPIRED",
-    "statusPendingActivation": "PENDING ACTIVATION",
-    "copyCode": "COPY",
+    "statusAvailable": "Available",
+    "statusActivated": "Activated",
+    "statusPending": "Pending",
+    "statusDelivered": "Delivered",
+    "statusFailed": "Failed",
+    "statusExpired": "Expired",
+    "statusPendingActivation": "Pending activation",
+    "copyCode": "Copy",
     "codeCopied": "Code copied!",
-    "shareGift": "SHARE",
+    "shareGift": "Share",
     "shareText": "I have a gift for you! Activate it here:",
     "codeReadyTitle": "Gift code is ready!",
     "codeLabel": "Gift code",
@@ -7934,7 +7942,8 @@
     "scanDescription": "Point the camera at the gift QR code",
     "scanNotRecognized": "No gift code in this QR",
     "scanError": "Could not scan",
-    "scanNoCamera": "Camera unavailable — enter the code manually"
+    "scanNoCamera": "Camera unavailable — enter the code manually",
+    "claimPageTitle": "Gift"
   },
   "news": {
     "title": "News & Updates",
@@ -8005,7 +8014,8 @@
         "imageUrlPrompt": "Image URL:",
         "linkUrlPrompt": "URL:"
       }
-    }
+    },
+    "articleTitle": "News"
   },
   "subscriptions": {
     "buy": "Buy subscription",
@@ -8211,5 +8221,16 @@
   "legal": {
     "serviceRules": "Service rules",
     "privacy": "Privacy policy"
+  },
+  "errors": {
+    "boundary": {
+      "title": "Something went wrong",
+      "appText": "An unexpected error occurred. Please reload the page.",
+      "reload": "Reload",
+      "widget": "Failed to load this section",
+      "retry": "Try again",
+      "updated": "App was updated. Reloading…",
+      "pageText": "An unexpected error occurred"
+    }
   }
 }

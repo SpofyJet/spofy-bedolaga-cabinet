@@ -36,6 +36,8 @@ import { useCurrency } from '../hooks/useCurrency';
 import { usePlatform, useHaptic } from '@/platform';
 import { openPaymentUrl } from '../utils/openPaymentUrl';
 import { Skeleton, SkeletonGroup } from '@/components/ui/skeleton';
+import { PageHeader } from '@/components/layout/PageHeader';
+import { Chip, EmptyState, Page, RowIcon } from '@/components/spofy/ui';
 import {
   SparklesIcon,
   GiftIcon,
@@ -99,11 +101,13 @@ type TabId = 'buy' | 'activate' | 'myGifts';
 
 function LoadingSkeleton() {
   return (
-    <div className="flex min-h-dvh items-center justify-center">
-      <div className="flex flex-col items-center gap-4">
-        <div className="h-8 w-8 animate-spin rounded-full border-2 border-dark-600 border-t-accent-500" />
-      </div>
-    </div>
+    <Page>
+      <SkeletonGroup className="space-y-6">
+        <Skeleton className="h-10 w-40" />
+        <Skeleton className="h-12 rounded-2xl" />
+        <Skeleton variant="card" count={3} className="h-20 rounded-3xl" />
+      </SkeletonGroup>
+    </Page>
   );
 }
 
@@ -111,15 +115,10 @@ function ErrorState({ message }: { message: string }) {
   const { t } = useTranslation();
 
   return (
-    <div className="flex min-h-dvh items-center justify-center px-4">
-      <div className="flex max-w-sm flex-col items-center gap-4 text-center">
-        <div className="flex h-16 w-16 items-center justify-center rounded-full bg-error-500/10">
-          <WarningCircleIcon className="h-8 w-8 text-error-400" />
-        </div>
-        <h2 className="text-lg font-semibold text-dark-50">{t('gift.failedTitle')}</h2>
-        <p className="text-sm text-dark-300">{message}</p>
-      </div>
-    </div>
+    <Page>
+      <PageHeader title={t('gift.pageTitle')} backTo="/profile" />
+      <EmptyState icon={<WarningCircleIcon />} title={t('gift.failedTitle')} text={message} />
+    </Page>
   );
 }
 
@@ -133,15 +132,14 @@ function DisabledState() {
   }, [navigate]);
 
   return (
-    <div className="flex min-h-dvh items-center justify-center px-4">
-      <div className="flex max-w-sm flex-col items-center gap-4 text-center">
-        <div className="flex h-16 w-16 items-center justify-center rounded-full bg-dark-800/50">
-          <BanIcon className="h-8 w-8 text-dark-400" />
-        </div>
-        <h2 className="text-lg font-semibold text-dark-50">{t('gift.featureDisabled')}</h2>
-        <p className="text-sm text-dark-300">{t('gift.redirecting')}</p>
-      </div>
-    </div>
+    <Page>
+      <PageHeader title={t('gift.pageTitle')} backTo="/profile" />
+      <EmptyState
+        icon={<BanIcon />}
+        title={t('gift.featureDisabled')}
+        text={t('gift.redirecting')}
+      />
+    </Page>
   );
 }
 
@@ -163,39 +161,28 @@ function TariffCard({
       aria-checked={isSelected}
       onClick={onSelect}
       className={cn(
-        'block w-full rounded-2xl p-4 text-start transition-all duration-200',
+        'block w-full rounded-3xl p-4 text-start transition-colors duration-200',
         tariff.is_highlighted
-          ? cn(bestValueFrame(isSelected), isSelected ? 'bg-accent-500/5' : 'bg-dark-900/50')
+          ? cn(bestValueFrame(isSelected), isSelected ? 'bg-accent-500/5' : 'bg-dark-900/70')
           : isSelected
-            ? 'border border-accent-500/50 bg-accent-500/5'
-            : 'border border-dark-800/50 bg-dark-900/50 hover:border-dark-700/50',
+            ? 'bg-accent-500/5 ring-1 ring-inset ring-accent-500/50'
+            : 'bg-dark-900/70 ring-1 ring-inset ring-dark-800/80 hover:bg-dark-800/50',
       )}
     >
       {/* Отметка оператора первой строкой, как в покупке и продлении: этот тариф
           выбран сразу — подпись объясняет почему. */}
       {tariff.is_highlighted && <BestValueBadge className="mb-3" />}
-      <div className="flex items-center gap-4">
-        {/* Gift circle icon */}
-        <div
-          className={cn(
-            'flex h-12 w-12 shrink-0 items-center justify-center rounded-full transition-colors',
-            isSelected ? 'bg-accent-500/20' : 'bg-dark-800/50',
-          )}
-        >
-          <GiftIcon
-            className={cn(
-              'h-6 w-6 transition-colors',
-              isSelected ? 'text-accent-400' : 'text-dark-400',
-            )}
-          />
-        </div>
+      <div className="flex items-center gap-3">
+        <RowIcon tone={isSelected ? 'accent' : 'muted'}>
+          <GiftIcon />
+        </RowIcon>
 
         {/* Info */}
         <div className="min-w-0 flex-1">
-          <p className="text-base font-bold text-dark-50">{tariff.name}</p>
+          <p className="truncate text-[15px] font-semibold text-dark-50">{tariff.name}</p>
           <p
             className={cn(
-              'text-xs font-medium uppercase tracking-wider transition-colors',
+              'mt-0.5 text-[13px] transition-colors',
               isSelected ? 'text-accent-400' : 'text-dark-400',
             )}
           >
@@ -210,11 +197,11 @@ function TariffCard({
         {/* Checkmark circle */}
         <div
           className={cn(
-            'flex h-6 w-6 shrink-0 items-center justify-center rounded-full border-2 transition-colors',
+            'flex h-[22px] w-[22px] shrink-0 items-center justify-center rounded-full border-2 transition-colors',
             isSelected ? 'border-accent-500 bg-accent-500' : 'border-dark-600',
           )}
         >
-          {isSelected && <CheckIcon className="h-3.5 w-3.5 text-white" />}
+          {isSelected && <CheckIcon className="h-3 w-3 text-on-accent" />}
         </div>
       </div>
     </button>
@@ -242,12 +229,12 @@ function PeriodCard({
       // Выбор — подсветкой и голубой рамкой, как в покупке и продлении. Сплошная
       // голубая заливка выбранного съедала золотую плашку «Выгодно».
       className={cn(
-        'block w-full rounded-2xl p-4 text-start transition-all duration-200',
+        'block w-full rounded-3xl p-4 text-start transition-colors duration-200',
         period.is_highlighted
-          ? cn(bestValueFrame(isSelected), isSelected ? 'bg-accent-500/10' : 'bg-dark-800/50')
+          ? cn(bestValueFrame(isSelected), isSelected ? 'bg-accent-500/10' : 'bg-dark-900/70')
           : isSelected
-            ? 'border border-accent-500 bg-accent-500/10'
-            : 'border border-transparent bg-dark-800/50 hover:bg-dark-700/50',
+            ? 'bg-accent-500/10 ring-1 ring-inset ring-accent-500/60'
+            : 'bg-dark-900/70 ring-1 ring-inset ring-dark-800/80 hover:bg-dark-800/50',
       )}
     >
       {/* Отметка оператора первой строкой: этот период выбран сразу — подпись
@@ -256,19 +243,17 @@ function PeriodCard({
       <div className="flex items-center justify-between gap-3">
         {/* Left: period + discount */}
         <div className="flex min-w-0 flex-col items-start gap-1">
-          <span className="text-lg font-bold text-dark-50">
+          <span className="text-[15px] font-semibold text-dark-50">
             {formatPeriodLabel(period.days, t)}
           </span>
           {hasDiscount && period.discount_percent != null && (
-            <span className="rounded-md bg-accent-500/20 px-2 py-0.5 text-xs font-bold text-accent-400">
-              -{period.discount_percent}%
-            </span>
+            <Chip tone="success">-{period.discount_percent}%</Chip>
           )}
         </div>
 
         {/* Right: prices */}
         <div className="flex shrink-0 flex-col items-end gap-0.5">
-          <span className="whitespace-nowrap text-lg font-bold text-accent-400">
+          <span className="whitespace-nowrap text-[17px] font-bold text-dark-50">
             {formatPrice(period.price_kopeks)}
           </span>
           {hasDiscount && period.original_price_kopeks != null && (
@@ -297,16 +282,16 @@ function PaymentModeToggle({
     <div
       role="group"
       aria-label={t('gift.paymentMode')}
-      className="flex rounded-xl bg-dark-800/50 p-1"
+      className="flex rounded-2xl bg-dark-900/70 p-1 ring-1 ring-inset ring-dark-800/80"
     >
       <button
         type="button"
         onClick={() => onToggle('balance')}
         aria-pressed={mode === 'balance'}
         className={cn(
-          'flex-1 rounded-lg px-4 py-2.5 text-sm font-medium transition-all duration-200',
+          'flex-1 rounded-xl px-3 py-2.5 text-sm font-semibold transition-colors duration-200',
           mode === 'balance'
-            ? 'bg-dark-700 text-dark-50 shadow-sm'
+            ? 'bg-dark-800 text-dark-50 ring-1 ring-inset ring-dark-700/60'
             : 'text-dark-400 hover:text-dark-200',
         )}
       >
@@ -317,9 +302,9 @@ function PaymentModeToggle({
         onClick={() => onToggle('gateway')}
         aria-pressed={mode === 'gateway'}
         className={cn(
-          'flex-1 rounded-lg px-4 py-2.5 text-sm font-medium transition-all duration-200',
+          'flex-1 rounded-xl px-3 py-2.5 text-sm font-semibold transition-colors duration-200',
           mode === 'gateway'
-            ? 'bg-dark-700 text-dark-50 shadow-sm'
+            ? 'bg-dark-800 text-dark-50 ring-1 ring-inset ring-dark-700/60'
             : 'text-dark-400 hover:text-dark-200',
         )}
       >
@@ -347,10 +332,10 @@ function PaymentMethodCard({
   return (
     <div
       className={cn(
-        'rounded-2xl border transition-all duration-200',
+        'rounded-3xl ring-1 ring-inset transition-colors duration-200',
         isSelected
-          ? 'border-accent-500/50 bg-accent-500/5'
-          : 'border-dark-800/50 bg-dark-900/50 hover:border-dark-700/50',
+          ? 'bg-accent-500/5 ring-accent-500/50'
+          : 'bg-dark-900/70 ring-dark-800/80 hover:bg-dark-800/50',
       )}
     >
       <button
@@ -358,7 +343,7 @@ function PaymentMethodCard({
         role="radio"
         aria-checked={isSelected}
         onClick={onSelect}
-        className="flex w-full items-center gap-4 p-4 text-start"
+        className="flex min-h-[60px] w-full items-center gap-3 px-4 py-3 text-start"
       >
         {method.icon_url && (
           <div className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-dark-800/50">
@@ -366,7 +351,7 @@ function PaymentMethodCard({
           </div>
         )}
         <div className="min-w-0 flex-1">
-          <p className="text-sm font-medium text-dark-100">{method.display_name}</p>
+          <p className="text-[15px] font-semibold text-dark-100">{method.display_name}</p>
           {method.description && (
             <p className="mt-0.5 truncate text-xs text-dark-400">{method.description}</p>
           )}
@@ -377,7 +362,7 @@ function PaymentMethodCard({
             isSelected ? 'border-accent-500 bg-accent-500' : 'border-dark-600',
           )}
         >
-          {isSelected && <div className="h-2 w-2 rounded-full bg-white" />}
+          {isSelected && <div className="h-2 w-2 rounded-full bg-on-accent" />}
         </div>
       </button>
 
@@ -392,7 +377,7 @@ function PaymentMethodCard({
                 className={cn(
                   'rounded-xl px-4 py-2 text-sm font-medium transition-all duration-200',
                   selectedSubOption === opt.id
-                    ? 'bg-accent-500 text-on-accent shadow-sm shadow-accent-500/25'
+                    ? 'bg-accent-500 text-on-accent'
                     : 'bg-dark-800/50 text-dark-300 hover:bg-dark-700/50',
                 )}
               >
@@ -572,7 +557,7 @@ function BuyTabContent({
       {/* Tariff selection */}
       {showTariffCards && (
         <div>
-          <h2 className="mb-3 text-xs font-semibold uppercase tracking-wider text-dark-400">
+          <h2 className="mb-2 px-1 text-[13px] font-semibold text-dark-400">
             {t('gift.selectTariff')}
           </h2>
           <div role="radiogroup" aria-label={t('gift.chooseTariff')} className="space-y-2">
@@ -590,14 +575,14 @@ function BuyTabContent({
 
       {/* Selected tariff description */}
       {selectedTariff?.description && (
-        <div className="rounded-xl border border-dark-800/30 bg-dark-800/20 px-4 py-3">
-          <p className="text-sm text-dark-300">{selectedTariff.description}</p>
-        </div>
+        <p className="-mt-3 px-1 text-[13px] leading-snug text-dark-400">
+          {selectedTariff.description}
+        </p>
       )}
 
       {/* Promo group banner */}
       {config.promo_group_name && (
-        <div className="flex items-center gap-3 rounded-xl border border-success-500/30 bg-success-500/10 p-3">
+        <div className="flex items-center gap-3 rounded-2xl bg-success-500/10 p-3 ring-1 ring-inset ring-success-500/25">
           <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-success-500/20">
             <SparklesIcon className="h-4 w-4 text-success-400" />
           </div>
@@ -614,7 +599,7 @@ function BuyTabContent({
 
       {/* Active discount banner */}
       {config.active_discount_percent != null && config.active_discount_percent > 0 && (
-        <div className="flex items-center gap-3 rounded-xl border border-warning-500/30 bg-warning-500/10 p-3">
+        <div className="flex items-center gap-3 rounded-2xl bg-warning-500/10 p-3 ring-1 ring-inset ring-warning-500/25">
           <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-warning-500/20">
             <SparklesIcon className="h-4 w-4 text-warning-400" />
           </div>
@@ -627,7 +612,7 @@ function BuyTabContent({
       {/* Period selection */}
       {periodsForDisplay.length > 0 && (
         <div>
-          <h2 className="mb-3 text-xs font-semibold uppercase tracking-wider text-dark-400">
+          <h2 className="mb-2 px-1 text-[13px] font-semibold text-dark-400">
             {t('gift.selectPeriod')}
           </h2>
           <div className="space-y-2">
@@ -645,7 +630,7 @@ function BuyTabContent({
 
       {/* Payment mode toggle */}
       <div>
-        <h2 className="mb-3 text-xs font-semibold uppercase tracking-wider text-dark-400">
+        <h2 className="mb-2 px-1 text-[13px] font-semibold text-dark-400">
           {t('gift.paymentMode')}
         </h2>
         <PaymentModeToggle
@@ -690,10 +675,10 @@ function BuyTabContent({
 
       {/* Summary / Balance info */}
       {paymentMode === 'balance' && (
-        <div className="rounded-2xl border border-dark-800/50 bg-dark-900/50 p-4">
+        <div className="rounded-3xl bg-dark-900/70 px-4 py-4 ring-1 ring-inset ring-dark-800/80">
           <div className="flex items-center justify-between">
-            <span className="text-sm text-dark-400">{t('gift.yourBalance')}</span>
-            <span className="text-sm font-semibold text-dark-200">
+            <span className="text-[15px] text-dark-300">{t('gift.yourBalance')}</span>
+            <span className="text-[15px] font-semibold text-dark-100">
               {formatPrice(config.balance_kopeks)}
             </span>
           </div>
@@ -707,7 +692,7 @@ function BuyTabContent({
             initial={{ opacity: 0, y: -8 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
-            className="rounded-xl border border-warning-500/20 bg-warning-500/5 p-3"
+            className="rounded-2xl bg-warning-500/10 p-3 ring-1 ring-inset ring-warning-500/25"
           >
             <p className="text-sm text-warning-400">
               {t('gift.insufficientBalance')}{' '}
@@ -729,7 +714,7 @@ function BuyTabContent({
             initial={{ opacity: 0, y: -8 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
-            className="rounded-xl border border-error-500/20 bg-error-500/5 p-3"
+            className="rounded-2xl bg-error-500/10 p-3 ring-1 ring-inset ring-error-500/25"
           >
             <p className="text-sm text-error-400">{submitError}</p>
           </motion.div>
@@ -742,9 +727,9 @@ function BuyTabContent({
         onClick={handleSubmit}
         disabled={!canSubmit || purchaseMutation.isPending}
         className={cn(
-          'flex w-full items-center justify-center gap-2 rounded-2xl px-6 py-4 text-base font-semibold transition-all duration-200',
+          'flex h-12 w-full items-center justify-center gap-2 rounded-2xl px-6 text-[15px] font-semibold transition-colors duration-200',
           canSubmit && !purchaseMutation.isPending
-            ? 'bg-accent-500 text-on-accent shadow-lg shadow-accent-500/25 hover:bg-accent-400 hover:shadow-accent-500/40 active:scale-[0.98]'
+            ? 'bg-accent-500 text-on-accent hover:bg-accent-600 active:scale-[0.98]'
             : 'cursor-not-allowed bg-dark-800 text-dark-500',
         )}
       >
@@ -875,10 +860,10 @@ function ActivateTabContent({ initialCode }: { initialCode?: string | null }) {
     const result = activateMutation.data;
     return (
       <div className="flex flex-col items-center gap-4 py-12 text-center">
-        <div className="flex h-16 w-16 items-center justify-center rounded-full bg-accent-500/20">
-          <CheckCircleIcon className="h-8 w-8 text-accent-400" />
-        </div>
-        <h2 className="text-xl font-bold text-dark-50">{t('gift.activateSuccess')}</h2>
+        <RowIcon tone="success">
+          <CheckCircleIcon />
+        </RowIcon>
+        <h2 className="text-lg font-bold text-dark-50">{t('gift.activateSuccess')}</h2>
         <p className="text-sm text-dark-300">
           {t('gift.activateSuccessDesc', {
             tariff: result.tariff_name ?? '',
@@ -893,10 +878,10 @@ function ActivateTabContent({ initialCode }: { initialCode?: string | null }) {
     <div className="flex flex-col items-center gap-6 py-8">
       {/* Icon + title */}
       <div className="flex flex-col items-center gap-3 text-center [overflow-wrap:anywhere]">
-        <div className="flex h-16 w-16 items-center justify-center rounded-full bg-accent-500/20">
-          <KeyIcon className="h-8 w-8 text-accent-400" />
-        </div>
-        <h2 className="text-xl font-bold text-dark-50">{t('gift.activateTitle')}</h2>
+        <RowIcon>
+          <KeyIcon />
+        </RowIcon>
+        <h2 className="text-lg font-bold text-dark-50">{t('gift.activateTitle')}</h2>
         <p className="max-w-xs text-sm text-dark-400">{t('gift.activateDescription')}</p>
       </div>
 
@@ -910,7 +895,7 @@ function ActivateTabContent({ initialCode }: { initialCode?: string | null }) {
             setActivateError(null);
           }}
           placeholder={t('gift.activateCodePlaceholder')}
-          className="w-full rounded-2xl border border-dark-700/50 bg-dark-800/50 px-6 py-4 text-center font-mono text-sm text-dark-50 placeholder-dark-500 outline-none transition-colors focus:border-accent-500/50 focus:ring-1 focus:ring-accent-500/25"
+          className="h-12 w-full rounded-2xl bg-dark-800/60 px-4 text-center text-[15px] font-semibold tracking-wide text-dark-50 placeholder-dark-500 outline-none ring-1 ring-inset ring-dark-700/50 transition-colors focus:ring-accent-500/50"
           aria-label={t('gift.activateTitle')}
         />
 
@@ -920,7 +905,7 @@ function ActivateTabContent({ initialCode }: { initialCode?: string | null }) {
           type="button"
           onClick={handleScan}
           disabled={scanning}
-          className="mt-3 w-full rounded-2xl border border-dark-700/50 px-6 py-3 text-sm font-medium text-dark-200 transition-colors hover:bg-dark-800/50 disabled:opacity-50"
+          className="mt-3 h-12 w-full rounded-2xl bg-dark-800/70 px-6 text-[15px] font-semibold text-dark-100 ring-1 ring-inset ring-dark-700/60 transition-colors hover:bg-dark-700/70 disabled:opacity-50"
         >
           {scanning ? t('gift.scanInProgress') : t('gift.scanButton')}
         </button>
@@ -934,7 +919,7 @@ function ActivateTabContent({ initialCode }: { initialCode?: string | null }) {
           <button
             type="button"
             onClick={stopScan}
-            className="mt-2 w-full rounded-2xl border border-dark-700/50 px-6 py-2 text-xs text-dark-400 transition-colors hover:bg-dark-800/50"
+            className="mt-2 h-10 w-full rounded-2xl px-6 text-sm font-semibold text-dark-300 transition-colors hover:bg-dark-800/50"
           >
             {t('gift.scanCancel')}
           </button>
@@ -948,7 +933,7 @@ function ActivateTabContent({ initialCode }: { initialCode?: string | null }) {
             initial={{ opacity: 0, y: -8 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
-            className="w-full max-w-sm rounded-xl border border-error-500/20 bg-error-500/5 p-3"
+            className="w-full max-w-sm rounded-2xl bg-error-500/10 p-3 ring-1 ring-inset ring-error-500/25"
           >
             <p className="text-center text-sm text-error-400">{activateError}</p>
           </motion.div>
@@ -961,9 +946,9 @@ function ActivateTabContent({ initialCode }: { initialCode?: string | null }) {
         onClick={handleActivate}
         disabled={!code.trim() || activateMutation.isPending}
         className={cn(
-          'w-full max-w-sm rounded-2xl px-6 py-4 text-base font-semibold transition-all duration-200',
+          'h-12 w-full max-w-sm rounded-2xl px-6 text-[15px] font-semibold transition-colors duration-200',
           code.trim() && !activateMutation.isPending
-            ? 'bg-accent-500 text-on-accent shadow-lg shadow-accent-500/25 hover:bg-accent-400 active:scale-[0.98]'
+            ? 'bg-accent-500 text-on-accent hover:bg-accent-600 active:scale-[0.98]'
             : 'cursor-not-allowed bg-dark-800 text-dark-500',
         )}
       >
@@ -994,7 +979,7 @@ function CopiedToast({ onDismiss }: { onDismiss: () => void }) {
       // На мобильном стоит над нижней панелью: на bottom-6 тост целиком уходил за неё.
       className="fixed inset-x-0 bottom-[var(--mobile-nav-clearance)] z-50 flex justify-center lg:bottom-6"
     >
-      <div className="flex items-center gap-2 rounded-full border border-dark-700/50 bg-dark-900/95 px-5 py-2.5 shadow-2xl shadow-black/40 backdrop-blur-md">
+      <div className="flex items-center gap-2 rounded-full bg-dark-900 px-5 py-2.5 ring-1 ring-inset ring-dark-700/60">
         <CheckIcon className="h-4 w-4 text-success-400" />
         <span className="text-sm font-medium text-success-400">{t('gift.shareToastCopied')}</span>
       </div>
@@ -1053,26 +1038,17 @@ function SentGiftCard({ gift }: { gift: SentGift }) {
   const handleDismissToast = useCallback(() => setShowToast(false), []);
 
   return (
-    <div className="rounded-2xl border border-dark-800/50 bg-dark-900/50 p-4">
+    <div className="rounded-3xl bg-dark-900/70 p-4 ring-1 ring-inset ring-dark-800/80">
       {/* Header: tariff name + status badge */}
-      <div className="mb-3 flex items-start justify-between">
-        <h3 className="text-base font-bold text-dark-50">{gift.tariff_name ?? t('gift.tariff')}</h3>
-        <span
-          className={cn(
-            'rounded-lg px-2.5 py-1 text-xs font-bold',
-            isActivated
-              ? 'bg-dark-700 text-dark-400'
-              : isAvailable
-                ? 'bg-success-500/20 text-success-400'
-                : 'bg-dark-700 text-dark-400',
-          )}
-        >
-          {statusText}
-        </span>
+      <div className="mb-1 flex items-start justify-between gap-3">
+        <h3 className="min-w-0 truncate text-[15px] font-semibold text-dark-50">
+          {gift.tariff_name ?? t('gift.tariff')}
+        </h3>
+        <Chip tone={!isActivated && isAvailable ? 'success' : 'muted'}>{statusText}</Chip>
       </div>
 
       {/* Info line */}
-      <p className="mb-3 text-xs text-dark-400">
+      <p className="mb-3 text-[13px] text-dark-400">
         {formatGiftDate(gift.created_at)}
         {' \u2022 '}
         {isLifetimePeriod(gift.period_days)
@@ -1086,8 +1062,8 @@ function SentGiftCard({ gift }: { gift: SentGift }) {
       {!isActivated && (
         <>
           {/* Gift code display */}
-          <div className="mb-3 rounded-xl bg-dark-800/80 px-4 py-4 text-center">
-            <p className="break-all font-mono text-sm font-bold tracking-wider text-accent-400">
+          <div className="mb-3 rounded-2xl bg-dark-800/60 px-4 py-3 text-center ring-1 ring-inset ring-dark-700/50">
+            <p className="break-all text-[15px] font-semibold tracking-wide text-accent-400">
               {giftCode}
             </p>
           </div>
@@ -1096,7 +1072,7 @@ function SentGiftCard({ gift }: { gift: SentGift }) {
           <button
             type="button"
             onClick={handleShare}
-            className="flex w-full items-center justify-center gap-2 rounded-xl bg-accent-500 px-4 py-3 text-sm font-bold uppercase tracking-wider text-on-accent transition-colors hover:bg-accent-400 active:scale-[0.98]"
+            className="flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-accent-500 px-4 text-[15px] font-semibold text-on-accent transition-colors hover:bg-accent-600 active:scale-[0.98]"
           >
             <ExportIcon className="h-4 w-4" />
             {t('gift.shareGift')}
@@ -1136,17 +1112,17 @@ function ReceivedGiftCard({ gift }: { gift: ReceivedGift }) {
   const statusText = t(statusKey);
 
   return (
-    <div className="rounded-2xl border border-dark-800/50 bg-dark-900/50 p-4">
+    <div className="rounded-3xl bg-dark-900/70 p-4 ring-1 ring-inset ring-dark-800/80">
       {/* Header */}
-      <div className="mb-3 flex items-start justify-between">
-        <h3 className="text-base font-bold text-dark-50">{gift.tariff_name ?? t('gift.tariff')}</h3>
-        <span className="rounded-lg bg-dark-700 px-2.5 py-1 text-xs font-bold text-dark-400">
-          {statusText}
-        </span>
+      <div className="mb-1 flex items-start justify-between gap-3">
+        <h3 className="min-w-0 truncate text-[15px] font-semibold text-dark-50">
+          {gift.tariff_name ?? t('gift.tariff')}
+        </h3>
+        <Chip tone="muted">{statusText}</Chip>
       </div>
 
       {/* Info line */}
-      <p className="mb-2 text-xs text-dark-400">
+      <p className="mb-2 text-[13px] text-dark-400">
         {formatGiftDate(gift.created_at)}
         {' \u2022 '}
         {isLifetimePeriod(gift.period_days)
@@ -1165,8 +1141,8 @@ function ReceivedGiftCard({ gift }: { gift: ReceivedGift }) {
 
       {/* Gift message */}
       {gift.gift_message && (
-        <div className="mt-2 rounded-xl bg-dark-800/50 p-3">
-          <p className="text-xs italic text-dark-300">{gift.gift_message}</p>
+        <div className="mt-2 rounded-2xl bg-dark-800/50 p-3">
+          <p className="text-[13px] text-dark-300">{gift.gift_message}</p>
         </div>
       )}
     </div>
@@ -1216,7 +1192,7 @@ function MyGiftsTabContent() {
   if (isLoading) {
     return (
       <SkeletonGroup className="space-y-3">
-        <Skeleton variant="card" count={3} className="h-24" />
+        <Skeleton variant="card" count={3} className="h-24 rounded-3xl" />
       </SkeletonGroup>
     );
   }
@@ -1231,13 +1207,11 @@ function MyGiftsTabContent() {
 
   if (isEmpty) {
     return (
-      <div className="flex flex-col items-center gap-4 py-12 text-center">
-        <div className="flex h-16 w-16 items-center justify-center rounded-full bg-dark-800/50">
-          <InboxIcon className="h-8 w-8 text-dark-400" />
-        </div>
-        <h2 className="text-lg font-semibold text-dark-200">{t('gift.myGiftsEmpty')}</h2>
-        <p className="max-w-xs text-sm text-dark-400">{t('gift.myGiftsEmptyDesc')}</p>
-      </div>
+      <EmptyState
+        icon={<InboxIcon />}
+        title={t('gift.myGiftsEmpty')}
+        text={t('gift.myGiftsEmptyDesc')}
+      />
     );
   }
 
@@ -1246,7 +1220,7 @@ function MyGiftsTabContent() {
       {/* Active gifts (awaiting activation) */}
       {hasActive && (
         <div>
-          <h2 className="mb-3 text-xs font-semibold uppercase tracking-wider text-dark-400">
+          <h2 className="mb-2 px-1 text-[13px] font-semibold text-dark-400">
             {t('gift.activeGiftsTitle')}
           </h2>
           <div className="space-y-3">
@@ -1260,7 +1234,7 @@ function MyGiftsTabContent() {
       {/* Activated gifts */}
       {hasActivated && (
         <div>
-          <h2 className="mb-3 text-xs font-semibold uppercase tracking-wider text-dark-400">
+          <h2 className="mb-2 px-1 text-[13px] font-semibold text-dark-400">
             {t('gift.activatedGiftsTitle')}
           </h2>
           <div className="space-y-3">
@@ -1274,7 +1248,7 @@ function MyGiftsTabContent() {
       {/* Received gifts */}
       {hasReceived && (
         <div>
-          <h2 className="mb-3 text-xs font-semibold uppercase tracking-wider text-dark-400">
+          <h2 className="mb-2 px-1 text-[13px] font-semibold text-dark-400">
             {t('gift.receivedGiftsTitle')}
           </h2>
           <div className="space-y-3">
@@ -1344,27 +1318,16 @@ export default function GiftSubscription() {
   ];
 
   return (
-    <div className="min-h-dvh">
-      <div className="mx-auto max-w-2xl px-4 py-6">
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4 }}
-          className="mb-6 flex items-center gap-3"
-        >
-          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-accent-500/20">
-            <GiftIcon className="h-5 w-5 text-accent-400" />
-          </div>
-          <h1 className="text-2xl font-bold text-dark-50">{t('gift.pageTitle')}</h1>
-        </motion.div>
+    <Page>
+      <div>
+        <PageHeader title={t('gift.pageTitle')} backTo="/profile" />
 
         {/* Tab bar */}
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.05 }}
-          className="mb-6 rounded-2xl bg-dark-800/50 p-1"
+          className="mb-6 rounded-2xl bg-dark-900/70 p-1 ring-1 ring-inset ring-dark-800/80"
         >
           <div className="flex" role="tablist" aria-label={t('gift.pageTitle')}>
             {tabs.map((tab) => (
@@ -1379,9 +1342,9 @@ export default function GiftSubscription() {
                 // Равные вкладки, узкие поля и шрифт на телефоне: «Мои подарки»
                 // переносилась в две строки, и пилюля была выше соседних.
                 className={cn(
-                  'min-w-0 flex-1 basis-0 whitespace-nowrap rounded-xl px-1.5 py-2.5 text-[13px] font-medium transition-all duration-200 sm:px-3 sm:text-sm',
+                  'min-w-0 flex-1 basis-0 whitespace-nowrap rounded-xl px-1.5 py-2.5 text-[13px] font-semibold transition-colors duration-200 sm:px-3 sm:text-sm',
                   activeTab === tab.id
-                    ? 'bg-accent-500 text-on-accent shadow-sm'
+                    ? 'bg-dark-800 text-dark-50 ring-1 ring-inset ring-dark-700/60'
                     : 'text-dark-400 hover:text-dark-200',
                 )}
               >
@@ -1412,6 +1375,6 @@ export default function GiftSubscription() {
           </motion.div>
         </AnimatePresence>
       </div>
-    </div>
+    </Page>
   );
 }

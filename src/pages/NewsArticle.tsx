@@ -6,7 +6,10 @@ import { motion } from 'framer-motion';
 import DOMPurify from 'dompurify';
 import { newsApi } from '../api/news';
 import { usePlatform } from '../platform/hooks/usePlatform';
-import { BackIcon, ClockIcon, CalendarIcon } from '@/components/icons';
+import { ClockIcon, CalendarIcon } from '@/components/icons';
+import { PiNewspaperDuotone } from 'react-icons/pi';
+import { PageHeader } from '@/components/layout/PageHeader';
+import { EmptyState, Page } from '@/components/spofy/ui';
 import { Skeleton, SkeletonGroup } from '@/components/ui/skeleton';
 
 /**
@@ -253,8 +256,8 @@ export default function NewsArticlePage() {
 
   if (isLoading) {
     return (
-      <SkeletonGroup className="space-y-6">
-        <Skeleton className="h-8 w-32 rounded-lg" />
+      <SkeletonGroup className="mx-auto w-full max-w-[600px] space-y-6">
+        <Skeleton className="h-10 w-40 rounded-xl" />
         <Skeleton className="h-10 w-3/4 rounded-lg" />
         <Skeleton className="h-5 w-48 rounded-lg" />
         <Skeleton className="h-64 w-full rounded-xl" />
@@ -269,97 +272,58 @@ export default function NewsArticlePage() {
 
   if (isError || !article) {
     return (
-      <div className="space-y-6">
-        {!capabilities.hasBackButton && (
-          <button
-            onClick={() => navigate('/')}
-            className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-xl border border-dark-700 bg-dark-800 transition-colors hover:border-dark-600"
-            aria-label={t('news.backToHome')}
-          >
-            <BackIcon />
-          </button>
-        )}
-        <div className="rounded-xl border border-dark-700 bg-dark-800/50 p-8 text-center text-dark-400">
-          {t('news.noNews')}
-        </div>
-      </div>
+      <Page>
+        <PageHeader title={t('news.articleTitle', 'Новость')} backTo="/" />
+        <EmptyState icon={<PiNewspaperDuotone />} title={t('news.noNews')} />
+      </Page>
     );
   }
 
+  const color = safeColor(article.category_color);
+
   return (
-    <div className="space-y-6">
-      {/* Back button */}
-      {!capabilities.hasBackButton && (
-        <button
-          onClick={() => navigate(-1)}
-          className="flex min-h-[44px] items-center gap-2 rounded-xl border border-dark-700 bg-dark-800 px-4 text-sm text-dark-400 transition-colors hover:border-dark-600 hover:text-dark-200"
-          aria-label={t('news.backToHome')}
-        >
-          <BackIcon />
-          <span>{t('news.backToHome')}</span>
-        </button>
-      )}
+    <Page>
+      <PageHeader title={t('news.articleTitle', 'Новость')} backTo="/" />
 
       {/* Article header */}
       <motion.div
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, ease: [0.23, 1, 0.32, 1] }}
+        className="space-y-3 px-1"
       >
         {/* Category + tag */}
-        <div className="mb-4 flex flex-wrap items-center gap-3">
-          {(() => {
-            const color = safeColor(article.category_color);
-            return (
-              <>
-                <span
-                  className="inline-flex items-center gap-1.5 rounded-md px-3 py-1 font-mono text-[11px] font-bold uppercase tracking-widest"
-                  style={{
-                    color,
-                    background: `${color}15`,
-                    border: `1px solid ${color}30`,
-                  }}
-                >
-                  <span
-                    className="h-1.5 w-1.5 animate-pulse rounded-full"
-                    style={{
-                      background: color,
-                      boxShadow: `0 0 8px ${color}`,
-                    }}
-                  />
-                  {article.category}
-                </span>
-                {article.tag && (
-                  <span
-                    className="inline-block rounded px-2 py-0.5 font-mono text-[10px] font-bold uppercase tracking-wider"
-                    style={{
-                      color,
-                      border: `1px solid ${color}33`,
-                      background: `${color}11`,
-                    }}
-                  >
-                    {article.tag}
-                  </span>
-                )}
-              </>
-            );
-          })()}
-        </div>
+        {(article.category || article.tag) && (
+          <div className="flex flex-wrap items-center gap-2">
+            {article.category && (
+              <span
+                className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold"
+                style={{ color, background: `${color}1a` }}
+              >
+                <span className="h-1.5 w-1.5 rounded-full" style={{ background: color }} />
+                {article.category}
+              </span>
+            )}
+            {article.tag && (
+              <span className="inline-flex items-center rounded-full bg-dark-800/80 px-2.5 py-1 text-xs font-semibold text-dark-300">
+                {article.tag}
+              </span>
+            )}
+          </div>
+        )}
 
         {/* Title */}
-        <h1 className="mb-4 text-2xl font-extrabold leading-tight text-dark-50 sm:text-3xl">
-          {article.title}
-        </h1>
+        <h2 className="text-xl font-bold leading-snug text-dark-50">{article.title}</h2>
 
         {/* Meta info */}
-        <div className="mb-6 flex flex-wrap items-center gap-4 text-sm text-dark-400">
+        <div className="flex flex-wrap items-center gap-4 text-[13px] text-dark-400">
           {article.published_at && (
-            <span className="inline-flex items-center gap-1.5 font-mono text-xs">
+            <span className="inline-flex items-center gap-1.5">
               <CalendarIcon className="h-4 w-4" />
               {new Date(article.published_at).toLocaleDateString(i18n.language)}
             </span>
           )}
-          <span className="inline-flex items-center gap-1.5 font-mono text-xs">
+          <span className="inline-flex items-center gap-1.5">
             <ClockIcon className="h-4 w-4" />
             {article.read_time_minutes} {t('news.readTime')}
           </span>
@@ -372,12 +336,12 @@ export default function NewsArticlePage() {
           initial={{ opacity: 0, scale: 0.98 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5, delay: 0.1 }}
-          className="overflow-hidden rounded-xl"
+          className="overflow-hidden rounded-3xl"
         >
           <img
             src={article.featured_image_url}
             alt={article.title}
-            className="max-h-96 w-full rounded-xl object-cover"
+            className="max-h-96 w-full object-cover"
             loading="eager"
             fetchPriority="high"
           />
@@ -389,9 +353,9 @@ export default function NewsArticlePage() {
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.2 }}
-        className="prose max-w-none lg:max-w-3xl"
+        className="prose max-w-none rounded-3xl bg-dark-900/70 p-4 ring-1 ring-inset ring-dark-800/80 sm:p-5"
         dangerouslySetInnerHTML={{ __html: sanitizedContent }}
       />
-    </div>
+    </Page>
   );
 }

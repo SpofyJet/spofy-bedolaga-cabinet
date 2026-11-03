@@ -1,6 +1,6 @@
 import { isLifetimeEndDate } from '@/utils/lifetime';
 import { uiLocale } from '@/utils/uiLocale';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, type ReactNode } from 'react';
 import { useParams, useNavigate, Link } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -8,7 +8,30 @@ import { motion } from 'framer-motion';
 import { authApi } from '../api/auth';
 import { useAuthStore } from '../store/auth';
 import { useToast } from '../components/Toast';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/data-display/Card';
+import { PageHeader } from '@/components/layout/PageHeader';
+
+// Поверхности Spofy вместо старых карточек: плоский фон, тонкое кольцо.
+function Card({ className, children }: { className?: string; children: ReactNode }) {
+  return (
+    <div
+      className={cn(
+        'rounded-3xl bg-dark-900/70 p-4 ring-1 ring-inset ring-dark-800/80 sm:p-5',
+        className,
+      )}
+    >
+      {children}
+    </div>
+  );
+}
+function CardHeader({ children }: { children: ReactNode }) {
+  return <div className="mb-3">{children}</div>;
+}
+function CardTitle({ children }: { children: ReactNode }) {
+  return <h2 className="text-[15px] font-semibold text-dark-100">{children}</h2>;
+}
+function CardContent({ className, children }: { className?: string; children: ReactNode }) {
+  return <div className={className}>{children}</div>;
+}
 import { Button } from '@/components/primitives/Button';
 import { staggerContainer, staggerItem } from '@/components/motion/transitions';
 import { Skeleton, SkeletonGroup } from '@/components/ui/skeleton';
@@ -76,7 +99,7 @@ function AccountCard({ account, label, isSelected, onSelect, showRadio }: Accoun
   const { t } = useTranslation();
 
   return (
-    <Card className={cn('transition-colors', isSelected && 'border-accent-500/50')}>
+    <Card className={cn('transition-colors', isSelected && 'bg-accent-500/5 ring-accent-500/50')}>
       <CardHeader>
         <CardTitle>{label}</CardTitle>
       </CardHeader>
@@ -142,7 +165,7 @@ function AccountCard({ account, label, isSelected, onSelect, showRadio }: Accoun
             role="radio"
             aria-checked={isSelected}
             onClick={onSelect}
-            className="mt-2 flex w-full items-center gap-2.5 rounded-lg bg-dark-800/50 px-3 py-2.5 text-left transition-colors hover:bg-dark-800"
+            className="mt-2 flex min-h-12 w-full items-center gap-2.5 rounded-2xl bg-dark-800/50 px-4 py-2.5 text-left transition-colors hover:bg-dark-800"
           >
             <RadioIndicator selected={isSelected} />
             <span className="text-sm text-dark-200">{t('merge.keepThisSubscription')}</span>
@@ -159,7 +182,7 @@ function LoadingSkeleton() {
   return (
     <SkeletonGroup>
       <motion.div
-        className="mx-auto max-w-lg space-y-6 px-4 py-6"
+        className="mx-auto max-w-[600px] space-y-6 px-4 py-6"
         variants={staggerContainer}
         initial="initial"
         animate="animate"
@@ -209,8 +232,8 @@ function ExpiredState() {
       animate="animate"
     >
       <motion.div variants={staggerItem}>
-        <div className="flex h-16 w-16 items-center justify-center rounded-full bg-warning-500/20">
-          <ClockIcon className="h-8 w-8 text-warning-400" />
+        <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-warning-500/10">
+          <ClockIcon className="h-7 w-7 text-warning-400" />
         </div>
       </motion.div>
 
@@ -243,8 +266,8 @@ function ErrorState() {
       animate="animate"
     >
       <motion.div variants={staggerItem}>
-        <div className="flex h-16 w-16 items-center justify-center rounded-full bg-error-500/20">
-          <WarningIcon className="h-8 w-8 text-error-400" />
+        <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-error-500/10">
+          <WarningIcon className="h-7 w-7 text-error-400" />
         </div>
       </motion.div>
 
@@ -414,20 +437,18 @@ export default function MergeAccounts() {
     // Экран живёт вне общей обвязки кабинета — отступы от краёв задаёт сам,
     // иначе карточки и кнопка «Объединить» стояли вплотную к краю экрана.
     <motion.div
-      className="mx-auto max-w-lg space-y-6 px-4 py-6"
+      className="mx-auto max-w-[600px] space-y-6 px-4 py-6"
       variants={staggerContainer}
       initial="initial"
       animate="animate"
     >
       {/* Header with warning */}
       <motion.div variants={staggerItem}>
-        <Card className="border-warning-500/30 bg-warning-500/5">
+        <PageHeader title={t('merge.title')} backTo="/" />
+        <Card className="bg-warning-500/10 ring-warning-500/25">
           <div className="flex items-start gap-3">
-            <WarningIcon className="mt-0.5 h-6 w-6 shrink-0 text-warning-400" />
-            <div>
-              <h1 className="text-xl font-bold text-dark-50">{t('merge.title')}</h1>
-              <p className="mt-1 text-sm text-dark-400">{t('merge.description')}</p>
-            </div>
+            <WarningIcon className="mt-0.5 h-5 w-5 shrink-0 text-warning-400" />
+            <p className="text-sm text-dark-200">{t('merge.description')}</p>
           </div>
         </Card>
       </motion.div>
@@ -435,7 +456,7 @@ export default function MergeAccounts() {
       {/* Subscription choice prompt (when both have subs) */}
       {bothHaveSubscriptions && !selectedUserId && (
         <motion.div variants={staggerItem}>
-          <div className="rounded-xl border border-accent-500/30 bg-accent-500/10 px-4 py-3">
+          <div className="rounded-2xl bg-accent-500/10 px-4 py-3 ring-1 ring-inset ring-accent-500/25">
             <p className="text-sm font-medium text-accent-400">{t('merge.chooseSubscription')}</p>
           </div>
         </motion.div>
