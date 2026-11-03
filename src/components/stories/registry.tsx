@@ -1,66 +1,87 @@
 import { useTranslation } from 'react-i18next';
+import {
+  PiPlugsConnectedDuotone,
+  PiAppStoreLogoDuotone,
+  PiWrenchDuotone,
+  PiDevicesDuotone,
+} from 'react-icons/pi';
 
 import type { StoryCtaKey, StorySeries, StorySeriesMeta, StorySlideContent } from './types';
 
 /**
- * Реестр серий сторис. Контент — в локалях, визуальные параметры — здесь.
- * Новая серия = запись в STORY_SERIES + блок в четырёх JSON-локалях.
+ * Реестр серий. Текст — в локалях, визуал — здесь: реальные скриншоты там, где
+ * важно узнать экран (смена региона App Store), и фрагменты интерфейса там, где
+ * нужно показать, куда нажать. Никаких сгенерированных картинок.
  */
 export const STORY_SERIES: readonly StorySeriesMeta[] = [
   {
-    id: 'appstore-region',
+    id: 'connect',
     order: 1,
-    coverImage: '/img/story-appstore.jpg',
-    featured: true,
-    palette: { from: '#0E9F6E', to: '#0B7285', accent: '#34D399' },
-    art: ['globe-intro', 'account', 'country', 'payment-none', 'cta-check'],
-    cta: 'purchase',
-  },
-  {
-    id: 'connect-ios',
-    order: 2,
-    coverImage: '/img/story-ios.jpg',
-    palette: { from: '#4F46E5', to: '#1D4ED8', accent: '#818CF8' },
-    art: ['shield-intro', 'connect', 'install', 'cta-check'],
+    accent: '#3B82F6',
+    icon: PiPlugsConnectedDuotone,
+    slides: [{ visual: 'install' }, { visual: 'add-sub' }, { visual: 'power' }],
     cta: 'connect',
   },
   {
-    id: 'connect-android',
-    order: 3,
-    coverImage: '/img/story-android.jpg',
-    palette: { from: '#7C3AED', to: '#4C1D95', accent: '#A78BFA' },
-    art: ['shield-intro', 'connect', 'install', 'cta-check'],
+    id: 'appstore-region',
+    order: 2,
+    accent: '#38BDF8',
+    icon: PiAppStoreLogoDuotone,
+    slides: [
+      { image: '/img/story-region-1.jpg' },
+      { image: '/img/story-region-2.jpg' },
+      { image: '/img/story-region-3.jpg' },
+      { image: '/img/story-region-4.jpg' },
+      { image: '/img/story-region-5.jpg' },
+    ],
     cta: 'connect',
   },
   {
     id: 'no-connection',
-    order: 4,
-    coverImage: '/img/story-wrench.jpg',
-    palette: { from: '#B45309', to: '#78350F', accent: '#FBBF24' },
-    art: ['alert-intro', 'status', 'refresh', 'chat'],
+    order: 3,
+    accent: '#F59E0B',
+    icon: PiWrenchDuotone,
+    slides: [
+      { visual: 'refresh' },
+      { visual: 'reset-path' },
+      { visual: 'servers' },
+      { visual: 'bypass' },
+      { visual: 'support' },
+    ],
     cta: 'support',
+  },
+  {
+    id: 'add-device',
+    order: 4,
+    accent: '#A78BFA',
+    icon: PiDevicesDuotone,
+    slides: [{ visual: 'slots' }, { visual: 'web' }, { visual: 'tv-qr' }, { visual: 'limit' }],
+    cta: 'devices',
   },
 ];
 
 export const STORY_CTA_ROUTES: Record<StoryCtaKey, string> = {
   connect: '/connection',
-  purchase: '/subscription/purchase',
-  renew: '/subscriptions',
-  topup: '/balance/top-up',
   support: '/support',
+  devices: '/subscription',
 };
 
 export function getSeriesMeta(id: string): StorySeriesMeta | undefined {
   return STORY_SERIES.find((s) => s.id === id);
 }
 
+/** Адрес кабинета для текста сторис — тот, с которого его открыли. */
+export function cabinetHost(): string {
+  return typeof window === 'undefined' ? '' : window.location.host;
+}
+
 /**
- * Собирает серию: метаданные + локализованный контент текущей локали.
- * returnObjects даёт массив слайдов из JSON; сферический ключ в вакууме —
- * на случай битого бандла локали защищаемся пустым массивом.
+ * Серии с текстом текущей локали. returnObjects отдаёт массив слайдов из JSON;
+ * на случай битого бандла локали — пустой массив.
  */
 export function useStorySeries(): StorySeries[] {
   const { t } = useTranslation();
+  const site = cabinetHost();
 
   return [...STORY_SERIES]
     .sort((a, b) => a.order - b.order)
@@ -68,11 +89,12 @@ export function useStorySeries(): StorySeries[] {
       const coverTitle = t(`stories.series.${meta.id}.coverTitle`);
       const slides = t(`stories.series.${meta.id}.slides`, {
         returnObjects: true,
+        site,
       }) as unknown as StorySlideContent[];
       return {
         meta,
         coverTitle,
-        slides: Array.isArray(slides) ? slides.filter((s) => s && s.title) : [],
+        slides: Array.isArray(slides) ? slides.filter((s) => s?.title) : [],
       };
     });
 }

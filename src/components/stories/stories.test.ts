@@ -1,3 +1,5 @@
+import { existsSync } from 'node:fs';
+import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 import ru from '@/locales/ru.json';
@@ -21,24 +23,46 @@ function slidesOf(lng: string, seriesId: string) {
 }
 
 describe('реестр серий сторис', () => {
-  it('есть 4 готовые серии с корректными палитрами', () => {
+  it('серии с акцентом, иконкой и уникальным порядком', () => {
     expect(STORY_SERIES.length).toBeGreaterThanOrEqual(3);
     for (const meta of STORY_SERIES) {
-      expect(meta.palette.from).toMatch(/^#[0-9a-f]{6}$/i);
-      expect(meta.palette.to).toMatch(/^#[0-9a-f]{6}$/i);
+      expect(meta.accent).toMatch(/^#[0-9a-f]{6}$/i);
+      expect(typeof meta.icon).toBe('function');
       expect(meta.order).toBeGreaterThan(0);
     }
-    // Порядок уникален
     expect(new Set(STORY_SERIES.map((s) => s.order)).size).toBe(STORY_SERIES.length);
   });
 
-  it('у каждой серии 3–7 слайдов и иллюстрация на каждый слайд', () => {
+  it('у каждой серии 3–5 слайдов, и визуал есть у каждого слайда', () => {
     for (const meta of STORY_SERIES) {
       const slides = slidesOf('ru', meta.id);
       expect(slides, `ru: серия ${meta.id}`).not.toBeNull();
       expect(slides!.length).toBeGreaterThanOrEqual(3);
-      expect(slides!.length).toBeLessThanOrEqual(7);
-      expect(meta.art.length).toBe(slides!.length);
+      expect(slides!.length).toBeLessThanOrEqual(5);
+      expect(meta.slides.length, `визуал серии ${meta.id}`).toBe(slides!.length);
+    }
+  });
+
+  it('серия appstore-region показывает реальные скриншоты шагов, и они лежат в public/', () => {
+    const meta = STORY_SERIES.find((s) => s.id === 'appstore-region')!;
+    expect(meta.slides.length).toBe(5);
+    for (const v of meta.slides) {
+      expect('image' in v).toBe(true);
+      const src = (v as { image: string }).image;
+      expect(src.startsWith('/img/story-region-')).toBe(true);
+      expect(existsSync(resolve(__dirname, '../../../public', src.slice(1)))).toBe(true);
+    }
+  });
+
+  it('в локалях только текст — картинки и визуал живут в реестре', () => {
+    for (const lng of Object.keys(LOCALES)) {
+      for (const meta of STORY_SERIES) {
+        for (const slide of slidesOf(lng, meta.id)!) {
+          expect(Object.keys(slide).sort()).toEqual(
+            'ctaLabel' in slide ? ['ctaLabel', 'subtitle', 'title'] : ['subtitle', 'title'],
+          );
+        }
+      }
     }
   });
 

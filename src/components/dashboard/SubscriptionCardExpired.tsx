@@ -1,4 +1,3 @@
-import { uiLocale } from '@/utils/uiLocale';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useNavigate, useLocation } from 'react-router';
@@ -7,7 +6,6 @@ import { AxiosError } from 'axios';
 import type { Subscription } from '../../types';
 import { subscriptionApi } from '../../api/subscription';
 import { useTheme } from '../../hooks/useTheme';
-import { useCurrency } from '../../hooks/useCurrency';
 import { useHapticFeedback } from '../../platform/hooks/useHaptic';
 import { getGlassColors } from '../../utils/glassTheme';
 import { getInsufficientBalanceError } from '../../utils/subscriptionHelpers';
@@ -24,7 +22,6 @@ interface SubscriptionCardExpiredProps {
 export default function SubscriptionCardExpired({
   subscription,
   balanceKopeks = 0,
-  balanceRubles = 0,
   className,
 }: SubscriptionCardExpiredProps) {
   const { t } = useTranslation();
@@ -33,13 +30,10 @@ export default function SubscriptionCardExpired({
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const location = useLocation();
-  const { formatAmount, currencySymbol } = useCurrency();
   const haptic = useHapticFeedback();
 
   const [isRenewing, setIsRenewing] = useState(false);
   const [renewError, setRenewError] = useState<string | null>(null);
-
-  const formattedDate = new Date(subscription.end_date).toLocaleDateString(uiLocale());
 
   // Detect limited (traffic exhausted) state
   const isLimited = subscription.is_limited;
@@ -151,52 +145,10 @@ export default function SubscriptionCardExpired({
         boxShadow: isDark
           ? g.shadow
           : `0 2px 16px rgba(${accent.r},${accent.g},${accent.b},0.1), 0 0 0 1px rgba(${accent.r},${accent.g},${accent.b},0.06)`,
-        padding: '28px 28px 24px',
+        padding: '20px',
       }}
     >
       {/* Glow */}
-      <div
-        className="pointer-events-none absolute"
-        style={{
-          top: -60,
-          right: -60,
-          width: 200,
-          height: 200,
-          borderRadius: '50%',
-          background: `radial-gradient(circle, rgba(${accent.r},${accent.g},${accent.b},0.08) 0%, transparent 70%)`,
-        }}
-        aria-hidden="true"
-      />
-      {/* Стеклянный ключ — декоративный арт, растворён в фоне */}
-      <img
-        src="/img/card-glass.jpg"
-        alt=""
-        aria-hidden="true"
-        className="pointer-events-none absolute mix-blend-screen"
-        style={{
-          top: -56,
-          right: -48,
-          width: 190,
-          opacity: isDark ? 0.55 : 0.28,
-          maskImage: 'radial-gradient(70% 70% at 50% 50%, #000 38%, transparent 72%)',
-          WebkitMaskImage: 'radial-gradient(70% 70% at 50% 50%, #000 38%, transparent 72%)',
-        }}
-      />
-      {/* Grid pattern */}
-      <div
-        className="pointer-events-none absolute inset-0"
-        style={{
-          opacity: isDark ? 0.02 : 0.04,
-          backgroundImage: isDark
-            ? `linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
-               linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)`
-            : `linear-gradient(rgba(0,0,0,0.06) 1px, transparent 1px),
-               linear-gradient(90deg, rgba(0,0,0,0.06) 1px, transparent 1px)`,
-          backgroundSize: '40px 40px',
-        }}
-        aria-hidden="true"
-      />
-
       {/* Header */}
       <div className="mb-5 flex items-center gap-3">
         <div
@@ -230,41 +182,6 @@ export default function SubscriptionCardExpired({
           {t('subscription.trafficLimitedDescription')}
         </p>
       )}
-
-      {/* Expired date + Balance row */}
-      <div
-        // Дата и баланс разведены зазором; не влезли в строку — баланс уходит
-        // ниже. Было «01.09.2026БАЛАНС», а крупная сумма вылезала за плашку.
-        className="mb-5 flex flex-wrap items-center justify-between gap-x-4 gap-y-2 rounded-[14px]"
-        style={{
-          background: `rgba(${accent.r},${accent.g},${accent.b},0.04)`,
-          border: `1px solid rgba(${accent.r},${accent.g},${accent.b},0.08)`,
-          padding: '14px 18px',
-        }}
-      >
-        <div className="flex min-w-0 items-center gap-3">
-          <div className="mb-0.5 font-mono text-[10px] font-medium uppercase tracking-wider text-dark-400">
-            {isLimited
-              ? t('dashboard.expired.activeUntil')
-              : t('dashboard.expired.expiredDate', {
-                  context: subscription.is_trial ? 'trial' : '',
-                })}
-          </div>
-          <div className="text-base font-bold tracking-tight text-dark-50/50">{formattedDate}</div>
-        </div>
-        <div className="flex items-center gap-1.5">
-          <span className="text-[10px] font-medium uppercase tracking-wider text-dark-400">
-            {t('dashboard.expired.balance')}
-          </span>
-          <span
-            className={`whitespace-nowrap text-sm font-semibold ${hasBalance ? 'text-success-400' : 'text-dark-400'}`}
-          >
-            {formatAmount(balanceRubles)}
-            {'\u00A0'}
-            {currencySymbol}
-          </span>
-        </div>
-      </div>
 
       {/* Renew error */}
       {renewError && (

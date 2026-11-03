@@ -6,6 +6,6 @@ export type {
   StorySeries,
   StorySeriesMeta,
   StorySlideContent,
-  StoryArtKey,
   StoryCtaKey,
+  StoryVisualKey,
 } from './types';

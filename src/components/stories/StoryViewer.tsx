@@ -1,14 +1,17 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { useNavigate } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import { AnimatePresence, motion } from 'framer-motion';
 import { PiXBold } from 'react-icons/pi';
 
+import { useBranding } from '@/hooks/useBranding';
+import { useHeaderHeight } from '@/hooks/useHeaderHeight';
 import { STORY_CTA_ROUTES, useStorySeries } from './registry';
-import { StoryArtwork } from './artwork';
 import { markStoryRead } from './useStoryRead';
+import { StoryVisual } from './visuals';
 
-const SLIDE_DURATION_MS = 6000;
+const SLIDE_DURATION_MS = 8000;
 const SWIPE_THRESHOLD_PX = 56;
 const TAP_MAX_DURATION_MS = 300;
 const TAP_MAX_DISTANCE_PX = 12;
@@ -17,6 +20,12 @@ const TAP_MAX_DISTANCE_PX = 12;
 export function tapZone(offsetX: number, width: number): 'prev' | 'next' {
   return offsetX < width / 3 ? 'prev' : 'next';
 }
+
+/** Кнопки поверх слайда не должны листать сторис и ставить их на паузу. */
+const stopPointer = {
+  onPointerDown: (e: React.PointerEvent) => e.stopPropagation(),
+  onPointerUp: (e: React.PointerEvent) => e.stopPropagation(),
+};
 
 interface StoryViewerProps {
   initialIndex: number;
@@ -27,13 +36,15 @@ export function StoryViewer({ initialIndex, onClose }: StoryViewerProps) {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const seriesList = useStorySeries();
+  const { appName, logoUrl, hasCustomLogo, logoLetter } = useBranding();
+  const { topSafeArea, bottomSafeArea } = useHeaderHeight();
 
   const [seriesIdx, setSeriesIdx] = useState(initialIndex);
   const [slideIdx, setSlideIdx] = useState(0);
   const [direction, setDirection] = useState(1);
   const [paused, setPaused] = useState(false);
 
-  // Индексы и пауза в ref — rAF-цикл не должен зависеть от ререндеров.
+  // Индексы и пауза в ref — rAF-цикл не зависит от ререндеров.
   const seriesRef = useRef(seriesIdx);
   const slideRef = useRef(slideIdx);
   const pausedRef = useRef(paused);
@@ -56,40 +67,29 @@ export function StoryViewer({ initialIndex, onClose }: StoryViewerProps) {
   const next = useCallback(() => {
     const s = seriesRef.current;
     const i = slideRef.current;
-    const total = seriesList.length;
     const count = seriesList[s]?.slides.length ?? 0;
-    if (i < count - 1) {
-      goTo(s, i + 1, 1);
-    } else if (s < total - 1) {
-      goTo(s + 1, 0, 1);
-    } else {
-      onClose();
-    }
+    if (i < count - 1) goTo(s, i + 1, 1);
+    else if (s < seriesList.length - 1) goTo(s + 1, 0, 1);
+    else onClose();
   }, [seriesList, goTo, onClose]);
 
   const prev = useCallback(() => {
     const s = seriesRef.current;
     const i = slideRef.current;
-    if (i > 0) {
-      goTo(s, i - 1, -1);
-    } else if (s > 0) {
-      goTo(s - 1, (seriesList[s - 1]?.slides.length ?? 1) - 1, -1);
-    }
+    if (i > 0) goTo(s, i - 1, -1);
+    else if (s > 0) goTo(s - 1, (seriesList[s - 1]?.slides.length ?? 1) - 1, -1);
   }, [seriesList, goTo]);
 
-  // next/prev для таймера — через ref: эффект ниже должен перезапускаться
-  // ТОЛЬКО по смене слайда/серии, а не по каждому рендеру (иначе пауза
-  // обнуляла бы прогресс).
+  // Таймер перезапускается только по смене слайда/серии.
   const nextRef = useRef(next);
   nextRef.current = next;
 
-  // Автопереход: rAF-прогресс активного слайда, пауза при удержании.
+  // biome-ignore lint/correctness/useExhaustiveDependencies: seriesIdx/slideIdx — намеренный перезапуск таймера на каждом слайде
   useEffect(() => {
     if (slides.length === 0) return;
     let raf = 0;
     const start = performance.now();
     let last = start;
-    // Пауза при удержании: удержанное время вычитаем из прогресса.
     let pausedMs = 0;
     const tick = (now: number) => {
       if (pausedRef.current) {
@@ -99,9 +99,8 @@ export function StoryViewer({ initialIndex, onClose }: StoryViewerProps) {
         return;
       }
       last = now;
-      const elapsed = now - start - pausedMs;
-      const ratio = Math.min(1, elapsed / SLIDE_DURATION_MS);
-      if (fillRef.current) fillRef.current.style.width = `${ratio * 100}%`;
+      const ratio = Math.min(1, (now - start - pausedMs) / SLIDE_DURATION_MS);
+      if (fillRef.current) fillRef.current.style.transform = `scaleX(${ratio})`;
       if (ratio >= 1) {
         nextRef.current();
         return;
@@ -112,7 +111,7 @@ export function StoryViewer({ initialIndex, onClose }: StoryViewerProps) {
     return () => cancelAnimationFrame(raf);
   }, [seriesIdx, slideIdx, slides.length]);
 
-  // Блок скролла страницы под просмотрщиком.
+  // Страница под просмотрщиком не скроллится.
   useEffect(() => {
     const prevOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
@@ -121,7 +120,7 @@ export function StoryViewer({ initialIndex, onClose }: StoryViewerProps) {
     };
   }, []);
 
-  // Клавиатура: Esc — закрыть, стрелки — листать.
+  // Esc — закрыть, стрелки — листать.
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
@@ -132,13 +131,17 @@ export function StoryViewer({ initialIndex, onClose }: StoryViewerProps) {
     return () => window.removeEventListener('keydown', onKey);
   }, [next, prev, onClose]);
 
-  // Просмотр засчитан с первого кадра: бейдж «не прочитано» не должен
-  // мигать обратно, если пользователь закрыл серию на середине.
+  // Просмотр засчитан с первого кадра серии.
   useEffect(() => {
-    const id = seriesList[seriesRef.current]?.meta.id;
+    const id = seriesList[seriesIdx]?.meta.id;
     if (id) markStoryRead(id);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [seriesIdx]);
+  }, [seriesIdx, seriesList]);
+
+  // Фото следующего слайда — заранее, чтобы не моргало при перелистывании.
+  useEffect(() => {
+    const visual = series?.meta.slides[slideIdx + 1];
+    if (visual && 'image' in visual) new Image().src = visual.image;
+  }, [series, slideIdx]);
 
   const handlePointerDown = (e: React.PointerEvent) => {
     holdStart.current = { x: e.clientX, y: e.clientY, t: performance.now(), consumed: false };
@@ -175,8 +178,7 @@ export function StoryViewer({ initialIndex, onClose }: StoryViewerProps) {
     const dt = performance.now() - hold.t;
     if (dt < TAP_MAX_DURATION_MS && dx < TAP_MAX_DISTANCE_PX && dy < TAP_MAX_DISTANCE_PX) {
       const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
-      const offsetX = e.clientX - rect.left;
-      if (tapZone(offsetX, rect.width) === 'next') next();
+      if (tapZone(e.clientX - rect.left, rect.width) === 'next') next();
       else prev();
     }
   };
@@ -185,6 +187,7 @@ export function StoryViewer({ initialIndex, onClose }: StoryViewerProps) {
   const { meta } = series;
   const slide = slides[slideIdx];
   if (!slide) return null;
+  const visual = meta.slides[slideIdx];
   const isLastSlide = slideIdx === slides.length - 1;
 
   const handleCta = () => {
@@ -193,21 +196,60 @@ export function StoryViewer({ initialIndex, onClose }: StoryViewerProps) {
     navigate(STORY_CTA_ROUTES[meta.cta]);
   };
 
-  return (
+  return createPortal(
     <div className="story-viewer" role="dialog" aria-modal="true" aria-label={series.coverTitle}>
-      <div className="story-viewer-frame">
-        <AnimatePresence initial={false} custom={direction}>
+      <div
+        className="story-viewer-frame"
+        style={
+          {
+            '--story-accent': meta.accent,
+            '--story-top': `${topSafeArea}px`,
+            '--story-bottom': `${bottomSafeArea}px`,
+          } as React.CSSProperties
+        }
+      >
+        <div className="story-chrome">
+          <div className="story-progress-list" aria-hidden>
+            {slides.map((_, i) => (
+              <div key={i} className="story-progress-track">
+                <div
+                  className="story-progress-fill"
+                  ref={i === slideIdx ? fillRef : undefined}
+                  style={{ transform: `scaleX(${i < slideIdx ? 1 : 0})` }}
+                />
+              </div>
+            ))}
+          </div>
+          <div className="story-header">
+            <span className="story-brand-logo">
+              {hasCustomLogo && logoUrl ? <img src={logoUrl} alt="" /> : <span>{logoLetter}</span>}
+            </span>
+            <span className="story-brand-name">{appName}</span>
+            <span className="story-header-dot" aria-hidden>
+              ·
+            </span>
+            <span className="story-header-series">{series.coverTitle}</span>
+            <button
+              type="button"
+              className="story-close"
+              onClick={onClose}
+              aria-label={t('stories.close', 'Закрыть')}
+              {...stopPointer}
+            >
+              <PiXBold className="h-[18px] w-[18px]" />
+            </button>
+          </div>
+        </div>
+
+        <AnimatePresence initial={false} custom={direction} mode="popLayout">
           <motion.div
             key={`${meta.id}-${slideIdx}`}
             className="story-slide"
-            style={{
-              background: `linear-gradient(165deg, ${meta.palette.from} 0%, ${meta.palette.to} 78%)`,
-            }}
             custom={direction}
-            initial={{ opacity: 0, x: direction * 90 }}
+            initial={{ opacity: 0, x: direction * 40 }}
             animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: direction * -90 }}
-            transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+            exit={{ opacity: 0, x: direction * -40 }}
+            transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
             onPointerDown={handlePointerDown}
             onPointerMove={handlePointerMove}
             onPointerUp={handlePointerUp}
@@ -216,52 +258,42 @@ export function StoryViewer({ initialIndex, onClose }: StoryViewerProps) {
               setPaused(false);
             }}
           >
-            {/* Прогресс-бары всей серии + моно-метка серии */}
-            <div className="story-progress-list">
-              {slides.map((_, i) => (
-                <div key={i} className="story-progress-track">
-                  <div
-                    className="story-progress-fill"
-                    ref={i === slideIdx ? fillRef : undefined}
-                    style={{
-                      width: i < slideIdx ? '100%' : '0%',
-                      transition: i < slideIdx ? 'width 0.2s ease' : undefined,
-                    }}
-                  />
-                </div>
-              ))}
-            </div>
-            <div className="story-meta font-mono">
-              <span className="story-meta-index">
-                {String(slideIdx + 1).padStart(2, '0')} / {String(slides.length).padStart(2, '0')}
-              </span>
-              <span className="story-meta-title">{series.coverTitle}</span>
-            </div>
-
-            <div className="story-head">
-              <h2 className="story-title font-display">{slide.title}</h2>
+            <div className="story-text">
+              {slides.length > 1 && (
+                <span className="story-step">
+                  {t('stories.step', 'Шаг {{n}} из {{total}}', {
+                    n: slideIdx + 1,
+                    total: slides.length,
+                  })}
+                </span>
+              )}
+              <h2 className="story-title">{slide.title}</h2>
               <p className="story-subtitle">{slide.subtitle}</p>
             </div>
 
-            <StoryArtwork art={meta.art[slideIdx] ?? 'cta-check'} palette={meta.palette} />
+            <div className="story-visual">
+              {visual && 'image' in visual ? (
+                <img className="story-photo" src={visual.image} alt="" draggable={false} />
+              ) : visual ? (
+                <StoryVisual name={visual.visual} accent={meta.accent} />
+              ) : null}
+            </div>
 
-            {isLastSlide && slide.ctaLabel && meta.cta && (
-              <button type="button" className="story-cta" onClick={handleCta}>
-                {slide.ctaLabel}
-              </button>
-            )}
+            <div className="story-footer">
+              {isLastSlide && slide.ctaLabel && meta.cta ? (
+                <button type="button" className="story-cta" onClick={handleCta} {...stopPointer}>
+                  {slide.ctaLabel}
+                </button>
+              ) : (
+                <span className="story-hint">
+                  {t('stories.tapHint', 'Нажмите справа, чтобы продолжить')}
+                </span>
+              )}
+            </div>
           </motion.div>
         </AnimatePresence>
-
-        <button
-          type="button"
-          className="story-close"
-          onClick={onClose}
-          aria-label={t('stories.close', 'Закрыть')}
-        >
-          <PiXBold className="h-4 w-4" />
-        </button>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }

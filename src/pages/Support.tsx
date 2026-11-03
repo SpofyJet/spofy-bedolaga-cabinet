@@ -1,742 +1,515 @@
-import { uiLocale } from '@/utils/uiLocale';
-import { useState, useRef, useEffect, useCallback } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { Fragment, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
-import { motion } from 'framer-motion';
+import {
+  PiArrowUpBold,
+  PiImageSquareDuotone,
+  PiLockKeyDuotone,
+  PiTelegramLogoDuotone,
+  PiWarningCircleDuotone,
+  PiXBold,
+} from 'react-icons/pi';
+
 import { ticketsApi } from '../api/tickets';
-import { MessageMediaGrid } from '../components/tickets/MessageMediaGrid';
 import { infoApi } from '../api/info';
+import { ticketNotificationsApi } from '../api/ticketNotifications';
+import { MessageMediaGrid } from '../components/tickets/MessageMediaGrid';
 import { useAuthStore } from '../store/auth';
-import { logger } from '../utils/logger';
-import { checkRateLimit, getRateLimitResetTime, RATE_LIMIT_KEYS } from '../utils/rateLimit';
-import { getApiErrorMessage } from '../utils/api-error';
-import { isOpenTicketConflict } from '../utils/ticketErrors';
-import type { SupportConfig, TicketDetail } from '../types';
-import { Card } from '@/components/data-display/Card';
-import { Button } from '@/components/primitives/Button';
-import { staggerContainer, staggerItem } from '@/components/motion/transitions';
-import { ChatIcon, CloseIcon, ImageIcon, PlusIcon, SendIcon } from '@/components/icons';
+import { useBranding } from '@/hooks/useBranding';
+import { SUPPORT_CHAT_KEY, SUPPORT_UNREAD_KEY } from '@/hooks/useSupportUnread';
 import { usePlatform } from '@/platform';
+import { Skeleton } from '@/components/ui/skeleton';
+import { getApiErrorMessage } from '../utils/api-error';
+import { checkRateLimit, getRateLimitResetTime, RATE_LIMIT_KEYS } from '../utils/rateLimit';
+import { isOpenTicketConflict } from '../utils/ticketErrors';
 import { linkifyText } from '../utils/linkify';
 import { resolveSupportContact } from '../utils/supportContact';
-import { Skeleton, SkeletonGroup } from '@/components/ui/skeleton';
+import { uiLocale } from '@/utils/uiLocale';
+import {
+  SUPPORT_MAX_ATTACHMENTS,
+  SUPPORT_MAX_FILE_BYTES,
+  SUPPORT_MEDIA_TYPES,
+  buildTicketTitle,
+  dayKey,
+  isTicketOpen,
+  pickChatTicket,
+  toMediaParams,
+  type ReadyAttachment,
+} from '../utils/supportChat';
+import type { TicketDetail, TicketMessage } from '../types';
 
-const log = logger.createLogger('Support');
+import './support.css';
 
-const MEDIA_TYPES: Record<string, 'photo' | 'video'> = {
-  'image/jpeg': 'photo',
-  'image/png': 'photo',
-  'image/gif': 'photo',
-  'image/webp': 'photo',
-  'video/mp4': 'video',
-  'video/webm': 'video',
-  'video/quicktime': 'video',
-};
-
-// Media attachment state
-interface MediaAttachment {
+interface Attachment {
   id: string;
   file: File;
   preview: string;
   mediaType: 'photo' | 'video';
   uploading: boolean;
   fileId?: string;
-  error?: string;
+  failed?: boolean;
 }
 
-export default function Support() {
-  log.debug('Component loaded');
+const LIST_KEY = [...SUPPORT_CHAT_KEY, 'list'] as const;
+const detailKey = (id: number | undefined) => [...SUPPORT_CHAT_KEY, 'ticket', id] as const;
 
+const newId = () =>
+  typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function'
+    ? crypto.randomUUID()
+    : `att_${Date.now()}_${Math.random().toString(36).slice(2)}`;
+
+/**
+ * Поддержка — сразу открытый чат: зашёл и пишешь. Под капотом те же тикеты
+ * бота, но пользователь их не видит: открытое обращение — это переписка,
+ * первое сообщение создаёт его само, закрытое остаётся историей выше.
+ */
+export default function Support() {
   const { t } = useTranslation();
-  const isAdmin = useAuthStore((state) => state.isAdmin);
+  const user = useAuthStore((state) => state.user);
+  const { appName, logoUrl, hasCustomLogo, logoLetter } = useBranding();
   const queryClient = useQueryClient();
   const { openTelegramLink, openLink } = usePlatform();
 
-  const openSupportContact = useCallback(
-    (config: SupportConfig) => {
-      const target = resolveSupportContact(config);
-      if (!target) return;
-      if (target.kind === 'external') {
-        openLink(target.url, { tryInstantView: false });
-      } else {
-        openTelegramLink(target.url);
-      }
-    },
-    [openLink, openTelegramLink],
-  );
-  const [selectedTicket, setSelectedTicket] = useState<TicketDetail | null>(null);
-  const [showCreateForm, setShowCreateForm] = useState(false);
-  const [newTitle, setNewTitle] = useState('');
-  const [newMessage, setNewMessage] = useState('');
-  const [replyMessage, setReplyMessage] = useState('');
-  // Ошибка активной формы: и клиентский rate-limit, и отказ бэка (409 «уже есть
-  // открытый тикет», 403 «поддержка выключена/пользователь заблокирован» и т.п.).
-  // Формы create и reply взаимоисключающие, поэтому состояние одно на обе.
-  const [formError, setFormError] = useState<string | null>(null);
-
-  // Media attachment states (multi-upload, up to 10)
-  const [createAttachments, setCreateAttachments] = useState<MediaAttachment[]>([]);
-  const [replyAttachments, setReplyAttachments] = useState<MediaAttachment[]>([]);
-  const createFileInputRef = useRef<HTMLInputElement>(null);
-  const replyFileInputRef = useRef<HTMLInputElement>(null);
-
-  const blobUrlsRef = useRef<Set<string>>(new Set());
+  const [draft, setDraft] = useState('');
+  const [attachments, setAttachments] = useState<Attachment[]>([]);
+  const [error, setError] = useState<string | null>(null);
+  const [pendingText, setPendingText] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
+  const blobUrls = useRef<Set<string>>(new Set());
 
   useEffect(() => {
-    const urls = blobUrlsRef;
-    return () => {
-      urls.current.forEach((u) => URL.revokeObjectURL(u));
-    };
+    const urls = blobUrls.current;
+    return () => urls.forEach((u) => URL.revokeObjectURL(u));
   }, []);
 
-  const clearCreateAttachments = () => {
-    createAttachments.forEach((a) => {
-      if (a.preview) URL.revokeObjectURL(a.preview);
-    });
-    setCreateAttachments([]);
-    if (createFileInputRef.current) createFileInputRef.current.value = '';
-  };
-
-  const clearReplyAttachments = () => {
-    replyAttachments.forEach((a) => {
-      if (a.preview) URL.revokeObjectURL(a.preview);
-    });
-    setReplyAttachments([]);
-    if (replyFileInputRef.current) replyFileInputRef.current.value = '';
-  };
-
-  // Get support configuration
   const { data: supportConfig, isLoading: configLoading } = useQuery({
     queryKey: ['support-config'],
     queryFn: infoApi.getSupportConfig,
   });
+  const chatEnabled = supportConfig?.tickets_enabled === true;
 
-  const { data: tickets, isLoading } = useQuery({
-    queryKey: ['tickets'],
-    queryFn: () => ticketsApi.getTickets({ per_page: 20 }),
-    enabled: supportConfig?.tickets_enabled === true,
+  const { data: ticketsPage, isLoading: listLoading } = useQuery({
+    queryKey: LIST_KEY,
+    queryFn: () => ticketsApi.getTickets({ page: 1, per_page: 20 }),
+    enabled: chatEnabled,
+  });
+  const chatTicket = pickChatTicket(ticketsPage?.items);
+  const ticketIsOpen = chatTicket ? isTicketOpen(chatTicket) : false;
+
+  const { data: ticket, isLoading: detailLoading } = useQuery({
+    queryKey: detailKey(chatTicket?.id),
+    queryFn: () => ticketsApi.getTicket(chatTicket!.id),
+    enabled: chatTicket != null,
+    // Ответ оператора приходит по WebSocket (useSupportUnread инвалидирует
+    // SUPPORT_CHAT_KEY); опрос — страховка, если сокет отвалился.
+    refetchInterval: ticketIsOpen ? 20_000 : false,
   });
 
-  const { data: ticketDetail, isLoading: detailLoading } = useQuery({
-    queryKey: ['ticket', selectedTicket?.id],
-    queryFn: () => ticketsApi.getTicket(selectedTicket!.id),
-    enabled: !!selectedTicket,
-  });
+  // Человек в чате — уведомления по этой переписке прочитаны.
+  const adminMessages = ticket?.messages.filter((m) => m.is_from_admin).length ?? 0;
+  useEffect(() => {
+    if (!ticket?.id || adminMessages === 0) return;
+    ticketNotificationsApi
+      .markTicketAsRead(ticket.id)
+      .then(() => queryClient.invalidateQueries({ queryKey: SUPPORT_UNREAD_KEY }))
+      .catch(() => {});
+  }, [ticket?.id, adminMessages, queryClient]);
 
-  // Handle file selection (multi-upload)
-  const handleFileSelect = async (
-    file: File,
-    setAttachments: React.Dispatch<React.SetStateAction<MediaAttachment[]>>,
-  ) => {
-    const mediaType = MEDIA_TYPES[file.type];
-    if (!mediaType) return;
-    if (file.size > 10 * 1024 * 1024) return;
+  // ---------- Вложения ----------
 
-    const preview = mediaType === 'photo' ? URL.createObjectURL(file) : '';
-    if (preview) blobUrlsRef.current.add(preview);
-    const id =
-      typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function'
-        ? crypto.randomUUID()
-        : `att_${Date.now()}_${Math.random().toString(36).slice(2)}`;
-    const entry: MediaAttachment = { id, file, preview, mediaType, uploading: true };
-    setAttachments((prev) => (prev.length >= 10 ? prev : [...prev, entry]));
-
-    try {
-      const result = await ticketsApi.uploadMedia(file, mediaType);
-      setAttachments((prev) =>
-        prev.map((a) => (a.id === id ? { ...a, uploading: false, fileId: result.file_id } : a)),
-      );
-    } catch {
-      setAttachments((prev) =>
-        prev.map((a) =>
-          a.id === id ? { ...a, uploading: false, error: t('support.uploadFailed') } : a,
-        ),
-      );
+  const addFiles = async (files: FileList | null) => {
+    if (!files) return;
+    setError(null);
+    const free = SUPPORT_MAX_ATTACHMENTS - attachments.length;
+    const picked = Array.from(files);
+    if (picked.length > free) {
+      setError(t('support.chat.tooManyFiles', { count: SUPPORT_MAX_ATTACHMENTS }));
     }
+    const queue: Attachment[] = [];
+    for (const file of picked.slice(0, Math.max(0, free))) {
+      const mediaType = SUPPORT_MEDIA_TYPES[file.type];
+      if (!mediaType) {
+        setError(t('support.chat.badFile'));
+        continue;
+      }
+      if (file.size > SUPPORT_MAX_FILE_BYTES) {
+        setError(t('support.fileTooLarge'));
+        continue;
+      }
+      const preview = mediaType === 'photo' ? URL.createObjectURL(file) : '';
+      if (preview) blobUrls.current.add(preview);
+      queue.push({ id: newId(), file, preview, mediaType, uploading: true });
+    }
+    if (fileInputRef.current) fileInputRef.current.value = '';
+    if (queue.length === 0) return;
+    setAttachments((prev) => [...prev, ...queue]);
+    await Promise.all(
+      queue.map(async ({ id, file, mediaType }) => {
+        try {
+          const res = await ticketsApi.uploadMedia(file, mediaType);
+          setAttachments((prev) =>
+            prev.map((a) => (a.id === id ? { ...a, uploading: false, fileId: res.file_id } : a)),
+          );
+        } catch {
+          setAttachments((prev) =>
+            prev.map((a) => (a.id === id ? { ...a, uploading: false, failed: true } : a)),
+          );
+        }
+      }),
+    );
   };
 
-  const createMutation = useMutation({
-    mutationFn: async () => {
-      const ready = createAttachments.filter(
-        (a): a is MediaAttachment & { fileId: string } => !!a.fileId,
-      );
-      const media =
-        ready.length > 0
-          ? {
-              media_type: ready[0].mediaType,
-              media_file_id: ready[0].fileId,
-              media_items: ready.map((a) => ({ type: a.mediaType, file_id: a.fileId })),
-            }
-          : undefined;
-      return ticketsApi.createTicket(newTitle, newMessage, media);
-    },
-    onSuccess: (ticket) => {
-      queryClient.invalidateQueries({ queryKey: ['tickets'] });
-      setShowCreateForm(false);
-      setFormError(null);
-      setNewTitle('');
-      setNewMessage('');
-      clearCreateAttachments();
-      setSelectedTicket(ticket);
-    },
-    onError: (error) => {
-      // Без этого отказ бэка (чаще всего 409 «уже есть открытый тикет») уходил
-      // в никуда: форма просто оставалась на месте, и пользователь жал «Отправить»
-      // снова и снова, не понимая, почему обращение не создаётся.
-      log.error('Ticket creation failed', error);
-      if (isOpenTicketConflict(error)) {
-        setFormError(t('support.errors.alreadyOpenTicket'));
-        // Открытый тикет мог появиться в другой сессии (бот, второе устройство) —
-        // подтягиваем список, чтобы пользователю было куда перейти.
-        queryClient.invalidateQueries({ queryKey: ['tickets'] });
-        return;
+  const removeAttachment = (id: string) => {
+    setAttachments((prev) => {
+      const target = prev.find((a) => a.id === id);
+      if (target?.preview) {
+        URL.revokeObjectURL(target.preview);
+        blobUrls.current.delete(target.preview);
       }
-      setFormError(getApiErrorMessage(error, t('support.errors.createFailed')));
-    },
-  });
+      return prev.filter((a) => a.id !== id);
+    });
+  };
 
-  const replyMutation = useMutation({
-    mutationFn: async () => {
-      const ready = replyAttachments.filter(
-        (a): a is MediaAttachment & { fileId: string } => !!a.fileId,
-      );
-      const media =
-        ready.length > 0
-          ? {
-              media_type: ready[0].mediaType,
-              media_file_id: ready[0].fileId,
-              media_items: ready.map((a) => ({ type: a.mediaType, file_id: a.fileId })),
-            }
-          : undefined;
-      await ticketsApi.addMessage(selectedTicket!.id, replyMessage, media);
+  const uploading = attachments.some((a) => a.uploading);
+  const ready: ReadyAttachment[] = attachments
+    .filter((a): a is Attachment & { fileId: string } => !!a.fileId)
+    .map((a) => ({ mediaType: a.mediaType, fileId: a.fileId }));
+
+  // ---------- Отправка ----------
+
+  const sendMutation = useMutation({
+    mutationFn: async ({ text, media }: { text: string; media: ReadyAttachment[] }) => {
+      const params = toMediaParams(media);
+      if (chatTicket && ticketIsOpen) {
+        await ticketsApi.addMessage(chatTicket.id, text, params);
+        return chatTicket.id;
+      }
+      try {
+        const created: TicketDetail = await ticketsApi.createTicket(
+          buildTicketTitle(text, t('support.chat.ticketTitle')),
+          text,
+          params,
+        );
+        return created.id;
+      } catch (err) {
+        // Обращение открыли в другом месте (бот, второе устройство) — пишем в него.
+        if (!isOpenTicketConflict(err)) throw err;
+        const fresh = await ticketsApi.getTickets({ page: 1, per_page: 20 });
+        const open = fresh.items.find(isTicketOpen);
+        if (!open) throw err;
+        await ticketsApi.addMessage(open.id, text, params);
+        return open.id;
+      }
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['ticket', selectedTicket?.id] });
-      setFormError(null);
-      setReplyMessage('');
-      clearReplyAttachments();
+      attachments.forEach((a) => a.preview && URL.revokeObjectURL(a.preview));
+      setAttachments([]);
     },
-    onError: (error) => {
-      // Ответ в тикет молчал ровно так же: 403 (блокировка в поддержке) и 400
-      // (тикет уже закрыт) выглядели как «кнопка не работает».
-      log.error('Ticket reply failed', error);
-      setFormError(getApiErrorMessage(error, t('support.errors.replyFailed')));
+    onError: (err: unknown, vars) => {
+      // Текст возвращаем в поле — ничего не теряется.
+      setDraft((current) => current || vars.text);
+      setError(getApiErrorMessage(err, t('support.chat.sendFailed')));
+    },
+    onSettled: async () => {
+      await queryClient.invalidateQueries({ queryKey: SUPPORT_CHAT_KEY });
+      setPendingText(null);
     },
   });
 
-  const getStatusBadge = (status: string) => {
-    switch (status) {
-      case 'open':
-        return 'badge-info';
-      case 'answered':
-        return 'badge-success';
-      case 'pending':
-        return 'badge-warning';
-      case 'closed':
-        return 'badge-neutral';
-      default:
-        return 'badge-neutral';
+  const canSend =
+    (draft.trim().length > 0 || ready.length > 0) && !uploading && !sendMutation.isPending;
+
+  const send = () => {
+    if (!canSend) return;
+    if (!checkRateLimit(RATE_LIMIT_KEYS.TICKET_REPLY, 5, 30_000)) {
+      setError(
+        t('support.tooManyRequests', {
+          seconds: getRateLimitResetTime(RATE_LIMIT_KEYS.TICKET_REPLY),
+        }),
+      );
+      return;
     }
+    const text = draft.trim();
+    setError(null);
+    setDraft('');
+    setPendingText(text || null);
+    sendMutation.mutate({ text, media: ready });
+    inputRef.current?.focus();
   };
 
-  const getStatusLabel = (status: string) => {
-    return t(`support.status.${status}`) || status;
-  };
+  // ---------- Автовысота поля и прокрутка ----------
 
-  // Show loading while checking configuration
-  if (configLoading) {
+  useLayoutEffect(() => {
+    const el = inputRef.current;
+    if (!el) return;
+    el.style.height = 'auto';
+    el.style.height = `${Math.min(el.scrollHeight, 140)}px`;
+  }, [draft]);
+
+  const messages = ticket?.messages ?? [];
+  const lastId = messages[messages.length - 1]?.id;
+  const scrollToEnd = useCallback((smooth: boolean) => {
+    window.scrollTo({
+      top: document.documentElement.scrollHeight,
+      behavior: smooth ? 'smooth' : 'auto',
+    });
+  }, []);
+  const firstScroll = useRef(true);
+  useEffect(() => {
+    if (configLoading || listLoading || detailLoading) return;
+    scrollToEnd(!firstScroll.current);
+    firstScroll.current = false;
+  }, [lastId, pendingText, configLoading, listLoading, detailLoading, scrollToEnd]);
+
+  // ---------- Рендер ----------
+
+  const contact = supportConfig ? resolveSupportContact(supportConfig) : null;
+  const openContact = () => {
+    if (!contact) return;
+    if (contact.kind === 'external') openLink(contact.url, { tryInstantView: false });
+    else openTelegramLink(contact.url);
+  };
+  const showContactLink =
+    contact && (supportConfig?.support_type === 'both' || supportConfig?.support_type === 'url');
+
+  const loading = configLoading || (chatEnabled && listLoading) || (chatTicket && detailLoading);
+  const timeFmt = new Intl.DateTimeFormat(uiLocale(), { hour: '2-digit', minute: '2-digit' });
+  const dayFmt = new Intl.DateTimeFormat(uiLocale(), { day: 'numeric', month: 'long' });
+  const todayKey = dayKey(new Date().toISOString());
+  const replyBlocked = ticketIsOpen && ticket?.is_reply_blocked === true;
+
+  const header = (
+    <header className="support-head">
+      <span className="support-head-avatar" aria-hidden>
+        {hasCustomLogo && logoUrl ? <img src={logoUrl} alt="" /> : logoLetter.toUpperCase()}
+      </span>
+      <span className="min-w-0 flex-1">
+        <span className="block truncate text-[17px] font-bold tracking-tight text-dark-50">
+          {t('support.chat.title', { name: appName })}
+        </span>
+        <span className="mt-0.5 flex items-center gap-1.5 text-[13px] text-dark-400">
+          <span className="support-head-online" aria-hidden />
+          {t('support.chat.subtitle')}
+        </span>
+      </span>
+      {showContactLink && (
+        <button
+          type="button"
+          onClick={openContact}
+          className="support-head-link"
+          aria-label={t('support.chat.openTelegram')}
+          title={t('support.chat.openTelegram')}
+        >
+          <PiTelegramLogoDuotone className="h-5 w-5" />
+        </button>
+      )}
+    </header>
+  );
+
+  if (loading) {
     return (
-      <SkeletonGroup className="space-y-3">
-        <Skeleton variant="card" count={3} className="h-16" />
-      </SkeletonGroup>
+      <div className="support-page">
+        {header}
+        <div className="space-y-3 pt-4">
+          <Skeleton className="h-14 w-3/4 rounded-2xl" />
+          <Skeleton className="ml-auto h-10 w-1/2 rounded-2xl" />
+          <Skeleton className="h-16 w-4/5 rounded-2xl" />
+        </div>
+      </div>
     );
   }
 
-  // If tickets are disabled, show redirect message
-  if (supportConfig && !supportConfig.tickets_enabled) {
-    log.debug('Tickets disabled, config:', supportConfig);
-
-    // Куда и чем открывать контакт — один резолв на весь блок. null → открывать
-    // нечего (пустой/битый конфиг), и кнопку тогда не рендерим вовсе.
-    const contact = resolveSupportContact(supportConfig);
-
-    const getSupportMessage = () => {
-      log.debug('Getting support message for type:', supportConfig.support_type);
-
-      const title = isAdmin ? t('support.ticketsDisabled') : t('support.title');
-
-      if (supportConfig.support_type === 'url' && supportConfig.support_url) {
-        return {
-          title,
-          message: t('support.useExternalLink'),
-          buttonText: t('support.openSupport'),
-        };
-      }
-
-      // profile и любой fallback — контакт в телеграме
-      const supportUsername = supportConfig.support_username || '@support';
-      return {
-        title,
-        message: t('support.contactSupport', { username: supportUsername }),
-        buttonText: t('support.contactUs'),
-      };
-    };
-
-    const supportMessage = getSupportMessage();
-
+  // Чат выключен в боте — честно ведём туда, где отвечают.
+  if (!chatEnabled) {
     return (
-      <div className="mx-auto mt-12 max-w-md">
-        <Card className="text-center">
-          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-dark-800">
-            <ChatIcon className="h-8 w-8 text-dark-400" />
-          </div>
-          <h2 className="mb-2 text-xl font-semibold text-dark-100">{supportMessage.title}</h2>
-          <p className="mb-6 text-dark-400">{supportMessage.message}</p>
+      <div className="support-page">
+        {header}
+        <div className="support-empty">
+          <p>{t('support.chat.disabled')}</p>
           {contact && (
-            <Button onClick={() => openSupportContact(supportConfig)} fullWidth>
-              {supportMessage.buttonText}
-            </Button>
+            <button type="button" onClick={openContact} className="support-empty-btn">
+              <PiTelegramLogoDuotone className="h-5 w-5" />
+              {t('support.chat.write')}
+            </button>
           )}
-        </Card>
+        </div>
       </div>
     );
   }
 
-  // Attachments preview component
-  const AttachmentsPreview = ({
-    items,
-    onRemove,
-  }: {
-    items: MediaAttachment[];
-    onRemove: (idx: number) => void;
-  }) =>
-    items.length === 0 ? null : (
-      <div className="mt-2 flex flex-wrap gap-2">
-        {items.map((att, idx) => (
-          <div key={idx} className="relative">
-            {att.preview ? (
-              <img
-                src={att.preview}
-                alt="Preview"
-                loading="lazy"
-                className="h-16 w-16 rounded-lg border border-dark-700 object-cover"
-              />
-            ) : (
-              <div className="flex h-16 w-16 items-center justify-center rounded-lg bg-dark-700 text-xs text-dark-400">
-                {att.file.name.slice(-6)}
-              </div>
-            )}
-            {att.uploading && (
-              <div className="absolute inset-0 flex items-center justify-center rounded-lg bg-dark-950/50">
-                <span className="h-4 w-4 animate-spin rounded-full border-2 border-accent-500 border-t-transparent" />
-              </div>
-            )}
-            {att.error && (
-              <div className="absolute inset-0 flex items-center justify-center rounded-lg bg-error-500/30">
-                <span className="text-xs text-error-300">!</span>
-              </div>
-            )}
-            <button
-              type="button"
-              onClick={() => onRemove(idx)}
-              className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-dark-600 text-dark-300 hover:bg-error-500 hover:text-white"
-            >
-              <CloseIcon className="h-4 w-4" />
-            </button>
+  const renderMessage = (msg: TicketMessage, prev: TicketMessage | undefined) => {
+    const k = dayKey(msg.created_at);
+    const showDay = !prev || dayKey(prev.created_at) !== k;
+    const sameAuthor = prev && prev.is_from_admin === msg.is_from_admin && !showDay;
+    return (
+      <Fragment key={msg.id}>
+        {showDay && (
+          <div className="support-day">
+            {k === todayKey ? t('support.chat.today') : dayFmt.format(new Date(msg.created_at))}
           </div>
-        ))}
-      </div>
+        )}
+        <div
+          className={`support-msg ${msg.is_from_admin ? 'support-msg-in' : 'support-msg-out'}${
+            sameAuthor ? ' support-msg-cont' : ''
+          }`}
+        >
+          {msg.is_from_admin && !sameAuthor && (
+            <span className="support-msg-author">{t('support.supportTeam')}</span>
+          )}
+          <div className="support-bubble">
+            <MessageMediaGrid message={msg} translateError={t('support.imageLoadFailed')} />
+            {msg.message_text && (
+              <span
+                className="support-bubble-text whitespace-pre-wrap break-words"
+                dangerouslySetInnerHTML={{ __html: linkifyText(msg.message_text) }}
+              />
+            )}
+            <span className="support-bubble-time">{timeFmt.format(new Date(msg.created_at))}</span>
+          </div>
+        </div>
+      </Fragment>
     );
+  };
 
   return (
-    <motion.div
-      className="space-y-6"
-      variants={staggerContainer}
-      initial="initial"
-      animate="animate"
-    >
-      <motion.div
-        variants={staggerItem}
-        className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between"
-      >
-        <h1 className="text-xl font-bold tracking-tight text-dark-50 sm:text-2xl">{t('support.title')}</h1>
-        <Button
-          onClick={() => {
-            setShowCreateForm(true);
-            setSelectedTicket(null);
-            setFormError(null);
-            clearCreateAttachments();
-          }}
-        >
-          <PlusIcon />
-          <span className="ml-2">{t('support.newTicket')}</span>
-        </Button>
-      </motion.div>
+    <div className="support-page">
+      {header}
 
-      {/* Contact support card for "both" mode — self-animated: mounts after the
-          config query resolves, when the parent stagger orchestration has already
-          finished and would leave it stuck at opacity 0 */}
-      {supportConfig?.support_type === 'both' &&
-        supportConfig.support_username &&
-        resolveSupportContact(supportConfig) && (
-          <motion.div variants={staggerItem} initial="initial" animate="animate">
-            {/* Длинный ник поддержки уводил «Написать» за край карточки, а карточка
-                обрезает всё, что за краем: текст сжимается, кнопка — нет. */}
-            <Card className="flex items-center justify-between gap-3">
-              <div className="flex min-w-0 items-center gap-3">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-dark-800">
-                  <ChatIcon className="h-5 w-5 text-dark-400" />
-                </div>
-                <div className="min-w-0">
-                  <div className="text-sm font-medium text-dark-100">{t('support.contactUs')}</div>
-                  <div className="truncate text-xs text-dark-400">
-                    {supportConfig.support_username}
-                  </div>
-                </div>
-              </div>
-              <Button
-                variant="secondary"
-                className="shrink-0 whitespace-nowrap"
-                onClick={() => openSupportContact(supportConfig)}
-              >
-                {t('support.writeButton', 'Написать')}
-              </Button>
-            </Card>
-          </motion.div>
+      <div className="support-feed" aria-live="polite">
+        <div className="support-note">
+          <PiLockKeyDuotone className="h-5 w-5 shrink-0" aria-hidden />
+          <p>{t('support.chat.safety')}</p>
+        </div>
+
+        <div className="support-msg support-msg-in">
+          <span className="support-msg-author">{t('support.supportTeam')}</span>
+          <div className="support-bubble">
+            <span className="support-bubble-text">
+              {user?.first_name
+                ? t('support.chat.welcomeNamed', { name: user.first_name })
+                : t('support.chat.welcome')}
+            </span>
+          </div>
+        </div>
+
+        {messages.map((msg, i) => renderMessage(msg, messages[i - 1]))}
+
+        {chatTicket && !ticketIsOpen && (
+          <div className="support-closed">{t('support.chat.closed')}</div>
         )}
 
-      <motion.div variants={staggerItem} className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-        {/* Tickets List */}
-        <Card className="lg:col-span-1">
-          <h2 className="mb-4 text-lg font-semibold text-dark-100">{t('support.yourTickets')}</h2>
+        {pendingText && (
+          <div className="support-msg support-msg-out support-msg-pending">
+            <div className="support-bubble">
+              <span className="support-bubble-text">{pendingText}</span>
+              <span className="support-bubble-time">{t('support.chat.sending')}</span>
+            </div>
+          </div>
+        )}
+      </div>
 
-          {isLoading ? (
-            <SkeletonGroup className="space-y-3">
-              <Skeleton variant="card" count={3} className="h-16" />
-            </SkeletonGroup>
-          ) : tickets?.items && tickets.items.length > 0 ? (
-            <div className="space-y-2">
-              {tickets.items.map((ticket) => (
-                <button
-                  key={ticket.id}
-                  onClick={() => {
-                    setSelectedTicket(ticket as unknown as TicketDetail);
-                    setShowCreateForm(false);
-                    setFormError(null);
-                    clearReplyAttachments();
-                  }}
-                  className={`w-full rounded-bento border p-4 text-left transition-all ${
-                    selectedTicket?.id === ticket.id
-                      ? 'border-accent-500 bg-accent-500/10'
-                      : 'border-dark-700/50 bg-dark-800/30 hover:border-dark-600'
-                  }`}
-                >
-                  <div className="mb-2 flex items-start justify-between gap-2">
-                    <div className="truncate font-medium text-dark-100">{ticket.title}</div>
-                    <span className={`${getStatusBadge(ticket.status)} flex-shrink-0`}>
-                      {getStatusLabel(ticket.status)}
+      {replyBlocked ? (
+        <div className="support-composer">
+          <p className="support-blocked">{t('support.repliesDisabled')}</p>
+        </div>
+      ) : (
+        <div className="support-composer">
+          {error && (
+            <p className="support-error" role="alert">
+              <PiWarningCircleDuotone className="h-4 w-4 shrink-0" aria-hidden />
+              {error}
+            </p>
+          )}
+
+          {attachments.length > 0 && (
+            <div className="support-attachments">
+              {attachments.map((a) => (
+                <div key={a.id} className={`support-att${a.failed ? ' support-att-failed' : ''}`}>
+                  {a.preview ? (
+                    <img src={a.preview} alt="" />
+                  ) : (
+                    <span className="support-att-video">{a.file.name.split('.').pop()}</span>
+                  )}
+                  {a.uploading && <span className="support-att-spinner" aria-hidden />}
+                  {a.failed && (
+                    <span className="support-att-flag" title={t('support.uploadFailed')}>
+                      !
                     </span>
-                  </div>
-                  <div className="text-xs text-dark-500">
-                    {new Date(ticket.updated_at).toLocaleDateString(uiLocale())}
-                  </div>
-                </button>
+                  )}
+                  <button
+                    type="button"
+                    onClick={() => removeAttachment(a.id)}
+                    className="support-att-remove"
+                    aria-label={t('common.delete', 'Удалить')}
+                  >
+                    <PiXBold className="h-3 w-3" />
+                  </button>
+                </div>
               ))}
             </div>
-          ) : (
-            <div className="py-12 text-center">
-              <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-dark-800">
-                <ChatIcon className="h-8 w-8 text-dark-500" />
-              </div>
-              <div className="text-dark-400">{t('support.noTickets')}</div>
-            </div>
           )}
-        </Card>
 
-        {/* Ticket Detail / Create Form */}
-        <Card className="lg:col-span-2">
-          {showCreateForm ? (
-            <div>
-              <h2 className="mb-6 text-lg font-semibold text-dark-100">
-                {t('support.createTicket')}
-              </h2>
-              <form
-                onSubmit={(e) => {
+          <form
+            className="support-composer-row"
+            onSubmit={(e) => {
+              e.preventDefault();
+              send();
+            }}
+          >
+            <input
+              ref={fileInputRef}
+              type="file"
+              multiple
+              hidden
+              accept={Object.keys(SUPPORT_MEDIA_TYPES).join(',')}
+              onChange={(e) => addFiles(e.target.files)}
+            />
+            <button
+              type="button"
+              className="support-attach"
+              onClick={() => fileInputRef.current?.click()}
+              aria-label={t('support.attachMedia')}
+              title={t('support.attachMedia')}
+            >
+              <PiImageSquareDuotone className="h-[22px] w-[22px]" />
+            </button>
+            <textarea
+              ref={inputRef}
+              value={draft}
+              onChange={(e) => setDraft(e.target.value)}
+              onKeyDown={(e) => {
+                // На телефоне Enter — перенос строки, отправка кнопкой.
+                if (
+                  e.key === 'Enter' &&
+                  !e.shiftKey &&
+                  window.matchMedia('(hover: hover)').matches
+                ) {
                   e.preventDefault();
-                  setFormError(null);
-                  // Rate limit: max 3 tickets per 60 seconds
-                  if (!checkRateLimit(RATE_LIMIT_KEYS.TICKET_CREATE, 3, 60000)) {
-                    const resetTime = getRateLimitResetTime(RATE_LIMIT_KEYS.TICKET_CREATE);
-                    setFormError(t('support.tooManyRequests', { seconds: resetTime }));
-                    return;
-                  }
-                  createMutation.mutate();
-                }}
-                className="space-y-4"
-              >
-                <div>
-                  <label htmlFor="support-subject" className="label">
-                    {t('support.subject')}
-                  </label>
-                  <input
-                    id="support-subject"
-                    type="text"
-                    className="input"
-                    placeholder={t('support.subjectPlaceholder')}
-                    value={newTitle}
-                    onChange={(e) => setNewTitle(e.target.value)}
-                    required
-                    minLength={3}
-                    maxLength={255}
-                  />
-                </div>
-                <div>
-                  <label htmlFor="support-message" className="label">
-                    {t('support.message')}
-                  </label>
-                  <textarea
-                    id="support-message"
-                    className="input min-h-[150px]"
-                    placeholder={t('support.messagePlaceholder')}
-                    value={newMessage}
-                    onChange={(e) => setNewMessage(e.target.value)}
-                    required
-                    minLength={10}
-                    maxLength={4000}
-                  />
-                </div>
-
-                {/* Media attachments for create */}
-                <div>
-                  <input
-                    ref={createFileInputRef}
-                    type="file"
-                    accept={Object.keys(MEDIA_TYPES).join(',')}
-                    multiple
-                    className="hidden"
-                    onChange={(e) => {
-                      const files = Array.from(e.target.files || []);
-                      files.forEach((file) => handleFileSelect(file, setCreateAttachments));
-                      e.target.value = '';
-                    }}
-                  />
-                  <AttachmentsPreview
-                    items={createAttachments}
-                    onRemove={(idx) =>
-                      setCreateAttachments((prev) => {
-                        const removed = prev[idx];
-                        if (removed?.preview) URL.revokeObjectURL(removed.preview);
-                        return prev.filter((_, i) => i !== idx);
-                      })
-                    }
-                  />
-                  {createAttachments.length < 10 && (
-                    <button
-                      type="button"
-                      onClick={() => createFileInputRef.current?.click()}
-                      disabled={createAttachments.some((a) => a.uploading)}
-                      className="mt-2 flex items-center gap-2 text-sm text-dark-400 transition-colors hover:text-dark-200 disabled:opacity-50"
-                    >
-                      <ImageIcon />
-                      {t('support.attachMedia')}{' '}
-                      {createAttachments.length > 0 && `(${createAttachments.length}/10)`}
-                    </button>
-                  )}
-                </div>
-
-                {formError && (
-                  <div className="rounded-xl border border-error-500/30 bg-error-500/10 p-3 text-sm text-error-400">
-                    {formError}
-                  </div>
-                )}
-
-                <div className="flex gap-3">
-                  <Button
-                    type="submit"
-                    disabled={createAttachments.some((a) => a.uploading)}
-                    loading={createMutation.isPending}
-                  >
-                    <SendIcon className="h-4 w-4" />
-                    <span className="ml-2">{t('support.send')}</span>
-                  </Button>
-                  <Button
-                    type="button"
-                    variant="secondary"
-                    onClick={() => {
-                      setShowCreateForm(false);
-                      setFormError(null);
-                      clearCreateAttachments();
-                    }}
-                  >
-                    {t('common.cancel')}
-                  </Button>
-                </div>
-              </form>
-            </div>
-          ) : selectedTicket ? (
-            <div className="flex h-full flex-col">
-              <div className="mb-6 flex flex-col gap-2 border-b border-dark-800/50 pb-4 sm:flex-row sm:items-start sm:justify-between">
-                <div>
-                  <h2 className="text-lg font-semibold text-dark-100">
-                    {ticketDetail?.title || selectedTicket.title}
-                  </h2>
-                  <div className="mt-2 flex flex-wrap items-center gap-2">
-                    <span className={getStatusBadge(ticketDetail?.status || selectedTicket.status)}>
-                      {getStatusLabel(ticketDetail?.status || selectedTicket.status)}
-                    </span>
-                    <span className="text-xs text-dark-500">
-                      {t('support.created')}{' '}
-                      {new Date(selectedTicket.created_at).toLocaleDateString(uiLocale())}
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Messages */}
-              {detailLoading ? (
-                <SkeletonGroup className="space-y-3">
-                  <Skeleton variant="card" count={3} className="h-16" />
-                </SkeletonGroup>
-              ) : ticketDetail?.messages ? (
-                <div className="scrollbar-hide mb-6 max-h-96 flex-1 space-y-4 overflow-y-auto">
-                  {ticketDetail.messages.map((msg) => (
-                    <div
-                      key={msg.id}
-                      className={`rounded-xl p-4 ${
-                        msg.is_from_admin
-                          ? 'ml-4 border border-accent-500/20 bg-accent-500/10'
-                          : 'mr-4 border border-dark-700/30 bg-dark-800/50'
-                      }`}
-                    >
-                      <div className="mb-2 flex items-center justify-between">
-                        <span
-                          className={`text-xs font-medium ${msg.is_from_admin ? 'text-accent-400' : 'text-dark-400'}`}
-                        >
-                          {msg.is_from_admin ? t('support.supportTeam') : t('support.you')}
-                        </span>
-                        <span className="text-xs text-dark-500">
-                          {new Date(msg.created_at).toLocaleString(uiLocale())}
-                        </span>
-                      </div>
-                      {msg.message_text && (
-                        <div
-                          className="whitespace-pre-wrap break-words text-dark-200 [&_a]:text-accent-400 [&_a]:underline"
-                          dangerouslySetInnerHTML={{ __html: linkifyText(msg.message_text) }}
-                        />
-                      )}
-                      {/* Display media if present */}
-                      <MessageMediaGrid
-                        message={msg}
-                        translateError={t('support.imageLoadFailed')}
-                      />
-                    </div>
-                  ))}
-                </div>
-              ) : null}
-
-              {/* Reply Form */}
-              {ticketDetail?.status !== 'closed' && !ticketDetail?.is_reply_blocked && (
-                <form
-                  onSubmit={(e) => {
-                    e.preventDefault();
-                    setFormError(null);
-                    // Rate limit: max 5 replies per 30 seconds
-                    if (!checkRateLimit(RATE_LIMIT_KEYS.TICKET_REPLY, 5, 30000)) {
-                      const resetTime = getRateLimitResetTime(RATE_LIMIT_KEYS.TICKET_REPLY);
-                      setFormError(t('support.tooManyRequests', { seconds: resetTime }));
-                      return;
-                    }
-                    replyMutation.mutate();
-                  }}
-                  className="border-t border-dark-800/50 pt-4"
-                >
-                  <div className="space-y-3">
-                    <div className="flex gap-3">
-                      <textarea
-                        className="input min-h-[80px] min-w-0 flex-1"
-                        placeholder={t('support.replyPlaceholder')}
-                        value={replyMessage}
-                        onChange={(e) => setReplyMessage(e.target.value)}
-                        maxLength={4000}
-                      />
-                    </div>
-
-                    {/* Media attachments for reply */}
-                    <div>
-                      <input
-                        ref={replyFileInputRef}
-                        type="file"
-                        accept={Object.keys(MEDIA_TYPES).join(',')}
-                        multiple
-                        className="hidden"
-                        onChange={(e) => {
-                          const files = Array.from(e.target.files || []);
-                          files.forEach((file) => handleFileSelect(file, setReplyAttachments));
-                          e.target.value = '';
-                        }}
-                      />
-                      <AttachmentsPreview
-                        items={replyAttachments}
-                        onRemove={(idx) =>
-                          setReplyAttachments((prev) => {
-                            const removed = prev[idx];
-                            if (removed?.preview) URL.revokeObjectURL(removed.preview);
-                            return prev.filter((_, i) => i !== idx);
-                          })
-                        }
-                      />
-                    </div>
-                    <div className="flex items-center justify-between">
-                      {replyAttachments.length < 10 && (
-                        <button
-                          type="button"
-                          onClick={() => replyFileInputRef.current?.click()}
-                          disabled={replyAttachments.some((a) => a.uploading)}
-                          className="flex items-center gap-2 text-sm text-dark-400 transition-colors hover:text-dark-200 disabled:opacity-50"
-                        >
-                          <ImageIcon />
-                          {t('support.attachMedia')}{' '}
-                          {replyAttachments.length > 0 && `(${replyAttachments.length}/10)`}
-                        </button>
-                      )}
-
-                      <Button
-                        type="submit"
-                        disabled={
-                          (!replyMessage.trim() &&
-                            replyAttachments.filter((a) => a.fileId).length === 0) ||
-                          replyAttachments.some((a) => a.uploading)
-                        }
-                        loading={replyMutation.isPending}
-                      >
-                        <SendIcon className="h-4 w-4" />
-                      </Button>
-                    </div>
-                    {formError && (
-                      <div className="mt-2 rounded-lg border border-error-500/30 bg-error-500/10 p-2 text-sm text-error-400">
-                        {formError}
-                      </div>
-                    )}
-                  </div>
-                </form>
-              )}
-
-              {ticketDetail?.is_reply_blocked && (
-                <div className="border-t border-dark-800/50 py-4 text-center text-sm text-dark-500">
-                  {t('support.repliesDisabled')}
-                </div>
-              )}
-            </div>
-          ) : (
-            <div className="flex flex-col items-center justify-center py-16">
-              <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-dark-800">
-                <ChatIcon className="h-8 w-8 text-dark-500" />
-              </div>
-              <div className="text-dark-400">{t('support.selectTicket')}</div>
-            </div>
-          )}
-        </Card>
-      </motion.div>
-    </motion.div>
+                  send();
+                }
+              }}
+              rows={1}
+              maxLength={4000}
+              placeholder={
+                chatTicket && ticketIsOpen
+                  ? t('support.chat.placeholder')
+                  : t('support.chat.placeholderNew')
+              }
+              aria-label={t('support.chat.placeholder')}
+              className="support-input"
+            />
+            <button
+              type="submit"
+              disabled={!canSend}
+              className="support-send"
+              aria-label={t('support.chat.send')}
+            >
+              <PiArrowUpBold className="h-5 w-5" />
+            </button>
+          </form>
+        </div>
+      )}
+    </div>
   );
 }

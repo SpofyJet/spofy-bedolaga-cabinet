@@ -67,6 +67,8 @@ const SavedCards = lazyWithRetry(() => import('./pages/SavedCards'));
 const Referral = lazyWithRetry(() => import('./pages/Referral'));
 const Support = lazyWithRetry(() => import('./pages/Support'));
 const Profile = lazyWithRetry(() => import('./pages/Profile'));
+const ProfileNotifications = lazyWithRetry(() => import('./pages/ProfileNotifications'));
+const ProfileEmail = lazyWithRetry(() => import('./pages/ProfileEmail'));
 const Contests = lazyWithRetry(() => import('./pages/Contests'));
 const Polls = lazyWithRetry(() => import('./pages/Polls'));
 const Info = lazyWithRetry(() => import('./pages/Info'));
@@ -526,6 +528,26 @@ function App() {
             <ProtectedRoute>
               <LazyPage>
                 <Profile />
+              </LazyPage>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/profile/notifications"
+          element={
+            <ProtectedRoute>
+              <LazyPage>
+                <ProfileNotifications />
+              </LazyPage>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/profile/email"
+          element={
+            <ProtectedRoute>
+              <LazyPage>
+                <ProfileEmail />
               </LazyPage>
             </ProtectedRoute>
           }

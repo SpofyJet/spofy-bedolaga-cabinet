@@ -1,53 +1,45 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { STORY_SERIES } from './registry';
+import { useStorySeries } from './registry';
 import { useStoryRead } from './useStoryRead';
 import { StoryViewer } from './StoryViewer';
 
 import './stories.css';
 
 /**
- * Горизонтальная лента обложек сторис. Обложки — сгенерированный 3D-стеклянный
- * арт серии (полнокровное изображение + скрим для заголовка). Первая серия
- * (featured) — с акцентным кольцом.
+ * Лента обложек сторис: иконка серии, короткий заголовок, кольцо в цвет серии,
+ * пока серия не просмотрена. Порядок постоянный — нужная серия всегда на том же
+ * месте, просмотренные просто становятся спокойнее.
  */
 export function StoryRail() {
   const { t } = useTranslation();
   const { isRead } = useStoryRead();
+  const series = useStorySeries();
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
-  if (STORY_SERIES.length === 0) return null;
+  if (series.length === 0) return null;
 
   return (
     <>
       <div className="story-rail" role="list" aria-label={t('stories.sectionTitle')}>
-        {STORY_SERIES.map((meta, index) => {
-          const coverTitle = t(`stories.series.${meta.id}.coverTitle`);
+        {series.map(({ meta, coverTitle }, index) => {
           const read = isRead(meta.id);
+          const Icon = meta.icon;
           return (
             <button
               key={meta.id}
               type="button"
               role="listitem"
-              className={`story-cover${meta.featured ? ' story-cover-featured' : ''}`}
-              style={{
-                background: `linear-gradient(160deg, ${meta.palette.from}, ${meta.palette.to})`,
-              }}
+              className={`story-cover${read ? ' story-cover-read' : ''}`}
+              style={{ '--story-accent': meta.accent } as React.CSSProperties}
               onClick={() => setOpenIndex(index)}
               aria-label={coverTitle}
             >
-              <img className="story-cover-img" src={meta.coverImage} alt="" aria-hidden />
-              {!read && (
-                <span
-                  className={`story-badge${meta.featured ? ' story-badge-label' : ''}`}
-                  aria-hidden
-                />
-              )}
-              <span className="story-cover-index font-mono" aria-hidden>
-                {String(index + 1).padStart(2, '0')}
+              <span className="story-cover-icon" aria-hidden>
+                <Icon className="h-6 w-6" />
               </span>
-              <span className="story-cover-title font-display">{coverTitle}</span>
+              <span className="story-cover-title">{coverTitle}</span>
             </button>
           );
         })}

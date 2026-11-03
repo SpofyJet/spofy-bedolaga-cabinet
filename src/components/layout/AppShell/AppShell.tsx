@@ -7,7 +7,7 @@ import { motion } from 'framer-motion';
 import { useAuthStore } from '@/store/auth';
 import { useHaptic } from '@/platform';
 import { useTelegramSDK } from '@/hooks/useTelegramSDK';
-import { useHeaderHeight } from '@/hooks/useHeaderHeight';
+import { headerHeightCss, useHeaderHeight } from '@/hooks/useHeaderHeight';
 import { useTheme } from '@/hooks/useTheme';
 import { useBranding } from '@/hooks/useBranding';
 import { useFeatureFlags } from '@/hooks/useFeatureFlags';
@@ -15,6 +15,7 @@ import { useLiteMode } from '@/hooks/useLiteMode';
 import { useScrollRestoration } from '@/hooks/useScrollRestoration';
 import { resetVirtualKeyboard } from '@/hooks/useVirtualKeyboard';
 import { themeColorsApi } from '@/api/themeColors';
+import { useSupportUnread } from '@/hooks/useSupportUnread';
 import { cn } from '@/lib/utils';
 
 import WebSocketNotifications from '@/components/WebSocketNotifications';
@@ -25,16 +26,15 @@ import LanguageSwitcher from '@/components/LanguageSwitcher';
 import TicketNotificationBell from '@/components/TicketNotificationBell';
 import {
   SubscriptionIcon,
-  GiftIcon,
   HomeIcon,
   CreditCardIcon,
   ChatIcon,
   UserIcon,
   UsersIcon,
   ShieldIcon,
-  InfoIcon,
   SunIcon,
   MoonIcon,
+  PowerIcon,
 } from '@/components/icons';
 
 import { MobileBottomNav } from './MobileBottomNav';
@@ -56,7 +56,14 @@ export function AppShell({ children }: AppShellProps) {
   const logout = useAuthStore((state) => state.logout);
   const { isFullscreen, safeAreaInset, contentSafeAreaInset, platform, isMobile } =
     useTelegramSDK();
-  const { mobileCss: headerHeight } = useHeaderHeight();
+  const {
+    mobileCss: headerHeight,
+    topSafeArea,
+    isMobileFullscreen: isTgFullscreen,
+  } = useHeaderHeight();
+  // Без шапки на телефоне сверху остаётся только безопасная зона: вырез/статус-бар
+  // и кнопки Telegram в fullscreen.
+  const topInsetCss = headerHeightCss(topSafeArea, isTgFullscreen);
   const haptic = useHaptic();
   const { toggleTheme, isDark } = useTheme();
 
@@ -121,14 +128,21 @@ export function AppShell({ children }: AppShellProps) {
   const connectTo = navFirstSubId != null ? `/connection?sub=${navFirstSubId}` : '/connection';
 
   // Desktop navigation — labels always visible (no hover-reveal gimmick)
+  // Админка живёт со своей шапкой (меню, колокольчик тикетов); экраны
+  // покупателя — без мобильной шапки и с короткой капсулой на ПК.
+  const isAdminRoute = location.pathname.startsWith('/admin');
+  const supportUnread = useSupportUnread(!isAdminRoute);
+
+  // Те же разделы, что и в нижней панели телефона, плюс подписка и баланс.
+  // Подарок, инструкции, язык, тема и выход — в профиле и на главной.
   const desktopNav = [
     { path: '/', label: t('nav.dashboard'), icon: HomeIcon },
     { path: '/subscriptions', label: t('nav.subscription'), icon: SubscriptionIcon },
     { path: '/balance', label: t('nav.balance'), icon: CreditCardIcon },
-    ...(referralEnabled ? [{ path: '/referral', label: t('nav.referral'), icon: UsersIcon }] : []),
-    ...(giftEnabled ? [{ path: '/gift', label: t('nav.gift'), icon: GiftIcon }] : []),
-    { path: '/support', label: t('nav.support'), icon: ChatIcon },
-    { path: '/info', label: t('nav.info'), icon: InfoIcon },
+    ...(referralEnabled
+      ? [{ path: '/referral', label: t('navShort.referral', t('nav.referral')), icon: UsersIcon }]
+      : []),
+    { path: '/support', label: t('nav.support'), icon: ChatIcon, dot: supportUnread > 0 },
     { path: '/profile', label: t('nav.profile'), icon: UserIcon },
   ];
 
@@ -148,6 +162,7 @@ export function AppShell({ children }: AppShellProps) {
     label: string,
     Icon: React.ComponentType<{ className?: string }>,
     admin = false,
+    dot = false,
   ) => {
     const active = admin ? location.pathname.startsWith('/admin') : isActive(path);
     return (
@@ -182,6 +197,12 @@ export function AppShell({ children }: AppShellProps) {
         )}
         <Icon className="relative h-4 w-4 shrink-0" />
         <span className="relative whitespace-nowrap">{label}</span>
+        {dot && (
+          <span
+            className="absolute right-1.5 top-1 h-2 w-2 rounded-full bg-error-500 ring-2 ring-dark-950"
+            aria-label={t('support.chat.unread', 'Новый ответ')}
+          />
+        )}
       </Link>
     );
   };
@@ -242,7 +263,9 @@ export function AppShell({ children }: AppShellProps) {
               всегда, без скролла/сжатия/сворачивания. Центрируется средней
               колонкой grid (justify-self-center), а не auto-margin'ами. */}
           <nav className="flex items-center gap-0.5 justify-self-center rounded-full border border-dark-800/70 bg-dark-900/50 p-1 shadow-sm backdrop-blur-sm">
-            {desktopNav.map((item) => renderNavLink(item.path, item.label, item.icon))}
+            {desktopNav.map((item) =>
+              renderNavLink(item.path, item.label, item.icon, false, 'dot' in item && !!item.dot),
+            )}
             {isAdmin && (
               <>
                 <div className="mx-1 h-5 w-px shrink-0 bg-dark-700/60" />
@@ -251,59 +274,84 @@ export function AppShell({ children }: AppShellProps) {
             )}
           </nav>
 
-          {/* Right side actions — правая колонка grid, прижата к краю, не сжимается */}
-          <div className="flex shrink-0 items-center gap-2 justify-self-end">
-            <button
-              onClick={() => {
-                haptic.impact('light');
-                toggleTheme();
-              }}
-              className={cn(
-                'rounded-xl border border-dark-700/50 bg-dark-800/50 p-2 text-dark-400 transition-colors duration-200 hover:bg-dark-700 hover:text-accent-400',
-                !canToggleTheme && 'hidden',
-              )}
-              aria-label={
-                isDark ? t('theme.light') || 'Light mode' : t('theme.dark') || 'Dark mode'
-              }
-              title={isDark ? t('theme.light') || 'Light mode' : t('theme.dark') || 'Dark mode'}
-            >
-              {isDark ? <MoonIcon className="h-5 w-5" /> : <SunIcon className="h-5 w-5" />}
-            </button>
-            <TicketNotificationBell isAdmin={location.pathname.startsWith('/admin')} />
-            <LanguageSwitcher />
-            <LogoutButton
-              variant="icon"
-              onLogout={() => {
-                haptic.impact('light');
-                logout();
-              }}
-            />
-          </div>
+          {/* Правая зона: в админке — инструменты, у покупателя — одно главное действие.
+              Тема, язык и выход у покупателя — в профиле. */}
+          {isAdminRoute ? (
+            <div className="flex shrink-0 items-center gap-2 justify-self-end">
+              <button
+                onClick={() => {
+                  haptic.impact('light');
+                  toggleTheme();
+                }}
+                className={cn(
+                  'rounded-xl border border-dark-700/50 bg-dark-800/50 p-2 text-dark-400 transition-colors duration-200 hover:bg-dark-700 hover:text-accent-400',
+                  !canToggleTheme && 'hidden',
+                )}
+                aria-label={
+                  isDark ? t('theme.light') || 'Light mode' : t('theme.dark') || 'Dark mode'
+                }
+                title={isDark ? t('theme.light') || 'Light mode' : t('theme.dark') || 'Dark mode'}
+              >
+                {isDark ? <MoonIcon className="h-5 w-5" /> : <SunIcon className="h-5 w-5" />}
+              </button>
+              <TicketNotificationBell isAdmin={location.pathname.startsWith('/admin')} />
+              <LanguageSwitcher />
+              <LogoutButton
+                variant="icon"
+                onLogout={() => {
+                  haptic.impact('light');
+                  logout();
+                }}
+              />
+            </div>
+          ) : (
+            <div className="flex shrink-0 items-center justify-self-end">
+              <Link
+                to={connectTo}
+                onClick={handleNavClick}
+                className="flex items-center gap-2 rounded-full bg-accent-500 px-4 py-2 text-[13px] font-semibold text-on-accent shadow-[0_6px_20px_-8px_rgba(var(--color-accent-500),0.7)] transition-colors hover:bg-accent-600"
+              >
+                <PowerIcon className="h-4 w-4" />
+                {t('dashboard.quick.connect')}
+              </Link>
+            </div>
+          )}
         </div>
       </header>
 
-      {/* Mobile Header */}
-      <AppHeader
-        mobileMenuOpen={mobileMenuOpen}
-        setMobileMenuOpen={setMobileMenuOpen}
-        onCommandPaletteOpen={() => {}}
-        headerHeight={headerHeight}
-        isFullscreen={isMobileFullscreen}
-        safeAreaInset={safeAreaInset}
-        contentSafeAreaInset={contentSafeAreaInset}
-        telegramPlatform={platform}
-        wheelEnabled={wheelEnabled}
-        referralEnabled={referralEnabled}
-        hasContests={hasContests}
-        hasPolls={hasPolls}
-        giftEnabled={giftEnabled}
-      />
+      {/* Mobile Header — только в админке */}
+      {isAdminRoute && (
+        <AppHeader
+          mobileMenuOpen={mobileMenuOpen}
+          setMobileMenuOpen={setMobileMenuOpen}
+          onCommandPaletteOpen={() => {}}
+          headerHeight={headerHeight}
+          isFullscreen={isMobileFullscreen}
+          safeAreaInset={safeAreaInset}
+          contentSafeAreaInset={contentSafeAreaInset}
+          telegramPlatform={platform}
+          wheelEnabled={wheelEnabled}
+          referralEnabled={referralEnabled}
+          hasContests={hasContests}
+          hasPolls={hasPolls}
+          giftEnabled={giftEnabled}
+        />
+      )}
+
+      {/* Подложка под статус-бар / кнопки Telegram: контент не просвечивает под ними */}
+      {!isAdminRoute && (
+        <div
+          aria-hidden
+          className="pointer-events-none fixed inset-x-0 top-0 z-40 bg-dark-950/85 backdrop-blur-md lg:hidden"
+          style={{ height: topInsetCss }}
+        />
+      )}
 
       {/* Desktop spacer */}
       <div className="hidden h-14 lg:block" />
 
       {/* Mobile spacer */}
-      <div className="lg:hidden" style={{ height: headerHeight }} />
+      <div className="lg:hidden" style={{ height: isAdminRoute ? headerHeight : topInsetCss }} />
 
       {/* Main content */}
       {/* Боковые отступы не меньше вырезов (альбомная ориентация iPhone); снизу —
@@ -315,7 +363,12 @@ export function AppShell({ children }: AppShellProps) {
 
       {/* Mobile Bottom Navigation — только на экранах её кнопок */}
       {showMobileNav && (
-        <MobileBottomNav items={navItems} connectTo={connectTo} isMenuOpen={mobileMenuOpen} />
+        <MobileBottomNav
+          items={navItems}
+          connectTo={connectTo}
+          isMenuOpen={mobileMenuOpen}
+          badges={{ support: supportUnread > 0 }}
+        />
       )}
     </div>
   );

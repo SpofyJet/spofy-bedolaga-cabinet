@@ -201,12 +201,16 @@ export default function Subscription() {
   const [showDeleteSheet, setShowDeleteSheet] = useState(false);
 
   // Device/traffic topup state
-  const [showDeviceTopup, setShowDeviceTopup] = useState(false);
+  const [searchParams] = useSearchParams();
+  // ?topup=devices («Добавить место» на главной) сразу открывает докупку устройств.
+  const [showDeviceTopup, setShowDeviceTopup] = useState(
+    () => searchParams.get('topup') === 'devices',
+  );
+  const deviceTopupRef = useRef<HTMLDivElement>(null);
   const [devicesToAdd, setDevicesToAdd] = useState(1);
   const [showDeviceReduction, setShowDeviceReduction] = useState(false);
   const [targetDeviceLimit, setTargetDeviceLimit] = useState<number>(1);
   // ?topup=traffic (баннер «обходы отключены» на главной) сразу открывает докупку трафика.
-  const [searchParams] = useSearchParams();
   const [showTrafficTopup, setShowTrafficTopup] = useState(
     () => searchParams.get('topup') === 'traffic',
   );
@@ -397,6 +401,15 @@ export default function Subscription() {
       block: 'start',
     });
   }, [showTrafficTopup, hasTrafficSheet]);
+  const hasSubscriptionLoaded = !!subscription;
+  useEffect(() => {
+    if (!showDeviceTopup || !hasSubscriptionLoaded) return;
+    const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    deviceTopupRef.current?.scrollIntoView({
+      behavior: reduce ? 'auto' : 'smooth',
+      block: 'start',
+    });
+  }, [showDeviceTopup, hasSubscriptionLoaded]);
 
   if (isMultiTariff && !subscriptionId && !isLoading) {
     return <Navigate to="/subscriptions" replace />;
@@ -1005,17 +1018,19 @@ export default function Subscription() {
           </h2>
 
           {/* Buy Devices */}
-          <DeviceTopupSheet
-            open={showDeviceTopup}
-            onOpen={() => setShowDeviceTopup(true)}
-            onClose={() => setShowDeviceTopup(false)}
-            subscription={subscription}
-            subscriptionId={subscriptionId}
-            devicesToAdd={devicesToAdd}
-            onDevicesToAddChange={setDevicesToAdd}
-            purchaseOptions={purchaseOptions}
-            isDark={isDark}
-          />
+          <div className="scroll-mt-20" ref={deviceTopupRef}>
+            <DeviceTopupSheet
+              open={showDeviceTopup}
+              onOpen={() => setShowDeviceTopup(true)}
+              onClose={() => setShowDeviceTopup(false)}
+              subscription={subscription}
+              subscriptionId={subscriptionId}
+              devicesToAdd={devicesToAdd}
+              onDevicesToAddChange={setDevicesToAdd}
+              purchaseOptions={purchaseOptions}
+              isDark={isDark}
+            />
+          </div>
 
           {/* Reduce Devices */}
           <div className="mt-4">

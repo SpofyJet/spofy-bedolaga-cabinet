@@ -62,7 +62,8 @@
   },
   "navShort": {
     "wheel": "Wheel",
-    "more": "More"
+    "more": "More",
+    "referral": "Friends"
   },
   "nav": {
     "dashboard": "Dashboard",
@@ -317,7 +318,9 @@
       "connect": "Connect",
       "renew": "Renew",
       "topup": "Top up",
-      "invite": "Invite"
+      "invite": "Invite",
+      "title": "Quick actions",
+      "plans": "Plans"
     },
     "storiesTitle": "Guides",
     "title": "Dashboard",
@@ -413,7 +416,11 @@
         "chooseTariff": "Choose a plan",
         "trial": "Trial",
         "active": "Active",
-        "expired": "Expired"
+        "expired": "Expired",
+        "daysCount_one": "{{count}} day",
+        "daysCount_other": "{{count}} days",
+        "renew": "Renew",
+        "endingSoon": "Ending soon"
       },
       "balance": {
         "title": "Balance",
@@ -430,7 +437,23 @@
       "gift": "Gift",
       "promocode": "Promocode",
       "balance": "Balance",
-      "support": "Support"
+      "support": "Support",
+      "history": "History"
+    },
+    "devicesTraffic": {
+      "title": "Devices and traffic",
+      "ofDevices": "{{used}} of {{limit}}",
+      "ofTraffic": "{{used}} of {{limit}}",
+      "devices": "devices connected",
+      "allSlotsBusy": "all slots in use",
+      "unlimited": "Unlimited",
+      "traffic": "traffic",
+      "bypassTraffic": "bypass traffic",
+      "bypassOff": "bypass is off",
+      "bypassOffHint": "Regular servers still work. Buy more gigabytes to turn bypass back on.",
+      "addSlot": "Add a slot",
+      "buyTraffic": "Buy GB",
+      "manage": "My devices"
     }
   },
   "subscription": {
@@ -1408,6 +1431,29 @@
       "alreadyOpenTicket": "You already have an open ticket. Please continue the conversation there — a new ticket can be created once the current one is closed.",
       "createFailed": "Could not create the ticket. Please try again.",
       "replyFailed": "Could not send the reply. Please try again."
+    },
+    "chat": {
+      "title": "{{name}} Support",
+      "subtitle": "We reply here and send you a notification",
+      "openTelegram": "Message us on Telegram",
+      "disabled": "In-app chat is turned off right now. Message us on Telegram and we will reply there.",
+      "write": "Contact support",
+      "safety": "We never ask for passwords, SMS codes or card transfers. Write only here or to the official bot.",
+      "welcome": "Hi! Tell us what happened — you can attach a screenshot. We will reply right in this chat.",
+      "welcomeNamed": "Hi {{name}}! Tell us what happened — you can attach a screenshot. We will reply right in this chat.",
+      "today": "Today",
+      "closed": "This conversation is closed. Write again and we will start a new one.",
+      "sending": "sending…",
+      "placeholder": "Message",
+      "placeholderNew": "Describe the problem",
+      "send": "Send",
+      "badFile": "You can attach photos (JPG, PNG, GIF, WebP) or videos (MP4, WebM, MOV).",
+      "tooManyFiles": "Up to {{count}} files per message.",
+      "ticketTitle": "Message from the cabinet",
+      "sendFailed": "Could not send. Your text is kept — please try again.",
+      "toastTitle": "Support replied",
+      "toastText": "Open the chat to read it",
+      "unread": "New reply from support"
     }
   },
   "wheel": {
@@ -7341,13 +7387,12 @@
         "subscription": "Subscription",
         "account": "Account",
         "about": "About",
-        "more": "More settings"
+        "settings": "Settings"
       },
       "devices": "My devices",
       "paymentHistory": "Payment history",
       "promocode": "Promocode",
       "connected": "Connected accounts",
-      "connectedHint": "Telegram",
       "notifications": "Notifications",
       "notificationsOn": "On",
       "notificationsOff": "Off",
@@ -7356,8 +7401,13 @@
       "about": "About the service",
       "aboutHint": "Rules, offer, policy",
       "gift": "Gift subscription",
-      "signInVia": "sign-in via Telegram"
-    }
+      "signInWith": "signed in with {{method}}",
+      "language": "Language",
+      "theme": "Theme",
+      "themeDark": "Dark",
+      "themeLight": "Light"
+    },
+    "emailAuthDisabled": "Email sign-in is turned off right now."
   },
   "theme": {
     "colors": "Theme Colors",
@@ -8022,96 +8072,124 @@
   "stories": {
     "sectionTitle": "Guides",
     "close": "Close",
+    "step": "Step {{n}} of {{total}}",
+    "tapHint": "Tap on the right to continue",
+    "ui": {
+      "recommended": "Recommended",
+      "alternative": "Backup option",
+      "get": "Get",
+      "step2": "Cabinet → Connect",
+      "addToIncy": "Add to INCY",
+      "autoAdded": "The subscription is added automatically",
+      "netherlands": "Netherlands",
+      "germany": "Germany",
+      "finland": "Finland",
+      "ms": "ms",
+      "best": "fastest",
+      "connected": "Connected",
+      "settings": "Settings",
+      "reset": "Reset",
+      "fullReset": "Full reset",
+      "bypass": "Bypass",
+      "forMobile": "for mobile internet",
+      "androidProfiles": "Settings → VPN: remove other VPN profiles",
+      "supportName": "Spofy support",
+      "userMessage": "VPN won’t connect 🙏",
+      "slotsFree": "A free slot is waiting",
+      "loginTelegram": "Log in with Telegram",
+      "qrPath": "Home → Useful → QR for TV",
+      "oldLaptop": "Old laptop"
+    },
     "series": {
-      "appstore-region": {
-        "coverTitle": "Change App Store region",
+      "connect": {
+        "coverTitle": "How to connect",
         "slides": [
           {
-            "title": "Change your App Store region",
-            "subtitle": "In a couple of minutes you'll get access to apps from another region."
+            "title": "Install INCY",
+            "subtitle": "Free on the App Store or Google Play. Backup option — Happ."
           },
           {
-            "title": "Tap your name",
-            "subtitle": "In the Account menu that opens, it's the very first row."
+            "title": "Add the subscription",
+            "subtitle": "Tap “Connect”, then “Add to INCY” — the subscription is added automatically."
           },
           {
-            "title": "Change the country",
-            "subtitle": "Open «Country/Region» and choose «Kazakhstan»."
-          },
-          {
-            "title": "Agree to the terms",
-            "subtitle": "Pick None as the payment method — no card needed."
-          },
-          {
-            "title": "All set!",
-            "subtitle": "Now head back to the cabinet and pick a plan.",
-            "ctaLabel": "Browse plans"
-          }
-        ]
-      },
-      "connect-ios": {
-        "coverTitle": "VPN on iPhone",
-        "slides": [
-          {
-            "title": "VPN on iPhone in a minute",
-            "subtitle": "You only need the cabinet — the configuration builds itself."
-          },
-          {
-            "title": "Open «Connect»",
-            "subtitle": "Cabinet → Connect → choose your subscription."
-          },
-          {
-            "title": "Install the profile",
-            "subtitle": "Tap «Install» and confirm the profile installation."
-          },
-          {
-            "title": "Turn VPN on",
-            "subtitle": "One tap in the app — and your connection is protected.",
+            "title": "Turn on the VPN",
+            "subtitle": "Pick the server with the lowest ping and tap connect. Done!",
             "ctaLabel": "Connect"
           }
         ]
       },
-      "connect-android": {
-        "coverTitle": "VPN on Android",
+      "appstore-region": {
+        "coverTitle": "INCY not in App Store",
         "slides": [
           {
-            "title": "VPN on Android",
-            "subtitle": "Connect through the app — the link is already in the cabinet."
+            "title": "Open the App Store",
+            "subtitle": "Tap your avatar in the top right corner."
           },
           {
-            "title": "Open «Connect»",
-            "subtitle": "Cabinet → Connect → choose your subscription."
+            "title": "Tap your name",
+            "subtitle": "The first line in the Account menu."
           },
           {
-            "title": "Install the app",
-            "subtitle": "Follow the link and install the VPN app."
+            "title": "Change the country",
+            "subtitle": "“Country/Region” → “Kazakhstan”."
           },
           {
-            "title": "Turn VPN on",
-            "subtitle": "One tap on the connect button — done.",
+            "title": "Payment — None",
+            "subtitle": "Accept the terms and choose None: no card needed."
+          },
+          {
+            "title": "Fill in the address",
+            "subtitle": "Street and City — SpofyVPN, Region — any, Phone — 7-555-222-47-47. Tap Done and download INCY.",
             "ctaLabel": "Connect"
           }
         ]
       },
       "no-connection": {
-        "coverTitle": "VPN won't connect",
+        "coverTitle": "VPN won’t connect",
         "slides": [
           {
-            "title": "VPN won't connect?",
-            "subtitle": "Check three things — they fix almost every case."
+            "title": "Update the subscription",
+            "subtitle": "In INCY or Happ tap ⟳ next to the subscription — the server list refreshes."
           },
           {
-            "title": "Check your subscription",
-            "subtitle": "The status on the home screen must be «Active». If not — renew it."
+            "title": "Reset Happ",
+            "subtitle": "Settings → Reset → Full reset, then add the subscription again. Or try INCY."
           },
           {
-            "title": "Refresh the configuration",
-            "subtitle": "Update the subscription in the app to pull the servers again."
+            "title": "Switch the server",
+            "subtitle": "Pick another country — preferably the one with the lowest ping."
           },
           {
-            "title": "Still stuck?",
-            "subtitle": "Message support — we'll sort it out together.",
-            "ctaLabel": "Open support"
+            "title": "On mobile data?",
+            "subtitle": "If the VPN doesn’t work over mobile internet, turn on “Bypass”."
+          },
+          {
+            "title": "Still not working?",
+            "subtitle": "Message us in the chat — we’ll sort it out together.",
+            "ctaLabel": "Message support"
+          }
+        ]
+      },
+      "add-device": {
+        "coverTitle": "Another device",
+        "slides": [
+          {
+            "title": "Connect one more",
+            "subtitle": "One subscription works on several devices. Free slots are shown on the home screen."
+          },
+          {
+            "title": "Open the cabinet",
+            "subtitle": "On the new device go to {{site}}, log in with Telegram and tap “Connect”."
+          },
+          {
+            "title": "TV — via QR",
+            "subtitle": "Scan the QR code from the cabinet in the app on your TV."
+          },
+          {
+            "title": "Out of slots?",
+            "subtitle": "Remove an old device or add a slot in “Subscription”.",
+            "ctaLabel": "My devices"
           }
         ]
       }

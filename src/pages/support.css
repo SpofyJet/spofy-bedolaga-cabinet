@@ -1,0 +1,429 @@
+/* ============ ЧАТ ПОДДЕРЖКИ ============ */
+/* Обычный поток страницы (скроллится документ — так работает и в Telegram,
+   и в браузере), поле ввода прилипает над нижней навигацией. */
+
+.support-page {
+  margin: 0 auto;
+  width: 100%;
+  max-width: 600px;
+  display: flex;
+  min-height: calc(100dvh - var(--mobile-nav-clearance, 0px) - 3rem);
+  flex-direction: column;
+}
+
+.support-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid rgba(var(--color-dark-800), 0.7);
+}
+
+.support-head-avatar {
+  position: relative;
+  display: flex;
+  height: 46px;
+  width: 46px;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: 16px;
+  font-size: 18px;
+  font-weight: 800;
+  color: rgb(var(--color-accent-400));
+  background: rgba(var(--color-accent-500), 0.14);
+}
+
+.support-head-avatar img {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+}
+
+.support-head-online {
+  height: 7px;
+  width: 7px;
+  border-radius: 999px;
+  background: rgb(var(--color-success-400));
+  box-shadow: 0 0 0 3px rgba(var(--color-success-400), 0.18);
+}
+
+.support-head-link {
+  display: flex;
+  height: 40px;
+  width: 40px;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: 14px;
+  color: rgb(var(--color-dark-300));
+  background: rgba(var(--color-dark-800), 0.7);
+  transition:
+    color 0.15s ease,
+    background 0.15s ease;
+}
+
+.support-head-link:hover {
+  color: rgb(var(--color-accent-400));
+}
+
+.support-feed {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 4px;
+  padding: 16px 0 12px;
+}
+
+.support-note {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  margin-bottom: 12px;
+  padding: 12px 14px;
+  border-radius: 16px;
+  font-size: 13px;
+  line-height: 1.45;
+  color: rgb(var(--color-dark-300));
+  background: rgba(var(--color-dark-800), 0.5);
+}
+
+.support-note svg {
+  color: rgb(var(--color-accent-400));
+}
+
+.support-day {
+  align-self: center;
+  margin: 12px 0 6px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  color: rgb(var(--color-dark-400));
+  background: rgba(var(--color-dark-800), 0.6);
+}
+
+.support-msg {
+  display: flex;
+  max-width: 82%;
+  flex-direction: column;
+  margin-top: 8px;
+}
+
+.support-msg-cont {
+  margin-top: 0;
+}
+
+.support-msg-in {
+  align-self: flex-start;
+  align-items: flex-start;
+}
+
+.support-msg-out {
+  align-self: flex-end;
+  align-items: flex-end;
+}
+
+.support-msg-author {
+  margin: 0 0 4px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: rgb(var(--color-accent-400));
+}
+
+.support-bubble {
+  position: relative;
+  max-width: 100%;
+  padding: 9px 13px 8px;
+  border-radius: 20px;
+  font-size: 15px;
+  line-height: 1.42;
+}
+
+.support-bubble > * + * {
+  margin-top: 6px;
+}
+
+.support-msg-in .support-bubble {
+  color: rgb(var(--color-dark-50));
+  background: rgb(var(--color-dark-800));
+  border-bottom-left-radius: 6px;
+}
+
+.support-msg-out .support-bubble {
+  /* Белый на accent-600 — контраст ≥ 4.5 у фирменного синего; on-accent
+     темы для пузырей не берём: тёмный текст на синем читается как ошибка. */
+  color: #fff;
+  background: rgb(var(--color-accent-600));
+  border-bottom-right-radius: 6px;
+}
+
+.support-msg-cont.support-msg-in .support-bubble {
+  border-top-left-radius: 6px;
+}
+
+.support-msg-cont.support-msg-out .support-bubble {
+  border-top-right-radius: 6px;
+}
+
+.support-bubble-text {
+  display: block;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.support-bubble-text a {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.support-msg-in .support-bubble-text a {
+  color: rgb(var(--color-accent-400));
+}
+
+.support-bubble-time {
+  display: block;
+  margin-top: 2px;
+  text-align: right;
+  font-size: 11px;
+  opacity: 0.6;
+}
+
+.support-msg-pending {
+  opacity: 0.65;
+}
+
+.support-closed {
+  align-self: center;
+  margin: 14px 0 4px;
+  max-width: 320px;
+  text-align: center;
+  font-size: 13px;
+  line-height: 1.4;
+  color: rgb(var(--color-dark-400));
+}
+
+/* ---------- Поле ввода ---------- */
+
+.support-composer {
+  position: sticky;
+  bottom: var(--mobile-nav-clearance, 12px);
+  z-index: 10;
+  margin: 0 -4px;
+  padding: 8px 4px 4px;
+  background: linear-gradient(
+    to top,
+    rgb(var(--color-dark-950)) 70%,
+    rgba(var(--color-dark-950), 0)
+  );
+}
+
+@media (min-width: 1024px) {
+  .support-composer {
+    bottom: 16px;
+  }
+}
+
+.support-composer-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+  padding: 5px;
+  border-radius: 24px;
+  background: rgb(var(--color-dark-900));
+  box-shadow: inset 0 0 0 1px rgba(var(--color-dark-700), 0.6);
+  transition: box-shadow 0.15s ease;
+}
+
+.support-composer-row:focus-within {
+  box-shadow: inset 0 0 0 1.5px rgba(var(--color-accent-500), 0.6);
+}
+
+.support-attach,
+.support-send {
+  display: flex;
+  height: 40px;
+  width: 40px;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  transition:
+    opacity 0.15s ease,
+    transform 0.15s ease,
+    color 0.15s ease;
+}
+
+.support-attach {
+  color: rgb(var(--color-dark-400));
+}
+
+.support-attach:hover {
+  color: rgb(var(--color-accent-400));
+}
+
+.support-send {
+  color: rgb(var(--color-on-accent, 255, 255, 255));
+  background: rgb(var(--color-accent-500));
+}
+
+.support-send:disabled {
+  opacity: 0.35;
+}
+
+.support-send:not(:disabled):active {
+  transform: scale(0.92);
+}
+
+.support-input {
+  min-height: 40px;
+  min-width: 0;
+  flex: 1;
+  resize: none;
+  padding: 9px 4px;
+  border: 0;
+  outline: none;
+  font-size: 16px; /* меньше 16 — iOS зумит страницу при фокусе */
+  line-height: 1.4;
+  color: rgb(var(--color-dark-50));
+  background: transparent;
+}
+
+.support-input::placeholder {
+  color: rgb(var(--color-dark-500));
+}
+
+.support-error,
+.support-blocked {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0 8px 8px;
+  font-size: 13px;
+  color: rgb(var(--color-error-400));
+}
+
+.support-blocked {
+  justify-content: center;
+  margin: 8px;
+  color: rgb(var(--color-dark-400));
+}
+
+.support-attachments {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 6px 4px 10px;
+  scrollbar-width: none;
+}
+
+.support-att {
+  position: relative;
+  height: 60px;
+  width: 60px;
+  flex-shrink: 0;
+  overflow: visible;
+  border-radius: 14px;
+  background: rgb(var(--color-dark-800));
+}
+
+.support-att img {
+  height: 100%;
+  width: 100%;
+  border-radius: 14px;
+  object-fit: cover;
+}
+
+.support-att-video {
+  display: flex;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: rgb(var(--color-dark-300));
+}
+
+.support-att-spinner {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  height: 20px;
+  width: 20px;
+  border-radius: 999px;
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  border-top-color: #fff;
+  animation: support-spin 0.8s linear infinite;
+}
+
+.support-att-failed {
+  box-shadow: inset 0 0 0 2px rgb(var(--color-error-400));
+}
+
+.support-att-flag {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 14px;
+  font-weight: 800;
+  color: #fff;
+  background: rgba(var(--color-error-500), 0.45);
+}
+
+.support-att-remove {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  display: flex;
+  height: 22px;
+  width: 22px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  color: rgb(var(--color-dark-100));
+  background: rgb(var(--color-dark-700));
+  box-shadow: 0 0 0 2px rgb(var(--color-dark-950));
+}
+
+@keyframes support-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ---------- Чат выключен ---------- */
+
+.support-empty {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 48px 24px;
+  text-align: center;
+  font-size: 15px;
+  color: rgb(var(--color-dark-300));
+}
+
+.support-empty-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 48px;
+  padding: 0 22px;
+  border-radius: 16px;
+  font-weight: 700;
+  color: rgb(var(--color-on-accent, 255, 255, 255));
+  background: rgb(var(--color-accent-500));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .support-att-spinner {
+    animation-duration: 2s;
+  }
+}

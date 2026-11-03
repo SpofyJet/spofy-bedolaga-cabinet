@@ -57,7 +57,8 @@
   },
   "navShort": {
     "wheel": "转盘",
-    "more": "更多"
+    "more": "更多",
+    "referral": "好友"
   },
   "nav": {
     "dashboard": "首页",
@@ -297,7 +298,9 @@
       "connect": "连接",
       "renew": "续费",
       "topup": "充值",
-      "invite": "邀请"
+      "invite": "邀请",
+      "title": "快捷操作",
+      "plans": "套餐"
     },
     "storiesTitle": "指南",
     "title": "个人中心",
@@ -379,7 +382,10 @@
         "chooseTariff": "选择套餐",
         "trial": "试用期",
         "active": "有效",
-        "expired": "已到期"
+        "expired": "已到期",
+        "daysCount_other": "{{count}} 天",
+        "renew": "续订",
+        "endingSoon": "即将到期"
       },
       "balance": {
         "title": "余额",
@@ -396,7 +402,23 @@
       "gift": "礼物",
       "promocode": "优惠码",
       "balance": "余额",
-      "support": "支持"
+      "support": "支持",
+      "history": "记录"
+    },
+    "devicesTraffic": {
+      "title": "设备与流量",
+      "ofDevices": "{{used}} / {{limit}}",
+      "ofTraffic": "{{used}} / {{limit}}",
+      "devices": "台设备已连接",
+      "allSlotsBusy": "名额已用完",
+      "unlimited": "无限",
+      "traffic": "流量",
+      "bypassTraffic": "绕行流量",
+      "bypassOff": "绕行已关闭",
+      "bypassOffHint": "普通服务器仍可使用。购买流量即可恢复绕行。",
+      "addSlot": "增加名额",
+      "buyTraffic": "购买流量",
+      "manage": "我的设备"
     }
   },
   "subscription": {
@@ -1272,6 +1294,29 @@
       "alreadyOpenTicket": "您已有一个未关闭的工单。请在该工单中继续沟通，当前工单关闭后即可创建新工单。",
       "createFailed": "创建工单失败，请重试。",
       "replyFailed": "发送回复失败，请重试。"
+    },
+    "chat": {
+      "title": "{{name}} 客服",
+      "subtitle": "我们会在这里回复并通知您",
+      "openTelegram": "在 Telegram 联系我们",
+      "disabled": "应用内聊天暂时关闭。请在 Telegram 联系我们，我们会在那里回复。",
+      "write": "联系客服",
+      "safety": "我们绝不会索要密码、短信验证码或要求转账。请只在这里或官方机器人中联系我们。",
+      "welcome": "您好！请描述遇到的问题，可以附上截图。我们会直接在此聊天中回复。",
+      "welcomeNamed": "{{name}}，您好！请描述遇到的问题，可以附上截图。我们会直接在此聊天中回复。",
+      "today": "今天",
+      "closed": "此对话已结束。再次发送消息即可开始新的对话。",
+      "sending": "发送中…",
+      "placeholder": "消息",
+      "placeholderNew": "描述问题",
+      "send": "发送",
+      "badFile": "可附加照片（JPG、PNG、GIF、WebP）或视频（MP4、WebM、MOV）。",
+      "tooManyFiles": "每条消息最多 {{count}} 个文件。",
+      "ticketTitle": "来自用户中心的消息",
+      "sendFailed": "发送失败。文字已保留，请重试。",
+      "toastTitle": "客服已回复",
+      "toastText": "打开聊天查看",
+      "unread": "客服有新回复"
     }
   },
   "wheel": {
@@ -6720,13 +6765,12 @@
         "subscription": "订阅",
         "account": "账户",
         "about": "关于服务",
-        "more": "更多设置"
+        "settings": "设置"
       },
       "devices": "我的设备",
       "paymentHistory": "支付记录",
       "promocode": "优惠码",
       "connected": "已绑定账户",
-      "connectedHint": "Telegram",
       "notifications": "通知",
       "notificationsOn": "已开启",
       "notificationsOff": "已关闭",
@@ -6735,8 +6779,13 @@
       "about": "关于服务",
       "aboutHint": "规则、条款、政策",
       "gift": "赠送订阅",
-      "signInVia": "通过 Telegram 登录"
-    }
+      "signInWith": "通过 {{method}} 登录",
+      "language": "语言",
+      "theme": "主题",
+      "themeDark": "深色",
+      "themeLight": "浅色"
+    },
+    "emailAuthDisabled": "邮箱登录目前已关闭。"
   },
   "theme": {
     "colors": "主题颜色",
@@ -7459,76 +7508,78 @@
     }
   },
   "stories": {
-    "sectionTitle": "指南",
+    "sectionTitle": "使用指南",
     "close": "关闭",
+    "step": "第 {{n}} 步，共 {{total}} 步",
+    "tapHint": "点击右侧继续",
+    "ui": {
+      "recommended": "推荐",
+      "alternative": "备用",
+      "get": "获取",
+      "step2": "个人中心 → 连接",
+      "addToIncy": "添加到 INCY",
+      "autoAdded": "订阅会自动添加",
+      "netherlands": "荷兰",
+      "germany": "德国",
+      "finland": "芬兰",
+      "ms": "毫秒",
+      "best": "最快",
+      "connected": "已连接",
+      "settings": "设置",
+      "reset": "重置",
+      "fullReset": "完全重置",
+      "bypass": "绕行",
+      "forMobile": "适用于移动网络",
+      "androidProfiles": "设置 → VPN：删除其他 VPN 配置",
+      "supportName": "Spofy 客服",
+      "userMessage": "VPN 连不上 🙏",
+      "slotsFree": "还有空余名额",
+      "loginTelegram": "通过 Telegram 登录",
+      "qrPath": "首页 → 实用 → 电视二维码",
+      "oldLaptop": "旧笔记本"
+    },
     "series": {
+      "connect": {
+        "coverTitle": "如何连接",
+        "slides": [
+          {
+            "title": "安装 INCY",
+            "subtitle": "在 App Store 或 Google Play 免费下载。备用方案 — Happ。"
+          },
+          {
+            "title": "添加订阅",
+            "subtitle": "点击“连接”，再点“添加到 INCY” — 订阅会自动添加。"
+          },
+          {
+            "title": "开启 VPN",
+            "subtitle": "选择延迟最低的服务器并点击连接。完成！",
+            "ctaLabel": "连接"
+          }
+        ]
+      },
       "appstore-region": {
-        "coverTitle": "更改 App Store 地区",
+        "coverTitle": "App Store 没有 INCY",
         "slides": [
           {
-            "title": "更改 App Store 地区",
-            "subtitle": "几分钟后，你就能访问其他地区应用。"
+            "title": "打开 App Store",
+            "subtitle": "点击右上角的头像。"
           },
           {
-            "title": "点击你的姓名",
-            "subtitle": "在打开的 Account 菜单中，就是第一行。"
+            "title": "点击你的名字",
+            "subtitle": "Account 菜单的第一行。"
           },
           {
-            "title": "更改国家/地区",
-            "subtitle": "打开「国家/地区」，选择「哈萨克斯坦」。"
+            "title": "更改国家",
+            "subtitle": "“国家/地区” → “哈萨克斯坦”。"
           },
           {
-            "title": "同意条款",
-            "subtitle": "付款方式选 None——无需绑定银行卡。"
+            "title": "付款方式 — None",
+            "subtitle": "接受条款并选择 None：无需绑定银行卡。"
           },
           {
-            "title": "完成！",
-            "subtitle": "回到个人中心，选择适合的套餐。",
-            "ctaLabel": "选择套餐"
-          }
-        ]
-      },
-      "connect-ios": {
-        "coverTitle": "在 iPhone 上使用 VPN",
-        "slides": [
-          {
-            "title": "一分钟装好 iPhone VPN",
-            "subtitle": "只需要个人中心——配置会自动生成。"
-          },
-          {
-            "title": "打开「连接」",
-            "subtitle": "个人中心 → 连接 → 选择你的订阅。"
-          },
-          {
-            "title": "安装描述文件",
-            "subtitle": "点击「安装」并确认安装描述文件。"
-          },
-          {
-            "title": "开启 VPN",
-            "subtitle": "在应用中点一下，连接即受保护。",
-            "ctaLabel": "去连接"
-          }
-        ]
-      },
-      "connect-android": {
-        "coverTitle": "在 Android 上使用 VPN",
-        "slides": [
-          {
-            "title": "Android 上的 VPN",
-            "subtitle": "通过应用连接——链接已在个人中心里。"
-          },
-          {
-            "title": "打开「连接」",
-            "subtitle": "个人中心 → 连接 → 选择你的订阅。"
-          },
-          {
-            "title": "安装应用",
-            "subtitle": "点击链接，安装 VPN 应用。"
-          },
-          {
-            "title": "开启 VPN",
-            "subtitle": "点一下连接按钮——完成。",
-            "ctaLabel": "去连接"
+            "title": "填写地址",
+            "subtitle": "Street 和 City — SpofyVPN，Region — 任意，Phone — 7-555-222-47-47。点击 Done 并下载 INCY。",
+            "ctaLabel": "连接"
           }
         ]
       },
@@ -7536,21 +7587,47 @@
         "coverTitle": "VPN 连不上",
         "slides": [
           {
-            "title": "VPN 连不上？",
-            "subtitle": "检查三件事——几乎都能解决。"
+            "title": "更新订阅",
+            "subtitle": "在 INCY 或 Happ 中点击订阅旁的 ⟳ — 服务器列表会刷新。"
           },
           {
-            "title": "检查订阅状态",
-            "subtitle": "首页状态应为「使用中」，否则请先续费。"
+            "title": "重置 Happ",
+            "subtitle": "设置 → 重置 → 完全重置，然后重新添加订阅。或者试试 INCY。"
           },
           {
-            "title": "更新配置",
-            "subtitle": "在应用中更新订阅，重新拉取服务器列表。"
+            "title": "更换服务器",
+            "subtitle": "选择其他国家 — 最好选延迟更低的。"
           },
           {
-            "title": "还没解决？",
-            "subtitle": "联系客服——我们一起排查。",
-            "ctaLabel": "打开客服"
+            "title": "使用移动网络？",
+            "subtitle": "如果 VPN 在移动网络下无法使用 — 请开启“绕行”。"
+          },
+          {
+            "title": "还是不行？",
+            "subtitle": "在聊天中联系我们 — 一起解决。",
+            "ctaLabel": "联系客服"
+          }
+        ]
+      },
+      "add-device": {
+        "coverTitle": "再加一台设备",
+        "slides": [
+          {
+            "title": "再连接一台",
+            "subtitle": "一个订阅可在多台设备上使用。空余名额显示在首页。"
+          },
+          {
+            "title": "打开个人中心",
+            "subtitle": "在新设备上访问 {{site}}，通过 Telegram 登录并点击“连接”。"
+          },
+          {
+            "title": "电视 — 扫码",
+            "subtitle": "在电视上的应用中扫描个人中心里的二维码。"
+          },
+          {
+            "title": "名额不够？",
+            "subtitle": "删除旧设备，或在“订阅”中增加名额。",
+            "ctaLabel": "我的设备"
           }
         ]
       }

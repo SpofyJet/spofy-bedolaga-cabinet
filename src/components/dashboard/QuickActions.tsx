@@ -1,111 +1,121 @@
 import { Link } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import {
-  PiPlugsConnectedFill,
-  PiArrowClockwiseFill,
-  PiPlusCircleFill,
-  PiGiftFill,
+  PiPowerBold,
+  PiArrowsClockwiseBold,
+  PiWalletBold,
+  PiUserPlusBold,
+  PiShoppingBagOpenBold,
+  PiTicketBold,
 } from 'react-icons/pi';
+import type { IconType } from 'react-icons';
 
 import { cn } from '@/lib/utils';
 
 /**
- * Быстрые действия главной: один тап — один ответ на «что сделать дальше».
- * Иерархия через вес и акцент, не через радугу подложек: единственный цветной
- * элемент — первое действие, остальные спокойные hairline-чипы.
+ * Быстрые действия главной — всегда ровно четыре одинаковые плитки, чтобы сетка
+ * не прыгала между состояниями (было 2/3/4 колонки). Первая — главное действие
+ * для текущего состояния и единственная цветная:
+ *   доступ есть   → Подключить · Продлить · Пополнить · Пригласить
+ *   закончилась   → Продлить · Тарифы · Пополнить · Пригласить
+ *   нет подписки  → Тарифы · Пополнить · Промокод · Пригласить
  */
+export type QuickActionsState = 'active' | 'expired' | 'none';
+
 interface QuickActionsProps {
-  /** Есть активный или ограниченный доступ — показываем «Подключить». */
-  canConnect: boolean;
-  /** Есть подписка (любая) — показываем «Продлить». */
-  hasSubscription: boolean;
-  /** Маршрут продления: конкретная подписка или список. */
+  state: QuickActionsState;
   renewTo: string;
-  onConnect?: () => void;
-  connectTo?: string;
+  connectTo: string;
 }
 
-export default function QuickActions({
-  canConnect,
-  hasSubscription,
-  renewTo,
-  onConnect,
-  connectTo = '/connection',
-}: QuickActionsProps) {
+interface Action {
+  key: string;
+  label: string;
+  icon: IconType;
+  to: string;
+}
+
+export default function QuickActions({ state, renewTo, connectTo }: QuickActionsProps) {
   const { t } = useTranslation();
 
-  const actions = [
-    canConnect
-      ? {
-          key: 'connect',
-          label: t('dashboard.quick.connect'),
-          icon: PiPlugsConnectedFill,
-          to: connectTo,
-          onClick: onConnect,
-          primary: true,
-        }
-      : null,
-    hasSubscription
-      ? {
-          key: 'renew',
-          label: t('dashboard.quick.renew'),
-          icon: PiArrowClockwiseFill,
-          to: renewTo,
-          primary: false,
-        }
-      : null,
-    {
-      key: 'topup',
-      label: t('dashboard.quick.topup'),
-      icon: PiPlusCircleFill,
-      to: '/balance/top-up',
-      primary: false,
-    },
-    {
-      key: 'invite',
-      label: t('dashboard.quick.invite'),
-      icon: PiGiftFill,
-      to: '/referral',
-      primary: false,
-    },
-  ].filter((a): a is NonNullable<typeof a> => a !== null);
+  const connect: Action = {
+    key: 'connect',
+    label: t('dashboard.quick.connect'),
+    icon: PiPowerBold,
+    to: connectTo,
+  };
+  const renew: Action = {
+    key: 'renew',
+    label: t('dashboard.quick.renew'),
+    icon: PiArrowsClockwiseBold,
+    to: renewTo,
+  };
+  const plans: Action = {
+    key: 'plans',
+    label: t('dashboard.quick.plans', 'Тарифы'),
+    icon: PiShoppingBagOpenBold,
+    to: '/subscription/purchase',
+  };
+  const topup: Action = {
+    key: 'topup',
+    label: t('dashboard.quick.topup'),
+    icon: PiWalletBold,
+    to: '/balance/top-up',
+  };
+  const promo: Action = {
+    key: 'promo',
+    label: t('dashboard.useful.promocode', 'Промокод'),
+    icon: PiTicketBold,
+    to: '/balance?section=promo',
+  };
+  const invite: Action = {
+    key: 'invite',
+    label: t('dashboard.quick.invite'),
+    icon: PiUserPlusBold,
+    to: '/referral',
+  };
 
-  if (actions.length === 0) return null;
+  const actions =
+    state === 'active'
+      ? [connect, renew, topup, invite]
+      : state === 'expired'
+        ? [renew, plans, topup, invite]
+        : [plans, topup, promo, invite];
 
   return (
-    // Ровная сетка: колонок ровно столько, сколько действий — тайлы всегда
-    // одинаковой ширины и всегда по центру, на телефоне и на ПК.
-    <div
-      className="grid gap-3"
-      style={{ gridTemplateColumns: `repeat(${actions.length}, minmax(0, 1fr))` }}
+    <nav
+      className="grid grid-cols-4 gap-2.5"
+      aria-label={t('dashboard.quick.title', 'Быстрые действия')}
     >
-      {actions.map((action) => (
-        <Link
-          key={action.key}
-          to={action.to}
-          onClick={action.onClick}
-          className="group flex flex-col items-center gap-2 transition-transform duration-200 active:scale-95"
-        >
-          <span
-            className={cn(
-              'flex h-[52px] w-full max-w-[64px] items-center justify-center rounded-2xl border transition-all duration-200',
-              action.primary
-                ? 'border-accent-400/50 bg-gradient-to-b from-accent-500/20 to-accent-500/5 text-accent-300 shadow-[0_0_26px_-8px_rgba(var(--color-accent-500),0.6),inset_0_1px_0_rgba(255,255,255,0.08)] group-hover:from-accent-500/25'
-                : 'border-dark-600/50 bg-dark-800/50 text-dark-300 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] group-hover:border-dark-500/60 group-hover:text-dark-100',
-            )}
+      {actions.map((action, index) => {
+        const primary = index === 0;
+        return (
+          <Link
+            key={action.key}
+            to={action.to}
+            className="group flex flex-col items-center gap-2 transition-transform duration-150 active:scale-95"
           >
-            <action.icon className="h-5 w-5" />
-          </span>
-          <span
-            className={cn(
-              'text-2xs font-semibold transition-colors',
-              action.primary ? 'text-accent-300' : 'text-dark-400 group-hover:text-dark-200',
-            )}
-          >
-            {action.label}
-          </span>
-        </Link>
-      ))}
-    </div>
+            <span
+              className={cn(
+                'flex aspect-[5/4] w-full items-center justify-center rounded-2xl transition-colors duration-200',
+                primary
+                  ? 'bg-accent-500 text-on-accent shadow-[0_8px_24px_-10px_rgba(var(--color-accent-500),0.7)] group-hover:bg-accent-600'
+                  : 'bg-dark-800/70 text-accent-300 ring-1 ring-inset ring-dark-700/60 group-hover:bg-dark-700/70',
+              )}
+            >
+              <action.icon className="h-[22px] w-[22px]" />
+            </span>
+            <span
+              className={cn(
+                'text-xs font-semibold leading-none',
+                primary ? 'text-dark-50' : 'text-dark-300 group-hover:text-dark-100',
+              )}
+            >
+              {action.label}
+            </span>
+          </Link>
+        );
+      })}
+    </nav>
   );
 }

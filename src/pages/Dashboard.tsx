@@ -12,8 +12,7 @@ import { balanceApi } from '../api/balance';
 import { wheelApi } from '../api/wheel';
 import Onboarding, { useOnboarding } from '../components/Onboarding';
 import PromoOffersSection from '../components/PromoOffersSection';
-import NewsSection from '../components/news/NewsSection';
-import SubscriptionCardActive from '../components/dashboard/SubscriptionCardActive';
+import DevicesTrafficCard from '../components/dashboard/DevicesTrafficCard';
 import SubscriptionCardExpired from '../components/dashboard/SubscriptionCardExpired';
 import { hasLegacySubscription } from '../utils/legacySubscription';
 import TrialOfferCard from '../components/dashboard/TrialOfferCard';
@@ -241,13 +240,13 @@ export default function Dashboard() {
 
   // При живом доступе подключение в карточке остаётся главным действием,
   // а покупка любого следующего тарифа — спокойным второстепенным CTA.
-  const hasActiveAccess = (multiSubData?.subscriptions ?? []).some(
-    (s) => s.status === 'active' || s.status === 'limited',
-  );
-  // Идёт пробный период: ему показываем «+2 дня за друга» (бот начисляет обоим, когда друг подключит VPN).
-  const hasActiveTrial =
-    (multiSubData?.subscriptions ?? []).some((s) => s.is_trial && s.status === 'active') ||
-    (subscription?.is_trial === true && subscription.status === 'active');
+  const hasActiveAccess =
+    (multiSubData?.subscriptions ?? []).some(
+      (s) => s.status === 'active' || s.status === 'limited',
+    ) ||
+    (!!subscription &&
+      !subscription.is_expired &&
+      (subscription.status === 'active' || subscription.status === 'limited'));
   // Старая подписка (без тарифа при включённых тарифах) в списке: «купить ещё»
   // не предлагаем, её карточка ведёт на переход на тариф.
   const hasLegacy = hasLegacySubscription(multiSubData?.subscriptions);
@@ -330,7 +329,7 @@ export default function Dashboard() {
   const renewTo = firstSubId != null ? `/subscriptions/${firstSubId}/renew` : '/subscriptions';
 
   return (
-    <div className="space-y-5">
+    <div className="mx-auto w-full max-w-[600px] space-y-5">
       {/* Шапка профиля, как в топовых VPN-клиентах: аватар — тап в профиль,
           рядом имя и ID, справа подарок (по флагу) и статус-пилюля. */}
       <div className="flex items-center gap-3" data-onboarding="welcome">
@@ -388,7 +387,14 @@ export default function Dashboard() {
         <StoryRail />
       </section>
 
-      {/* Информационные карточки вместо hero-шапки: Подписка + Баланс */}
+      {/* Главное действие для состояния + три спокойных */}
+      <QuickActions
+        state={status}
+        renewTo={renewTo}
+        connectTo={firstSubId != null ? `/connection?sub=${firstSubId}` : '/connection'}
+      />
+
+      {/* Подписка + Баланс */}
       <InfoCards
         status={status}
         daysLeft={daysLeft}
@@ -397,14 +403,7 @@ export default function Dashboard() {
         balanceRubles={balanceData?.balance_rubles ?? 0}
         fromFriendsRubles={referralInfo?.available_balance_rubles ?? null}
         loading={subLoading}
-      />
-
-      {/* Быстрые действия: один тап — один ответ на «что дальше» */}
-      <QuickActions
-        canConnect={hasActiveAccess}
-        hasSubscription={!hasNoSubscription}
         renewTo={renewTo}
-        connectTo={firstSubId != null ? `/connection?sub=${firstSubId}` : '/connection'}
       />
 
       {/* Pending Gift Activations */}
@@ -466,16 +465,15 @@ export default function Dashboard() {
       {/* Subscription Status Card — hidden in multi-tariff (managed via /subscriptions) */}
       {!isMultiTariff &&
         (subLoading ? (
-          <SkeletonGroup className="bento-card">
-            <div className="mb-4 flex items-center justify-between">
-              <Skeleton className="h-5 w-20" />
-              <Skeleton className="h-6 w-16 rounded-full" />
+          <SkeletonGroup className="bento-card p-4">
+            <Skeleton className="mb-4 h-5 w-40" />
+            <div className="grid grid-cols-2 gap-3">
+              <Skeleton className="h-16 w-full rounded-xl" />
+              <Skeleton className="h-16 w-full rounded-xl" />
             </div>
-            <Skeleton className="mb-3 h-10 w-32" />
-            <Skeleton className="mb-3 h-4 w-40" />
-            <Skeleton className="h-3 w-full rounded-full" />
-            <div className="mt-5">
-              <Skeleton className="h-12 w-full rounded-xl" />
+            <div className="mt-4 grid grid-cols-2 gap-3">
+              <Skeleton className="h-11 w-full rounded-xl" />
+              <Skeleton className="h-11 w-full rounded-xl" />
             </div>
           </SkeletonGroup>
         ) : subscription?.is_expired ||
@@ -487,12 +485,16 @@ export default function Dashboard() {
             balanceRubles={balanceData?.balance_rubles ?? 0}
           />
         ) : subscription ? (
-          <SubscriptionCardActive
-            subscription={subscription}
-            trafficData={trafficData}
-            refreshTrafficMutation={refreshTrafficMutation}
-            trafficRefreshCooldown={trafficRefreshCooldown}
+          <DevicesTrafficCard
+            subscriptionId={subscription.id}
+            isTrial={subscription.is_trial}
+            deviceLimit={subscription.device_limit}
+            devices={devicesData?.devices ?? []}
             connectedDevices={devicesData?.total ?? 0}
+            trafficLimitGb={subscription.traffic_limit_gb}
+            trafficUsedGb={trafficData?.traffic_used_gb ?? subscription.traffic_used_gb}
+            bypassQuota={subscription.bypass_quota}
+            bypassSuspended={subscription.bypass_suspended}
           />
         ) : null)}
 
@@ -525,27 +527,6 @@ export default function Dashboard() {
       {/* Promo Offers */}
       <PromoOffersSection />
 
-      {/* Пробный период: дни за друга (до кнопки «Купить» они тоже работают) */}
-      {hasActiveTrial && (
-        <Link
-          to="/referral"
-          className="flex items-center gap-4 rounded-2xl border border-accent-500/30 bg-accent-500/5 p-4 transition-colors hover:bg-accent-500/10"
-        >
-          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-accent-500/15 text-accent-400">
-            <GiftIcon className="h-5 w-5" />
-          </div>
-          <div className="min-w-0 flex-1">
-            <div className="font-semibold text-dark-50">
-              {t('dashboard.trialFriendDays.title', { days: 2 })}
-            </div>
-            <div className="text-sm text-dark-300">
-              {t('dashboard.trialFriendDays.text', { days: 2 })}
-            </div>
-          </div>
-          <ChevronRightIcon className="h-5 w-5 shrink-0 text-dark-500" />
-        </Link>
-      )}
-
       {/* Fortune Wheel Banner */}
       {wheelConfig?.is_enabled && (
         <Link to="/wheel" className="bento-card-hover group flex items-center justify-between">
@@ -565,11 +546,8 @@ export default function Dashboard() {
       {/* Напоминания (админка → Напоминания) */}
       <ReminderCards />
 
-      {/* Полезное: инструкции, QR для ТВ, устройства, баланс, поддержка */}
-      <UsefulGrid giftEnabled={Boolean(giftEnabled)} />
-
-      {/* News Section */}
-      <NewsSection />
+      {/* Полезное: то, чего нет в карточках выше */}
+      <UsefulGrid />
 
       {/* Onboarding Tutorial */}
       {showOnboarding && (

@@ -27,9 +27,16 @@ interface MobileBottomNavProps {
   connectTo?: string;
   /** Открыто выезжающее меню шапки: у него есть все те же пункты, панель поверх него лишняя. */
   isMenuOpen?: boolean;
+  /** Точка на пункте — например, непрочитанный ответ поддержки. */
+  badges?: Partial<Record<MobileNavKey, boolean>>;
 }
 
-export function MobileBottomNav({ items, connectTo, isMenuOpen = false }: MobileBottomNavProps) {
+export function MobileBottomNav({
+  items,
+  connectTo,
+  isMenuOpen = false,
+  badges = {},
+}: MobileBottomNavProps) {
   const { t } = useTranslation();
   const location = useLocation();
   const { haptic } = usePlatform();
@@ -86,7 +93,15 @@ export function MobileBottomNav({ items, connectTo, isMenuOpen = false }: Mobile
                   transition={{ type: 'spring', stiffness: 500, damping: 30 }}
                 />
               )}
-              <Icon className="relative z-10 h-5 w-5" />
+              <span className="relative z-10">
+                <Icon className="h-5 w-5" />
+                {badges[item.key] && (
+                  <span
+                    className="absolute -right-1 -top-0.5 h-2.5 w-2.5 rounded-full bg-error-500 ring-2 ring-dark-900"
+                    aria-label={t('support.chat.unread', 'Новый ответ')}
+                  />
+                )}
+              </span>
               <span
                 className={cn(
                   'relative z-10 mt-1 max-w-full truncate text-2xs transition-colors',

@@ -166,9 +166,29 @@ export default function Balance() {
     days_left: number;
   }> | null>(null);
   const [promoSelectCode, setPromoSelectCode] = useState<string | null>(null);
-  const [promoOpen, setPromoOpen] = useState(false);
+  // ?section=promo | ?section=history — ссылки «Промокод» и «История платежей»
+  // с главной и из профиля: нужный блок сразу раскрыт и подкручен в экран.
+  const deepSection = searchParams.get('section');
+  const [promoOpen, setPromoOpen] = useState(deepSection === 'promo');
+  const promoRef = useRef<HTMLDivElement>(null);
+  const historyRef = useRef<HTMLDivElement>(null);
   const [transactionsPage, setTransactionsPage] = useState(1);
-  const [isHistoryOpen, setIsHistoryOpen] = useState(false);
+  const [isHistoryOpen, setIsHistoryOpen] = useState(deepSection === 'history');
+  useEffect(() => {
+    const target =
+      deepSection === 'promo'
+        ? promoRef.current
+        : deepSection === 'history'
+          ? historyRef.current
+          : null;
+    if (!target) return;
+    const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    const timer = setTimeout(
+      () => target.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' }),
+      350,
+    );
+    return () => clearTimeout(timer);
+  }, [deepSection]);
 
   const { data: transactions, isLoading } = useQuery<PaginatedResponse<Transaction>>({
     queryKey: ['transactions', transactionsPage],
@@ -268,7 +288,9 @@ export default function Balance() {
       animate="animate"
     >
       <motion.div variants={staggerItem}>
-        <h1 className="text-xl font-bold tracking-tight text-dark-50 sm:text-2xl">{t('balance.title')}</h1>
+        <h1 className="text-xl font-bold tracking-tight text-dark-50 sm:text-2xl">
+          {t('balance.title')}
+        </h1>
       </motion.div>
 
       {/* Balance Card — flat surface; the giant numeric carries the
@@ -457,7 +479,7 @@ export default function Balance() {
         !!promocodeError ||
         !!promocodeSuccess ||
         !!promoSelectSubs) && (
-        <motion.div variants={staggerItem}>
+        <motion.div variants={staggerItem} ref={promoRef} className="scroll-mt-6">
           <Card>
             <h2 className="mb-4 text-lg font-semibold text-dark-100">
               {t('balance.promocode.title')}
@@ -552,7 +574,7 @@ export default function Balance() {
       )}
 
       {/* Transaction History */}
-      <motion.div variants={staggerItem}>
+      <motion.div variants={staggerItem} ref={historyRef} className="scroll-mt-6">
         <Card className="overflow-hidden">
           <button
             onClick={() => setIsHistoryOpen(!isHistoryOpen)}

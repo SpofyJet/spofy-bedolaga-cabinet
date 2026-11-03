@@ -50,36 +50,24 @@ describe('isOpenTicketConflict', () => {
   });
 });
 
-describe('обработчики ошибок на форме поддержки', () => {
-  // Решение «это 409» вынесено в утилиту и покрыто выше, а вот сама привязка
-  // onError к мутациям — нет: в репозитории нет окружения для рендера
-  // компонентов (vitest настроен на node, без jsdom). Поэтому закрепляем
-  // структурно: пропажа onError — это ровно тот баг, который PR и чинит
-  // (форма молчала, человек жал «Отправить» повторно).
+describe('обработчики ошибок в чате поддержки', () => {
+  // Поведение (409 → сообщение уходит в уже открытое обращение) проверено
+  // рендером в src/pages/supportChat.test.tsx. Здесь — структурная страховка:
+  // отказ бэка не должен уходить в никуда, как было в старой тикет-форме.
   const source = readFileSync(new URL('../pages/Support.tsx', import.meta.url), 'utf8');
+  const block = source.slice(source.indexOf('const sendMutation'), source.indexOf('const canSend'));
 
-  it('createMutation обрабатывает отказ бэка', () => {
-    const block = source.slice(
-      source.indexOf('const createMutation'),
-      source.indexOf('const replyMutation'),
-    );
+  it('отправка обрабатывает отказ бэка', () => {
     expect(block).toContain('onError');
-    expect(block).toContain('isOpenTicketConflict');
+    expect(block).toContain('setError');
   });
 
-  it('replyMutation обрабатывает отказ бэка', () => {
-    const block = source.slice(
-      source.indexOf('const replyMutation'),
-      source.indexOf('const getStatusBadge'),
-    );
-    expect(block).toContain('onError');
+  it('409 не теряет сообщение — оно уходит в открытое обращение', () => {
+    expect(block).toContain('isOpenTicketConflict(err)');
+    expect(block).toContain('ticketsApi.addMessage(open.id');
   });
 
-  it('409 подтягивает список тикетов — открытый мог появиться в другой сессии', () => {
-    const block = source.slice(
-      source.indexOf('isOpenTicketConflict(error)'),
-      source.indexOf('const replyMutation'),
-    );
+  it('после отправки переписка перечитывается', () => {
     expect(block).toContain('invalidateQueries');
   });
 });

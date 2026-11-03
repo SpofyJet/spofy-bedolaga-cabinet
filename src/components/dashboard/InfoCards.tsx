@@ -20,6 +20,8 @@ interface InfoCardsProps {
   /** Заработано с рефералов, ₽ — чип под балансом. 0/null — чип скрыт. */
   fromFriendsRubles?: number | null;
   loading?: boolean;
+  /** Куда ведёт карточка закончившейся подписки (продление конкретной). */
+  renewTo?: string;
 }
 
 function formatUntil(endDate: string, locale: string): string {
@@ -41,15 +43,27 @@ export default function InfoCards({
   balanceRubles,
   fromFriendsRubles,
   loading,
+  renewTo = '/subscriptions',
 }: InfoCardsProps) {
   const { t, i18n } = useTranslation();
 
+  const endingSoon = status === 'active' && daysLeft != null && daysLeft <= 3;
   const subChip =
-    isTrial
-      ? { label: t('dashboard.info.subscription.trial', 'Пробный период'), tone: 'accent' }
-      : status === 'active'
-        ? { label: t('dashboard.info.subscription.active', 'Активна'), tone: 'success' }
-        : { label: t('dashboard.info.subscription.chooseTariff', 'Выберите тариф'), tone: 'warn' };
+    status === 'expired'
+      ? { label: t('dashboard.info.subscription.renew', 'Продлить'), tone: 'danger' }
+      : status === 'none'
+        ? { label: t('dashboard.info.subscription.chooseTariff', 'Выберите тариф'), tone: 'warn' }
+        : isTrial
+          ? {
+              label: t('dashboard.info.subscription.trial', 'Пробный период'),
+              tone: endingSoon ? 'warn' : 'accent',
+            }
+          : endingSoon
+            ? {
+                label: t('dashboard.info.subscription.endingSoon', 'Скоро закончится'),
+                tone: 'warn',
+              }
+            : { label: t('dashboard.info.subscription.active', 'Активна'), tone: 'success' };
 
   const chipClass =
     subChip.tone === 'success'
@@ -66,7 +80,13 @@ export default function InfoCards({
     <div className="grid grid-cols-2 gap-3">
       {/* Подписка */}
       <Link
-        to={hasSubscription ? '/subscription' : '/subscription/purchase'}
+        to={
+          status === 'expired'
+            ? renewTo
+            : hasSubscription
+              ? '/subscription'
+              : '/subscription/purchase'
+        }
         className="bento-card-hover group flex min-h-[118px] flex-col justify-between p-4"
       >
         <span className="text-sm font-medium text-dark-400">
@@ -77,7 +97,7 @@ export default function InfoCards({
         ) : status === 'active' && daysLeft != null ? (
           <span className="mt-1 block">
             <span className="block text-[26px] font-bold leading-none tracking-tight text-dark-50">
-              {t('dashboard.info.subscription.days', '{{days}} дней', { days: daysLeft })}
+              {t('dashboard.info.subscription.daysCount', { count: daysLeft })}
             </span>
             {endDate && (
               <span className="mt-1 block text-xs text-dark-400">
@@ -88,10 +108,17 @@ export default function InfoCards({
             )}
           </span>
         ) : (
-          <span className="mt-1 block whitespace-nowrap text-[22px] font-bold leading-none tracking-tight text-dark-50">
-            {status === 'expired'
-              ? t('dashboard.info.subscription.expired', 'Закончилась')
-              : t('dashboard.info.subscription.none', 'Нет подписки')}
+          <span className="mt-1 block">
+            <span className="block whitespace-nowrap text-[22px] font-bold leading-none tracking-tight text-dark-50">
+              {status === 'expired'
+                ? t('dashboard.info.subscription.expired', 'Закончилась')
+                : t('dashboard.info.subscription.none', 'Нет подписки')}
+            </span>
+            {status === 'expired' && endDate && (
+              <span className="mt-1 block text-xs text-dark-400">
+                {formatUntil(endDate, i18n.language)}
+              </span>
+            )}
           </span>
         )}
         <span
@@ -102,13 +129,17 @@ export default function InfoCards({
       </Link>
 
       {/* Баланс */}
-      <Link to="/balance" className="bento-card-hover group flex min-h-[118px] flex-col justify-between p-4">
+      <Link
+        to="/balance"
+        className="bento-card-hover group flex min-h-[118px] flex-col justify-between p-4"
+      >
         <span className="text-sm font-medium text-dark-400">
           {t('dashboard.info.balance.title', 'Баланс')}
         </span>
         <span className="mt-1 block">
           <span className="block text-[26px] font-bold leading-none tracking-tight text-dark-50">
-            {Math.floor(balanceRubles).toLocaleString('ru-RU')}{'\u00A0'}₽
+            {Math.floor(balanceRubles).toLocaleString('ru-RU')}
+            {'\u00A0'}₽
           </span>
           <span className="mt-1 block text-xs text-dark-400">
             {t('dashboard.info.balance.renewals', 'Оплата продлений')}

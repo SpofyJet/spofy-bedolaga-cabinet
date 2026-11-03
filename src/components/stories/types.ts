@@ -1,15 +1,34 @@
 /**
  * Типы системы сторис.
  *
- * Контент (заголовки, инструкции, CTA) живёт в JSON-локалях под ключом
- * `stories.series.<id>` — см. src/locales/{ru,en,fa,zh}.json. Тест
- * stories.test.ts проверяет парность ключей между всеми четырьмя локалями.
- * Rich-text не используется: только плоские строки, санитизация DOMPurify
- * для них не нужна (React экранирует вывод сам).
+ * Текст (обложка, заголовки, подписи, CTA) — в JSON-локалях под ключом
+ * `stories.series.<id>`; визуал каждого слайда (фото или фрагмент интерфейса)
+ * — в registry.tsx. Тест stories.test.ts сверяет число слайдов в реестре и во
+ * всех четырёх локалях. Только плоские строки: React экранирует вывод сам.
  */
 
 /** Действие финального CTA — маршрут разрешается в registry.tsx. */
-export type StoryCtaKey = 'connect' | 'purchase' | 'renew' | 'topup' | 'support';
+export type StoryCtaKey = 'connect' | 'support' | 'devices';
+
+/**
+ * Фрагмент интерфейса на слайде: не иллюстрация «для красоты», а ровно то,
+ * куда человеку нажать (кнопка, путь в настройках, список серверов…).
+ */
+export type StoryVisualKey =
+  | 'install'
+  | 'add-sub'
+  | 'power'
+  | 'refresh'
+  | 'reset-path'
+  | 'servers'
+  | 'bypass'
+  | 'support'
+  | 'slots'
+  | 'web'
+  | 'tv-qr'
+  | 'limit';
+
+export type StorySlideVisual = { image: string } | { visual: StoryVisualKey };
 
 export interface StorySlideContent {
   title: string;
@@ -18,41 +37,18 @@ export interface StorySlideContent {
   ctaLabel?: string;
 }
 
-export interface StoryPalette {
-  /** Градиент фона слайда (единый внутри серии). */
-  from: string;
-  to: string;
-  /** Акцент подсветки выделенного элемента мокапа. */
-  accent: string;
-}
-
-/** Ключ иллюстрации — параметрический CSS-мокап, см. artwork.tsx. */
-export type StoryArtKey =
-  | 'globe-intro'
-  | 'account'
-  | 'country'
-  | 'payment-none'
-  | 'cta-check'
-  | 'connect'
-  | 'install'
-  | 'status'
-  | 'refresh'
-  | 'chat'
-  | 'shield-intro'
-  | 'alert-intro';
-
 export interface StorySeriesMeta {
   id: string;
   /** Порядок в ленте. */
   order: number;
-  coverImage: string;
-  palette: StoryPalette;
-  /** Иллюстрация для каждого слайда — длина совпадает с числом слайдов. */
-  art: StoryArtKey[];
-  /** CTA финального слайда (маршрут подставляется из STORY_CTA_ROUTES). */
+  /** Акцент серии: кольцо непрочитанной обложки, подсветка фрагментов, прогресс. */
+  accent: string;
+  /** Иконка обложки. */
+  icon: React.ComponentType<{ className?: string }>;
+  /** Визуал по слайдам — длина равна числу слайдов в локалях. */
+  slides: readonly StorySlideVisual[];
+  /** CTA финального слайда. */
   cta?: StoryCtaKey;
-  /** Первая карточка в ленте — акцентная (чуть крупнее градиентная обложка). */
-  featured?: boolean;
 }
 
 export interface StorySeries {
