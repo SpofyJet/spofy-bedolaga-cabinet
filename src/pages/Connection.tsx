@@ -6,14 +6,16 @@ import { openLink as sdkOpenLink } from '@telegram-apps/sdk-react';
 import { subscriptionApi } from '../api/subscription';
 import { useTelegramSDK } from '../hooks/useTelegramSDK';
 import { useHaptic } from '@/platform';
-import { PhoneIcon, SettingsIcon } from '@/components/icons';
+import { PiDeviceMobileDuotone, PiGearSixDuotone, PiQrCodeBold } from 'react-icons/pi';
 import { resolveTemplate, hasTemplates } from '../utils/templateEngine';
 import { openAppScheme } from '../utils/openAppScheme';
 import { isHappCryptolinkMode, resolveConnectionUrlForUi } from '../utils/connectionLink';
 import { useAuthStore } from '../store/auth';
-import type { AppConfig, RemnawavePlatformData } from '../types';
-import InstallationGuide from '../components/connection/InstallationGuide';
+import type { AppConfig } from '../types';
+import ConnectGuide, { connectablePlatforms } from '../components/connection/ConnectGuide';
 import { Skeleton, SkeletonGroup } from '@/components/ui/skeleton';
+import { PageHeader } from '@/components/layout/PageHeader';
+import { Button, EmptyState, Page } from '@/components/spofy/ui';
 
 export default function Connection() {
   const { t, i18n } = useTranslation();
@@ -159,75 +161,110 @@ export default function Connection() {
     ],
   );
 
-  // Check if any platform has configured apps
+  // Есть ли что показать: платформы с Happ/INCY (или с приложениями панели, если их нет).
   const hasApps = useMemo(() => {
     if (!appConfig?.platforms) return false;
-    return Object.values(appConfig.platforms).some(
-      (p: RemnawavePlatformData) => p.apps && p.apps.length > 0,
-    );
-  }, [appConfig?.platforms]);
+    return connectablePlatforms(appConfig).available.length > 0;
+  }, [appConfig]);
+
+  // «Скопировать ссылку» в шаге без своей кнопки копирования: в режиме HAPP
+  // cryptolink — зашифрованная ссылка (обычную там не показываем), иначе обычная.
+  const copyUrl = isHappCryptolinkMode(connectionLink?.connect_mode)
+    ? qrConnectionUrl || null
+    : (appConfig?.subscriptionUrl ?? null);
+  const backTo = subId ? `/subscriptions/${subId}` : '/subscription';
+  const title = t('subscription.connection.title');
 
   if (isLoading || isConnectionLinkLoading) {
     return (
-      <SkeletonGroup className="space-y-6 pb-6">
-        {/* Повторяет шапку InstallationGuide: кнопка «назад», заголовок, выбор платформы. */}
-        <div className="flex items-center gap-3">
-          <Skeleton className="h-10 w-10 shrink-0 rounded-xl" />
-          <Skeleton className="h-6 flex-1" />
-          <Skeleton className="h-10 w-10 shrink-0 rounded-xl" />
-        </div>
-        <Skeleton variant="card" count={3} className="h-24" />
-      </SkeletonGroup>
+      <Page>
+        <PageHeader title={title} backTo={backTo} />
+        <SkeletonGroup className="space-y-6">
+          {/* Повторяет раскладку: плитки устройств, приложения, шаги. */}
+          <div className="grid grid-cols-3 gap-2">
+            <Skeleton count={6} className="h-[76px] rounded-2xl" />
+          </div>
+          <div className="grid grid-cols-2 gap-2">
+            <Skeleton count={2} className="h-16 rounded-2xl" />
+          </div>
+          <Skeleton className="h-64 rounded-3xl" />
+        </SkeletonGroup>
+      </Page>
     );
   }
 
   if (error || !appConfig || !hasApps) {
     return (
-      <div className="flex flex-1 flex-col items-center justify-center p-8 text-center">
-        <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-dark-800">
-          <PhoneIcon className="h-8 w-8 text-dark-400" />
-        </div>
-        <h3 className="mb-2 text-xl font-bold text-dark-100">
-          {t('subscription.connection.notConfigured')}
-        </h3>
-        <p className="mb-6 max-w-sm text-dark-400">
-          {isAdmin
-            ? t('subscription.connection.notConfiguredAdmin')
-            : t('subscription.connection.notConfiguredUser')}
-        </p>
-        {isAdmin && (
-          <Link to="/admin/apps" className="btn-primary inline-flex items-center gap-2 px-6 py-2.5">
-            <SettingsIcon className="h-4 w-4" />
-            {t('subscription.connection.goToApps')}
-          </Link>
-        )}
-      </div>
+      <Page>
+        <PageHeader title={title} backTo={backTo} />
+        <EmptyState
+          icon={<PiDeviceMobileDuotone />}
+          title={t('subscription.connection.notConfigured')}
+          text={
+            isAdmin
+              ? t('subscription.connection.notConfiguredAdmin')
+              : t('subscription.connection.notConfiguredUser')
+          }
+          action={
+            isAdmin ? (
+              <Link
+                to="/admin/apps"
+                className="inline-flex h-12 items-center justify-center gap-2 rounded-2xl bg-accent-500 px-5 text-[15px] font-semibold text-on-accent transition-colors hover:bg-accent-600"
+              >
+                <PiGearSixDuotone className="h-5 w-5" />
+                {t('subscription.connection.goToApps')}
+              </Link>
+            ) : undefined
+          }
+        />
+      </Page>
     );
   }
 
   // No subscription
   if (!appConfig.hasSubscription) {
     return (
-      <div className="flex flex-1 flex-col items-center justify-center p-8 text-center">
-        <h3 className="mb-2 text-xl font-bold text-dark-100">
-          {t('subscription.connection.title')}
-        </h3>
-        <p className="mb-4 text-dark-400">{t('subscription.connection.noSubscription')}</p>
-        <button onClick={handleGoBack} className="btn-primary px-6 py-2">
-          {t('common.close')}
-        </button>
-      </div>
+      <Page>
+        <PageHeader title={title} backTo={backTo} />
+        <EmptyState
+          icon={<PiDeviceMobileDuotone />}
+          title={t('subscription.connection.noSubscription')}
+          action={
+            <Button tone="secondary" onClick={handleGoBack}>
+              {t('common.close')}
+            </Button>
+          }
+        />
+      </Page>
     );
   }
 
   return (
-    <InstallationGuide
-      appConfig={appConfig}
-      onOpenDeepLink={openDeepLink}
-      isTelegramWebApp={isTelegramWebApp}
-      onGoBack={handleGoBack}
-      onOpenQR={handleOpenQR}
-      username={user?.username ?? undefined}
-    />
+    <Page>
+      <PageHeader
+        title={title}
+        backTo={backTo}
+        right={
+          appConfig.subscriptionUrl ? (
+            <button
+              type="button"
+              onClick={handleOpenQR}
+              aria-label={t('subscription.connection.openQr', 'Open QR code')}
+              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-dark-900/70 text-dark-200 ring-1 ring-inset ring-dark-800/80 transition-colors hover:bg-dark-800/70 hover:text-dark-50 active:scale-95"
+            >
+              <PiQrCodeBold className="h-[18px] w-[18px]" />
+            </button>
+          ) : undefined
+        }
+      />
+      <ConnectGuide
+        appConfig={appConfig}
+        onOpenDeepLink={openDeepLink}
+        isTelegramWebApp={isTelegramWebApp}
+        onOpenQR={handleOpenQR}
+        copyUrl={copyUrl}
+        username={user?.username ?? undefined}
+      />
+    </Page>
   );
 }

@@ -3,8 +3,9 @@ import { useLocation, useNavigate } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import { QRCodeSVG } from 'qrcode.react';
 import { useBranding } from '../hooks/useBranding';
-import { AdminBackButton } from '@/components/admin';
-import { CopyIcon, CheckIcon } from '@/components/icons';
+import { PiCaretLeftBold, PiCheckBold, PiCopyBold } from 'react-icons/pi';
+import { Button, Page, Surface } from '@/components/spofy/ui';
+import { useHaptic } from '@/platform';
 import { copyToClipboard } from '@/utils/clipboard';
 
 interface ConnectionQRState {
@@ -24,6 +25,7 @@ export default function ConnectionQR() {
   const navigate = useNavigate();
   const location = useLocation();
   const { appName } = useBranding();
+  const haptic = useHaptic();
   const [copyResult, setCopyResult] = useState<{
     url: string;
     status: 'copying' | 'copied' | 'error';
@@ -57,68 +59,79 @@ export default function ConnectionQR() {
   }
 
   return (
-    <div className="animate-fade-in">
-      <div className="mb-6 flex items-center gap-3">
-        <AdminBackButton to={connectionPath} replace />
-        <h1 className="text-2xl font-bold text-dark-100">{t('subscription.connection.qrTitle')}</h1>
-      </div>
+    <Page>
+      {/* Шапка как PageHeader, но «назад» всегда ведёт на инструкцию: экран QR
+          открывается с replace, и шаг истории назад увёл бы мимо неё. */}
+      <header className="mb-5 flex items-center gap-3">
+        <button
+          type="button"
+          onClick={() => {
+            haptic.impact('light');
+            navigate(connectionPath, { replace: true });
+          }}
+          aria-label={t('common.back', 'Назад')}
+          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-dark-900/70 text-dark-200 ring-1 ring-inset ring-dark-800/80 transition-colors hover:bg-dark-800/70 hover:text-dark-50 active:scale-95"
+        >
+          <PiCaretLeftBold className="h-[18px] w-[18px]" />
+        </button>
+        <div className="min-w-0 flex-1">
+          <h1 className="truncate text-xl font-bold tracking-tight text-dark-50 sm:text-2xl">
+            {t('subscription.connection.qrTitle')}
+          </h1>
+          {appName && <p className="mt-0.5 truncate text-[13px] text-dark-400">{appName}</p>}
+        </div>
+      </header>
 
-      <div className="flex flex-col items-center">
-        <div className="flex w-full max-w-sm flex-col items-center px-6">
-          {appName && (
-            <p className="mb-3 text-sm font-medium uppercase tracking-wider text-dark-400">
-              {appName}
+      <Surface className="flex flex-col items-center gap-4 text-center">
+        <p className="text-[13px] text-dark-400">{t('subscription.connection.qrScanHint')}</p>
+        {/* QR всегда на белом: тёмный код на тёмном фоне камеры читают хуже */}
+        <div className="rounded-2xl bg-white p-4">
+          <QRCodeSVG
+            value={validState.url}
+            size={280}
+            level="M"
+            includeMargin={false}
+            className="h-[240px] w-[240px] sm:h-[300px] sm:w-[300px]"
+          />
+        </div>
+      </Surface>
+
+      {!validState.hideLink && (
+        <Surface className="min-w-0 space-y-3">
+          <p
+            dir="ltr"
+            className="max-h-32 select-text overflow-y-auto break-all whitespace-normal rounded-2xl bg-dark-800/50 px-3 py-2.5 text-left text-xs leading-relaxed text-dark-300"
+          >
+            {validState.url}
+          </p>
+          <Button
+            tone="secondary"
+            className="w-full"
+            disabled={copyStatus === 'copying'}
+            onClick={handleCopy}
+          >
+            {copyStatus === 'copied' ? (
+              <PiCheckBold className="h-4 w-4 text-success-400" />
+            ) : (
+              <PiCopyBold className="h-4 w-4" />
+            )}
+            <span aria-live="polite">
+              {copyStatus === 'copied' ? t('common.copied') : t('subscription.connection.copyLink')}
+            </span>
+          </Button>
+          {copyStatus === 'error' && (
+            <p role="alert" className="text-[13px] text-error-400">
+              {t('subscription.connection.copyFailed')}
             </p>
           )}
-
-          <p className="mb-8 text-center text-sm text-dark-400">
-            {t('subscription.connection.qrScanHint')}
+          <p className="text-xs text-dark-500">
+            {t(
+              'subscription.connection.v10.personalKey',
+              'Это ваш личный ключ — никому его не пересылайте',
+            )}
           </p>
-
-          <div className="rounded-3xl bg-white p-6">
-            <QRCodeSVG
-              value={validState.url}
-              size={280}
-              level="M"
-              includeMargin={false}
-              className="h-[280px] w-[280px] sm:h-[360px] sm:w-[360px]"
-            />
-          </div>
-
-          {!validState.hideLink && (
-            <div className="mt-6 w-full min-w-0 space-y-3">
-              <p
-                dir="ltr"
-                className="select-text break-all whitespace-normal text-left font-mono text-xs text-dark-400"
-              >
-                {validState.url}
-              </p>
-              <button
-                type="button"
-                className="btn-secondary inline-flex w-full items-center justify-center gap-2"
-                disabled={copyStatus === 'copying'}
-                onClick={handleCopy}
-              >
-                {copyStatus === 'copied' ? (
-                  <CheckIcon className="h-4 w-4" />
-                ) : (
-                  <CopyIcon className="h-4 w-4" />
-                )}
-                <span aria-live="polite">
-                  {copyStatus === 'copied'
-                    ? t('common.copied')
-                    : t('subscription.connection.copyLink')}
-                </span>
-              </button>
-              {copyStatus === 'error' && (
-                <p role="alert" className="text-sm text-error-400">
-                  {t('subscription.connection.copyFailed')}
-                </p>
-              )}
-            </div>
-          )}
-        </div>
-      </div>
-    </div>
+        </Surface>
+      )}
+    </Page>
   );
 }

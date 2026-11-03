@@ -272,11 +272,8 @@ export function TariffPickerGrid({
                     )}
                   </div>
 
-                  {action === 'current-daily' ? (
-                    <span className="text-[13px] text-dark-500">
-                      {t('subscription.currentTariff')}
-                    </span>
-                  ) : action === 'switch' ? (
+                  {/* текущий тариф уже помечен чипом «Текущий» — кнопки нет */}
+                  {action === 'current-daily' ? null : action === 'switch' ? (
                     <Button
                       tone="secondary"
                       className="h-11 px-5"

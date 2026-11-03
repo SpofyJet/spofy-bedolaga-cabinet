@@ -5,9 +5,8 @@ import {
   isQrScannerSupported,
   retrieveLaunchParams,
 } from '@telegram-apps/sdk-react';
-import { blockButtonClass } from './blocks/buttonStyles';
 import { loadHtml5Qrcode, type Html5QrcodeInstance } from '@/utils/qrScanner';
-import { CameraIcon } from '@/components/icons';
+import { PiCameraDuotone } from 'react-icons/pi';
 
 const TG_MOBILE_PLATFORMS = new Set(['ios', 'android', 'android_x', 'ios_x']);
 
@@ -24,10 +23,11 @@ const HAPP_TV_API = 'https://check.happ.su/sendtv';
 
 interface Props {
   subscriptionUrl: string;
-  isLight: boolean;
+  /** Не используется: цвета берутся из токенов темы. Оставлено для совместимости. */
+  isLight?: boolean;
 }
 
-export default function TvQuickConnect({ subscriptionUrl, isLight }: Props) {
+export default function TvQuickConnect({ subscriptionUrl }: Props) {
   const { t } = useTranslation();
   const [code, setCode] = useState('');
   const [sending, setSending] = useState(false);
@@ -173,13 +173,11 @@ export default function TvQuickConnect({ subscriptionUrl, isLight }: Props) {
     }
   }, [tgNative, sendToTV, showToast, onScanDecoded, t]);
 
-  const inputClass = isLight
-    ? 'w-full rounded-xl border border-dark-700/60 bg-white px-4 py-3 text-center text-2xl font-bold tracking-[0.3em] uppercase text-dark-100 outline-none focus:border-accent-500 focus:ring-1 focus:ring-accent-500'
-    : 'w-full rounded-xl border border-dark-700 bg-dark-900/50 px-4 py-3 text-center text-2xl font-bold tracking-[0.3em] uppercase text-dark-100 outline-none focus:border-accent-500 focus:ring-1 focus:ring-accent-500';
+  const inputClass =
+    'h-12 w-full rounded-2xl bg-dark-800/60 px-4 text-center text-xl font-bold tracking-[0.2em] text-dark-50 outline-none ring-1 ring-inset ring-dark-700/60 placeholder:text-dark-500 focus:ring-2 focus:ring-accent-500';
 
-  // Full-width buttons in the same outlined-accent language as the config blocks
-  // (so the Happ TV block adapts to the subscription-page styles, not a one-off).
-  const actionBtnClass = `${blockButtonClass('light', isLight)} flex w-full items-center justify-center`;
+  const actionBtnClass =
+    'inline-flex h-11 w-full items-center justify-center gap-2 rounded-2xl bg-dark-800/70 px-4 text-sm font-semibold text-dark-100 ring-1 ring-inset ring-dark-700/60 transition-colors hover:bg-dark-700/70 active:scale-[0.98]';
 
   return (
     <div className="mt-3 space-y-4">
@@ -187,7 +185,7 @@ export default function TvQuickConnect({ subscriptionUrl, isLight }: Props) {
           wrapper; here we only render the interactive controls so the widget
           inherits whatever style the panel config produced. */}
       <div className="space-y-2">
-        <p className="text-sm font-medium text-dark-200">
+        <p className="text-[13px] font-semibold text-dark-300">
           {t('subscription.tvQuickConnect.title')}
         </p>
         <input
@@ -206,7 +204,7 @@ export default function TvQuickConnect({ subscriptionUrl, isLight }: Props) {
           className={`${actionBtnClass} disabled:opacity-50`}
         >
           {sending ? (
-            <div className="h-5 w-5 animate-spin rounded-full border-2 border-accent-500/30 border-t-accent-500" />
+            <span className="h-5 w-5 animate-spin rounded-full border-2 border-accent-500/30 border-t-accent-500" />
           ) : (
             t('subscription.tvQuickConnect.sendBtn')
           )}
@@ -215,17 +213,17 @@ export default function TvQuickConnect({ subscriptionUrl, isLight }: Props) {
 
       {/* QR scan */}
       <div className="space-y-2">
-        <p className="text-sm font-medium text-dark-200">
+        <p className="text-[13px] font-semibold text-dark-300">
           {t('subscription.tvQuickConnect.scanTitle')}
         </p>
         {!scanning && (
           <button onClick={startScan} className={actionBtnClass}>
-            <CameraIcon className="mr-2 h-5 w-5" />
+            <PiCameraDuotone className="h-5 w-5" />
             {t('subscription.tvQuickConnect.scanBtn')}
           </button>
         )}
         <div className={scanning ? 'space-y-2' : 'hidden'}>
-          <div id="tv-qr-reader" className="overflow-hidden rounded-xl" />
+          <div id="tv-qr-reader" className="overflow-hidden rounded-2xl" />
           {scanning && (
             <button onClick={stopScan} className={actionBtnClass}>
               {t('subscription.tvQuickConnect.stopScan')}
@@ -238,7 +236,7 @@ export default function TvQuickConnect({ subscriptionUrl, isLight }: Props) {
       {toast && (
         <div
           // На мобильном стоит над нижней панелью: на bottom-6 тост целиком уходил за неё.
-          className={`fixed bottom-[var(--mobile-nav-clearance)] left-1/2 z-50 -translate-x-1/2 rounded-xl px-5 py-3 text-sm font-medium shadow-lg transition-all lg:bottom-6 ${
+          className={`fixed bottom-[var(--mobile-nav-clearance)] left-1/2 z-50 -translate-x-1/2 rounded-2xl px-5 py-3 text-sm font-medium transition-all lg:bottom-6 ${
             toast.type === 'success' ? 'bg-success-500/90 text-white' : 'bg-error-500/90 text-white'
           }`}
         >

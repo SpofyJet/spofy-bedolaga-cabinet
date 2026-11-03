@@ -1,4 +1,4 @@
-import { isLifetimePeriod } from '@/utils/lifetime';
+import { isLifetimePeriod, isLifetimeSubscription } from '@/utils/lifetime';
 import { isUncertainPurchaseOutcome } from '@/utils/api-error';
 import { useEffect, useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -14,7 +14,7 @@ import { BestValueBadge, bestValueFrame } from '../components/subscription/BestV
 import { PageHeader } from '@/components/layout/PageHeader';
 import { Button, Chip, EmptyState, Page, SectionTitle, Surface } from '@/components/spofy/ui';
 import { cn } from '@/lib/utils';
-import { PiCalendarXDuotone } from 'react-icons/pi';
+import { PiCalendarXDuotone, PiInfinityDuotone } from 'react-icons/pi';
 import { PageSkeleton, Skeleton } from '../components/ui/skeleton';
 import { DailyPausePanel } from '../components/subscription/manage/DailyPausePanel';
 import { canOpenTariffSwitch, needsTariff, tariffSelectionPath } from '../utils/legacySubscription';
@@ -142,6 +142,7 @@ export default function RenewSubscription() {
     `${formatAmount(kopeks / 100).replace(/[.,]00$/, '')} ${currencySymbol}`;
   const selectedOption = options?.find((o) => o.period_days === selectedPeriod) ?? null;
   const isDailyRenewal = Boolean(subscription?.is_daily && !subscription.is_trial);
+  const isLifetime = Boolean(subscription && isLifetimeSubscription(subscription));
 
   return (
     <Page>
@@ -151,8 +152,24 @@ export default function RenewSubscription() {
         backTo={`/subscriptions/${subId}`}
       />
 
-      {/* Daily subscriptions use daily billing, not period renewal. */}
-      {isDailyRenewal && subscription ? (
+      {/* Вечную подписку продлевать не нужно: «Продлить» на неё нигде не ведёт,
+          но по прямой ссылке объясняем это вместо списка периодов. */}
+      {isLifetime ? (
+        <EmptyState
+          icon={<PiInfinityDuotone />}
+          title={t('lite.status.lifetime', 'Подписка работает навсегда')}
+          text={t('subscription.v10.lifetimeNoRenew', 'Продлевать её не нужно.')}
+          action={
+            <Link
+              className="inline-flex h-12 items-center justify-center rounded-2xl bg-dark-800/70 px-5 text-[15px] font-semibold text-dark-100 ring-1 ring-inset ring-dark-700/60 transition-colors hover:bg-dark-700/70"
+              to={`/subscriptions/${subId}`}
+            >
+              {t('subscription.v10.toSubscription', 'К подписке')}
+            </Link>
+          }
+        />
+      ) : /* Daily subscriptions use daily billing, not period renewal. */
+      isDailyRenewal && subscription ? (
         <Surface className="space-y-4">
           <p className="text-[13px] leading-snug text-dark-400">
             {t('subscription.dailyRenewalExplanation')}
@@ -256,7 +273,7 @@ export default function RenewSubscription() {
       )}
 
       {/* Итог: баланс, сумма, кнопка */}
-      {!isDailyRenewal && options && options.length > 0 && (
+      {!isDailyRenewal && !isLifetime && options && options.length > 0 && (
         <Surface className="space-y-4">
           <div className="flex items-center justify-between gap-3 text-[14px]">
             <span className="text-dark-400">{t('common.balance', 'Баланс')}</span>

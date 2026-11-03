@@ -554,7 +554,17 @@
       "qrTitle": "کد QR اشتراک",
       "qrScanHint": "برای اتصال با دوربین اسکن کنید",
       "qrButton": "کد QR",
-      "openQr": "باز کردن کد QR"
+      "openQr": "باز کردن کد QR",
+      "v10": {
+        "personalKey": "این کلید شخصی شماست — آن را برای کسی نفرستید",
+        "tvHint": "روی تلویزیون اسکن کد QR ساده‌تر است",
+        "steps": "مراحل",
+        "copied": "کپی شد",
+        "stepDone": "انجام شد",
+        "notOpened": "برنامه باز نشد؟",
+        "notOpenedText": "مطمئن شوید نصب شده است (مرحله ۱). یا لینک را کپی کنید و در برنامه با «+» وارد کنید.",
+        "copyManual": "گوشی اجازه کپی نداد. لینک را لمس کرده و نگه دارید، سپس «کپی» را انتخاب کنید."
+      }
     },
     "additionalOptions": {
       "title": "گزینه‌های اضافی",
@@ -868,6 +878,21 @@
     "lifetime": {
       "forever": "برای همیشه",
       "term": "مدت"
+    },
+    "v10": {
+      "autopayHint": "از موجودی، {{count}} روز پیش از پایان",
+      "pickPackage": "یک بسته انتخاب کنید",
+      "ended": "به پایان رسید",
+      "until": "تا {{date}}",
+      "devicesOf": "{{used}} از {{max}}",
+      "connected": "متصل",
+      "trafficUnlimited": "بدون محدودیت حجم",
+      "linkTitle": "لینک اشتراک",
+      "paymentTitle": "پرداخت خودکار",
+      "addonsTitle": "خرید بیشتر",
+      "currentTariffLabel": "فعلی",
+      "lifetimeNoRenew": "نیازی به تمدید آن نیست.",
+      "toSubscription": "به اشتراک"
     }
   },
   "balance": {
