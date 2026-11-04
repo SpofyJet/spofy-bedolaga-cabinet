@@ -7,11 +7,19 @@ import { formatTraffic } from '@/utils/formatTraffic';
 import type { Device } from '@/types';
 import { platformIcon } from '@/components/subscription/platformIcon';
 
-const PANEL = 'flex min-w-0 flex-col rounded-2xl bg-dark-800/45 p-2.5 min-[360px]:p-3';
+const PANEL =
+  'flex min-w-0 flex-col rounded-2xl bg-dark-800/45 p-2.5 ring-1 ring-inset min-[360px]:p-3';
+/**
+ * Обводка панели — её состояние, а не украшение: зелёная — всё в порядке,
+ * жёлтая — места или трафик на исходе. Синий остаётся за кнопками.
+ */
+const PANEL_OK = 'ring-success-500/30';
+const PANEL_WARN = 'ring-warning-500/40';
+const TILE_OK = 'bg-success-500/15 text-success-400';
 const TILE =
   'flex aspect-square w-full max-w-[32px] items-center justify-center rounded-lg min-[360px]:rounded-[10px]';
 const VALUE =
-  'mt-3 truncate text-base font-bold leading-tight tracking-tight text-dark-50 min-[360px]:text-lg';
+  'mt-3 truncate text-base font-bold leading-tight tracking-tight text-dark-50 min-[400px]:text-lg';
 const CAPTION = 'mt-0.5 text-xs leading-snug';
 const ACTION =
   'mt-3 flex h-10 items-center justify-center gap-1.5 whitespace-nowrap rounded-xl px-2 text-[13px] font-semibold transition-colors min-[360px]:text-sm';
@@ -63,10 +71,11 @@ interface DevicesTrafficCardProps {
   bypassSuspended?: boolean;
 }
 
-/** «12,4 из 50 ГБ»: единицу у первого числа опускаем, только если она та же. */
+/** «12,4 из 50 ГБ»: единицу у первого числа опускаем, только если она та же; «50,0» → «50». */
 export function trafficPair(usedGb: number, limitGb: number): { used: string; limit: string } {
-  const used = formatTraffic(usedGb);
-  const limit = formatTraffic(limitGb);
+  const whole = (s: string) => s.replace(/[.,]0(?=\u00A0)/, '');
+  const used = whole(formatTraffic(usedGb));
+  const limit = whole(formatTraffic(limitGb));
   const unitOf = (s: string) => s.split('\u00A0').pop() ?? '';
   const usedUnit = unitOf(used);
   return {
@@ -127,7 +136,7 @@ export default function DevicesTrafficCard({
           колонкам не нужно ничего делить. */}
       <div className="grid grid-cols-2 gap-2">
         {/* Устройства: верх панели ведёт в «Мои устройства», кнопка — докупить место */}
-        <div className={PANEL}>
+        <div className={cn(PANEL, atLimit ? PANEL_WARN : PANEL_OK)}>
           <Link
             to="/subscription?section=devices"
             aria-label={t('dashboard.devicesTraffic.manage', 'Мои устройства')}
@@ -146,16 +155,13 @@ export default function DevicesTrafficCard({
                   );
                 if (tile.kind === 'more')
                   return (
-                    <span
-                      key={i}
-                      className={cn(TILE, 'bg-accent-500/15 text-[11px] font-bold text-accent-300')}
-                    >
+                    <span key={i} className={cn(TILE, TILE_OK, 'text-[11px] font-bold')}>
                       +{tile.count}
                     </span>
                   );
                 const Icon = platformIcon(tile.device?.platform);
                 return (
-                  <span key={i} className={cn(TILE, 'bg-accent-500/15 text-accent-300')}>
+                  <span key={i} className={cn(TILE, TILE_OK)}>
                     <Icon className="h-4 w-4" />
                   </span>
                 );
@@ -179,10 +185,10 @@ export default function DevicesTrafficCard({
           <Link to={devicesTo} className={cn(ACTION, atLimit ? ACTION_HOT : ACTION_QUIET)}>
             <PiPlusBold className="hidden h-3.5 w-3.5 shrink-0 min-[360px]:block" />
             {/* на узком экране — короткая подпись: панель и так про устройства */}
-            <span className="hidden min-[360px]:inline">
+            <span className="hidden min-[400px]:inline">
               {t('dashboard.devicesTraffic.addSlot', 'Добавить место')}
             </span>
-            <span className="min-[360px]:hidden">
+            <span className="min-[400px]:hidden">
               {t('dashboard.devicesTraffic.addSlotShort', 'Ещё место')}
             </span>
           </Link>
@@ -190,12 +196,18 @@ export default function DevicesTrafficCard({
 
         {/* Трафик. Безлимиту докупать нечего — кнопки нет, и панель не тянет
             пустоту снизу: значок и подпись стоят по центру. */}
-        <div className={cn(PANEL, unlimitedTraffic && 'items-center justify-center text-center')}>
+        <div
+          className={cn(
+            PANEL,
+            trafficLow ? PANEL_WARN : PANEL_OK,
+            unlimitedTraffic && 'items-center justify-center text-center',
+          )}
+        >
           <div className="flex h-8 items-center">
             {unlimitedTraffic ? (
               // та же плитка, что у устройств: ряды двух панелей на одной высоте
               <span
-                className="flex h-8 w-8 items-center justify-center rounded-[10px] bg-accent-500/15 text-lg font-bold leading-none text-accent-300"
+                className="flex h-8 w-8 items-center justify-center rounded-[10px] bg-success-500/15 text-lg font-bold leading-none text-success-400"
                 aria-hidden
               >
                 ∞
@@ -211,7 +223,7 @@ export default function DevicesTrafficCard({
                 <div
                   className={cn(
                     'h-full rounded-full transition-[width] duration-700',
-                    trafficLow ? 'bg-warning-400' : 'bg-accent-400',
+                    trafficLow ? 'bg-warning-400' : 'bg-success-400',
                   )}
                   style={{ width: `${Math.max(percent, percent > 0 ? 4 : 0)}%` }}
                 />

@@ -69,7 +69,8 @@
 
 .story-cover-title {
   display: -webkit-box;
-  max-width: 100%;
+  max-width: calc(100% + 6px);
+  margin: 0 -3px;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
@@ -77,8 +78,18 @@
   font-weight: 600;
   line-height: 1.25;
   letter-spacing: -0.01em;
-  overflow-wrap: break-word;
-  hyphens: auto;
+  /* Слово целиком: «подклю-…» под кружком читалось как обрывок. Длинное слово
+     может чуть выйти за колонку — у кружков вокруг есть поля. */
+  overflow-wrap: normal;
+  word-break: keep-all;
+  hyphens: manual;
+}
+
+@media (max-width: 379px) {
+  .story-cover-title {
+    font-size: 10.5px;
+    letter-spacing: -0.02em;
+  }
 }
 
 .story-cover-read .story-cover-title {

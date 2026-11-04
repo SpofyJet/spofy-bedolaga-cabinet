@@ -87,6 +87,12 @@ describe('deviceTiles', () => {
 });
 
 describe('trafficPair', () => {
+  it('целое число гигабайт — без «,0»', () => {
+    const pair = trafficPair(12.4, 50);
+    expect(pair.limit).not.toMatch(/[.,]0\u00A0/);
+    expect(pair.used).toMatch(/12[.,]4/);
+  });
+
   it('убирает единицу у первого числа, только если она совпадает', () => {
     const same = trafficPair(12.4, 50);
     expect(same.limit.endsWith(same.used)).toBe(false);
