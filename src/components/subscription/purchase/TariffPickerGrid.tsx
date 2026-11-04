@@ -11,9 +11,8 @@ import {
   PiChartPieSliceDuotone,
   PiCheckCircleDuotone,
   PiDevicesDuotone,
-  PiGiftDuotone,
 } from 'react-icons/pi';
-import { Button, Chip, EmptyState, RowIcon } from '@/components/spofy/ui';
+import { Button, Chip, EmptyState } from '@/components/spofy/ui';
 import { cn } from '@/lib/utils';
 import type { Tariff, Subscription, PurchaseOptions } from '../../../types';
 import { tariffAction, type TariffActionKind } from './tariffAction';
@@ -29,8 +28,8 @@ const TARIFF_ACTION_LABEL: Record<Exclude<TariffActionKind, 'current-daily' | 's
 // TariffPickerGrid
 //
 // The tariff selection surface inside SubscriptionPurchase. Renders:
-//   - an optional promo-group banner when any tariff carries a
-//     promo_group_name
+//   (no promo-group banner: Spofy owner removed «Ваша группа: …»; group
+//    discounts already show up in the prices)
 //   - the "all tariffs purchased" empty state (multi-tariff mode)
 //   - the grid itself (1 col mobile, 2 cols sm+) with promo prices,
 //     per-tariff CTAs differentiated by user state (extend / switch /
@@ -76,25 +75,6 @@ export function TariffPickerGrid({
 
   return (
     <>
-      {/* Promo group discount banner */}
-      {tariffs.some((tariff) => tariff.promo_group_name) && (
-        <div className="mb-4 flex items-center gap-3 rounded-3xl bg-success-500/5 p-4 ring-1 ring-inset ring-success-500/20">
-          <RowIcon tone="success">
-            <PiGiftDuotone />
-          </RowIcon>
-          <div className="min-w-0">
-            <div className="text-[15px] font-semibold text-success-400">
-              {t('subscription.promoGroup.yourGroup', {
-                name: tariffs.find((tariff) => tariff.promo_group_name)?.promo_group_name,
-              })}
-            </div>
-            <div className="text-[13px] text-dark-400">
-              {t('subscription.promoGroup.personalDiscountsApplied')}
-            </div>
-          </div>
-        </div>
-      )}
-
       {/* Tariff Grid */}
       {isMultiTariff &&
         purchaseOptions &&
