@@ -737,7 +737,7 @@
     "allTariffsPurchased": "所有套餐已购买",
     "autopay": "自动续订",
     "sbpRecurring": {
-      "title": "SBP 自动扣款",
+      "title": "SBP 自动续费",
       "connect": "开通",
       "confirmInBank": "请在银行应用中确认",
       "cancel": "关闭",

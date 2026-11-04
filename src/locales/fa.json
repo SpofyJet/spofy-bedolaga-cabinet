@@ -743,7 +743,7 @@
     "allTariffsPurchased": "همه تعرفه‌ها قبلاً خریداری شده‌اند",
     "autopay": "تمدید خودکار",
     "sbpRecurring": {
-      "title": "پرداخت خودکار SBP",
+      "title": "تمدید خودکار SBP",
       "connect": "اتصال",
       "confirmInBank": "در اپلیکیشن بانک تأیید کنید",
       "cancel": "غیرفعال کردن",
@@ -890,7 +890,7 @@
       "connected": "متصل",
       "trafficUnlimited": "بدون محدودیت حجم",
       "linkTitle": "لینک اشتراک",
-      "paymentTitle": "پرداخت خودکار",
+      "paymentTitle": "تمدید خودکار",
       "addonsTitle": "خرید بیشتر",
       "currentTariffLabel": "فعلی",
       "lifetimeNoRenew": "نیازی به تمدید آن نیست.",

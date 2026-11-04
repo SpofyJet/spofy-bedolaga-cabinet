@@ -847,7 +847,7 @@
     "allTariffsPurchased": "All tariffs already purchased",
     "autopay": "Auto-renew",
     "sbpRecurring": {
-      "title": "SBP Auto-payment",
+      "title": "SBP auto-renewal",
       "connect": "Connect",
       "confirmInBank": "Confirm in your banking app",
       "cancel": "Disable",
@@ -974,7 +974,7 @@
       "connected": "connected",
       "trafficUnlimited": "No data cap",
       "linkTitle": "Subscription link",
-      "paymentTitle": "Auto-payment",
+      "paymentTitle": "Auto-renewal",
       "addonsTitle": "Add more",
       "currentTariffLabel": "Current",
       "lifetimeNoRenew": "No need to renew it.",

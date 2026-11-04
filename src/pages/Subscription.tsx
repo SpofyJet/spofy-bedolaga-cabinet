@@ -603,7 +603,7 @@ export default function Subscription() {
 
       {/* ─── Автоплатёж ─── */}
       {!subscription.is_trial && (
-        <OptionalGroup title={t('subscription.v10.paymentTitle', 'Автоплатёж')}>
+        <OptionalGroup title={t('subscription.v10.paymentTitle', 'Автопродление')}>
           {showsAutopayToggle(subscription) && (
             <AutopayToggle subscription={subscription} subscriptionId={subscriptionId} />
           )}
