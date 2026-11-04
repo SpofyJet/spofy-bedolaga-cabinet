@@ -465,8 +465,8 @@ const CONFIRM_BUTTON = `${COMPACT_BUTTON} bg-accent-500/15 text-accent-300 hover
 const CANCEL_BUTTON = `${COMPACT_BUTTON} px-2.5 text-error-400 hover:bg-error-500/10`;
 
 /**
- * Строка одного способа автопродления: иконка, название и состояние слева,
- * компактное действие справа — как у соседнего тоггла «Автопродление» с баланса.
+ * Строка одного способа автопродления: иконка, название и состояние, рядом —
+ * компактное вторичное действие (на телефоне — под текстом, с sm — справа).
  */
 function ProviderRow({
   title,
@@ -488,52 +488,65 @@ function ProviderRow({
   const line = 'mt-0.5 text-[13px] leading-snug text-dark-400';
 
   return (
-    <div className="flex min-h-[60px] items-center gap-3 px-4 py-2.5">
-      <RowIcon>
-        <PiCreditCardDuotone />
-      </RowIcon>
-      <div className="min-w-0 flex-1">
-        <div className="text-[15px] font-semibold text-dark-100">{title}</div>
-        {state === 'off' && <div className={line}>{hint}</div>}
-        {state === 'pending' && <div className={line}>{pendingText}</div>}
-        {state === 'active' && (
-          <>
-            {amountLine && <div className={line}>{amountLine}</div>}
-            {nextChargeLine && <div className={line}>{nextChargeLine}</div>}
-          </>
-        )}
-        {state === 'past_due' && (
-          <div className="mt-0.5 text-[13px] font-medium text-warning-400">{pastDueText}</div>
-        )}
-        {state === 'pending' && confirm && (
-          <button
-            type="button"
-            onClick={() => onOpenUrl(confirm.url)}
-            className={`${CONFIRM_BUTTON} mt-2`}
-          >
-            {confirm.label}
-          </button>
-        )}
-      </div>
-      <div className="shrink-0">
-        {state === 'off' ? (
-          <button
-            type="button"
-            onClick={onConnect}
-            disabled={connecting}
-            className={CONNECT_BUTTON}
-          >
-            {connecting ? (
-              <span className="block h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
-            ) : (
-              connectLabel
+    <div className="px-4 py-3">
+      {/* На телефоне действие — компактной кнопкой под текстом (справа текст
+          сжимался в столбик), с sm — справа в строке. */}
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-3">
+        <div className="flex min-w-0 items-center gap-3">
+          <RowIcon>
+            <PiCreditCardDuotone />
+          </RowIcon>
+          <div className="min-w-0">
+            <div className="text-[15px] font-semibold text-dark-100">{title}</div>
+            {state === 'off' && <div className={line}>{hint}</div>}
+            {state === 'pending' && <div className={line}>{pendingText}</div>}
+            {state === 'active' && (
+              <>
+                {amountLine && <div className={line}>{amountLine}</div>}
+                {nextChargeLine && <div className={line}>{nextChargeLine}</div>}
+              </>
             )}
-          </button>
-        ) : (
-          <button type="button" onClick={onCancel} disabled={cancelling} className={CANCEL_BUTTON}>
-            {cancelLabel}
-          </button>
-        )}
+            {state === 'past_due' && (
+              <div className="mt-0.5 text-[13px] font-medium text-warning-400">{pastDueText}</div>
+            )}
+          </div>
+        </div>
+        <div className="flex shrink-0 flex-wrap items-center gap-2 pl-[52px] sm:pl-0">
+          {state === 'off' ? (
+            <button
+              type="button"
+              onClick={onConnect}
+              disabled={connecting}
+              className={CONNECT_BUTTON}
+            >
+              {connecting ? (
+                <span className="block h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
+              ) : (
+                connectLabel
+              )}
+            </button>
+          ) : (
+            <>
+              {state === 'pending' && confirm && (
+                <button
+                  type="button"
+                  onClick={() => onOpenUrl(confirm.url)}
+                  className={CONFIRM_BUTTON}
+                >
+                  {confirm.label}
+                </button>
+              )}
+              <button
+                type="button"
+                onClick={onCancel}
+                disabled={cancelling}
+                className={CANCEL_BUTTON}
+              >
+                {cancelLabel}
+              </button>
+            </>
+          )}
+        </div>
       </div>
     </div>
   );
