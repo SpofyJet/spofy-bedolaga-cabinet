@@ -320,7 +320,8 @@
       "topup": "Top up",
       "invite": "Invite",
       "title": "Quick actions",
-      "plans": "Plans"
+      "plans": "Plans",
+      "buy": "Buy"
     },
     "storiesTitle": "Guides",
     "title": "Dashboard",
@@ -977,7 +978,9 @@
       "currentTariffLabel": "Current",
       "lifetimeNoRenew": "No need to renew it.",
       "toSubscription": "To subscription"
-    }
+    },
+    "noRenewalChooseTariff": "Choose a plan to keep your access.",
+    "chooseTariff": "Choose a plan"
   },
   "balance": {
     "paymentEmail": "Payment email",

@@ -21,7 +21,7 @@ vi.mock('react-i18next', () => ({
   initReactI18next: { type: '3rdParty', init: () => {} },
 }));
 
-const state = { requiresTariff: true };
+const state = { requiresTariff: true, isTrial: false };
 
 vi.mock('@/api/subscription', () => ({
   subscriptionApi: {
@@ -32,6 +32,7 @@ vi.mock('@/api/subscription', () => ({
           id: 42,
           tariff_name: null,
           requires_tariff_selection: state.requiresTariff,
+          is_trial: state.isTrial,
         },
       }),
     getPurchaseOptions: () => Promise.resolve({ balance_kopeks: 0 }),
@@ -59,6 +60,7 @@ if (!window.matchMedia) {
 afterEach(() => {
   cleanup();
   state.requiresTariff = true;
+  state.isTrial = false;
 });
 
 async function renderRenew() {
@@ -91,6 +93,18 @@ describe('продление старой подписки', () => {
     await renderRenew();
 
     expect(await screen.findByText('subscription.noRenewalOptions')).toBeTruthy();
-    expect(screen.queryByText('витрина тарифов')).toBeNull();
+    // …и не оставляет в тупике: рядом кнопка на витрину тарифов.
+    expect(
+      screen.getByRole('link', { name: 'subscription.chooseTariff' }).getAttribute('href'),
+    ).toBe('/subscription/purchase');
+  });
+
+  it('истёкший пробный период уводит на витрину тарифов, а не на пустой экран', async () => {
+    state.requiresTariff = false;
+    state.isTrial = true;
+    await renderRenew();
+
+    expect(await screen.findByText('витрина тарифов')).toBeTruthy();
+    expect(screen.queryByText('subscription.noRenewalOptions')).toBeNull();
   });
 });

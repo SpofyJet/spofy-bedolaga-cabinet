@@ -49,7 +49,11 @@ export default function RenewSubscription() {
   const { data: options, isLoading } = useQuery({
     queryKey: ['renewal-options', subId],
     queryFn: () => subscriptionApi.getRenewalOptions(subId),
-    enabled: !!subId && !!subscription && !(subscription.is_daily && !subscription.is_trial),
+    enabled:
+      !!subId &&
+      !!subscription &&
+      !subscription.is_trial &&
+      !(subscription.is_daily && !subscription.is_trial),
     staleTime: 0,
     refetchOnMount: 'always',
   });
@@ -124,6 +128,12 @@ export default function RenewSubscription() {
     return <Navigate to={tariffSelectionPath(subId)} replace />;
   }
 
+  // Пробный период не продлевается: бот не отдаёт для него периодов, и страница
+  // показывала тупик «Нет вариантов продления». Ведём на витрину тарифов.
+  if (subscription?.is_trial) {
+    return <Navigate to="/subscription/purchase" replace />;
+  }
+
   if (isLoading || isSubscriptionLoading) {
     return (
       <PageSkeleton leading={1} titleWidth="w-56" className="space-y-5">
@@ -194,6 +204,15 @@ export default function RenewSubscription() {
         <EmptyState
           icon={<PiCalendarXDuotone />}
           title={t('subscription.noRenewalOptions', 'Нет доступных вариантов продления')}
+          text={t('subscription.noRenewalChooseTariff', 'Выберите тариф — доступ продолжится.')}
+          action={
+            <Link
+              className="inline-flex h-12 items-center justify-center rounded-2xl bg-cta-500 px-5 text-[15px] font-semibold text-on-cta transition-colors hover:bg-cta-600"
+              to="/subscription/purchase"
+            >
+              {t('subscription.chooseTariff', 'Выбрать тариф')}
+            </Link>
+          }
         />
       ) : (
         <section>

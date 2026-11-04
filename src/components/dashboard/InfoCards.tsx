@@ -138,7 +138,9 @@ export default function InfoCards({
           </span>
         ) : (
           <span className="mt-1 block">
-            <span className="block whitespace-nowrap text-[22px] font-bold leading-none tracking-tight text-dark-50">
+            {/* «Закончилась» в узком окне Telegram (~340 px) не влезала в карточку
+                при 22 px: размер теперь следует за шириной экрана. */}
+            <span className="block whitespace-nowrap text-[length:clamp(16px,5vw,22px)] font-bold leading-none tracking-tight text-dark-50">
               {status === 'expired'
                 ? t('dashboard.info.subscription.expired', 'Закончилась')
                 : t('dashboard.info.subscription.none', 'Нет подписки')}

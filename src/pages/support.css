@@ -507,7 +507,7 @@
     color 0.15s ease;
 }
 
-.support-tab[aria-selected='true'] {
+.support-tab[aria-selected="true"] {
   color: rgb(var(--color-dark-50));
   background: rgba(var(--color-dark-800), 0.9);
 }

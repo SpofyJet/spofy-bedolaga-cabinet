@@ -31,6 +31,8 @@ export type QuickActionsState = 'active' | 'expired' | 'none';
 interface QuickActionsProps {
   state: QuickActionsState;
   renewTo: string;
+  /** Пробный период: продлевать нечего — главная кнопка «Купить» ведёт на тарифы. */
+  trial?: boolean;
   connectTo: string;
   /** Вечная подписка (ULTIMA): «Продлить» не предлагаем. */
   lifetime?: boolean;
@@ -51,6 +53,7 @@ export default function QuickActions({
   renewTo,
   connectTo,
   lifetime = false,
+  trial = false,
   loading = false,
 }: QuickActionsProps) {
   const { t } = useTranslation();
@@ -76,8 +79,8 @@ export default function QuickActions({
   };
   const renew: Action = {
     key: 'renew',
-    label: t('dashboard.quick.renew'),
-    icon: PiArrowsClockwiseBold,
+    label: trial ? t('dashboard.quick.buy', 'Купить') : t('dashboard.quick.renew'),
+    icon: trial ? PiShoppingBagOpenBold : PiArrowsClockwiseBold,
     to: renewTo,
   };
   const plans: Action = {
@@ -109,7 +112,7 @@ export default function QuickActions({
     state === 'active'
       ? [connect, lifetime ? plans : renew, topup, invite]
       : state === 'expired'
-        ? [renew, plans, topup, invite]
+        ? [renew, trial ? promo : plans, topup, invite]
         : [topup, promo, invite];
   const hasPrimary = state !== 'none';
 

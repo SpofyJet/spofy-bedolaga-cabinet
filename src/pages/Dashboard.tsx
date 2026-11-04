@@ -337,7 +337,14 @@ export default function Dashboard() {
     const ms = new Date(focusSub.end_date).getTime() - Date.now();
     return Math.max(0, Math.ceil(ms / 86_400_000));
   }, [focusSub?.end_date]);
-  const renewTo = firstSubId != null ? `/subscriptions/${firstSubId}/renew` : '/subscriptions';
+  // Пробный период не продлевается (у бота для него нет периодов продления): «Продлить»
+  // вёл на пустой экран «Нет вариантов продления» вместо витрины тарифов.
+  const focusTrial = Boolean(focusSub?.is_trial);
+  const renewTo = focusTrial
+    ? '/subscription/purchase'
+    : firstSubId != null
+      ? `/subscriptions/${firstSubId}/renew`
+      : '/subscriptions';
 
   return (
     <div className="mx-auto w-full max-w-[600px] space-y-5">
@@ -390,6 +397,7 @@ export default function Dashboard() {
         renewTo={renewTo}
         connectTo={firstSubId != null ? `/connection?sub=${firstSubId}` : '/connection'}
         lifetime={focusLifetime}
+        trial={focusTrial}
       />
 
       {/* Подписка + Баланс */}
@@ -571,7 +579,10 @@ export default function Dashboard() {
       <ReminderCards />
 
       {/* Полезное: то, чего нет в карточках выше */}
-      <UsefulGrid hidePromocode={statusReady && status === 'none'} />
+      {/* Промокод уже в быстрых действиях — без подписки и у истёкшего пробного периода. */}
+      <UsefulGrid
+        hidePromocode={statusReady && (status === 'none' || (status === 'expired' && focusTrial))}
+      />
 
       {/* Onboarding Tutorial */}
       {showOnboarding && (

@@ -37,6 +37,27 @@ describe('главная без подписки: одна главная кно
     expect(document.querySelectorAll('.bg-cta-500')).toHaveLength(1);
   });
 
+  it('истёкший пробный период: «Купить» ведёт на тарифы, без второй плитки «Тарифы»', () => {
+    render(
+      <MemoryRouter>
+        <QuickActions
+          state="expired"
+          trial
+          renewTo="/subscription/purchase"
+          connectTo="/connection"
+        />
+      </MemoryRouter>,
+    );
+    expect(hrefs()).toEqual([
+      '/subscription/purchase',
+      '/balance?section=promo',
+      '/balance/top-up',
+      '/referral',
+    ]);
+    expect(screen.getByText('dashboard.quick.buy')).toBeTruthy();
+    expect(screen.queryByText('dashboard.quick.plans')).toBeNull();
+  });
+
   it('«Полезное» не повторяет промокод, когда он уже в быстрых действиях', () => {
     render(
       <MemoryRouter>

@@ -300,7 +300,8 @@
       "topup": "充值",
       "invite": "邀请",
       "title": "快捷操作",
-      "plans": "套餐"
+      "plans": "套餐",
+      "buy": "购买"
     },
     "storiesTitle": "指南",
     "title": "个人中心",
@@ -887,7 +888,9 @@
       "currentTariffLabel": "当前",
       "lifetimeNoRenew": "无需续费。",
       "toSubscription": "返回订阅"
-    }
+    },
+    "noRenewalChooseTariff": "选择套餐以继续使用。",
+    "chooseTariff": "选择套餐"
   },
   "balance": {
     "paymentEmail": "支付邮箱",

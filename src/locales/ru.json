@@ -328,7 +328,8 @@
       "topup": "Пополнить",
       "invite": "Пригласить",
       "title": "Быстрые действия",
-      "plans": "Тарифы"
+      "plans": "Тарифы",
+      "buy": "Купить"
     },
     "storiesTitle": "Полезное",
     "title": "Личный кабинет",
@@ -1007,7 +1008,9 @@
       "currentTariffLabel": "Сейчас",
       "lifetimeNoRenew": "Продлевать её не нужно.",
       "toSubscription": "К подписке"
-    }
+    },
+    "noRenewalChooseTariff": "Выберите тариф — доступ продолжится.",
+    "chooseTariff": "Выбрать тариф"
   },
   "balance": {
     "paymentEmail": "Email для оплаты",
@@ -8872,7 +8875,7 @@
         ]
       },
       "appstore-region": {
-        "coverTitle": "Нет INCY в App\u00a0Store",
+        "coverTitle": "Нет INCY в App Store",
         "slides": [
           {
             "title": "Откройте App Store",

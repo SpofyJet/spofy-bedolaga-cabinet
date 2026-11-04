@@ -305,7 +305,8 @@
       "topup": "شارژ",
       "invite": "دعوت",
       "title": "دسترسی سریع",
-      "plans": "تعرفه‌ها"
+      "plans": "تعرفه‌ها",
+      "buy": "خرید"
     },
     "storiesTitle": "راهنما",
     "title": "داشبورد",
@@ -893,7 +894,9 @@
       "currentTariffLabel": "فعلی",
       "lifetimeNoRenew": "نیازی به تمدید آن نیست.",
       "toSubscription": "به اشتراک"
-    }
+    },
+    "noRenewalChooseTariff": "یک طرح انتخاب کنید تا دسترسی ادامه یابد.",
+    "chooseTariff": "انتخاب طرح"
   },
   "balance": {
     "paymentEmail": "ایمیل پرداخت",
