@@ -1582,6 +1582,45 @@
       "spin_one": "Spin for free",
       "spin_other": "Spin for free · {{count}}",
       "historyLabel": "free"
+    },
+    "showcaseTitle": "What you can win",
+    "rarity": {
+      "common": "Common",
+      "rare": "Rare",
+      "jackpot": "Jackpot"
+    },
+    "prize": {
+      "short": {
+        "days_one": "+{{count}} day",
+        "days_other": "+{{count}} days",
+        "device_one": "+{{count}} device",
+        "device_other": "+{{count}} devices",
+        "extraSpin": "Extra spin",
+        "gb": "GB"
+      },
+      "desc": {
+        "days": "added to your subscription",
+        "discount_one": "on a purchase or renewal, {{count}} day",
+        "discount_other": "on a purchase or renewal, {{count}} days",
+        "balance": "to your balance",
+        "device_one": "one more device for {{count}} day",
+        "device_other": "one more device for {{count}} days",
+        "extraSpin": "spin again for free",
+        "traffic": "extra traffic",
+        "promocode": "bonus promo code",
+        "nothing": "no prize this time"
+      },
+      "title": {
+        "discount": "{{value}}% off",
+        "device_one": "+{{count}} device",
+        "device_other": "+{{count}} devices"
+      }
+    },
+    "result": {
+      "useDiscount": "Buy with discount",
+      "toSubscription": "Go to subscription",
+      "toBalance": "Go to balance",
+      "spinAgain": "Spin again"
     }
   },
   "admin": {

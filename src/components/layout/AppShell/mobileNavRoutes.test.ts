@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { isMobileNavScreen, mobileNavItems } from './mobileNavRoutes';
 
 /**
- * Нижняя панель на телефоне — минимальная: Главная · [Колесо|Друзья] ·
+ * Нижняя панель на телефоне — минимальная: Главная · [Друзья|Колесо] ·
  * Поддержка · Профиль (подключение — плиткой на главной). Панель живёт только
  * на экранах своих кнопок: на вложенных страницах и в админке её нет, и место
  * под неё не резервируется. Остальные разделы (баланс, подписка, инфо, подарки,
@@ -13,10 +13,15 @@ describe('mobileNavItems', () => {
     expect(mobileNavItems({}).map((item) => item.path)).toEqual(['/', '/support', '/profile']);
   });
 
-  it('колесо занимает слот перед поддержкой и вытесняет рефералку', () => {
+  it('слот у рефералки, даже когда колесо включено', () => {
     const paths = mobileNavItems({ wheelEnabled: true, referralEnabled: true }).map(
       (item) => item.path,
     );
+    expect(paths).toEqual(['/', '/referral', '/support', '/profile']);
+  });
+
+  it('колесо получает слот, только когда рефералка выключена', () => {
+    const paths = mobileNavItems({ wheelEnabled: true }).map((item) => item.path);
     expect(paths).toEqual(['/', '/wheel', '/support', '/profile']);
   });
 

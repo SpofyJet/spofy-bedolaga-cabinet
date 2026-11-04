@@ -1448,6 +1448,40 @@
       "topUp": "شارژ حساب",
       "spin_other": "چرخش رایگان · {{count}}",
       "historyLabel": "رایگان"
+    },
+    "showcaseTitle": "چه چیزی می‌توانید ببرید",
+    "rarity": {
+      "common": "رایج",
+      "rare": "نادر",
+      "jackpot": "جایزه بزرگ"
+    },
+    "prize": {
+      "short": {
+        "days_other": "+{{count}} روز",
+        "device_other": "+{{count}} دستگاه",
+        "extraSpin": "چرخش اضافه",
+        "gb": "گیگ"
+      },
+      "desc": {
+        "days": "به اشتراک اضافه می‌شود",
+        "discount_other": "برای خرید یا تمدید، {{count}} روز",
+        "balance": "به اعتبار",
+        "device_other": "یک دستگاه بیشتر برای {{count}} روز",
+        "extraSpin": "دوباره رایگان بچرخانید",
+        "traffic": "ترافیک اضافه",
+        "promocode": "کد تخفیف",
+        "nothing": "این بار بدون جایزه"
+      },
+      "title": {
+        "discount": "{{value}}٪ تخفیف",
+        "device_other": "+{{count}} دستگاه"
+      }
+    },
+    "result": {
+      "useDiscount": "خرید با تخفیف",
+      "toSubscription": "رفتن به اشتراک",
+      "toBalance": "رفتن به اعتبار",
+      "spinAgain": "دوباره بچرخان"
     }
   },
   "admin": {

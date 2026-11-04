@@ -5,9 +5,9 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router';
 import { wheelApi, type WheelPrize, type SpinResult, type SpinHistoryItem } from '../api/wheel';
-import { formatPrice } from '@/utils/format';
 import FortuneWheel from '../components/wheel/FortuneWheel';
 import WheelLegend from '../components/wheel/WheelLegend';
+import { formatPriceShort, prizeAction, prizeShortLabel } from '../components/wheel/prizeText';
 import { usePlatform, useHaptic } from '@/platform';
 import { useNotify } from '@/platform/hooks/useNotify';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -574,7 +574,7 @@ export default function Wheel() {
                   : t('wheel.free.none')}
               </div>
               <div className="text-[13px] text-dark-400">
-                {t('wheel.free.rule', { amount: formatPrice(threshold) })}
+                {t('wheel.free.rule', { amount: formatPriceShort(threshold) })}
               </div>
             </div>
           </div>
@@ -595,7 +595,7 @@ export default function Wheel() {
             </div>
             <p className="mt-1.5 text-[13px] text-dark-400">
               {t('wheel.free.left', {
-                amount: formatPrice(config.topup_left_kopeks ?? threshold),
+                amount: formatPriceShort(config.topup_left_kopeks ?? threshold),
               })}
             </p>
           </div>
@@ -614,6 +614,8 @@ export default function Wheel() {
           isSpinning={isSpinning}
           targetRotation={targetRotation}
           onSpinComplete={handleSpinComplete}
+          labels={config.prizes.map((prize) => prizeShortLabel(prize, t))}
+          hubLabel={freeSpins > 0 ? String(freeSpins) : undefined}
         />
 
         {/* Payment type selector */}
@@ -755,59 +757,124 @@ export default function Wheel() {
           </p>
         )}
 
-        {/* Inline Result Card */}
-        {spinResult && !isSpinning && (
-          <div
-            className={cn(
-              'animate-fade-in rounded-2xl p-4 ring-1 ring-inset',
-              spinResult.success
-                ? 'bg-accent-500/10 ring-accent-500/25'
-                : 'bg-error-500/10 ring-error-500/25',
-            )}
-          >
-            <div className="flex items-center gap-3">
-              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-dark-800/70 text-xl">
-                {spinResult.success ? spinResult.emoji || '🎉' : '😔'}
-              </span>
-              <div className="min-w-0 flex-1">
-                <div className="text-[15px] font-semibold text-dark-100">
-                  {spinResult.success && spinResult.prize_display_name
-                    ? spinResult.prize_display_name
-                    : spinResult.success
-                      ? spinResult.prize_type === 'nothing'
-                        ? t('wheel.noLuck')
-                        : t('wheel.congratulations')
-                      : t('wheel.oops')}
-                </div>
-                <div className="text-[13px] text-dark-400">{spinResult.message}</div>
-              </div>
-              <button
-                type="button"
-                onClick={closeResultModal}
-                aria-label={t('common.close')}
-                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-dark-400 transition-colors hover:bg-dark-800/60 hover:text-dark-200"
+        {/* Результат спина */}
+        {spinResult &&
+          !isSpinning &&
+          (() => {
+            const wonPrize =
+              spinResult.prize_id != null
+                ? config.prizes.find((prize) => prize.id === spinResult.prize_id)
+                : undefined;
+            const isWin =
+              spinResult.success && !!spinResult.prize_type && spinResult.prize_type !== 'nothing';
+            const color = wonPrize?.color || spinResult.color || '#2563EB';
+            const action = isWin ? prizeAction(spinResult.prize_type) : null;
+            const title = wonPrize
+              ? prizeShortLabel(wonPrize, t)
+              : spinResult.success && spinResult.prize_display_name
+                ? spinResult.prize_display_name
+                : spinResult.success
+                  ? spinResult.prize_type === 'nothing'
+                    ? t('wheel.noLuck')
+                    : t('wheel.congratulations')
+                  : t('wheel.oops');
+            return (
+              <div
+                className={cn(
+                  'relative animate-fade-in overflow-hidden rounded-3xl p-5 text-center ring-1 ring-inset',
+                  spinResult.success
+                    ? 'bg-dark-900/80 ring-dark-700/70'
+                    : 'bg-error-500/10 ring-error-500/25',
+                )}
               >
-                <PiXBold className="h-4 w-4" />
-              </button>
-            </div>
-
-            {/* Promocode if won */}
-            {spinResult.promocode && (
-              <div className="mt-3 rounded-2xl bg-dark-900/60 p-3 text-center">
-                <p className="mb-1 text-[13px] text-dark-400">{t('wheel.yourPromoCode')}</p>
-                <p className="select-all text-lg font-bold tracking-wide text-accent-400">
-                  {spinResult.promocode}
-                </p>
+                {isWin && (
+                  <span
+                    aria-hidden
+                    className="pointer-events-none absolute inset-x-0 -top-16 mx-auto h-40 w-40 rounded-full opacity-40 blur-3xl"
+                    style={{ backgroundColor: color }}
+                  />
+                )}
+                <button
+                  type="button"
+                  onClick={closeResultModal}
+                  aria-label={t('common.close')}
+                  className="absolute right-2 top-2 flex h-9 w-9 items-center justify-center rounded-xl text-dark-400 transition-colors hover:bg-dark-800/60 hover:text-dark-200"
+                >
+                  <PiXBold className="h-4 w-4" />
+                </button>
+                <div className="relative">
+                  <span
+                    className="mx-auto flex h-16 w-16 items-center justify-center rounded-3xl text-[34px]"
+                    style={
+                      isWin
+                        ? { backgroundColor: `${color}33`, boxShadow: `inset 0 0 0 1px ${color}66` }
+                        : undefined
+                    }
+                  >
+                    {spinResult.success ? spinResult.emoji || '🎉' : '😔'}
+                  </span>
+                  {isWin && (
+                    <p className="mt-3 text-[13px] font-semibold uppercase tracking-wide text-dark-400">
+                      {t('wheel.youWon')}
+                    </p>
+                  )}
+                  <p className="mt-1 text-[24px] font-bold leading-tight text-dark-50">{title}</p>
+                  {spinResult.message && (
+                    <p className="mx-auto mt-1.5 max-w-[300px] text-[14px] text-dark-300">
+                      {spinResult.message}
+                    </p>
+                  )}
+                  {spinResult.promocode && (
+                    <div className="mt-3 rounded-2xl bg-dark-800/70 p-3">
+                      <p className="mb-1 text-[13px] text-dark-400">{t('wheel.yourPromoCode')}</p>
+                      <p className="select-all text-lg font-bold tracking-wide text-accent-400">
+                        {spinResult.promocode}
+                      </p>
+                    </div>
+                  )}
+                  {(action || freeSpins > 0) && (
+                    <div
+                      className={cn(
+                        'mt-4 grid gap-2',
+                        action && freeSpins > 0 ? 'grid-cols-2' : 'grid-cols-1',
+                      )}
+                    >
+                      {action && (
+                        <Button
+                          tone={freeSpins > 0 ? 'secondary' : undefined}
+                          onClick={() => navigate(action.path)}
+                        >
+                          {t(action.labelKey)}
+                        </Button>
+                      )}
+                      {freeSpins > 0 && (
+                        <Button
+                          onClick={() => {
+                            closeResultModal();
+                            handleUnifiedSpin();
+                          }}
+                        >
+                          {t('wheel.result.spinAgain')}
+                        </Button>
+                      )}
+                    </div>
+                  )}
+                </div>
               </div>
-            )}
-          </div>
-        )}
+            );
+          })()}
       </Surface>
 
       {/* Prize Legend */}
       <section>
-        <SectionTitle>{t('wheel.prizes') || 'Призы'}</SectionTitle>
-        <WheelLegend prizes={config.prizes} />
+        <SectionTitle>{t('wheel.showcaseTitle')}</SectionTitle>
+        <WheelLegend
+          prizes={config.prizes}
+          context={{
+            discountDays: config.discount_days,
+            deviceBonusDays: config.device_bonus_days,
+          }}
+        />
       </section>
 
       {/* History Section - collapsible */}

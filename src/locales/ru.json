@@ -1618,6 +1618,50 @@
       "spin_few": "Крутить бесплатно · {{count}}",
       "spin_many": "Крутить бесплатно · {{count}}",
       "historyLabel": "бесплатно"
+    },
+    "showcaseTitle": "Что может выпасть",
+    "rarity": {
+      "common": "Часто",
+      "rare": "Редко",
+      "jackpot": "Джекпот"
+    },
+    "prize": {
+      "short": {
+        "days_one": "+{{count}} день",
+        "days_few": "+{{count}} дня",
+        "days_many": "+{{count}} дней",
+        "device_one": "+{{count}} устр.",
+        "device_few": "+{{count}} устр.",
+        "device_many": "+{{count}} устр.",
+        "extraSpin": "Ещё спин",
+        "gb": "ГБ"
+      },
+      "desc": {
+        "days": "к подписке",
+        "discount_one": "на покупку или продление, {{count}} день",
+        "discount_few": "на покупку или продление, {{count}} дня",
+        "discount_many": "на покупку или продление, {{count}} дней",
+        "balance": "на баланс",
+        "device_one": "ещё одно устройство на {{count}} день",
+        "device_few": "ещё одно устройство на {{count}} дня",
+        "device_many": "ещё одно устройство на {{count}} дней",
+        "extraSpin": "крутите ещё раз бесплатно",
+        "traffic": "дополнительный трафик",
+        "promocode": "промокод на бонус",
+        "nothing": "в этот раз без приза"
+      },
+      "title": {
+        "discount": "Скидка {{value}}%",
+        "device_one": "+{{count}} устройство",
+        "device_few": "+{{count}} устройства",
+        "device_many": "+{{count}} устройств"
+      }
+    },
+    "result": {
+      "useDiscount": "Оформить со скидкой",
+      "toSubscription": "К подписке",
+      "toBalance": "К балансу",
+      "spinAgain": "Крутить ещё"
     }
   },
   "admin": {

@@ -1441,6 +1441,40 @@
       "topUp": "充值余额",
       "spin_other": "免费转动 · {{count}}",
       "historyLabel": "免费"
+    },
+    "showcaseTitle": "可能获得的奖品",
+    "rarity": {
+      "common": "常见",
+      "rare": "稀有",
+      "jackpot": "大奖"
+    },
+    "prize": {
+      "short": {
+        "days_other": "+{{count}} 天",
+        "device_other": "+{{count}} 台设备",
+        "extraSpin": "再转一次",
+        "gb": "GB"
+      },
+      "desc": {
+        "days": "加到订阅",
+        "discount_other": "用于购买或续订，{{count}} 天内有效",
+        "balance": "充入余额",
+        "device_other": "额外设备，{{count}} 天",
+        "extraSpin": "免费再转一次",
+        "traffic": "额外流量",
+        "promocode": "奖励优惠码",
+        "nothing": "这次没有奖品"
+      },
+      "title": {
+        "discount": "{{value}}% 折扣",
+        "device_other": "+{{count}} 台设备"
+      }
+    },
+    "result": {
+      "useDiscount": "使用折扣购买",
+      "toSubscription": "前往订阅",
+      "toBalance": "前往余额",
+      "spinAgain": "再转一次"
     }
   },
   "admin": {

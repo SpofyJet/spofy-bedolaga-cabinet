@@ -6,6 +6,9 @@ export interface WheelPrize {
   emoji: string;
   color: string;
   prize_type: string;
+  prize_value?: number;
+  /** common | rare | jackpot — подпись в витрине призов; null — шанс не показываем */
+  rarity?: 'common' | 'rare' | 'jackpot' | null;
 }
 
 export type WheelPaymentType = 'telegram_stars' | 'subscription_days' | 'topup_credit';
@@ -41,6 +44,8 @@ export interface WheelConfig {
   topup_spin_threshold_kopeks?: number;
   topup_progress_kopeks?: number;
   topup_left_kopeks?: number;
+  discount_days?: number;
+  device_bonus_days?: number;
 }
 
 export interface SpinAvailability {

@@ -10,7 +10,6 @@ import { authApi } from '../api/auth';
 import { referralApi } from '../api/referral';
 import { balanceApi } from '../api/balance';
 import { wheelApi } from '../api/wheel';
-import { formatPrice } from '@/utils/format';
 import Onboarding, { useOnboarding } from '../components/Onboarding';
 import PromoOffersSection from '../components/PromoOffersSection';
 import DevicesTrafficCard from '../components/dashboard/DevicesTrafficCard';
@@ -35,6 +34,7 @@ import { WheelIcon } from '@/components/layout/AppShell/icons';
 import { Skeleton, SkeletonGroup } from '@/components/ui/skeleton';
 import { safeLocal } from '../utils/safeStorage';
 import { getApiErrorMessage } from '../utils/api-error';
+import { formatPriceShort } from '../components/wheel/prizeText';
 
 export default function Dashboard() {
   const { t } = useTranslation();
@@ -547,7 +547,7 @@ export default function Dashboard() {
               <p className="text-[13px] text-dark-400">
                 {wheelConfig.topup_spins_enabled && wheelConfig.topup_spin_threshold_kopeks
                   ? t('wheel.banner.topupDescription', {
-                      amount: formatPrice(wheelConfig.topup_spin_threshold_kopeks),
+                      amount: formatPriceShort(wheelConfig.topup_spin_threshold_kopeks),
                     })
                   : t('wheel.banner.description')}
               </p>
