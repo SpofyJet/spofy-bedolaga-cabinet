@@ -131,8 +131,15 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
           <p className="mb-6 text-sm text-dark-400">
             {isChunk
               ? tr('errors.boundary.updated', 'Приложение обновилось. Перезагружаем…')
-              : this.state.error?.message || tr('errors.boundary.pageText', 'Произошла ошибка')}
+              : tr('errors.boundary.pageText', 'Произошла ошибка')}
           </p>
+          {/* Сырой текст исключения («Cannot read properties of undefined…»)
+              человеку ничего не говорит — он только для разработки. */}
+          {import.meta.env.DEV && !isChunk && this.state.error?.message && (
+            <pre className="-mt-3 mb-6 whitespace-pre-wrap break-words rounded-xl bg-dark-800/60 p-3 text-left font-mono text-xs text-dark-400">
+              {this.state.error.message}
+            </pre>
+          )}
           <button type="button" onClick={() => window.location.reload()} className={PRIMARY_BUTTON}>
             {isChunk
               ? tr('errors.boundary.reload', 'Перезагрузить')
