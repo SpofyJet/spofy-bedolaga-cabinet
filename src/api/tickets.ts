@@ -56,6 +56,12 @@ export const ticketsApi = {
     return response.data;
   },
 
+  // Close the user's own ticket
+  closeTicket: async (ticketId: number): Promise<TicketDetail> => {
+    const response = await apiClient.post<TicketDetail>(`/cabinet/tickets/${ticketId}/close`);
+    return response.data;
+  },
+
   // Add message to ticket with optional media
   addMessage: async (
     ticketId: number,

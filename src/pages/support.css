@@ -521,3 +521,35 @@
   color: rgb(var(--color-dark-300));
   background: rgba(var(--color-dark-700), 0.7);
 }
+
+.support-head-close {
+  flex-shrink: 0;
+  height: 36px;
+  padding: 0 14px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+  color: rgb(var(--color-dark-200));
+  background: rgba(var(--color-dark-800), 0.7);
+  transition:
+    color 0.15s ease,
+    background 0.15s ease;
+}
+
+.support-head-close:hover {
+  color: rgb(var(--color-dark-50));
+}
+
+.support-head-close:active {
+  transform: scale(0.97);
+}
+
+.support-head-close:disabled {
+  opacity: 0.6;
+}
+
+.support-head-close-confirm {
+  color: rgb(var(--color-error-400));
+  background: rgba(var(--color-error-500), 0.12);
+}

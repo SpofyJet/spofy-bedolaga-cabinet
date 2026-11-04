@@ -231,6 +231,37 @@ export default function SupportChat() {
     },
   });
 
+  // Закрыть обращение: первое нажатие спрашивает «Точно?», второе закрывает.
+  const [confirmClose, setConfirmClose] = useState(false);
+  useEffect(() => {
+    if (!confirmClose) return;
+    const timer = setTimeout(() => setConfirmClose(false), 4000);
+    return () => clearTimeout(timer);
+  }, [confirmClose]);
+  const closeMutation = useMutation({
+    mutationFn: (id: number) => ticketsApi.closeTicket(id),
+    onSuccess: (closed) => {
+      haptic.notification('success');
+      queryClient.setQueryData(detailKey(closed.id), closed);
+    },
+    onError: (err: unknown) => {
+      setError(getApiErrorMessage(err, t('support.chat.closeFailed')));
+    },
+    onSettled: async () => {
+      setConfirmClose(false);
+      await queryClient.invalidateQueries({ queryKey: SUPPORT_CHAT_KEY });
+    },
+  });
+  const onCloseTicket = () => {
+    if (!ticket || closeMutation.isPending) return;
+    if (!confirmClose) {
+      haptic.impact('light');
+      setConfirmClose(true);
+      return;
+    }
+    closeMutation.mutate(ticket.id);
+  };
+
   const canSend =
     (draft.trim().length > 0 || ready.length > 0) && !uploading && !sendMutation.isPending;
 
@@ -330,6 +361,16 @@ export default function SupportChat() {
           {statusText}
         </span>
       </span>
+      {!isNew && ticket && ticketIsOpen && (
+        <button
+          type="button"
+          onClick={onCloseTicket}
+          disabled={closeMutation.isPending}
+          className={`support-head-close${confirmClose ? ' support-head-close-confirm' : ''}`}
+        >
+          {confirmClose ? t('support.chat.closeConfirm') : t('support.chat.close')}
+        </button>
+      )}
     </header>
   );
 
