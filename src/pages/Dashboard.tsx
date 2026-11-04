@@ -512,11 +512,18 @@ export default function Dashboard() {
               balanceRubles={balanceData?.balance_rubles || 0}
               activateTrialMutation={activateTrialMutation}
               trialError={trialError}
+              showBalance={false}
             />
           )}
+          {/* Одна главная кнопка на экране: при доступном пробном периоде это
+              «Активировать», покупка рядом — вторичная. */}
           <Link
             to="/subscription/purchase"
-            className="flex w-full items-center justify-center gap-2 rounded-2xl bg-accent-500 p-3.5 text-sm font-semibold text-on-accent transition-colors hover:bg-accent-600"
+            className={
+              trialInfo?.is_available
+                ? 'flex w-full items-center justify-center gap-2 rounded-2xl bg-dark-800/70 p-3.5 text-sm font-semibold text-dark-100 ring-1 ring-inset ring-dark-700/60 transition-colors hover:bg-dark-700/70'
+                : 'flex w-full items-center justify-center gap-2 rounded-2xl bg-accent-500 p-3.5 text-sm font-semibold text-on-accent transition-colors hover:bg-accent-600'
+            }
           >
             <span className="text-base">+</span>{' '}
             {t('subscriptions.browsePlans', 'Посмотреть тарифы и купить подписку')}
@@ -564,7 +571,7 @@ export default function Dashboard() {
       <ReminderCards />
 
       {/* Полезное: то, чего нет в карточках выше */}
-      <UsefulGrid />
+      <UsefulGrid hidePromocode={statusReady && status === 'none'} />
 
       {/* Onboarding Tutorial */}
       {showOnboarding && (

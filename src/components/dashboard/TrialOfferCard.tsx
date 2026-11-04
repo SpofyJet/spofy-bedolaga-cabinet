@@ -13,6 +13,9 @@ interface TrialOfferCardProps {
   balanceRubles: number;
   activateTrialMutation: UseMutationResult<unknown, unknown, void, unknown>;
   trialError: string | null;
+  /** Строка «Текущий баланс» у платного пробного периода. На главной баланс
+   *  уже в карточке рядом — там её не дублируем. */
+  showBalance?: boolean;
 }
 
 export default function TrialOfferCard({
@@ -21,6 +24,7 @@ export default function TrialOfferCard({
   balanceRubles,
   activateTrialMutation,
   trialError,
+  showBalance = true,
 }: TrialOfferCardProps) {
   const { t } = useTranslation();
   const { formatAmount, currencySymbol } = useCurrency();
@@ -178,7 +182,12 @@ export default function TrialOfferCard({
       </div>
 
       {/* Balance info for paid trial */}
-      {!isFree && trialInfo.price_rubles > 0 && (
+      {!isFree && trialInfo.price_rubles > 0 && !showBalance && !canAfford && (
+        <p className="mb-4 text-xs text-warning-400">
+          {t('subscription.trial.insufficientBalance')}
+        </p>
+      )}
+      {!isFree && trialInfo.price_rubles > 0 && showBalance && (
         <div
           className="mb-4 space-y-2 rounded-xl p-4 text-left"
           style={{ background: g.innerBg, border: `1px solid ${g.innerBorder}` }}
@@ -242,15 +251,15 @@ export default function TrialOfferCard({
         <button
           onClick={() => !activateTrialMutation.isPending && activateTrialMutation.mutate()}
           disabled={activateTrialMutation.isPending}
-          className="w-full rounded-[14px] py-4 text-base font-bold tracking-tight transition-all duration-300 disabled:opacity-50"
+          // Единственная главная кнопка экрана без подписки: в тёмной теме —
+          // сплошной акцент, как у остальных основных кнопок (была
+          // полупрозрачной и проигрывала кнопке покупки под ней).
+          className={`w-full rounded-[14px] py-4 text-base font-bold tracking-tight transition-all duration-300 disabled:opacity-50${
+            isDark ? ' bg-accent-500 text-on-accent hover:bg-accent-600' : ''
+          }`}
           style={
             isDark
-              ? {
-                  background:
-                    'linear-gradient(135deg, rgba(var(--color-accent-400), 0.12) 0%, rgba(var(--color-accent-400), 0.04) 100%)',
-                  border: '1px solid rgba(var(--color-accent-400), 0.25)',
-                  color: '#fff',
-                }
+              ? undefined
               : {
                   background:
                     'linear-gradient(135deg, rgb(var(--color-accent-400)), rgb(var(--color-accent-500)))',

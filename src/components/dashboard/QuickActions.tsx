@@ -14,13 +14,15 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/lib/utils';
 
 /**
- * Быстрые действия главной — всегда ровно четыре одинаковые плитки, чтобы сетка
- * не прыгала между состояниями (было 2/3/4 колонки). Первая — главное действие
- * для текущего состояния и единственная цветная:
+ * Быстрые действия главной. При подписке — четыре плитки, первая — главное
+ * действие для состояния и единственная цветная:
  *   доступ есть   → Подключить · Продлить · Пополнить · Пригласить
  *   закончилась   → Продлить · Тарифы · Пополнить · Пригласить
- *   нет подписки  → Тарифы · Пополнить · Промокод · Пригласить
  * Вечной подписке продлевать нечего: вместо «Продлить» — «Тарифы».
+ *
+ * Нет подписки → Пополнить · Промокод · Пригласить, все спокойные. Главное
+ * действие этого экрана — пробный период или кнопка покупки под карточками;
+ * цветная плитка «Тарифы» вела туда же и делала из экрана три кнопки «купить».
  */
 export type QuickActionsState = 'active' | 'expired' | 'none';
 
@@ -106,15 +108,16 @@ export default function QuickActions({
       ? [connect, lifetime ? plans : renew, topup, invite]
       : state === 'expired'
         ? [renew, plans, topup, invite]
-        : [plans, topup, promo, invite];
+        : [topup, promo, invite];
+  const hasPrimary = state !== 'none';
 
   return (
     <nav
-      className="grid grid-cols-4 gap-2.5"
+      className={cn('grid gap-2.5', actions.length === 3 ? 'grid-cols-3' : 'grid-cols-4')}
       aria-label={t('dashboard.quick.title', 'Быстрые действия')}
     >
       {actions.map((action, index) => {
-        const primary = index === 0;
+        const primary = hasPrimary && index === 0;
         return (
           <Link
             key={action.key}
