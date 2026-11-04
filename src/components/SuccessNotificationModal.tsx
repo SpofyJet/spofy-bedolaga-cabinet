@@ -23,6 +23,7 @@ import {
   TrafficIcon,
   WalletIcon,
 } from '@/components/icons';
+import { plainTariffName } from '@/utils/plainTariffName';
 
 export default function SuccessNotificationModal() {
   const { t } = useTranslation();
@@ -276,7 +277,7 @@ export default function SuccessNotificationModal() {
                 {t('successNotification.tariff', 'Tariff')}
               </span>
               <span className="min-w-0 truncate font-semibold text-dark-100">
-                {data.tariffName}
+                {plainTariffName(data.tariffName)}
               </span>
             </div>
           )}

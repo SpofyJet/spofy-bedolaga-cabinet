@@ -1,4 +1,5 @@
 import { Link } from 'react-router';
+import { cn } from '@/lib/utils';
 import { useTranslation } from 'react-i18next';
 import {
   PiBookOpenTextDuotone,
@@ -12,10 +13,15 @@ import {
  * трафика уже живут в «Подписке/Балансе» и «Устройствах и трафике»,
  * поддержка — в нижней панели: повторять их здесь — шум.
  */
-export default function UsefulGrid() {
+interface UsefulGridProps {
+  /** Промокод уже стоит в быстрых действиях (экран без подписки) — второй раз не показываем. */
+  hidePromocode?: boolean;
+}
+
+export default function UsefulGrid({ hidePromocode = false }: UsefulGridProps) {
   const { t } = useTranslation();
 
-  const items = [
+  const allItems = [
     {
       key: 'instructions',
       label: t('dashboard.useful.instructions', 'Инструкция'),
@@ -41,13 +47,14 @@ export default function UsefulGrid() {
       icon: PiReceiptDuotone,
     },
   ];
+  const items = hidePromocode ? allItems.filter((i) => i.key !== 'promocode') : allItems;
 
   return (
     <section aria-label={t('dashboard.useful.title', 'Полезное')}>
       <h2 className="mb-2 px-1 text-[13px] font-semibold text-dark-400">
         {t('dashboard.useful.title', 'Полезное')}
       </h2>
-      <div className="grid grid-cols-4 gap-2.5">
+      <div className={cn('grid gap-2.5', items.length === 3 ? 'grid-cols-3' : 'grid-cols-4')}>
         {items.map((item) => (
           <Link
             key={item.key}

@@ -1,25 +1,22 @@
-import { useState } from 'react';
+import { useState, type ReactNode } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 
 import { subscriptionApi } from '@/api/subscription';
-import {
-  PiCheckBold,
-  PiDeviceMobileDuotone,
-  PiPencilSimpleBold,
-  PiTrashBold,
-  PiXBold,
-} from 'react-icons/pi';
+import { PiCheckBold, PiPencilSimpleBold, PiTrashBold, PiXBold } from 'react-icons/pi';
 import { RowIcon, SectionTitle } from '@/components/spofy/ui';
 import { Skeleton, SkeletonGroup } from '@/components/ui/skeleton';
 import { DEVICE_ALIAS_MAX_LENGTH } from '@/constants/devices';
 import { useHaptic } from '@/platform';
 import { useDestructiveConfirm } from '@/platform/hooks/useNativeDialog';
 import type { Subscription } from '@/types';
+import { platformIcon } from '@/components/subscription/platformIcon';
 
 export interface DevicesPanelProps {
   subscription: Subscription;
   subscriptionId: number | undefined;
+  /** Под списком: редкие действия с лимитом устройств (уменьшить). */
+  footer?: ReactNode;
 }
 
 /**
@@ -32,7 +29,7 @@ export interface DevicesPanelProps {
  * Одновременно редактируется одно устройство: `editingDeviceHwid` служит и
  * переключателем, и признаком того, какая строка сейчас правится.
  */
-export function DevicesPanel({ subscription, subscriptionId }: DevicesPanelProps) {
+export function DevicesPanel({ subscription, subscriptionId, footer }: DevicesPanelProps) {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
   const haptic = useHaptic();
@@ -121,13 +118,14 @@ export function DevicesPanel({ subscription, subscriptionId }: DevicesPanelProps
               const trimmed = editingDeviceName.trim();
               renameDeviceMutation.mutate({ hwid: device.hwid, name: trimmed || null });
             };
+            const PlatformIcon = platformIcon(device.platform, 'duotone');
             const iconBtn =
               'flex h-9 w-9 items-center justify-center rounded-xl text-dark-400 transition-colors hover:bg-dark-800/70 hover:text-dark-100 disabled:opacity-50';
 
             return (
               <div key={device.hwid} className="flex min-h-[60px] items-center gap-3 px-4 py-2.5">
                 <RowIcon tone="muted">
-                  <PiDeviceMobileDuotone />
+                  <PlatformIcon />
                 </RowIcon>
                 <div className="min-w-0 flex-1">
                   {isEditing ? (
@@ -232,6 +230,7 @@ export function DevicesPanel({ subscription, subscriptionId }: DevicesPanelProps
           {t('subscription.noDevices')}
         </div>
       )}
+      {footer}
     </section>
   );
 }

@@ -26,6 +26,12 @@ export interface DeviceReductionSheetProps {
   targetDeviceLimit: number;
   onTargetDeviceLimitChange: (n: number) => void;
   isDark: boolean;
+  /**
+   * Как выглядит вход: строка группы (по умолчанию) или тихая ссылка под
+   * списком устройств — уменьшение лимита нужно редко и не должно стоять в
+   * одном ряду с покупками.
+   */
+  trigger?: 'row' | 'link';
 }
 
 export function DeviceReductionSheet({
@@ -36,6 +42,7 @@ export function DeviceReductionSheet({
   subscriptionId,
   targetDeviceLimit,
   onTargetDeviceLimitChange,
+  trigger = 'row',
 }: DeviceReductionSheetProps) {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
@@ -78,12 +85,23 @@ export function DeviceReductionSheet({
 
   return (
     <>
-      <Row
-        icon={<PiMinusCircleDuotone />}
-        label={t('subscription.additionalOptions.reduceDevices')}
-        description={t('subscription.additionalOptions.reduceDevicesDescription')}
-        onClick={onOpen}
-      />
+      {trigger === 'link' ? (
+        <button
+          type="button"
+          onClick={onOpen}
+          className="mx-auto mt-2 flex items-center gap-1.5 rounded-xl px-3 py-2 text-[13px] font-medium text-dark-400 transition-colors hover:bg-dark-800/40 hover:text-dark-200"
+        >
+          <PiMinusCircleDuotone className="h-4 w-4" aria-hidden />
+          {t('subscription.additionalOptions.reduceDevices')}
+        </button>
+      ) : (
+        <Row
+          icon={<PiMinusCircleDuotone />}
+          label={t('subscription.additionalOptions.reduceDevices')}
+          description={t('subscription.additionalOptions.reduceDevicesDescription')}
+          onClick={onOpen}
+        />
+      )}
       <ResponsiveSheet
         isOpen={open}
         onClose={onClose}

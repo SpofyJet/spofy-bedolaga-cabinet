@@ -384,18 +384,16 @@
         "days": "{{days}} روز",
         "until": "تا {{date}}",
         "none": "بدون اشتراک",
-        "chooseTariff": "انتخاب تعرفه",
         "trial": "دوره آزمایشی",
         "active": "فعال",
         "expired": "منقضی شده",
         "daysCount_other": "{{count}} روز",
-        "renew": "تمدید",
         "endingSoon": "به‌زودی تمام می‌شود"
       },
       "balance": {
         "title": "موجودی",
         "renewals": "پرداخت تمدید",
-        "fromFriends": "+{{amount}} ₽ از دوستان"
+        "fromFriends": "{{amount}} ₽ از آن از دوستان"
       }
     },
     "useful": {
@@ -584,8 +582,8 @@
       "unlimited": "نامحدود",
       "buyTrafficGb": "خرید {{gb}} GB",
       "buyUnlimited": "خرید نامحدود",
-      "manageServers": "مدیریت اسکوادها",
-      "manageServersTitle": "مدیریت اسکوادها",
+      "manageServers": "مدیریت موقعیت‌ها",
+      "manageServersTitle": "مدیریت موقعیت‌ها",
       "connectedDevices": "دستگاه‌های متصل",
       "currentDeviceLimit": "محدودیت فعلی دستگاه",
       "decrementDevices": "کاهش تعداد دستگاه‌ها",
@@ -743,7 +741,7 @@
     "allTariffsPurchased": "همه تعرفه‌ها قبلاً خریداری شده‌اند",
     "autopay": "تمدید خودکار",
     "sbpRecurring": {
-      "title": "پرداخت خودکار SBP",
+      "title": "تمدید خودکار SBP",
       "connect": "اتصال",
       "confirmInBank": "در اپلیکیشن بانک تأیید کنید",
       "cancel": "غیرفعال کردن",
@@ -890,7 +888,7 @@
       "connected": "متصل",
       "trafficUnlimited": "بدون محدودیت حجم",
       "linkTitle": "لینک اشتراک",
-      "paymentTitle": "پرداخت خودکار",
+      "paymentTitle": "تمدید خودکار",
       "addonsTitle": "خرید بیشتر",
       "currentTariffLabel": "فعلی",
       "lifetimeNoRenew": "نیازی به تمدید آن نیست.",

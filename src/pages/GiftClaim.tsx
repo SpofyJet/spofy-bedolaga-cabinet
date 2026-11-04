@@ -14,6 +14,7 @@ import { PageHeader } from '@/components/layout/PageHeader';
 import { CheckCircleIcon, CheckIcon, CopyIcon } from '@/components/icons';
 import { Skeleton, SkeletonGroup } from '@/components/ui/skeleton';
 import { PiGiftDuotone } from 'react-icons/pi';
+import { plainTariffName } from '@/utils/plainTariffName';
 
 const MAX_POLL_MS = 10 * 60 * 1000; // poll an unsettled payment for up to 10 min
 
@@ -254,7 +255,7 @@ export default function GiftClaim() {
           </h1>
           {gift.tariff_name && (
             <p className="mt-1 text-sm text-dark-300">
-              {gift.tariff_name}
+              {plainTariffName(gift.tariff_name)}
               {periodLabel ? ` — ${periodLabel}` : ''}
             </p>
           )}

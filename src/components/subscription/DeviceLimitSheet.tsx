@@ -2,7 +2,8 @@ import { useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 import { subscriptionApi } from '@/api/subscription';
-import { DevicesIcon, PlusIcon, TrashIcon, WarningIcon } from '@/components/icons';
+import { PlusIcon, TrashIcon, WarningIcon } from '@/components/icons';
+import { platformIcon } from './platformIcon';
 import { ResponsiveSheet } from '@/components/ui/ResponsiveSheet';
 import { getApiErrorMessage } from '@/utils/api-error';
 
@@ -90,29 +91,32 @@ export function DeviceLimitSheet({
             {t('subscription.connectFooter.connectedDevices', 'Подключённые устройства')}
           </div>
           <div className="space-y-2">
-            {devices.map((device) => (
-              <div
-                key={device.hwid}
-                className="flex items-center gap-3 rounded-xl bg-dark-800/60 px-3 py-2.5"
-              >
-                <DevicesIcon className="h-4 w-4 shrink-0 opacity-40" />
-                <div className="min-w-0 flex-1">
-                  <div className="truncate text-[13px] text-dark-100">
-                    {device.local_name || device.device_model || device.platform}
-                  </div>
-                  <div className="text-[11px] text-dark-500">{device.platform}</div>
-                </div>
-                <button
-                  type="button"
-                  disabled={disconnect.isPending}
-                  onClick={() => disconnect.mutate(device.hwid)}
-                  className="flex min-h-[36px] shrink-0 items-center gap-1.5 rounded-lg bg-error-500/10 px-2.5 text-[12px] font-medium text-error-400 transition-colors hover:bg-error-500/20 disabled:opacity-50"
+            {devices.map((device) => {
+              const PlatformIcon = platformIcon(device.platform, 'duotone');
+              return (
+                <div
+                  key={device.hwid}
+                  className="flex items-center gap-3 rounded-xl bg-dark-800/60 px-3 py-2.5"
                 >
-                  <TrashIcon className="h-3.5 w-3.5" />
-                  {t('subscription.connectFooter.disconnect', 'Отключить')}
-                </button>
-              </div>
-            ))}
+                  <PlatformIcon className="h-4 w-4 shrink-0 opacity-40" />
+                  <div className="min-w-0 flex-1">
+                    <div className="truncate text-[13px] text-dark-100">
+                      {device.local_name || device.device_model || device.platform}
+                    </div>
+                    <div className="text-[11px] text-dark-500">{device.platform}</div>
+                  </div>
+                  <button
+                    type="button"
+                    disabled={disconnect.isPending}
+                    onClick={() => disconnect.mutate(device.hwid)}
+                    className="flex min-h-[36px] shrink-0 items-center gap-1.5 rounded-lg bg-error-500/10 px-2.5 text-[12px] font-medium text-error-400 transition-colors hover:bg-error-500/20 disabled:opacity-50"
+                  >
+                    <TrashIcon className="h-3.5 w-3.5" />
+                    {t('subscription.connectFooter.disconnect', 'Отключить')}
+                  </button>
+                </div>
+              );
+            })}
           </div>
         </div>
 

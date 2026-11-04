@@ -379,18 +379,16 @@
         "days": "剩余 {{days}} 天",
         "until": "至 {{date}}",
         "none": "无订阅",
-        "chooseTariff": "选择套餐",
         "trial": "试用期",
         "active": "有效",
         "expired": "已到期",
         "daysCount_other": "{{count}} 天",
-        "renew": "续订",
         "endingSoon": "即将到期"
       },
       "balance": {
         "title": "余额",
         "renewals": "续费支付",
-        "fromFriends": "+{{amount}} ₽ 来自好友"
+        "fromFriends": "其中 {{amount}} ₽ 来自好友"
       }
     },
     "useful": {
@@ -578,8 +576,8 @@
       "unlimited": "无限制",
       "buyTrafficGb": "购买 {{gb}} GB",
       "buyUnlimited": "购买无限流量",
-      "manageServers": "小队管理",
-      "manageServersTitle": "小队管理",
+      "manageServers": "管理位置",
+      "manageServersTitle": "管理位置",
       "connectedDevices": "已连接设备",
       "currentDeviceLimit": "当前设备限制",
       "decrementDevices": "减少设备数量",
@@ -737,7 +735,7 @@
     "allTariffsPurchased": "所有套餐已购买",
     "autopay": "自动续订",
     "sbpRecurring": {
-      "title": "SBP 自动扣款",
+      "title": "SBP 自动续费",
       "connect": "开通",
       "confirmInBank": "请在银行应用中确认",
       "cancel": "关闭",

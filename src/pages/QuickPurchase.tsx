@@ -38,6 +38,7 @@ import { readContactPrefill, stripContactFromUrl } from '../utils/contactPrefill
 import { formatPrice } from '../utils/format';
 import { useCurrency } from '../hooks/useCurrency';
 import { safeSession } from '../utils/safeStorage';
+import { plainTariffName } from '@/utils/plainTariffName';
 
 function detectContactType(value: string): 'email' | 'telegram' {
   return value.startsWith('@') ? 'telegram' : 'email';
@@ -287,7 +288,7 @@ function TariffCard({
       {tariff.is_highlighted && <BestValueBadge className="mb-3 self-start" />}
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
-          <h3 className="text-[17px] font-bold text-dark-50">{tariff.name}</h3>
+          <h3 className="text-[17px] font-bold text-dark-50">{plainTariffName(tariff.name)}</h3>
           {tariff.description && (
             <p className="mt-0.5 text-[13px] leading-snug text-dark-400">{tariff.description}</p>
           )}
@@ -486,7 +487,7 @@ function SummaryCard({
               {t('landing.selectedTariff', 'Tariff')}
             </span>
             <span className="min-w-0 truncate text-[15px] font-semibold text-dark-50">
-              {selectedTariff.name}
+              {plainTariffName(selectedTariff.name)}
             </span>
           </div>
         )}

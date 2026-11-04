@@ -298,345 +298,257 @@ export function RecurringPanels({ subscription, subscriptionId }: RecurringPanel
     cancelCasheraMutation.mutate();
   };
 
+  const formatChargeDate = (iso: string) =>
+    new Date(iso).toLocaleDateString(uiLocale(), {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+    });
+
+  const lavaAmountLine = (() => {
+    if (!lavaInfo) return null;
+    const periodKey = lavaPeriodLabelKey(lavaInfo.charge_days);
+    const amount = formatAmount((lavaInfo.amount_kopeks ?? 0) / 100);
+    return periodKey
+      ? t('subscription.lavaRecurring.amountPerPeriod', { amount, period: t(periodKey) })
+      : t('subscription.lavaRecurring.amountPerDays', { amount, days: lavaInfo.charge_days ?? 0 });
+  })();
+
+  // Блоки ниже — сиблинги тоггла «Автопродление» с баланса и показываются
+  // только по is_trial + своему состоянию: суточным тарифам они тоже нужны
+  // (бэкенд умеет списание раз в сутки). Каждый способ — своя строка: способы
+  // оплаты не группируем.
   return (
     <>
-      {/* ─── SBP Recurring Auto-payment ───
-           Sibling of the autopay toggle above, guarded ONLY by
-           is_trial + uiState — daily-tariff subscriptions must see
-           this block too (backend supports a day-interval charge). */}
       {!subscription.is_trial && sbpUiStateValue !== 'hidden' && (
-        <div className="px-4 py-3">
-          {/* Заголовок и статус слева, компактное действие справа —
-              зеркально соседнему тогглу «Автопродление». На мобиле
-              кнопка падает вниз на всю ширину (w-full sm:w-auto). */}
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <div className="flex min-w-0 items-center gap-3">
-              <RowIcon>
-                <PiCreditCardDuotone />
-              </RowIcon>
-              <div className="min-w-0">
-                <div className="text-[15px] font-semibold text-dark-100">
-                  {t('subscription.sbpRecurring.title')}
-                </div>
-
-                {sbpUiStateValue === 'off' && (
-                  <div className="mt-0.5 text-[13px] leading-snug text-dark-400">
-                    {t('subscription.sbpRecurring.autopayHint')}
-                  </div>
-                )}
-                {sbpUiStateValue === 'pending' && (
-                  <div className="mt-0.5 text-[13px] leading-snug text-dark-400">
-                    {t('subscription.sbpRecurring.statusPending')}
-                  </div>
-                )}
-                {sbpUiStateValue === 'active' && sbpInfo && (
-                  <>
-                    <div className="mt-0.5 text-[13px] leading-snug text-dark-400">
-                      {t('subscription.sbpRecurring.amountPerInterval', {
-                        amount: formatAmount((sbpInfo.amount_kopeks ?? 0) / 100),
-                        interval: t(sbpIntervalLabelKey(sbpInfo.interval)),
-                      })}
-                    </div>
-                    {sbpInfo.next_charge_at && (
-                      <div className="mt-0.5 text-[13px] leading-snug text-dark-400">
-                        {t('subscription.sbpRecurring.nextCharge', {
-                          date: new Date(sbpInfo.next_charge_at).toLocaleDateString(uiLocale(), {
-                            day: '2-digit',
-                            month: '2-digit',
-                            year: 'numeric',
-                          }),
-                        })}
-                      </div>
-                    )}
-                  </>
-                )}
-                {sbpUiStateValue === 'past_due' && (
-                  <div className="mt-0.5 text-[13px] font-medium text-warning-400">
-                    {t('subscription.sbpRecurring.statusPastDue')}
-                  </div>
-                )}
-              </div>
-            </div>
-
-            <div className="flex shrink-0 flex-col gap-2 pl-[52px] sm:items-end sm:pl-0">
-              {sbpUiStateValue === 'off' && (
-                <button
-                  onClick={() => enableSbpMutation.mutate()}
-                  disabled={enableSbpMutation.isPending}
-                  className="w-full whitespace-nowrap rounded-2xl bg-accent-500 px-4 py-2.5 text-sm font-semibold text-on-accent transition-opacity disabled:opacity-50 sm:w-auto"
-                >
-                  {enableSbpMutation.isPending ? (
-                    <span className="mx-auto block h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
-                  ) : (
-                    t('subscription.sbpRecurring.connect')
-                  )}
-                </button>
-              )}
-
-              {sbpUiStateValue === 'pending' && (
-                <>
-                  {sbpInfo?.redirect_url && (
-                    <button
-                      onClick={() => {
-                        if (sbpInfo.redirect_url) {
-                          openPaymentUrl(sbpInfo.redirect_url, platform, openLink);
-                        }
-                      }}
-                      className="w-full whitespace-nowrap rounded-2xl bg-accent-500 px-4 py-2.5 text-sm font-semibold text-on-accent transition-opacity sm:w-auto"
-                    >
-                      {t('subscription.sbpRecurring.confirmInBank')}
-                    </button>
-                  )}
-                  <button
-                    onClick={handleCancelSbp}
-                    disabled={cancelSbpMutation.isPending}
-                    className="text-left text-[13px] font-medium text-error-400 transition-colors disabled:opacity-50 sm:text-right"
-                  >
-                    {t('subscription.sbpRecurring.cancel')}
-                  </button>
-                </>
-              )}
-
-              {(sbpUiStateValue === 'active' || sbpUiStateValue === 'past_due') && (
-                <button
-                  onClick={handleCancelSbp}
-                  disabled={cancelSbpMutation.isPending}
-                  className="w-full whitespace-nowrap rounded-2xl bg-error-500/10 px-4 py-2.5 text-sm font-semibold text-error-400 ring-1 ring-inset ring-error-500/25 transition-colors hover:bg-error-500/20 disabled:opacity-50 sm:w-auto"
-                >
-                  {t('subscription.sbpRecurring.cancel')}
-                </button>
-              )}
-            </div>
-          </div>
-        </div>
+        <ProviderRow
+          title={t('subscription.sbpRecurring.title')}
+          state={sbpUiStateValue}
+          hint={t('subscription.sbpRecurring.autopayHint')}
+          pendingText={t('subscription.sbpRecurring.statusPending')}
+          pastDueText={t('subscription.sbpRecurring.statusPastDue')}
+          amountLine={
+            sbpInfo
+              ? t('subscription.sbpRecurring.amountPerInterval', {
+                  amount: formatAmount((sbpInfo.amount_kopeks ?? 0) / 100),
+                  interval: t(sbpIntervalLabelKey(sbpInfo.interval)),
+                })
+              : null
+          }
+          nextChargeLine={
+            sbpInfo?.next_charge_at
+              ? t('subscription.sbpRecurring.nextCharge', {
+                  date: formatChargeDate(sbpInfo.next_charge_at),
+                })
+              : null
+          }
+          connectLabel={t('subscription.sbpRecurring.connect')}
+          onConnect={() => enableSbpMutation.mutate()}
+          connecting={enableSbpMutation.isPending}
+          confirm={
+            sbpInfo?.redirect_url
+              ? {
+                  label: t('subscription.sbpRecurring.confirmInBank'),
+                  url: sbpInfo.redirect_url,
+                }
+              : undefined
+          }
+          onOpenUrl={(url) => openPaymentUrl(url, platform, openLink)}
+          cancelLabel={t('subscription.sbpRecurring.cancel')}
+          onCancel={handleCancelSbp}
+          cancelling={cancelSbpMutation.isPending}
+        />
       )}
 
-      {/* ─── Автопродление Lava ───
-           Независимый от Platega движок: сиблинг того же тоггла, те же
-           состояния. Период задан продуктом в кабинете Lava и приезжает
-           числом дней, поэтому подпись строится из charge_days. */}
+      {/* Lava: период задан продуктом в кабинете Lava и приезжает числом
+          дней, поэтому подпись строится из charge_days. */}
       {!subscription.is_trial && lavaUiStateValue !== 'hidden' && (
-        <div className="px-4 py-3">
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <div className="flex min-w-0 items-center gap-3">
-              <RowIcon>
-                <PiCreditCardDuotone />
-              </RowIcon>
-              <div className="min-w-0">
-                <div className="text-[15px] font-semibold text-dark-100">
-                  {t('subscription.lavaRecurring.title')}
-                </div>
-
-                {lavaUiStateValue === 'off' && (
-                  <div className="mt-0.5 text-[13px] leading-snug text-dark-400">
-                    {t('subscription.lavaRecurring.autopayHint')}
-                  </div>
-                )}
-                {lavaUiStateValue === 'pending' && (
-                  <div className="mt-0.5 text-[13px] leading-snug text-dark-400">
-                    {t('subscription.lavaRecurring.statusPending')}
-                  </div>
-                )}
-                {lavaUiStateValue === 'active' && lavaInfo && (
-                  <>
-                    <div className="mt-0.5 text-[13px] leading-snug text-dark-400">
-                      {(() => {
-                        const periodKey = lavaPeriodLabelKey(lavaInfo.charge_days);
-                        const amount = formatAmount((lavaInfo.amount_kopeks ?? 0) / 100);
-                        return periodKey
-                          ? t('subscription.lavaRecurring.amountPerPeriod', {
-                              amount,
-                              period: t(periodKey),
-                            })
-                          : t('subscription.lavaRecurring.amountPerDays', {
-                              amount,
-                              days: lavaInfo.charge_days ?? 0,
-                            });
-                      })()}
-                    </div>
-                    {lavaInfo.next_charge_at && (
-                      <div className="mt-0.5 text-[13px] leading-snug text-dark-400">
-                        {t('subscription.lavaRecurring.nextCharge', {
-                          date: new Date(lavaInfo.next_charge_at).toLocaleDateString(uiLocale(), {
-                            day: '2-digit',
-                            month: '2-digit',
-                            year: 'numeric',
-                          }),
-                        })}
-                      </div>
-                    )}
-                  </>
-                )}
-                {lavaUiStateValue === 'past_due' && (
-                  <div className="mt-0.5 text-[13px] font-medium text-warning-400">
-                    {t('subscription.lavaRecurring.statusPastDue')}
-                  </div>
-                )}
-              </div>
-            </div>
-
-            <div className="flex shrink-0 flex-col gap-2 pl-[52px] sm:items-end sm:pl-0">
-              {lavaUiStateValue === 'off' && (
-                <button
-                  onClick={() => enableLavaMutation.mutate()}
-                  disabled={enableLavaMutation.isPending}
-                  className="w-full whitespace-nowrap rounded-2xl bg-accent-500 px-4 py-2.5 text-sm font-semibold text-on-accent transition-opacity disabled:opacity-50 sm:w-auto"
-                >
-                  {enableLavaMutation.isPending ? (
-                    <span className="mx-auto block h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
-                  ) : (
-                    t('subscription.lavaRecurring.connect')
-                  )}
-                </button>
-              )}
-
-              {lavaUiStateValue === 'pending' && (
-                <>
-                  {lavaInfo?.redirect_url && (
-                    <button
-                      onClick={() => {
-                        if (lavaInfo.redirect_url) {
-                          openPaymentUrl(lavaInfo.redirect_url, platform, openLink);
-                        }
-                      }}
-                      className="w-full whitespace-nowrap rounded-2xl bg-accent-500 px-4 py-2.5 text-sm font-semibold text-on-accent transition-opacity sm:w-auto"
-                    >
-                      {t('subscription.lavaRecurring.payFirst')}
-                    </button>
-                  )}
-                  <button
-                    onClick={handleCancelLava}
-                    disabled={cancelLavaMutation.isPending}
-                    className="text-left text-[13px] font-medium text-error-400 transition-colors disabled:opacity-50 sm:text-right"
-                  >
-                    {t('subscription.lavaRecurring.cancel')}
-                  </button>
-                </>
-              )}
-
-              {(lavaUiStateValue === 'active' || lavaUiStateValue === 'past_due') && (
-                <button
-                  onClick={handleCancelLava}
-                  disabled={cancelLavaMutation.isPending}
-                  className="w-full whitespace-nowrap rounded-2xl bg-error-500/10 px-4 py-2.5 text-sm font-semibold text-error-400 ring-1 ring-inset ring-error-500/25 transition-colors hover:bg-error-500/20 disabled:opacity-50 sm:w-auto"
-                >
-                  {t('subscription.lavaRecurring.cancel')}
-                </button>
-              )}
-            </div>
-          </div>
-        </div>
+        <ProviderRow
+          title={t('subscription.lavaRecurring.title')}
+          state={lavaUiStateValue}
+          hint={t('subscription.lavaRecurring.autopayHint')}
+          pendingText={t('subscription.lavaRecurring.statusPending')}
+          pastDueText={t('subscription.lavaRecurring.statusPastDue')}
+          amountLine={lavaAmountLine}
+          nextChargeLine={
+            lavaInfo?.next_charge_at
+              ? t('subscription.lavaRecurring.nextCharge', {
+                  date: formatChargeDate(lavaInfo.next_charge_at),
+                })
+              : null
+          }
+          connectLabel={t('subscription.lavaRecurring.connect')}
+          onConnect={() => enableLavaMutation.mutate()}
+          connecting={enableLavaMutation.isPending}
+          confirm={
+            lavaInfo?.redirect_url
+              ? { label: t('subscription.lavaRecurring.payFirst'), url: lavaInfo.redirect_url }
+              : undefined
+          }
+          onOpenUrl={(url) => openPaymentUrl(url, platform, openLink)}
+          cancelLabel={t('subscription.lavaRecurring.cancel')}
+          onCancel={handleCancelLava}
+          cancelling={cancelLavaMutation.isPending}
+        />
       )}
-      {/* ─── Автопродление Cashera ───
-           Третий движок с теми же состояниями. Интервал задаётся при
-           оформлении и приезжает строкой (daily/weekly/monthly/yearly). */}
+
+      {/* Cashera: интервал задаётся при оформлении и приезжает строкой
+          (daily/weekly/monthly/yearly). */}
       {!subscription.is_trial && casheraUiStateValue !== 'hidden' && (
-        <div className="px-4 py-3">
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <div className="flex min-w-0 items-center gap-3">
-              <RowIcon>
-                <PiCreditCardDuotone />
-              </RowIcon>
-              <div className="min-w-0">
-                <div className="text-[15px] font-semibold text-dark-100">
-                  {t('subscription.casheraRecurring.title')}
-                </div>
-
-                {casheraUiStateValue === 'off' && (
-                  <div className="mt-0.5 text-[13px] leading-snug text-dark-400">
-                    {t('subscription.casheraRecurring.autopayHint')}
-                  </div>
-                )}
-                {casheraUiStateValue === 'pending' && (
-                  <div className="mt-0.5 text-[13px] leading-snug text-dark-400">
-                    {t('subscription.casheraRecurring.statusPending')}
-                  </div>
-                )}
-                {casheraUiStateValue === 'active' && casheraInfo && (
-                  <>
-                    <div className="mt-0.5 text-[13px] leading-snug text-dark-400">
-                      {t('subscription.casheraRecurring.amountPerInterval', {
-                        amount: formatAmount((casheraInfo.amount_kopeks ?? 0) / 100),
-                        interval: t(casheraIntervalLabelKey(casheraInfo.interval)),
-                      })}
-                    </div>
-                    {casheraInfo.next_charge_at && (
-                      <div className="mt-0.5 text-[13px] leading-snug text-dark-400">
-                        {t('subscription.casheraRecurring.nextCharge', {
-                          date: new Date(casheraInfo.next_charge_at).toLocaleDateString(
-                            uiLocale(),
-                            {
-                              day: '2-digit',
-                              month: '2-digit',
-                              year: 'numeric',
-                            },
-                          ),
-                        })}
-                      </div>
-                    )}
-                  </>
-                )}
-                {casheraUiStateValue === 'past_due' && (
-                  <div className="mt-0.5 text-[13px] font-medium text-warning-400">
-                    {t('subscription.casheraRecurring.statusPastDue')}
-                  </div>
-                )}
-              </div>
-            </div>
-
-            <div className="flex shrink-0 flex-col gap-2 pl-[52px] sm:items-end sm:pl-0">
-              {casheraUiStateValue === 'off' && (
-                <button
-                  onClick={() => enableCasheraMutation.mutate()}
-                  disabled={enableCasheraMutation.isPending}
-                  className="w-full whitespace-nowrap rounded-2xl bg-accent-500 px-4 py-2.5 text-sm font-semibold text-on-accent transition-opacity disabled:opacity-50 sm:w-auto"
-                >
-                  {enableCasheraMutation.isPending ? (
-                    <span className="mx-auto block h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
-                  ) : (
-                    t('subscription.casheraRecurring.connect')
-                  )}
-                </button>
-              )}
-
-              {casheraUiStateValue === 'pending' && (
-                <>
-                  {casheraInfo?.redirect_url && (
-                    <button
-                      onClick={() => {
-                        if (casheraInfo.redirect_url) {
-                          openPaymentUrl(casheraInfo.redirect_url, platform, openLink);
-                        }
-                      }}
-                      className="w-full whitespace-nowrap rounded-2xl bg-accent-500 px-4 py-2.5 text-sm font-semibold text-on-accent transition-opacity sm:w-auto"
-                    >
-                      {t('subscription.casheraRecurring.confirm')}
-                    </button>
-                  )}
-                  <button
-                    onClick={handleCancelCashera}
-                    disabled={cancelCasheraMutation.isPending}
-                    className="text-left text-[13px] font-medium text-error-400 transition-colors disabled:opacity-50 sm:text-right"
-                  >
-                    {t('subscription.casheraRecurring.cancel')}
-                  </button>
-                </>
-              )}
-
-              {(casheraUiStateValue === 'active' || casheraUiStateValue === 'past_due') && (
-                <button
-                  onClick={handleCancelCashera}
-                  disabled={cancelCasheraMutation.isPending}
-                  className="w-full whitespace-nowrap rounded-2xl bg-error-500/10 px-4 py-2.5 text-sm font-semibold text-error-400 ring-1 ring-inset ring-error-500/25 transition-colors hover:bg-error-500/20 disabled:opacity-50 sm:w-auto"
-                >
-                  {t('subscription.casheraRecurring.cancel')}
-                </button>
-              )}
-            </div>
-          </div>
-        </div>
+        <ProviderRow
+          title={t('subscription.casheraRecurring.title')}
+          state={casheraUiStateValue}
+          hint={t('subscription.casheraRecurring.autopayHint')}
+          pendingText={t('subscription.casheraRecurring.statusPending')}
+          pastDueText={t('subscription.casheraRecurring.statusPastDue')}
+          amountLine={
+            casheraInfo
+              ? t('subscription.casheraRecurring.amountPerInterval', {
+                  amount: formatAmount((casheraInfo.amount_kopeks ?? 0) / 100),
+                  interval: t(casheraIntervalLabelKey(casheraInfo.interval)),
+                })
+              : null
+          }
+          nextChargeLine={
+            casheraInfo?.next_charge_at
+              ? t('subscription.casheraRecurring.nextCharge', {
+                  date: formatChargeDate(casheraInfo.next_charge_at),
+                })
+              : null
+          }
+          connectLabel={t('subscription.casheraRecurring.connect')}
+          onConnect={() => enableCasheraMutation.mutate()}
+          connecting={enableCasheraMutation.isPending}
+          confirm={
+            casheraInfo?.redirect_url
+              ? { label: t('subscription.casheraRecurring.confirm'), url: casheraInfo.redirect_url }
+              : undefined
+          }
+          onOpenUrl={(url) => openPaymentUrl(url, platform, openLink)}
+          cancelLabel={t('subscription.casheraRecurring.cancel')}
+          onCancel={handleCancelCashera}
+          cancelling={cancelCasheraMutation.isPending}
+        />
       )}
     </>
+  );
+}
+
+type ProviderState = 'off' | 'pending' | 'active' | 'past_due';
+
+interface ProviderRowProps {
+  title: string;
+  state: ProviderState;
+  /** Подпись под заголовком, пока автопродление не подключено. */
+  hint: string;
+  pendingText: string;
+  pastDueText: string;
+  amountLine: string | null;
+  nextChargeLine: string | null;
+  connectLabel: string;
+  onConnect: () => void;
+  connecting: boolean;
+  /** Ссылка подтверждения привязки, пока она ждёт (банк, первый счёт). */
+  confirm?: { label: string; url: string };
+  onOpenUrl: (url: string) => void;
+  cancelLabel: string;
+  onCancel: () => void;
+  cancelling: boolean;
+}
+
+const COMPACT_BUTTON =
+  'inline-flex h-9 items-center justify-center whitespace-nowrap rounded-xl px-3.5 text-[13px] font-semibold transition-colors disabled:opacity-50';
+/** «Подключить» — вторичная кнопка: на странице одна главная кнопка, а не стена акцентных. */
+const CONNECT_BUTTON = `${COMPACT_BUTTON} bg-dark-800/70 text-accent-300 ring-1 ring-inset ring-dark-700/60 hover:bg-dark-700/70`;
+/** Подтверждение ждущей привязки — единственное нужное сейчас действие строки. */
+const CONFIRM_BUTTON = `${COMPACT_BUTTON} bg-accent-500/15 text-accent-300 hover:bg-accent-500/25`;
+const CANCEL_BUTTON = `${COMPACT_BUTTON} px-2.5 text-error-400 hover:bg-error-500/10`;
+
+/**
+ * Строка одного способа автопродления: иконка, название и состояние, рядом —
+ * компактное вторичное действие (на телефоне — под текстом, с sm — справа).
+ */
+function ProviderRow({
+  title,
+  state,
+  hint,
+  pendingText,
+  pastDueText,
+  amountLine,
+  nextChargeLine,
+  connectLabel,
+  onConnect,
+  connecting,
+  confirm,
+  onOpenUrl,
+  cancelLabel,
+  onCancel,
+  cancelling,
+}: ProviderRowProps) {
+  const line = 'mt-0.5 text-[13px] leading-snug text-dark-400';
+
+  return (
+    <div className="px-4 py-3">
+      {/* На телефоне действие — компактной кнопкой под текстом (справа текст
+          сжимался в столбик), с sm — справа в строке. */}
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-3">
+        <div className="flex min-w-0 items-center gap-3">
+          <RowIcon>
+            <PiCreditCardDuotone />
+          </RowIcon>
+          <div className="min-w-0">
+            <div className="text-[15px] font-semibold text-dark-100">{title}</div>
+            {state === 'off' && <div className={line}>{hint}</div>}
+            {state === 'pending' && <div className={line}>{pendingText}</div>}
+            {state === 'active' && (
+              <>
+                {amountLine && <div className={line}>{amountLine}</div>}
+                {nextChargeLine && <div className={line}>{nextChargeLine}</div>}
+              </>
+            )}
+            {state === 'past_due' && (
+              <div className="mt-0.5 text-[13px] font-medium text-warning-400">{pastDueText}</div>
+            )}
+          </div>
+        </div>
+        <div className="flex shrink-0 flex-wrap items-center gap-2 pl-[52px] sm:pl-0">
+          {state === 'off' ? (
+            <button
+              type="button"
+              onClick={onConnect}
+              disabled={connecting}
+              className={CONNECT_BUTTON}
+            >
+              {connecting ? (
+                <span className="block h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
+              ) : (
+                connectLabel
+              )}
+            </button>
+          ) : (
+            <>
+              {state === 'pending' && confirm && (
+                <button
+                  type="button"
+                  onClick={() => onOpenUrl(confirm.url)}
+                  className={CONFIRM_BUTTON}
+                >
+                  {confirm.label}
+                </button>
+              )}
+              <button
+                type="button"
+                onClick={onCancel}
+                disabled={cancelling}
+                className={CANCEL_BUTTON}
+              >
+                {cancelLabel}
+              </button>
+            </>
+          )}
+        </div>
+      </div>
+    </div>
   );
 }
 

@@ -1,19 +1,11 @@
 import { Link } from 'react-router';
 import { useTranslation } from 'react-i18next';
-import {
-  PiDeviceMobileFill,
-  PiLaptopFill,
-  PiMonitorFill,
-  PiTelevisionFill,
-  PiPlusBold,
-  PiCaretRightBold,
-  PiWarningCircleFill,
-} from 'react-icons/pi';
-import type { IconType } from 'react-icons';
+import { PiPlusBold, PiCaretRightBold, PiWarningCircleFill } from 'react-icons/pi';
 
 import { cn } from '@/lib/utils';
 import { formatTraffic } from '@/utils/formatTraffic';
 import type { Device } from '@/types';
+import { platformIcon } from '@/components/subscription/platformIcon';
 
 const PANEL = 'flex min-w-0 flex-col rounded-2xl bg-dark-800/45 p-2.5 min-[360px]:p-3';
 const TILE =
@@ -69,14 +61,6 @@ interface DevicesTrafficCardProps {
   bypassQuota?: boolean;
   /** Spofy: квота обходов исчерпана — обходы выключены, обычные серверы работают. */
   bypassSuspended?: boolean;
-}
-
-function platformIcon(platform: string | undefined): IconType {
-  const p = (platform || '').toLowerCase();
-  if (/tv|android ?tv|tizen|webos|apple ?tv/.test(p)) return PiTelevisionFill;
-  if (/ios|iphone|ipad|android/.test(p)) return PiDeviceMobileFill;
-  if (/mac|windows|linux|desktop/.test(p)) return PiLaptopFill;
-  return PiMonitorFill;
 }
 
 /** «12,4 из 50 ГБ»: единицу у первого числа опускаем, только если она та же. */

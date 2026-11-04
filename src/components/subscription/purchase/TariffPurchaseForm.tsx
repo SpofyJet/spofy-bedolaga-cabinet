@@ -19,6 +19,7 @@ import { pickBestValue } from '../../../utils/bestValue';
 import InsufficientBalancePrompt from '../../InsufficientBalancePrompt';
 import type { Tariff, TariffPeriod } from '../../../types';
 import { BestValueBadge, bestValueFrame } from '../BestValueBadge';
+import { plainTariffName } from '@/utils/plainTariffName';
 
 // ──────────────────────────────────────────────────────────────────
 // TariffPurchaseForm
@@ -308,7 +309,7 @@ export function TariffPurchaseForm({
               {t('subscription.baseTariff', 'Тариф')}
             </p>
             <h3 className="mt-0.5 truncate text-xl font-bold tracking-tight text-dark-50">
-              {tariff.name}
+              {plainTariffName(tariff.name)}
             </h3>
           </div>
           <button

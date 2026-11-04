@@ -17,6 +17,7 @@ import { tariffTrafficLabel } from '@/utils/tariffTrafficLabel';
 import InsufficientBalancePrompt from '../../InsufficientBalancePrompt';
 import type { Subscription, Tariff } from '../../../types';
 import { Skeleton, SkeletonGroup } from '../../ui/skeleton';
+import { plainTariffName } from '@/utils/plainTariffName';
 
 // ──────────────────────────────────────────────────────────────────
 // SwitchTariffSheet
@@ -186,13 +187,13 @@ export function SwitchTariffSheet({
                 {t('subscription.switchTariff.currentTariff')}
               </dt>
               <dd className="min-w-0 break-words text-end font-medium text-dark-100">
-                {switchPreview.current_tariff_name || '—'}
+                {plainTariffName(switchPreview.current_tariff_name) || '—'}
               </dd>
             </div>
             <div className="flex justify-between gap-3">
               <dt className="text-sm text-dark-400">{t('subscription.switchTariff.newTariff')}</dt>
               <dd className="min-w-0 break-words text-end font-medium text-accent-400">
-                {switchPreview.new_tariff_name}
+                {plainTariffName(switchPreview.new_tariff_name)}
               </dd>
             </div>
             {target && (

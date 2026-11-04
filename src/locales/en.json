@@ -413,19 +413,17 @@
         "days": "{{days}} days",
         "until": "until {{date}}",
         "none": "No subscription",
-        "chooseTariff": "Choose a plan",
         "trial": "Trial",
         "active": "Active",
         "expired": "Expired",
         "daysCount_one": "{{count}} day",
         "daysCount_other": "{{count}} days",
-        "renew": "Renew",
         "endingSoon": "Ending soon"
       },
       "balance": {
         "title": "Balance",
         "renewals": "Renewal payments",
-        "fromFriends": "+{{amount}} ₽ from friends"
+        "fromFriends": "{{amount}} ₽ of it from friends"
       }
     },
     "useful": {
@@ -774,8 +772,8 @@
       "unlimited": "Unlimited",
       "buyTrafficGb": "Buy {{gb}} GB",
       "buyUnlimited": "Buy Unlimited",
-      "manageServers": "Squad management",
-      "manageServersTitle": "Squad management",
+      "manageServers": "Manage locations",
+      "manageServersTitle": "Manage locations",
       "connectedDevices": "Connected devices",
       "currentDeviceLimit": "Current device limit",
       "decrementDevices": "Decrease devices",
@@ -847,7 +845,7 @@
     "allTariffsPurchased": "All tariffs already purchased",
     "autopay": "Auto-renew",
     "sbpRecurring": {
-      "title": "SBP Auto-payment",
+      "title": "SBP auto-renewal",
       "connect": "Connect",
       "confirmInBank": "Confirm in your banking app",
       "cancel": "Disable",
@@ -974,7 +972,7 @@
       "connected": "connected",
       "trafficUnlimited": "No data cap",
       "linkTitle": "Subscription link",
-      "paymentTitle": "Auto-payment",
+      "paymentTitle": "Auto-renewal",
       "addonsTitle": "Add more",
       "currentTariffLabel": "Current",
       "lifetimeNoRenew": "No need to renew it.",

@@ -1,15 +1,12 @@
 import type { TFunction } from 'i18next';
 import type { WheelPrize } from '../../api/wheel';
-import { formatPrice } from '@/utils/format';
+import { formatPriceShort } from '@/utils/format';
+
+export { formatPriceShort };
 
 export interface PrizeTextContext {
   discountDays?: number;
   deviceBonusDays?: number;
-}
-
-/** Цена без нулевых копеек: «1 000 ₽», а не «1 000,00 ₽»; 359,50 ₽ остаётся как есть. */
-export function formatPriceShort(kopeks: number): string {
-  return formatPrice(kopeks).replace(/[.,]00(?=\D|$)/, '');
 }
 
 /** Короткая подпись на секторе колеса: «+3 дня», «−10%», «25 ₽». */

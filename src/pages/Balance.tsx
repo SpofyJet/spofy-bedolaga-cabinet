@@ -45,6 +45,7 @@ import {
 import { Skeleton, SkeletonGroup } from '@/components/ui/skeleton';
 import { isPaidStatus, isFailedStatus } from '../utils/paymentStatus';
 import { transactionTypeLabelKey } from '../utils/transactionType';
+import { plainTariffName } from '@/utils/plainTariffName';
 
 type Tone = 'accent' | 'success' | 'warning' | 'error' | 'muted';
 
@@ -429,7 +430,7 @@ export default function Balance() {
                     <Row
                       key={sub.id}
                       icon={<PiShieldCheckDuotone />}
-                      label={sub.tariff_name}
+                      label={plainTariffName(sub.tariff_name)}
                       hint={
                         isLifetimePeriod(sub.days_left)
                           ? t('subscription.lifetime.forever')

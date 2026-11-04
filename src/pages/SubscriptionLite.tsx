@@ -31,6 +31,7 @@ import {
 } from '@/utils/legacySubscription';
 import { formatLiteDate } from '@/utils/liteDate';
 import { isLifetimeSubscription } from '@/utils/lifetime';
+import { plainTariffName } from '@/utils/plainTariffName';
 
 type OpenPanel = 'traffic' | 'devices' | 'reduce' | 'servers' | 'devicesList' | 'delete' | null;
 
@@ -183,7 +184,7 @@ export default function SubscriptionLite() {
     <div className="mx-auto w-full max-w-lg">
       <section className="pb-7 pt-8">
         <h1 className="text-[28px] font-bold leading-[1.15] tracking-tight text-dark-50">
-          {subscription.tariff_name || t('lite.subscription.untitled', 'Подписка')}
+          {plainTariffName(subscription.tariff_name) || t('lite.subscription.untitled', 'Подписка')}
         </h1>
         <p className="mt-2 text-[15px] text-dark-400">
           {lifetime && !subscription.is_expired

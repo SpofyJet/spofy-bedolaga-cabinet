@@ -16,6 +16,7 @@ import { Button, Chip, EmptyState } from '@/components/spofy/ui';
 import { cn } from '@/lib/utils';
 import type { Tariff, Subscription, PurchaseOptions } from '../../../types';
 import { tariffAction, type TariffActionKind } from './tariffAction';
+import { plainTariffName } from '@/utils/plainTariffName';
 
 /** Подпись кнопки для действий, которые ведут в один и тот же сценарий выбора. */
 const TARIFF_ACTION_LABEL: Record<Exclude<TariffActionKind, 'current-daily' | 'switch'>, string> = {
@@ -185,7 +186,7 @@ export function TariffPickerGrid({
                 <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0">
                     <h3 className="truncate text-[17px] font-bold tracking-tight text-dark-50">
-                      {tariff.name}
+                      {plainTariffName(tariff.name)}
                     </h3>
                     {tariff.description && (
                       <p className="mt-1 whitespace-pre-line text-[13px] leading-snug text-dark-400">
@@ -260,7 +261,7 @@ export function TariffPickerGrid({
                       onClick={() => onSwitchTariff(tariff.id)}
                       aria-label={
                         switchSelection
-                          ? `${tariff.name}: ${t('subscription.switchTariff.choose')}`
+                          ? `${plainTariffName(tariff.name)}: ${t('subscription.switchTariff.choose')}`
                           : undefined
                       }
                     >

@@ -20,6 +20,7 @@ import { isLifetimeSubscription } from '@/utils/lifetime';
 import { useLiteMode } from '../hooks/useLiteMode';
 import { ClassicPurchaseWizard } from '../components/subscription/purchase/ClassicPurchaseWizard';
 import { PageSkeleton, Skeleton } from '@/components/ui/skeleton';
+import { plainTariffName } from '@/utils/plainTariffName';
 
 export default function SubscriptionPurchase() {
   const { t } = useTranslation();
@@ -152,7 +153,7 @@ export default function SubscriptionPurchase() {
             {t('subscription.v10.currentTariffLabel', 'Сейчас')}
           </p>
           <p className="mt-0.5 break-words text-[17px] font-bold text-dark-50">
-            {subscription.tariff_name}
+            {plainTariffName(subscription.tariff_name)}
           </p>
           {!subscription.is_daily && subscription.end_date && (
             <p className="mt-1 text-[13px] text-dark-400">

@@ -18,6 +18,7 @@ import { PiCalendarXDuotone, PiInfinityDuotone } from 'react-icons/pi';
 import { PageSkeleton, Skeleton } from '../components/ui/skeleton';
 import { DailyPausePanel } from '../components/subscription/manage/DailyPausePanel';
 import { canOpenTariffSwitch, needsTariff, tariffSelectionPath } from '../utils/legacySubscription';
+import { plainTariffName } from '@/utils/plainTariffName';
 
 export default function RenewSubscription() {
   const { subscriptionId } = useParams<{ subscriptionId: string }>();
@@ -148,7 +149,7 @@ export default function RenewSubscription() {
     <Page>
       <PageHeader
         title={t('subscription.extend', 'Продлить подписку')}
-        subtitle={subscription?.tariff_name || undefined}
+        subtitle={plainTariffName(subscription?.tariff_name) || undefined}
         backTo={`/subscriptions/${subId}`}
       />
 

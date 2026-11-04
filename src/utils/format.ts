@@ -67,6 +67,11 @@ export function formatPrice(kopeks: number, lang?: string): string {
   }
 }
 
+/** Цена без нулевых копеек: «1 000 ₽», а не «1 000,00 ₽»; 359,50 ₽ остаётся как есть. */
+export function formatPriceShort(kopeks: number, lang?: string): string {
+  return formatPrice(kopeks, lang).replace(/[.,]00(?=\D|$)/, '');
+}
+
 /** A date-only string (YYYY-MM-DD) is a calendar day, not UTC midnight: parsed as a local
  * date so the day label never slips back a day for viewers west of UTC. Full timestamps
  * stay instants. */

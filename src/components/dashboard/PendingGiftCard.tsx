@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { GiftIcon } from '@/components/icons';
 import type { PendingGift } from '../../api/gift';
+import { plainTariffName } from '@/utils/plainTariffName';
 
 interface PendingGiftCardProps {
   gifts: PendingGift[];
@@ -36,7 +37,7 @@ export default function PendingGiftCard({ gifts, className }: PendingGiftCardPro
               <p className="mt-0.5 text-xs text-dark-300">
                 {gift.tariff_name && (
                   <span>
-                    {gift.tariff_name} —{' '}
+                    {plainTariffName(gift.tariff_name)} —{' '}
                     {isLifetimePeriod(gift.period_days)
                       ? t('subscription.lifetime.forever')
                       : `${gift.period_days} ${t('gift.days')}`}

@@ -22,7 +22,10 @@ interface InfoCardsProps {
   tariffName?: string | null;
   /** undefined — баланс ещё грузится (заглушка вместо «0 ₽»). */
   balanceRubles?: number;
-  /** Заработано с рефералов, ₽ — чип под балансом. 0/null — чип скрыт. */
+  /**
+   * Часть баланса, заработанная на друзьях, ₽ (available_balance с бэкенда).
+   * Чип «из них N ₽ с друзей» — только когда это ≥ 1 ₽ уже лежащего на балансе.
+   */
   fromFriendsRubles?: number | null;
   loading?: boolean;
   /** Куда ведёт карточка закончившейся подписки (продление конкретной). */
@@ -55,31 +58,37 @@ export default function InfoCards({
   const { t, i18n } = useTranslation();
 
   const endingSoon = status === 'active' && !isLifetime && daysLeft != null && daysLeft <= 3;
+  // Закончилась / нет подписки: чипа нет. Раньше тут стояли «Продлить» и
+  // «Выберите тариф» — то же действие, что главная плитка и кнопка покупки
+  // рядом; «Закончилась» / «Нет подписки» крупно и так говорят о состоянии.
   const subChip =
-    status === 'expired'
-      ? { label: t('dashboard.info.subscription.renew', 'Продлить'), tone: 'danger' }
-      : status === 'none'
-        ? { label: t('dashboard.info.subscription.chooseTariff', 'Выберите тариф'), tone: 'warn' }
-        : isTrial
+    status === 'expired' || status === 'none'
+      ? null
+      : isTrial
+        ? {
+            label: t('dashboard.info.subscription.trial', 'Пробный период'),
+            tone: endingSoon ? 'warn' : 'accent',
+          }
+        : endingSoon
           ? {
-              label: t('dashboard.info.subscription.trial', 'Пробный период'),
-              tone: endingSoon ? 'warn' : 'accent',
+              label: t('dashboard.info.subscription.endingSoon', 'Скоро закончится'),
+              tone: 'warn',
             }
-          : endingSoon
-            ? {
-                label: t('dashboard.info.subscription.endingSoon', 'Скоро закончится'),
-                tone: 'warn',
-              }
-            : { label: t('dashboard.info.subscription.active', 'Активна'), tone: 'success' };
+          : { label: t('dashboard.info.subscription.active', 'Активна'), tone: 'success' };
 
   const chipClass =
-    subChip.tone === 'success'
+    subChip?.tone === 'success'
       ? 'border-success-500/25 bg-success-500/10 text-success-400'
-      : subChip.tone === 'danger'
-        ? 'border-error-500/25 bg-error-500/10 text-error-400'
-        : subChip.tone === 'accent'
-          ? 'border-accent-500/30 bg-accent-500/10 text-accent-300'
-          : 'border-warning-500/25 bg-warning-500/10 text-warning-400';
+      : subChip?.tone === 'accent'
+        ? 'border-accent-500/30 bg-accent-500/10 text-accent-300'
+        : 'border-warning-500/25 bg-warning-500/10 text-warning-400';
+
+  // Доля «с друзей» не может быть больше самого баланса (потратил — её нет),
+  // а «+0 ₽» или копейки ничего не сообщают.
+  const fromFriends =
+    balanceRubles !== undefined && fromFriendsRubles != null
+      ? Math.floor(Math.min(fromFriendsRubles, balanceRubles))
+      : 0;
 
   const hasSubscription = status !== 'none';
 
@@ -141,12 +150,14 @@ export default function InfoCards({
         )}
         {loading ? (
           <Skeleton className="mt-2 h-6 w-20 rounded-full" />
-        ) : (
+        ) : subChip ? (
           <span
             className={`mt-2 inline-flex w-fit items-center rounded-full border px-2.5 py-1 text-2xs font-semibold ${chipClass}`}
           >
             {subChip.label}
           </span>
+        ) : (
+          <span className="mt-2" />
         )}
       </Link>
 
@@ -171,10 +182,10 @@ export default function InfoCards({
             {t('dashboard.info.balance.renewals', 'Оплата продлений')}
           </span>
         </span>
-        {fromFriendsRubles != null && fromFriendsRubles > 0 ? (
+        {fromFriends >= 1 ? (
           <span className="mt-2 inline-flex w-fit items-center rounded-full border border-accent-500/30 bg-accent-500/10 px-2.5 py-1 text-2xs font-semibold text-accent-300">
-            {t('dashboard.info.balance.fromFriends', '+{{amount}}\u00A0₽ с друзей', {
-              amount: Math.floor(fromFriendsRubles).toLocaleString('ru-RU'),
+            {t('dashboard.info.balance.fromFriends', {
+              amount: fromFriends.toLocaleString('ru-RU'),
             })}
           </span>
         ) : (

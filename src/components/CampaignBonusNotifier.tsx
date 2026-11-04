@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuthStore } from '../store/auth';
 import { useToast } from './Toast';
+import { plainTariffName } from '@/utils/plainTariffName';
 
 export default function CampaignBonusNotifier() {
   const { t } = useTranslation();
@@ -25,7 +26,7 @@ export default function CampaignBonusNotifier() {
       });
     } else if (bonus.bonus_type === 'tariff' && bonus.tariff_name) {
       message = t('campaignBonus.tariff', {
-        tariff: bonus.tariff_name,
+        tariff: plainTariffName(bonus.tariff_name),
         name: bonus.campaign_name,
       });
     }
