@@ -413,19 +413,17 @@
         "days": "{{days}} days",
         "until": "until {{date}}",
         "none": "No subscription",
-        "chooseTariff": "Choose a plan",
         "trial": "Trial",
         "active": "Active",
         "expired": "Expired",
         "daysCount_one": "{{count}} day",
         "daysCount_other": "{{count}} days",
-        "renew": "Renew",
         "endingSoon": "Ending soon"
       },
       "balance": {
         "title": "Balance",
         "renewals": "Renewal payments",
-        "fromFriends": "+{{amount}} ₽ from friends"
+        "fromFriends": "{{amount}} ₽ of it from friends"
       }
     },
     "useful": {

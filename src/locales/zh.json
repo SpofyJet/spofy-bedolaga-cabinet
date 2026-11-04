@@ -379,18 +379,16 @@
         "days": "剩余 {{days}} 天",
         "until": "至 {{date}}",
         "none": "无订阅",
-        "chooseTariff": "选择套餐",
         "trial": "试用期",
         "active": "有效",
         "expired": "已到期",
         "daysCount_other": "{{count}} 天",
-        "renew": "续订",
         "endingSoon": "即将到期"
       },
       "balance": {
         "title": "余额",
         "renewals": "续费支付",
-        "fromFriends": "+{{amount}} ₽ 来自好友"
+        "fromFriends": "其中 {{amount}} ₽ 来自好友"
       }
     },
     "useful": {

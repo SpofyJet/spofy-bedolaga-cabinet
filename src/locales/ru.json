@@ -421,7 +421,6 @@
         "days": "{{days}} дней",
         "until": "до {{date}}",
         "none": "Нет подписки",
-        "chooseTariff": "Выберите тариф",
         "trial": "Пробный период",
         "active": "Активна",
         "expired": "Закончилась",
@@ -429,13 +428,12 @@
         "daysCount_few": "{{count}} дня",
         "daysCount_many": "{{count}} дней",
         "daysCount_other": "{{count}} дня",
-        "renew": "Продлить",
         "endingSoon": "Скоро закончится"
       },
       "balance": {
         "title": "Баланс",
         "renewals": "Оплата продлений",
-        "fromFriends": "+{{amount}} ₽ с друзей"
+        "fromFriends": "из них {{amount}} ₽ с друзей"
       }
     },
     "useful": {

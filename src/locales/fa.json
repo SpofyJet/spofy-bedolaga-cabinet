@@ -384,18 +384,16 @@
         "days": "{{days}} روز",
         "until": "تا {{date}}",
         "none": "بدون اشتراک",
-        "chooseTariff": "انتخاب تعرفه",
         "trial": "دوره آزمایشی",
         "active": "فعال",
         "expired": "منقضی شده",
         "daysCount_other": "{{count}} روز",
-        "renew": "تمدید",
         "endingSoon": "به‌زودی تمام می‌شود"
       },
       "balance": {
         "title": "موجودی",
         "renewals": "پرداخت تمدید",
-        "fromFriends": "+{{amount}} ₽ از دوستان"
+        "fromFriends": "{{amount}} ₽ از آن از دوستان"
       }
     },
     "useful": {
