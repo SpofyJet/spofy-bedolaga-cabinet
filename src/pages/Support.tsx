@@ -253,6 +253,7 @@ export default function Support() {
         <Group>
           <Row
             icon={<PiTelegramLogoDuotone />}
+            iconTone="devices"
             label={t('support.chat.openTelegram')}
             description={t('support.chat.telegramHint')}
             onClick={openContact}

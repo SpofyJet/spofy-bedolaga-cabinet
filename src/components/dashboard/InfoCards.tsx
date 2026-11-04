@@ -1,5 +1,6 @@
 import { Link } from 'react-router';
 import { Skeleton } from '@/components/ui/skeleton';
+import { TONE_CHIP } from '@/components/spofy/tones';
 import { useTranslation } from 'react-i18next';
 
 /**
@@ -67,7 +68,8 @@ export default function InfoCards({
       : isTrial
         ? {
             label: t('dashboard.info.subscription.trial', 'Пробный период'),
-            tone: endingSoon ? 'warn' : 'accent',
+            // Пробный — фиолетовый, как на странице подписки (синий — только действия).
+            tone: endingSoon ? 'warn' : 'trial',
           }
         : endingSoon
           ? {
@@ -79,8 +81,8 @@ export default function InfoCards({
   const chipClass =
     subChip?.tone === 'success'
       ? 'border-success-500/25 bg-success-500/10 text-success-400'
-      : subChip?.tone === 'accent'
-        ? 'border-accent-500/30 bg-accent-500/10 text-accent-300'
+      : subChip?.tone === 'trial'
+        ? TONE_CHIP.promo
         : 'border-warning-500/25 bg-warning-500/10 text-warning-400';
 
   // Доля «с друзей» не может быть больше самого баланса (потратил — её нет),
@@ -183,7 +185,9 @@ export default function InfoCards({
           </span>
         </span>
         {fromFriends >= 1 ? (
-          <span className="mt-2 inline-flex w-fit items-center rounded-full border border-accent-500/30 bg-accent-500/10 px-2.5 py-1 text-2xs font-semibold text-accent-300">
+          <span
+            className={`mt-2 inline-flex w-fit items-center rounded-full border px-2.5 py-1 text-2xs font-semibold ${TONE_CHIP.friends}`}
+          >
             {t('dashboard.info.balance.fromFriends', {
               amount: fromFriends.toLocaleString('ru-RU'),
             })}

@@ -131,7 +131,7 @@ export default function SubscriptionCardExpired({
         : t('dashboard.expired.title');
 
   const primaryCls =
-    'flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-accent-500 px-5 text-[15px] font-semibold text-on-accent transition-colors hover:bg-accent-600 active:scale-[0.98] disabled:opacity-50';
+    'flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-cta-500 px-5 text-[15px] font-semibold text-on-cta transition-colors hover:bg-cta-600 active:scale-[0.98] disabled:opacity-50';
 
   return (
     <section

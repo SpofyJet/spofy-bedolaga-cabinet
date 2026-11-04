@@ -52,7 +52,7 @@ export function AutopayToggle({ subscription, subscriptionId }: AutopayTogglePro
 
   return (
     <div className="flex min-h-[60px] w-full items-center gap-3 px-4 py-2.5">
-      <RowIcon>
+      <RowIcon tone="plan">
         <PiArrowsClockwiseDuotone />
       </RowIcon>
       <span className="min-w-0 flex-1">

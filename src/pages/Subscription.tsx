@@ -73,10 +73,10 @@ function OptionalGroup({ title, children }: { title: string; children: React.Rea
   );
 }
 
-/** Полоса расхода трафика: цвет по заполненности, без свечений. */
+/** Полоса расхода трафика: цвет состояния, как на главной (синий — только кнопки). */
 function TrafficBar({ percent }: { percent: number }) {
   const value = Math.max(0, Math.min(100, percent));
-  const tone = value >= 90 ? 'bg-error-400' : value >= 70 ? 'bg-warning-400' : 'bg-accent-500';
+  const tone = value >= 90 ? 'bg-error-400' : value >= 70 ? 'bg-warning-400' : 'bg-success-400';
   return (
     <div className="h-2 overflow-hidden rounded-full bg-dark-800">
       <div
@@ -571,6 +571,7 @@ export default function Subscription() {
           {displayedConnectionUrl && !shouldHideConnectionLink && (
             <Row
               icon={<PiLinkDuotone />}
+              iconTone="account"
               label={
                 <span dir="ltr" className="text-[14px] font-medium text-dark-200">
                   {displayedConnectionUrl}
@@ -676,6 +677,7 @@ export default function Subscription() {
               <Row
                 key={purchase.id}
                 icon={<PiDownloadSimpleDuotone />}
+                iconTone="devices"
                 label={`${purchase.traffic_gb} ${t('common.units.gb')}`}
                 description={
                   forever

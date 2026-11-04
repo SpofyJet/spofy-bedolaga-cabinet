@@ -15,7 +15,9 @@ import { cn } from '@/lib/utils';
 
 /**
  * Быстрые действия главной. При подписке — четыре плитки, первая — главное
- * действие для состояния и единственная цветная:
+ * действие для состояния и единственная залитая — кораллом, «каплей» тёплого
+ * на синем (spofy/tones.ts). Остальные спокойные, синие: рядом с каплей
+ * не должно быть других ярких цветов, иначе она теряется:
  *   доступ есть   → Подключить · Продлить · Пополнить · Пригласить
  *   закончилась   → Продлить · Тарифы · Пополнить · Пригласить
  * Вечной подписке продлевать нечего: вместо «Продлить» — «Тарифы».
@@ -128,7 +130,7 @@ export default function QuickActions({
               className={cn(
                 'flex h-12 w-full max-w-[88px] items-center justify-center rounded-2xl transition-colors duration-200 sm:h-[52px]',
                 primary
-                  ? 'bg-accent-500 text-on-accent shadow-[0_8px_24px_-10px_rgba(var(--color-accent-500),0.7)] group-hover:bg-accent-600'
+                  ? 'bg-cta-500 text-on-cta shadow-[0_8px_24px_-10px_rgba(255,98,66,0.55)] group-hover:bg-cta-600'
                   : 'bg-dark-800/70 text-accent-300 ring-1 ring-inset ring-dark-700/60 group-hover:bg-dark-700/70',
               )}
             >

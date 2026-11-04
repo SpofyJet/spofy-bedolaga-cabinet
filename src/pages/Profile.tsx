@@ -28,6 +28,7 @@ import { useBranding } from '@/hooks/useBranding';
 import { useFeatureFlags } from '@/hooks/useFeatureFlags';
 import { useTheme } from '@/hooks/useTheme';
 import { useHaptic, useIsTelegram } from '@/platform';
+import { RowIcon, type Tone } from '@/components/spofy/ui';
 
 /**
  * Профиль — короткое меню: кто я, подписка, аккаунт, настройки, о сервисе.
@@ -112,30 +113,44 @@ export default function Profile() {
       </div>
 
       <MenuGroup title={t('profile.menu.section.subscription')}>
-        <MenuLink to="/connection" icon={<PiDevicesDuotone />} label={t('profile.menu.devices')} />
+        <MenuLink
+          to="/connection"
+          tone="devices"
+          icon={<PiDevicesDuotone />}
+          label={t('profile.menu.devices')}
+        />
         <MenuLink
           to="/balance?section=history"
+          tone="money"
           icon={<PiClockCounterClockwiseDuotone />}
           label={t('profile.menu.paymentHistory')}
         />
         <MenuLink
           to="/balance?section=promo"
+          tone="promo"
           icon={<PiTicketDuotone />}
           label={t('profile.menu.promocode')}
         />
         {Boolean(giftEnabled) && (
-          <MenuLink to="/gift" icon={<PiGiftDuotone />} label={t('profile.menu.gift')} />
+          <MenuLink
+            to="/gift"
+            tone="friends"
+            icon={<PiGiftDuotone />}
+            label={t('profile.menu.gift')}
+          />
         )}
       </MenuGroup>
 
       <MenuGroup title={t('profile.menu.section.account')}>
         <MenuLink
           to="/profile/accounts"
+          tone="account"
           icon={<PiLinkSimpleDuotone />}
           label={t('profile.menu.connected')}
         />
         <MenuLink
           to="/profile/notifications"
+          tone="notify"
           icon={<PiBellDuotone />}
           label={t('profile.menu.notifications')}
           hint={
@@ -149,6 +164,7 @@ export default function Profile() {
         {emailAuth?.enabled !== false && (
           <MenuLink
             to="/profile/email"
+            tone="account"
             icon={<PiAtDuotone />}
             label={t('profile.menu.email')}
             hint={user?.email ?? t('profile.menu.emailNotLinked')}
@@ -159,7 +175,7 @@ export default function Profile() {
       {(languages.length > 1 || canToggle) && (
         <MenuGroup title={t('profile.menu.section.settings')}>
           {languages.length > 1 && (
-            <MenuRow icon={<PiTranslateDuotone />} label={t('profile.menu.language')}>
+            <MenuRow tone="muted" icon={<PiTranslateDuotone />} label={t('profile.menu.language')}>
               <Segmented
                 label={t('profile.menu.language')}
                 value={currentLang}
@@ -172,7 +188,7 @@ export default function Profile() {
             </MenuRow>
           )}
           {canToggle && (
-            <MenuRow icon={<PiMoonStarsDuotone />} label={t('profile.menu.theme')}>
+            <MenuRow tone="muted" icon={<PiMoonStarsDuotone />} label={t('profile.menu.theme')}>
               <Segmented
                 label={t('profile.menu.theme')}
                 value={isDark ? 'dark' : 'light'}
@@ -193,12 +209,18 @@ export default function Profile() {
       <MenuGroup title={t('profile.menu.section.about')}>
         <MenuLink
           to="/info"
+          tone="muted"
           icon={<PiInfoDuotone />}
           label={t('profile.menu.about')}
           hint={t('profile.menu.aboutHint')}
         />
         {isAdmin && (
-          <MenuLink to="/admin" icon={<PiShieldCheckDuotone />} label={t('admin.nav.title')} />
+          <MenuLink
+            to="/admin"
+            tone="error"
+            icon={<PiShieldCheckDuotone />}
+            label={t('admin.nav.title')}
+          />
         )}
       </MenuGroup>
 
@@ -230,22 +252,16 @@ function MenuGroup({ title, children }: { title: string; children: ReactNode }) 
   );
 }
 
-function RowIcon({ children }: { children: ReactNode }) {
-  return (
-    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-accent-500/10 text-accent-400 [&>svg]:h-[22px] [&>svg]:w-[22px]">
-      {children}
-    </span>
-  );
-}
-
 function MenuLink({
   to,
   icon,
+  tone,
   label,
   hint,
 }: {
   to: string;
   icon: ReactNode;
+  tone?: Tone;
   label: string;
   hint?: string;
 }) {
@@ -254,7 +270,7 @@ function MenuLink({
       to={to}
       className="flex min-h-[60px] items-center gap-3 px-4 py-2.5 transition-colors hover:bg-dark-800/40 active:bg-dark-800/60"
     >
-      <RowIcon>{icon}</RowIcon>
+      <RowIcon tone={tone}>{icon}</RowIcon>
       <span className="min-w-0 flex-1 truncate text-[15px] font-semibold text-dark-100">
         {label}
       </span>
@@ -266,16 +282,18 @@ function MenuLink({
 
 function MenuRow({
   icon,
+  tone,
   label,
   children,
 }: {
   icon: ReactNode;
+  tone?: Tone;
   label: string;
   children: ReactNode;
 }) {
   return (
     <div className="flex min-h-[60px] items-center gap-3 px-4 py-2.5">
-      <RowIcon>{icon}</RowIcon>
+      <RowIcon tone={tone}>{icon}</RowIcon>
       <span className="min-w-0 flex-1 truncate text-[15px] font-semibold text-dark-100">
         {label}
       </span>

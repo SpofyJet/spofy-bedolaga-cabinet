@@ -169,7 +169,7 @@ export default function CouponStatus() {
               href={coupon.bot_link}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex h-12 w-full items-center justify-center rounded-2xl bg-accent-500 px-5 text-[15px] font-semibold text-on-accent transition-colors hover:bg-accent-600"
+              className="flex h-12 w-full items-center justify-center rounded-2xl bg-cta-500 px-5 text-[15px] font-semibold text-on-cta transition-colors hover:bg-cta-600"
             >
               {t('coupon.openBot')}
             </a>

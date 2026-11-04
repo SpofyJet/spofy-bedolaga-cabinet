@@ -14,7 +14,7 @@ function linkButton(tone: 'primary' | 'secondary', extra?: string) {
   return cn(
     'inline-flex h-12 items-center justify-center gap-2 rounded-2xl px-4 text-center text-[15px] font-semibold leading-tight transition-colors active:scale-[0.98]',
     tone === 'primary'
-      ? 'bg-accent-500 text-on-accent hover:bg-accent-600'
+      ? 'bg-cta-500 text-on-cta hover:bg-cta-600'
       : 'bg-dark-800/70 text-dark-100 ring-1 ring-inset ring-dark-700/60 hover:bg-dark-700/70',
     extra,
   );
@@ -46,10 +46,18 @@ export default function PurchaseCTAButton({
 
   if (isTariffsMode && subscription && canOpenTariffSwitch(subscription)) {
     const showRenew = !isDaily && !isLifetime;
+    // Два синих блока подряд («Подключить устройство» в карточке и «Продлить»)
+    // спорили за внимание. Пока до конца больше недели, продление — спокойная
+    // кнопка; синей она становится, когда срок и правда подходит.
+    const renewUrgent =
+      !subscription.is_active || subscription.is_trial || subscription.days_left <= 7;
     return (
       <div className={cn('grid gap-2', showRenew && 'sm:grid-cols-2')}>
         {showRenew && (
-          <Link to={`/subscriptions/${subscription.id}/renew`} className={linkButton('primary')}>
+          <Link
+            to={`/subscriptions/${subscription.id}/renew`}
+            className={linkButton(renewUrgent ? 'primary' : 'secondary')}
+          >
             {t('subscription.extend')}
           </Link>
         )}

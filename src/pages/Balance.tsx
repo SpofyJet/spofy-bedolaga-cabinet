@@ -41,24 +41,23 @@ import {
   RowIcon,
   Stat,
   Surface,
+  type Tone,
 } from '@/components/spofy/ui';
 import { Skeleton, SkeletonGroup } from '@/components/ui/skeleton';
 import { isPaidStatus, isFailedStatus } from '../utils/paymentStatus';
 import { transactionTypeLabelKey } from '../utils/transactionType';
 import { plainTariffName } from '@/utils/plainTariffName';
 
-type Tone = 'accent' | 'success' | 'warning' | 'error' | 'muted';
-
 /** Иконка и цвет строки истории — по типу операции (типы бота, см. utils/transactionType). */
 const TX_ICONS: Record<string, { icon: ReactNode; tone: Tone }> = {
   DEPOSIT: { icon: <PiArrowDownLeftDuotone />, tone: 'success' },
   WITHDRAWAL: { icon: <PiArrowUpRightDuotone />, tone: 'error' },
-  SUBSCRIPTION_PAYMENT: { icon: <PiShieldCheckDuotone />, tone: 'accent' },
+  SUBSCRIPTION_PAYMENT: { icon: <PiShieldCheckDuotone />, tone: 'plan' },
   REFUND: { icon: <PiArrowCounterClockwiseDuotone />, tone: 'success' },
   FAILED_REFUND: { icon: <PiWarningDuotone />, tone: 'error' },
-  REFERRAL_REWARD: { icon: <PiUsersThreeDuotone />, tone: 'warning' },
-  POLL_REWARD: { icon: <PiChartBarDuotone />, tone: 'warning' },
-  GIFT_PAYMENT: { icon: <PiGiftDuotone />, tone: 'accent' },
+  REFERRAL_REWARD: { icon: <PiUsersThreeDuotone />, tone: 'friends' },
+  POLL_REWARD: { icon: <PiChartBarDuotone />, tone: 'promo' },
+  GIFT_PAYMENT: { icon: <PiGiftDuotone />, tone: 'friends' },
 };
 const TX_FALLBACK = { icon: <PiReceiptDuotone />, tone: 'muted' as Tone };
 
@@ -430,6 +429,7 @@ export default function Balance() {
                     <Row
                       key={sub.id}
                       icon={<PiShieldCheckDuotone />}
+                      iconTone="plan"
                       label={plainTariffName(sub.tariff_name)}
                       hint={
                         isLifetimePeriod(sub.days_left)
@@ -515,6 +515,7 @@ export default function Balance() {
           <Row
             to="/balance/saved-cards"
             icon={<PiCreditCardDuotone />}
+            iconTone="money"
             label={t('balance.savedCards.title')}
             hint={savedCardsData.cards.length > 0 ? String(savedCardsData.cards.length) : undefined}
           />

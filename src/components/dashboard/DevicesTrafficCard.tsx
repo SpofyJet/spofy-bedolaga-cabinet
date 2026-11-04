@@ -23,7 +23,7 @@ const VALUE =
 const CAPTION = 'mt-0.5 text-xs leading-snug';
 const ACTION =
   'mt-3 flex h-10 items-center justify-center gap-1.5 whitespace-nowrap rounded-xl px-2 text-[13px] font-semibold transition-colors min-[360px]:text-sm';
-const ACTION_HOT = 'bg-accent-500 text-on-accent hover:bg-accent-600';
+const ACTION_HOT = 'bg-cta-500 text-on-cta hover:bg-cta-600';
 const ACTION_QUIET = 'bg-dark-700/60 text-dark-100 hover:bg-dark-700';
 
 /** Сколько плиток помещается в половину карточки на телефоне (4 × 32px + зазоры). */

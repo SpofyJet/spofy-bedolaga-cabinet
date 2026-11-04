@@ -155,7 +155,7 @@ export default function Contests() {
                   <button
                     onClick={() => handleSubmitAnswer('blitz')}
                     disabled={submitAnswerMutation.isPending}
-                    className="h-14 w-full rounded-2xl bg-accent-500 text-[17px] font-bold text-on-accent transition-colors hover:bg-accent-600"
+                    className="h-14 w-full rounded-2xl bg-cta-500 text-[17px] font-bold text-on-cta transition-colors hover:bg-cta-600"
                   >
                     {gameData.game_data.button_text || t('contests.imHere')}
                   </button>

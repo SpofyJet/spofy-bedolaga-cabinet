@@ -30,7 +30,7 @@ export default function BypassSuspendedBanner({
 }: BypassSuspendedBannerProps) {
   const { t } = useTranslation();
   const primary =
-    'inline-flex h-11 items-center justify-center rounded-2xl bg-accent-500 px-4 text-sm font-semibold text-on-accent transition-colors hover:bg-accent-600';
+    'inline-flex h-11 items-center justify-center rounded-2xl bg-cta-500 px-4 text-sm font-semibold text-on-cta transition-colors hover:bg-cta-600';
   const secondary =
     'inline-flex h-11 items-center justify-center rounded-2xl bg-dark-800/70 px-4 text-sm font-semibold text-dark-100 ring-1 ring-inset ring-dark-700/60 transition-colors hover:bg-dark-700/70';
 

@@ -493,7 +493,7 @@ function ProviderRow({
           сжимался в столбик), с sm — справа в строке. */}
       <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-3">
         <div className="flex min-w-0 items-center gap-3">
-          <RowIcon>
+          <RowIcon tone="money">
             <PiCreditCardDuotone />
           </RowIcon>
           <div className="min-w-0">

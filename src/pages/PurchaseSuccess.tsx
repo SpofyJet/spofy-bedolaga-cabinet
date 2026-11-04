@@ -710,9 +710,7 @@ function GiftLinkShareState({
         onClick={handleCopy}
         className={cn(
           'flex h-12 w-full items-center justify-center gap-2 rounded-2xl px-5 text-[15px] font-semibold transition-colors active:scale-[0.98]',
-          copied
-            ? 'bg-success-500/15 text-success-400'
-            : 'bg-accent-500 text-on-accent hover:bg-accent-600',
+          copied ? 'bg-success-500/15 text-success-400' : 'bg-cta-500 text-on-cta hover:bg-cta-600',
         )}
       >
         {copied ? (

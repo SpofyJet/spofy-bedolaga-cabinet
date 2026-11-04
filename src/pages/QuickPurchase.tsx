@@ -580,7 +580,7 @@ function SummaryCard({
               className={cn(
                 'flex h-12 w-full items-center justify-center gap-2 rounded-2xl px-5 text-[15px] font-semibold transition-colors',
                 canSubmit && !isSubmitting
-                  ? 'bg-accent-500 text-on-accent hover:bg-accent-600 active:scale-[0.98]'
+                  ? 'bg-cta-500 text-on-cta hover:bg-cta-600 active:scale-[0.98]'
                   : 'cursor-not-allowed bg-dark-800 text-dark-500',
               )}
             >
@@ -626,7 +626,7 @@ function SummaryCard({
           className={cn(
             'flex h-12 w-full items-center justify-center gap-2 rounded-2xl px-5 text-[15px] font-semibold transition-colors',
             canSubmit && !isSubmitting
-              ? 'bg-accent-500 text-on-accent hover:bg-accent-600 active:scale-[0.98]'
+              ? 'bg-cta-500 text-on-cta hover:bg-cta-600 active:scale-[0.98]'
               : 'cursor-not-allowed bg-dark-800 text-dark-500',
           )}
         >

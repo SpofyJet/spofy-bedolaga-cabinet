@@ -274,8 +274,10 @@ export function computeThemeCssVars(themeColors: ThemeColors): Record<string, st
     '--color-dark-600': interpolateRgb(darkTextSecRgb, darkSurfaceRgb, 0.6),
     '--color-dark-700': interpolateRgb(darkTextSecRgb, darkSurfaceRgb, 0.8),
     '--color-dark-800': tripletOf(darkSurfaceRgb),
-    '--color-dark-850': interpolateRgb(darkSurfaceRgb, darkBgRgb, 0.5),
-    '--color-dark-900': interpolateRgb(darkSurfaceRgb, darkBgRgb, 0.7),
+    // Карточки (bg-dark-900/70) должны отделяться от фона: при 0.7 они
+    // уходили почти в цвет фона, и вся страница сливалась в одно пятно.
+    '--color-dark-850': interpolateRgb(darkSurfaceRgb, darkBgRgb, 0.2),
+    '--color-dark-900': interpolateRgb(darkSurfaceRgb, darkBgRgb, 0.4),
     '--color-dark-950': tripletOf(darkBgRgb),
   };
 

@@ -6,7 +6,7 @@ import { safeSession } from '../utils/safeStorage';
 const tr = (key: string, fallback: string) => i18n.t(key, { defaultValue: fallback });
 
 const PRIMARY_BUTTON =
-  'inline-flex h-12 items-center justify-center rounded-2xl bg-accent-500 px-6 text-[15px] font-semibold text-on-accent transition-colors hover:bg-accent-600 active:scale-[0.98]';
+  'inline-flex h-12 items-center justify-center rounded-2xl bg-cta-500 px-6 text-[15px] font-semibold text-on-cta transition-colors hover:bg-cta-600 active:scale-[0.98]';
 
 function ErrorIcon() {
   return (

@@ -62,7 +62,7 @@ export default function ReminderCards() {
             <button
               type="button"
               onClick={() => act(card)}
-              className="mt-3 rounded-xl bg-accent-500 px-4 py-2 text-sm font-medium text-on-accent transition-colors hover:bg-accent-400"
+              className="mt-3 rounded-xl bg-cta-500 px-4 py-2 text-sm font-medium text-on-cta transition-colors hover:bg-cta-400"
             >
               {card.button.text}
             </button>

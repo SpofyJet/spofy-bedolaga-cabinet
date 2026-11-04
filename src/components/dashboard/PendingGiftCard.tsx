@@ -59,7 +59,7 @@ export default function PendingGiftCard({ gifts, className }: PendingGiftCardPro
             {/* Activate button */}
             <Link
               to={`/gift?tab=activate&code=${gift.token}`}
-              className="shrink-0 rounded-xl bg-accent-500 px-4 py-2 text-sm font-medium text-on-accent transition-colors hover:bg-accent-400"
+              className="shrink-0 rounded-xl bg-cta-500 px-4 py-2 text-sm font-medium text-on-cta transition-colors hover:bg-cta-400"
             >
               {t('gift.pending.activate')}
             </Link>

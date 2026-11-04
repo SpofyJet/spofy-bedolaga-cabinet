@@ -453,7 +453,7 @@ export default function Dashboard() {
           ) : (
             <Link
               to="/subscription/purchase"
-              className="flex w-full items-center justify-center gap-2 rounded-2xl bg-accent-500 p-3.5 text-sm font-semibold text-on-accent transition-colors hover:bg-accent-600"
+              className="flex w-full items-center justify-center gap-2 rounded-2xl bg-cta-500 p-3.5 text-sm font-semibold text-on-cta transition-colors hover:bg-cta-600"
             >
               <span className="text-base">+</span>{' '}
               {t('subscriptions.browsePlans', 'Посмотреть тарифы и купить подписку')}
@@ -522,7 +522,7 @@ export default function Dashboard() {
             className={
               trialInfo?.is_available
                 ? 'flex w-full items-center justify-center gap-2 rounded-2xl bg-dark-800/70 p-3.5 text-sm font-semibold text-dark-100 ring-1 ring-inset ring-dark-700/60 transition-colors hover:bg-dark-700/70'
-                : 'flex w-full items-center justify-center gap-2 rounded-2xl bg-accent-500 p-3.5 text-sm font-semibold text-on-accent transition-colors hover:bg-accent-600'
+                : 'flex w-full items-center justify-center gap-2 rounded-2xl bg-cta-500 p-3.5 text-sm font-semibold text-on-cta transition-colors hover:bg-cta-600'
             }
           >
             <span className="text-base">+</span>{' '}

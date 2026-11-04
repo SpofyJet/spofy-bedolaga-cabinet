@@ -194,7 +194,7 @@ export default function SubscriptionListCard({
         <Link
           to={tariffSelectionPath(subscription.id)}
           onClick={() => impact('light')}
-          className="mx-4 mb-4 flex h-11 items-center justify-center gap-2 rounded-2xl bg-accent-500 text-sm font-semibold text-on-accent transition-colors hover:bg-accent-600"
+          className="mx-4 mb-4 flex h-11 items-center justify-center gap-2 rounded-2xl bg-cta-500 text-sm font-semibold text-on-cta transition-colors hover:bg-cta-600"
         >
           {t('subscription.cta.moveToTariff')}
           <PiCaretRightBold className="h-3.5 w-3.5" />

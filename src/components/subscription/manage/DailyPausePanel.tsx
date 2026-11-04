@@ -73,7 +73,7 @@ export function DailyPausePanel({ subscription, subscriptionId }: DailyPausePane
           disabled={pauseMutation.isPending}
           className={
             needsResume
-              ? 'inline-flex h-10 shrink-0 items-center rounded-2xl bg-accent-500 px-4 text-sm font-semibold text-on-accent disabled:opacity-60'
+              ? 'inline-flex h-10 shrink-0 items-center rounded-2xl bg-cta-500 px-4 text-sm font-semibold text-on-cta disabled:opacity-60'
               : 'inline-flex h-10 shrink-0 items-center rounded-2xl bg-dark-800/70 px-4 text-sm font-semibold text-dark-100 ring-1 ring-inset ring-dark-700/60 disabled:opacity-60'
           }
         >

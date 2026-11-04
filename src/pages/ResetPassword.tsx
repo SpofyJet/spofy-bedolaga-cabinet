@@ -78,7 +78,7 @@ export default function ResetPassword() {
             </p>
             <Link
               to="/login"
-              className="inline-flex h-12 items-center justify-center gap-2 rounded-2xl bg-accent-500 px-5 text-[15px] font-semibold text-on-accent transition-colors hover:bg-accent-600 active:scale-[0.98] disabled:cursor-not-allowed disabled:bg-accent-500/40 w-full"
+              className="inline-flex h-12 items-center justify-center gap-2 rounded-2xl bg-cta-500 px-5 text-[15px] font-semibold text-on-cta transition-colors hover:bg-cta-600 active:scale-[0.98] disabled:cursor-not-allowed disabled:bg-cta-500/40 w-full"
             >
               {t('auth.backToLogin', 'Back to login')}
             </Link>
@@ -164,7 +164,7 @@ export default function ResetPassword() {
                 <button
                   type="submit"
                   disabled={status === 'loading'}
-                  className="inline-flex h-12 items-center justify-center gap-2 rounded-2xl bg-accent-500 px-5 text-[15px] font-semibold text-on-accent transition-colors hover:bg-accent-600 active:scale-[0.98] disabled:cursor-not-allowed disabled:bg-accent-500/40 w-full"
+                  className="inline-flex h-12 items-center justify-center gap-2 rounded-2xl bg-cta-500 px-5 text-[15px] font-semibold text-on-cta transition-colors hover:bg-cta-600 active:scale-[0.98] disabled:cursor-not-allowed disabled:bg-cta-500/40 w-full"
                 >
                   {status === 'loading' ? (
                     <span className="flex items-center justify-center gap-2">

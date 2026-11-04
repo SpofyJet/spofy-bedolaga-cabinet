@@ -209,7 +209,7 @@ export default function Connection() {
             isAdmin ? (
               <Link
                 to="/admin/apps"
-                className="inline-flex h-12 items-center justify-center gap-2 rounded-2xl bg-accent-500 px-5 text-[15px] font-semibold text-on-accent transition-colors hover:bg-accent-600"
+                className="inline-flex h-12 items-center justify-center gap-2 rounded-2xl bg-cta-500 px-5 text-[15px] font-semibold text-on-cta transition-colors hover:bg-cta-600"
               >
                 <PiGearSixDuotone className="h-5 w-5" />
                 {t('subscription.connection.goToApps')}

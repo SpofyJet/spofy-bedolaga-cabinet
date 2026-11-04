@@ -715,7 +715,7 @@ function BuyTabContent({
         className={cn(
           'flex h-12 w-full items-center justify-center gap-2 rounded-2xl px-6 text-[15px] font-semibold transition-colors duration-200',
           canSubmit && !purchaseMutation.isPending
-            ? 'bg-accent-500 text-on-accent hover:bg-accent-600 active:scale-[0.98]'
+            ? 'bg-cta-500 text-on-cta hover:bg-cta-600 active:scale-[0.98]'
             : 'cursor-not-allowed bg-dark-800 text-dark-500',
         )}
       >
@@ -934,7 +934,7 @@ function ActivateTabContent({ initialCode }: { initialCode?: string | null }) {
         className={cn(
           'h-12 w-full max-w-sm rounded-2xl px-6 text-[15px] font-semibold transition-colors duration-200',
           code.trim() && !activateMutation.isPending
-            ? 'bg-accent-500 text-on-accent hover:bg-accent-600 active:scale-[0.98]'
+            ? 'bg-cta-500 text-on-cta hover:bg-cta-600 active:scale-[0.98]'
             : 'cursor-not-allowed bg-dark-800 text-dark-500',
         )}
       >
@@ -1058,7 +1058,7 @@ function SentGiftCard({ gift }: { gift: SentGift }) {
           <button
             type="button"
             onClick={handleShare}
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-accent-500 px-4 text-[15px] font-semibold text-on-accent transition-colors hover:bg-accent-600 active:scale-[0.98]"
+            className="flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-cta-500 px-4 text-[15px] font-semibold text-on-cta transition-colors hover:bg-cta-600 active:scale-[0.98]"
           >
             <ExportIcon className="h-4 w-4" />
             {t('gift.shareGift')}

@@ -635,6 +635,7 @@ export default function Referral() {
       <Group title={t('referral.terms.title')}>
         <Row
           icon={<PiGiftDuotone />}
+          iconTone="friends"
           label={t('referral.friendDays.title', { days: FRIEND_DAYS })}
           description={t('referral.friendDays.short', {
             days: FRIEND_DAYS,
@@ -643,6 +644,7 @@ export default function Referral() {
         />
         <Row
           icon={<PiPercentDuotone />}
+          iconTone="money"
           label={t('referral.terms.commission')}
           trailing={
             <span className="text-[15px] font-semibold text-dark-100">
@@ -652,6 +654,7 @@ export default function Referral() {
         />
         <Row
           icon={<PiCoinsDuotone />}
+          iconTone="money"
           label={t('referral.terms.minTopup')}
           trailing={
             <span className="text-[15px] font-semibold text-dark-100">
@@ -817,7 +820,7 @@ export default function Referral() {
       {/* Ссылка-приглашение */}
       <Surface className="space-y-4">
         <div className="flex items-start gap-3">
-          <RowIcon>
+          <RowIcon tone="friends">
             <PiUserPlusDuotone />
           </RowIcon>
           <div className="min-w-0">
@@ -982,6 +985,7 @@ export default function Referral() {
           {showApplySection && (
             <Row
               icon={<PiHandshakeDuotone />}
+              iconTone="friends"
               label={t('referral.partner.becomePartner')}
               description={
                 /* Обещать вывод заработка, когда вывод выключен, нельзя: заявку

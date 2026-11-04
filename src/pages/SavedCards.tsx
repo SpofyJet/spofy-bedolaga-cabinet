@@ -202,7 +202,7 @@ export default function SavedCards() {
         <Group title={t('balance.savedCards.cardsSection', 'Карты')}>
           {savedCards.map((card) => (
             <div key={card.id} className="flex min-h-[60px] items-center gap-3 px-4 py-2.5">
-              <RowIcon>
+              <RowIcon tone="money">
                 <PiCreditCardDuotone />
               </RowIcon>
               <span className="min-w-0 flex-1">
@@ -243,7 +243,7 @@ export default function SavedCards() {
             const statusKey = sbpStatusLabelKey(info.status);
             return (
               <div key={sub.id} className="flex min-h-[60px] items-center gap-3 px-4 py-2.5">
-                <RowIcon tone={info.status === 'PAST_DUE' ? 'warning' : 'accent'}>
+                <RowIcon tone={info.status === 'PAST_DUE' ? 'warning' : 'money'}>
                   <PiArrowsClockwiseDuotone />
                 </RowIcon>
                 <span className="min-w-0 flex-1">

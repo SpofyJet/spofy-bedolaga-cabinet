@@ -4,9 +4,10 @@
  *
  * Правила стиля:
  * - колонка max-w-[600px] по центру, отступы между блоками space-y-6;
- * - поверхность: rounded-3xl bg-dark-900/70 + ring-1 ring-inset ring-dark-800/80, без теней и стекла;
+ * - поверхность: rounded-3xl bg-dark-900/70 + ring-1 ring-inset ring-dark-800/80, без теней и стекла
+ *   (с v11 dark-900 заметно светлее фона — карточки отделяются, а не сливаются);
  * - заголовки секций — 13px semibold dark-400, обычным регистром (без КАПСА и моно-шрифта);
- * - иконки — react-icons/pi Duotone в плитке 40×40 accent-500/10;
+ * - иконки — react-icons/pi Duotone в плитке 40×40, цвет по смыслу (tones.ts), синий — только действия;
  * - основная кнопка — accent-500, вторичная — dark-800/70; высота 48px;
  * - никаких нейро-картинок, градиентных «стеклянных» карточек и декоративных орбов.
  */
@@ -15,6 +16,10 @@ import { Link } from 'react-router';
 import { PiCaretRightBold } from 'react-icons/pi';
 
 import { cn } from '@/lib/utils';
+
+import { TONE_CHIP, TONE_TILE, type Tone } from './tones';
+
+export type { Tone } from './tones';
 
 export function Page({ children, className }: { children: ReactNode; className?: string }) {
   return <div className={cn('mx-auto w-full max-w-[600px] space-y-6', className)}>{children}</div>;
@@ -70,25 +75,12 @@ export function Group({
   );
 }
 
-export function RowIcon({
-  children,
-  tone = 'accent',
-}: {
-  children: ReactNode;
-  tone?: 'accent' | 'success' | 'warning' | 'error' | 'muted';
-}) {
-  const toneClass = {
-    accent: 'bg-accent-500/10 text-accent-400',
-    success: 'bg-success-500/10 text-success-400',
-    warning: 'bg-warning-500/10 text-warning-400',
-    error: 'bg-error-500/10 text-error-400',
-    muted: 'bg-dark-800/80 text-dark-300',
-  }[tone];
+export function RowIcon({ children, tone = 'accent' }: { children: ReactNode; tone?: Tone }) {
   return (
     <span
       className={cn(
         'flex h-10 w-10 shrink-0 items-center justify-center rounded-xl [&>svg]:h-[22px] [&>svg]:w-[22px]',
-        toneClass,
+        TONE_TILE[tone],
       )}
     >
       {children}
@@ -98,7 +90,7 @@ export function RowIcon({
 
 interface RowProps {
   icon?: ReactNode;
-  iconTone?: 'accent' | 'success' | 'warning' | 'error' | 'muted';
+  iconTone?: Tone;
   label: ReactNode;
   /** Вторая строка под заголовком. */
   description?: ReactNode;
@@ -171,7 +163,7 @@ export function Button({
   ...rest
 }: ButtonHTMLAttributes<HTMLButtonElement> & { tone?: ButtonTone }) {
   const toneClass = {
-    primary: 'bg-accent-500 text-on-accent hover:bg-accent-600 disabled:bg-accent-500/40',
+    primary: 'bg-cta-500 text-on-cta hover:bg-cta-600 disabled:bg-cta-500/40',
     secondary:
       'bg-dark-800/70 text-dark-100 ring-1 ring-inset ring-dark-700/60 hover:bg-dark-700/70',
     danger:
@@ -194,25 +186,12 @@ export function Button({
 }
 
 /** Маленький статус-чип (Активна / Пробный / Истекла). */
-export function Chip({
-  children,
-  tone = 'accent',
-}: {
-  children: ReactNode;
-  tone?: 'accent' | 'success' | 'warning' | 'error' | 'muted';
-}) {
-  const toneClass = {
-    accent: 'border-accent-500/30 bg-accent-500/10 text-accent-300',
-    success: 'border-success-500/25 bg-success-500/10 text-success-400',
-    warning: 'border-warning-500/25 bg-warning-500/10 text-warning-400',
-    error: 'border-error-500/25 bg-error-500/10 text-error-400',
-    muted: 'border-dark-700/60 bg-dark-800/60 text-dark-300',
-  }[tone];
+export function Chip({ children, tone = 'accent' }: { children: ReactNode; tone?: Tone }) {
   return (
     <span
       className={cn(
         'inline-flex w-fit items-center rounded-full border px-2.5 py-1 text-2xs font-semibold',
-        toneClass,
+        TONE_CHIP[tone],
       )}
     >
       {children}

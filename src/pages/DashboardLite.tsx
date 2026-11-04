@@ -19,7 +19,7 @@ import { plainTariffName } from '@/utils/plainTariffName';
 
 /** Единственное главное действие экрана — ссылкой или кнопкой, вид один. */
 const PRIMARY_ACTION_CLASS =
-  'flex w-full items-center justify-center rounded-2xl bg-accent-500 px-5 py-4 text-[15px] font-semibold text-on-accent transition-colors hover:bg-accent-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-400 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent';
+  'flex w-full items-center justify-center rounded-2xl bg-cta-500 px-5 py-4 text-[15px] font-semibold text-on-cta transition-colors hover:bg-cta-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-400 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent';
 
 /**
  * Простой вид главного экрана.

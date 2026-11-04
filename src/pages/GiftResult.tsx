@@ -170,9 +170,7 @@ function CodeOnlySuccessState({
         onClick={handleCopy}
         className={cn(
           'flex h-12 w-full items-center justify-center gap-2 rounded-2xl px-4 text-[15px] font-semibold transition-colors duration-200 active:scale-[0.98]',
-          copied
-            ? 'bg-success-500/20 text-success-400'
-            : 'bg-accent-500 text-on-accent hover:bg-accent-600',
+          copied ? 'bg-success-500/20 text-success-400' : 'bg-cta-500 text-on-cta hover:bg-cta-600',
         )}
       >
         {copied ? (
@@ -255,7 +253,7 @@ function DeliveredState({
       <button
         type="button"
         onClick={() => navigate('/')}
-        className="flex h-12 w-full items-center justify-center rounded-2xl bg-accent-500 px-6 text-[15px] font-semibold text-on-accent transition-colors hover:bg-accent-600 active:scale-[0.98]"
+        className="flex h-12 w-full items-center justify-center rounded-2xl bg-cta-500 px-6 text-[15px] font-semibold text-on-cta transition-colors hover:bg-cta-600 active:scale-[0.98]"
       >
         {t('gift.backToDashboard', 'Back to dashboard')}
       </button>
@@ -325,7 +323,7 @@ function PendingActivationState({
       <button
         type="button"
         onClick={() => navigate('/')}
-        className="flex h-12 w-full items-center justify-center rounded-2xl bg-accent-500 px-6 text-[15px] font-semibold text-on-accent transition-colors hover:bg-accent-600 active:scale-[0.98]"
+        className="flex h-12 w-full items-center justify-center rounded-2xl bg-cta-500 px-6 text-[15px] font-semibold text-on-cta transition-colors hover:bg-cta-600 active:scale-[0.98]"
       >
         {t('gift.backToDashboard', 'Back to dashboard')}
       </button>
@@ -357,7 +355,7 @@ function FailedState() {
       <button
         type="button"
         onClick={() => navigate('/gift')}
-        className="flex h-12 w-full items-center justify-center rounded-2xl bg-accent-500 px-6 text-[15px] font-semibold text-on-accent transition-colors hover:bg-accent-600 active:scale-[0.98]"
+        className="flex h-12 w-full items-center justify-center rounded-2xl bg-cta-500 px-6 text-[15px] font-semibold text-on-cta transition-colors hover:bg-cta-600 active:scale-[0.98]"
       >
         {t('gift.tryAgain', 'Try again')}
       </button>
@@ -394,7 +392,7 @@ function PollErrorState() {
       <button
         type="button"
         onClick={() => navigate('/')}
-        className="flex h-12 w-full items-center justify-center rounded-2xl bg-accent-500 px-6 text-[15px] font-semibold text-on-accent transition-colors hover:bg-accent-600 active:scale-[0.98]"
+        className="flex h-12 w-full items-center justify-center rounded-2xl bg-cta-500 px-6 text-[15px] font-semibold text-on-cta transition-colors hover:bg-cta-600 active:scale-[0.98]"
       >
         {t('gift.backToDashboard', 'Back to dashboard')}
       </button>
@@ -428,7 +426,7 @@ function PollTimedOutState({ onRetry }: { onRetry: () => void }) {
       <button
         type="button"
         onClick={onRetry}
-        className="h-12 rounded-2xl bg-accent-500 px-6 text-[15px] font-semibold text-on-accent transition-colors hover:bg-accent-600 active:scale-[0.98]"
+        className="h-12 rounded-2xl bg-cta-500 px-6 text-[15px] font-semibold text-on-cta transition-colors hover:bg-cta-600 active:scale-[0.98]"
       >
         {t('gift.retry', 'Retry')}
       </button>
@@ -458,7 +456,7 @@ function NoTokenState() {
       <button
         type="button"
         onClick={() => navigate('/gift')}
-        className="h-12 rounded-2xl bg-accent-500 px-6 text-[15px] font-semibold text-on-accent transition-colors hover:bg-accent-600 active:scale-[0.98]"
+        className="h-12 rounded-2xl bg-cta-500 px-6 text-[15px] font-semibold text-on-cta transition-colors hover:bg-cta-600 active:scale-[0.98]"
       >
         {t('gift.backToGift', 'Go back')}
       </button>

@@ -24,7 +24,7 @@ describe('главная без подписки: одна главная кно
     expect(hrefs()).toEqual(['/balance/top-up', '/balance?section=promo', '/referral']);
     expect(screen.queryByText('dashboard.quick.plans')).toBeNull();
     // ни одна плитка не залита акцентом
-    expect(document.querySelector('.bg-accent-500')).toBeNull();
+    expect(document.querySelector('.bg-cta-500')).toBeNull();
   });
 
   it('с подпиской по-прежнему четыре плитки и главная — первая', () => {
@@ -34,7 +34,7 @@ describe('главная без подписки: одна главная кно
       </MemoryRouter>,
     );
     expect(hrefs()).toHaveLength(4);
-    expect(document.querySelectorAll('.bg-accent-500')).toHaveLength(1);
+    expect(document.querySelectorAll('.bg-cta-500')).toHaveLength(1);
   });
 
   it('«Полезное» не повторяет промокод, когда он уже в быстрых действиях', () => {

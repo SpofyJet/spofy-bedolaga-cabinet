@@ -255,7 +255,7 @@ export default function TrialOfferCard({
           // сплошной акцент, как у остальных основных кнопок (была
           // полупрозрачной и проигрывала кнопке покупки под ней).
           className={`w-full rounded-[14px] py-4 text-base font-bold tracking-tight transition-all duration-300 disabled:opacity-50${
-            isDark ? ' bg-accent-500 text-on-accent hover:bg-accent-600' : ''
+            isDark ? ' bg-cta-500 text-on-cta hover:bg-cta-600' : ''
           }`}
           style={
             isDark

@@ -41,15 +41,15 @@ export const DEFAULT_ENABLED_THEMES: EnabledThemes = {
 export const DEFAULT_THEME_COLORS: ThemeColors = {
   accent: '#3b82f6',
 
-  darkBackground: '#0a0f1a',
-  darkSurface: '#0f172a',
+  darkBackground: '#070d1c',
+  darkSurface: '#1c2740',
   darkText: '#f1f5f9',
   darkTextSecondary: '#94a3b8',
 
-  lightBackground: '#F7E7CE',
-  lightSurface: '#FEF9F0',
-  lightText: '#1F1A12',
-  lightTextSecondary: '#7D6B48',
+  lightBackground: '#e9ecf1',
+  lightSurface: '#ffffff',
+  lightText: '#11141b',
+  lightTextSecondary: '#5f6877',
 
   success: '#22c55e',
   warning: '#f59e0b',
