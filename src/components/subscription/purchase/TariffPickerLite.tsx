@@ -8,6 +8,7 @@ import type { Tariff } from '../../../types';
 import { dailyPriceQuote } from './dailyPrice';
 import { tariffAction } from './tariffAction';
 import type { TariffPickerGridProps } from './TariffPickerGrid';
+import { plainTariffName } from '@/utils/plainTariffName';
 
 /**
  * Простой вид витрины тарифов.
@@ -86,7 +87,7 @@ export function TariffPickerLite({
             <span className="min-w-0 flex-1">
               <span className="flex items-center gap-2">
                 <span className="truncate text-[16px] font-semibold text-dark-50">
-                  {tariff.name}
+                  {plainTariffName(tariff.name)}
                 </span>
                 {isCurrent && (
                   <span className="shrink-0 text-[13px] text-dark-400">

@@ -15,6 +15,7 @@ import { PageHeader } from '@/components/layout/PageHeader';
 import { Page } from '@/components/spofy/ui';
 import { copyToClipboard } from '@/utils/clipboard';
 import { CheckIcon, CopyIcon, InfoIcon, ExclamationIcon, ClockIcon } from '@/components/icons';
+import { plainTariffName } from '@/utils/plainTariffName';
 
 const MAX_POLL_MS = 10 * 60 * 1000; // 10 minutes
 
@@ -559,13 +560,13 @@ export default function GiftResult() {
         ) : isClaimablePaid ? (
           <CodeOnlySuccessState
             purchaseToken={status.purchase_token!}
-            tariffName={status.tariff_name}
+            tariffName={plainTariffName(status.tariff_name)}
             periodDays={status.period_days}
           />
         ) : isDelivered ? (
           <DeliveredState
             recipientContact={status.recipient_contact_value}
-            tariffName={status.tariff_name}
+            tariffName={plainTariffName(status.tariff_name)}
             periodDays={status.period_days}
             giftMessage={status.gift_message}
             warning={warning}
@@ -573,7 +574,7 @@ export default function GiftResult() {
         ) : isPendingActivation ? (
           <PendingActivationState
             recipientContact={status.recipient_contact_value}
-            tariffName={status.tariff_name}
+            tariffName={plainTariffName(status.tariff_name)}
             periodDays={status.period_days}
             warning={warning}
           />

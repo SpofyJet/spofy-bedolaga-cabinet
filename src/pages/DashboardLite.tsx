@@ -15,6 +15,7 @@ import { getApiErrorMessage } from '@/utils/api-error';
 import { formatLiteDate } from '@/utils/liteDate';
 import { liteStatus, type LiteAction } from '@/utils/liteStatus';
 import { isLifetimeSubscription } from '@/utils/lifetime';
+import { plainTariffName } from '@/utils/plainTariffName';
 
 /** Единственное главное действие экрана — ссылкой или кнопкой, вид один. */
 const PRIMARY_ACTION_CLASS =
@@ -201,7 +202,7 @@ export default function DashboardLite() {
         <ManySubscriptions
           items={subscriptions.map((item) => ({
             id: item.id,
-            name: item.tariff_name,
+            name: plainTariffName(item.tariff_name),
             endDate: item.end_date,
             lifetime: isLifetimeSubscription(item),
           }))}

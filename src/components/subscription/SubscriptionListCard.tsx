@@ -17,6 +17,7 @@ import { needsTariff, tariffSelectionPath } from '@/utils/legacySubscription';
 import { isLifetimeSubscription } from '@/utils/lifetime';
 import { connectFooterState } from './connectFooterState';
 import { SubscriptionConnectFooter } from './SubscriptionConnectFooter';
+import { plainTariffName } from '@/utils/plainTariffName';
 
 function formatDate(iso: string | null, locale?: string): string {
   if (!iso) return '—';
@@ -152,7 +153,7 @@ export default function SubscriptionListCard({
       >
         <div className="flex items-center justify-between gap-2">
           <span className="min-w-0 truncate text-[17px] font-bold tracking-tight text-dark-50">
-            {subscription.tariff_name || t('subscription.defaultName', 'Подписка')}
+            {plainTariffName(subscription.tariff_name) || t('subscription.defaultName', 'Подписка')}
           </span>
           <span className="flex shrink-0 items-center gap-2">
             <Chip tone={status.tone}>{status.label}</Chip>

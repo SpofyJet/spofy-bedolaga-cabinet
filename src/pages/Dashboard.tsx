@@ -35,6 +35,7 @@ import { Skeleton, SkeletonGroup } from '@/components/ui/skeleton';
 import { safeLocal } from '../utils/safeStorage';
 import { getApiErrorMessage } from '../utils/api-error';
 import { formatPriceShort } from '../components/wheel/prizeText';
+import { plainTariffName } from '@/utils/plainTariffName';
 
 export default function Dashboard() {
   const { t } = useTranslation();
@@ -398,7 +399,7 @@ export default function Dashboard() {
         endDate={focusSub?.end_date}
         isTrial={Boolean(focusSub?.is_trial)}
         isLifetime={focusLifetime}
-        tariffName={focusSub?.tariff_name ?? null}
+        tariffName={plainTariffName(focusSub?.tariff_name) ?? null}
         balanceRubles={balanceData?.balance_rubles}
         fromFriendsRubles={referralInfo?.available_balance_rubles ?? null}
         loading={!statusReady}
@@ -579,7 +580,9 @@ export default function Dashboard() {
           isOpen
           onClose={() => setDeviceLimitSubId(null)}
           subscriptionId={deviceLimitSub.id}
-          subscriptionName={deviceLimitSub.tariff_name || t('subscription.defaultName', 'Подписка')}
+          subscriptionName={
+            plainTariffName(deviceLimitSub.tariff_name) || t('subscription.defaultName', 'Подписка')
+          }
           deviceLimit={deviceLimitSub.device_limit}
           isTrial={deviceLimitSub.is_trial}
           devices={deviceLimitDevices?.devices ?? []}

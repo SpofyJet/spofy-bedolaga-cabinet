@@ -21,6 +21,7 @@ import { Spinner } from '@/components/ui/Spinner';
 import { AnimatedCheckmark } from '@/components/ui/AnimatedCheckmark';
 import { AnimatedCrossmark } from '@/components/ui/AnimatedCrossmark';
 import { cn } from '../lib/utils';
+import { plainTariffName } from '@/utils/plainTariffName';
 
 const MAX_POLL_MS = 10 * 60 * 1000; // 10 minutes
 
@@ -864,7 +865,7 @@ export default function PurchaseSuccess() {
               <GiftLinkShareState
                 claimUrl={purchaseStatus.claim_url}
                 botClaimLink={purchaseStatus.bot_claim_link}
-                tariffName={purchaseStatus.tariff_name}
+                tariffName={plainTariffName(purchaseStatus.tariff_name)}
                 periodDays={purchaseStatus.period_days}
                 recipientContactValue={purchaseStatus.recipient_contact_value}
                 contactType={purchaseStatus.contact_type}
@@ -874,7 +875,7 @@ export default function PurchaseSuccess() {
                 cabinetEmail={purchaseStatus.cabinet_email!}
                 cabinetPassword={purchaseStatus.cabinet_password}
                 autoLoginToken={purchaseStatus.auto_login_token}
-                tariffName={purchaseStatus.tariff_name}
+                tariffName={plainTariffName(purchaseStatus.tariff_name)}
                 periodDays={purchaseStatus.period_days}
               />
             ) : isSuccess ? (
@@ -883,7 +884,7 @@ export default function PurchaseSuccess() {
                 cryptoLink={purchaseStatus.subscription_crypto_link}
                 contactValue={purchaseStatus.contact_value}
                 recipientContactValue={purchaseStatus.recipient_contact_value}
-                tariffName={purchaseStatus.tariff_name}
+                tariffName={plainTariffName(purchaseStatus.tariff_name)}
                 periodDays={purchaseStatus.period_days}
                 isGift={purchaseStatus.is_gift}
                 giftMessage={purchaseStatus.gift_message}
@@ -893,7 +894,7 @@ export default function PurchaseSuccess() {
               />
             ) : isGiftPendingActivation ? (
               <GiftPendingActivationState
-                tariffName={purchaseStatus.tariff_name}
+                tariffName={plainTariffName(purchaseStatus.tariff_name)}
                 periodDays={purchaseStatus.period_days}
                 recipientContactValue={purchaseStatus.recipient_contact_value}
                 giftMessage={purchaseStatus.gift_message}
@@ -904,7 +905,7 @@ export default function PurchaseSuccess() {
             ) : isPendingActivation ? (
               <div className="space-y-4">
                 <PendingActivationState
-                  tariffName={purchaseStatus.tariff_name}
+                  tariffName={plainTariffName(purchaseStatus.tariff_name)}
                   periodDays={purchaseStatus.period_days}
                   giftMessage={purchaseStatus.gift_message}
                   isGift={purchaseStatus.is_gift}

@@ -1,5 +1,6 @@
 import type { Subscription } from '@/types';
 import { isLifetimeSubscription } from './lifetime';
+import { plainTariffName } from '@/utils/plainTariffName';
 
 /**
  * Старая подписка: платная, без тарифа, а оператор уже на тарифах (куплена в
@@ -51,7 +52,7 @@ export function planTitle(
   t: (key: string) => string,
 ): string {
   if (needsTariff(subscription)) return t('subscription.legacy.noTariff');
-  return subscription.tariff_name || t('subscription.currentPlan');
+  return plainTariffName(subscription.tariff_name) || t('subscription.currentPlan');
 }
 
 /**

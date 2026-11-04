@@ -49,6 +49,7 @@ import {
   WarningCircleIcon,
   BanIcon,
 } from '@/components/icons';
+import { plainTariffName } from '@/utils/plainTariffName';
 
 function formatPeriodLabel(
   days: number,
@@ -179,7 +180,9 @@ function TariffCard({
 
         {/* Info */}
         <div className="min-w-0 flex-1">
-          <p className="truncate text-[15px] font-semibold text-dark-50">{tariff.name}</p>
+          <p className="truncate text-[15px] font-semibold text-dark-50">
+            {plainTariffName(tariff.name)}
+          </p>
           <p
             className={cn(
               'mt-0.5 text-[13px] transition-colors',
@@ -849,7 +852,7 @@ function ActivateTabContent({ initialCode }: { initialCode?: string | null }) {
         <h2 className="text-lg font-bold text-dark-50">{t('gift.activateSuccess')}</h2>
         <p className="text-sm text-dark-300">
           {t('gift.activateSuccessDesc', {
-            tariff: result.tariff_name ?? '',
+            tariff: plainTariffName(result.tariff_name) ?? '',
             days: result.period_days ?? 0,
           })}
         </p>
@@ -1025,7 +1028,7 @@ function SentGiftCard({ gift }: { gift: SentGift }) {
       {/* Header: tariff name + status badge */}
       <div className="mb-1 flex items-start justify-between gap-3">
         <h3 className="min-w-0 truncate text-[15px] font-semibold text-dark-50">
-          {gift.tariff_name ?? t('gift.tariff')}
+          {plainTariffName(gift.tariff_name) ?? t('gift.tariff')}
         </h3>
         <Chip tone={!isActivated && isAvailable ? 'success' : 'muted'}>{statusText}</Chip>
       </div>
@@ -1099,7 +1102,7 @@ function ReceivedGiftCard({ gift }: { gift: ReceivedGift }) {
       {/* Header */}
       <div className="mb-1 flex items-start justify-between gap-3">
         <h3 className="min-w-0 truncate text-[15px] font-semibold text-dark-50">
-          {gift.tariff_name ?? t('gift.tariff')}
+          {plainTariffName(gift.tariff_name) ?? t('gift.tariff')}
         </h3>
         <Chip tone="muted">{statusText}</Chip>
       </div>
