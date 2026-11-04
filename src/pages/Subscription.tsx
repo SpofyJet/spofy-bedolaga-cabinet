@@ -649,16 +649,6 @@ export default function Subscription() {
               />
             </div>
           )}
-          <DeviceReductionSheet
-            open={showDeviceReduction}
-            onOpen={() => setShowDeviceReduction(true)}
-            onClose={() => setShowDeviceReduction(false)}
-            subscriptionPresent={!!subscription}
-            subscriptionId={subscriptionId}
-            targetDeviceLimit={targetDeviceLimit}
-            onTargetDeviceLimitChange={setTargetDeviceLimit}
-            isDark={isDark}
-          />
           {!isTariffsMode && (
             <ServerManagementSheet
               open={showServerManagement}
@@ -706,7 +696,27 @@ export default function Subscription() {
       )}
 
       {/* ─── Устройства ─── */}
-      <DevicesPanel subscription={subscription} subscriptionId={subscriptionId} />
+      <DevicesPanel
+        subscription={subscription}
+        subscriptionId={subscriptionId}
+        footer={
+          // Уменьшить лимит — редкое действие: тихая ссылка у списка
+          // устройств, а не строка среди покупок в «Докупить».
+          showAddons ? (
+            <DeviceReductionSheet
+              trigger="link"
+              open={showDeviceReduction}
+              onOpen={() => setShowDeviceReduction(true)}
+              onClose={() => setShowDeviceReduction(false)}
+              subscriptionPresent={!!subscription}
+              subscriptionId={subscriptionId}
+              targetDeviceLimit={targetDeviceLimit}
+              onTargetDeviceLimitChange={setTargetDeviceLimit}
+              isDark={isDark}
+            />
+          ) : undefined
+        }
+      />
 
       {/* ─── Удалить истёкшую (мультитариф) ─── */}
       {isMultiTariff &&

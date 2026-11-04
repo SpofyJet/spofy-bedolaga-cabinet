@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, type ReactNode } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 
@@ -15,6 +15,8 @@ import { platformIcon } from '@/components/subscription/platformIcon';
 export interface DevicesPanelProps {
   subscription: Subscription;
   subscriptionId: number | undefined;
+  /** Под списком: редкие действия с лимитом устройств (уменьшить). */
+  footer?: ReactNode;
 }
 
 /**
@@ -27,7 +29,7 @@ export interface DevicesPanelProps {
  * Одновременно редактируется одно устройство: `editingDeviceHwid` служит и
  * переключателем, и признаком того, какая строка сейчас правится.
  */
-export function DevicesPanel({ subscription, subscriptionId }: DevicesPanelProps) {
+export function DevicesPanel({ subscription, subscriptionId, footer }: DevicesPanelProps) {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
   const haptic = useHaptic();
@@ -228,6 +230,7 @@ export function DevicesPanel({ subscription, subscriptionId }: DevicesPanelProps
           {t('subscription.noDevices')}
         </div>
       )}
+      {footer}
     </section>
   );
 }
