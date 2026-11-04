@@ -3,6 +3,7 @@ import { uiLocale } from '@/utils/uiLocale';
 import { useState, useCallback, useEffect, useRef } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
+import { createPortal } from 'react-dom';
 import { useNavigate } from 'react-router';
 import { wheelApi, type WheelPrize, type SpinResult, type SpinHistoryItem } from '../api/wheel';
 import FortuneWheel from '../components/wheel/FortuneWheel';
@@ -485,6 +486,19 @@ export default function Wheel() {
     setTargetRotation(null);
   };
 
+  const resultOpen = Boolean(spinResult) && !isSpinning;
+  useEffect(() => {
+    if (!resultOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setSpinResult(null);
+        setTargetRotation(null);
+      }
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [resultOpen]);
+
   if (isLoading) {
     return (
       <Page>
@@ -783,75 +797,80 @@ export default function Wheel() {
                     ? t('wheel.noLuck')
                     : t('wheel.congratulations')
                   : t('wheel.oops');
-            return (
+            // Результат — всплывающее окно поверх страницы: карточкой под колесом его
+            // не замечали («я даже не понял, что выиграл»).
+            return createPortal(
               <div
-                className={cn(
-                  'relative animate-fade-in overflow-hidden rounded-3xl p-5 text-center ring-1 ring-inset',
-                  spinResult.success
-                    ? 'bg-dark-900/80 ring-dark-700/70'
-                    : 'bg-error-500/10 ring-error-500/25',
-                )}
+                className="fixed inset-0 z-[100] flex items-center justify-center bg-black/65 p-4 backdrop-blur-sm"
+                onClick={closeResultModal}
+                role="presentation"
               >
-                {isWin && (
-                  <span
-                    aria-hidden
-                    className="pointer-events-none absolute inset-x-0 -top-16 mx-auto h-40 w-40 rounded-full opacity-40 blur-3xl"
-                    style={{ backgroundColor: color }}
-                  />
-                )}
-                <button
-                  type="button"
-                  onClick={closeResultModal}
-                  aria-label={t('common.close')}
-                  className="absolute right-2 top-2 flex h-9 w-9 items-center justify-center rounded-xl text-dark-400 transition-colors hover:bg-dark-800/60 hover:text-dark-200"
+                <motion.div
+                  role="dialog"
+                  aria-modal="true"
+                  aria-label={isWin ? t('wheel.youWon') : title}
+                  initial={{ opacity: 0, scale: 0.85, y: 12 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  transition={{ type: 'spring', stiffness: 320, damping: 22 }}
+                  onClick={(e) => e.stopPropagation()}
+                  className={cn(
+                    'relative w-full max-w-[360px] overflow-hidden rounded-3xl p-6 text-center shadow-[0_30px_80px_-20px_rgba(0,0,0,0.9)] ring-1 ring-inset',
+                    spinResult.success
+                      ? 'bg-dark-900 ring-dark-700/70'
+                      : 'bg-dark-900 ring-error-500/30',
+                  )}
                 >
-                  <PiXBold className="h-4 w-4" />
-                </button>
-                <div className="relative">
-                  <span
-                    className="mx-auto flex h-16 w-16 items-center justify-center rounded-3xl text-[34px]"
-                    style={
-                      isWin
-                        ? { backgroundColor: `${color}33`, boxShadow: `inset 0 0 0 1px ${color}66` }
-                        : undefined
-                    }
-                  >
-                    {spinResult.success ? spinResult.emoji || '🎉' : '😔'}
-                  </span>
                   {isWin && (
-                    <p className="mt-3 text-[13px] font-semibold uppercase tracking-wide text-dark-400">
-                      {t('wheel.youWon')}
-                    </p>
+                    <span
+                      aria-hidden
+                      className="pointer-events-none absolute inset-x-0 -top-16 mx-auto h-40 w-40 rounded-full opacity-40 blur-3xl"
+                      style={{ backgroundColor: color }}
+                    />
                   )}
-                  <p className="mt-1 text-[24px] font-bold leading-tight text-dark-50">{title}</p>
-                  {spinResult.message && (
-                    <p className="mx-auto mt-1.5 max-w-[300px] text-[14px] text-dark-300">
-                      {spinResult.message}
-                    </p>
-                  )}
-                  {spinResult.promocode && (
-                    <div className="mt-3 rounded-2xl bg-dark-800/70 p-3">
-                      <p className="mb-1 text-[13px] text-dark-400">{t('wheel.yourPromoCode')}</p>
-                      <p className="select-all text-lg font-bold tracking-wide text-accent-400">
-                        {spinResult.promocode}
-                      </p>
-                    </div>
-                  )}
-                  {(action || freeSpins > 0) && (
-                    <div
-                      className={cn(
-                        'mt-4 grid gap-2',
-                        action && freeSpins > 0 ? 'grid-cols-2' : 'grid-cols-1',
-                      )}
+                  <button
+                    type="button"
+                    onClick={closeResultModal}
+                    aria-label={t('common.close')}
+                    className="absolute right-2 top-2 flex h-9 w-9 items-center justify-center rounded-xl text-dark-400 transition-colors hover:bg-dark-800/60 hover:text-dark-200"
+                  >
+                    <PiXBold className="h-4 w-4" />
+                  </button>
+                  <div className="relative">
+                    <span
+                      className="mx-auto flex h-16 w-16 items-center justify-center rounded-3xl text-[34px]"
+                      style={
+                        isWin
+                          ? {
+                              backgroundColor: `${color}33`,
+                              boxShadow: `inset 0 0 0 1px ${color}66`,
+                            }
+                          : undefined
+                      }
                     >
-                      {action && (
-                        <Button
-                          tone={freeSpins > 0 ? 'secondary' : undefined}
-                          onClick={() => navigate(action.path)}
-                        >
-                          {t(action.labelKey)}
-                        </Button>
-                      )}
+                      {spinResult.success ? spinResult.emoji || '🎉' : '😔'}
+                    </span>
+                    {isWin && (
+                      <p className="mt-3 text-[13px] font-semibold uppercase tracking-wide text-dark-400">
+                        {t('wheel.youWon')}
+                      </p>
+                    )}
+                    <p className="mt-1 text-[24px] font-bold leading-tight text-dark-50">{title}</p>
+                    {spinResult.message && (
+                      <p className="mx-auto mt-1.5 max-w-[300px] text-[14px] text-dark-300">
+                        {spinResult.message}
+                      </p>
+                    )}
+                    {spinResult.promocode && (
+                      <div className="mt-3 rounded-2xl bg-dark-800/70 p-3">
+                        <p className="mb-1 text-[13px] text-dark-400">{t('wheel.yourPromoCode')}</p>
+                        <p className="select-all text-lg font-bold tracking-wide text-accent-400">
+                          {spinResult.promocode}
+                        </p>
+                      </div>
+                    )}
+                    {/* Кнопки друг под другом: в два столбца «Оформить со скидкой» не
+                      помещалась и переносилась на три строки. */}
+                    <div className="mt-5 grid grid-cols-1 gap-2">
                       {freeSpins > 0 && (
                         <Button
                           onClick={() => {
@@ -862,10 +881,24 @@ export default function Wheel() {
                           {t('wheel.result.spinAgain')}
                         </Button>
                       )}
+                      {action && (
+                        <Button
+                          tone={freeSpins > 0 ? 'secondary' : undefined}
+                          onClick={() => navigate(action.path)}
+                        >
+                          {t(action.labelKey)}
+                        </Button>
+                      )}
+                      {!action && freeSpins <= 0 && (
+                        <Button tone="secondary" onClick={closeResultModal}>
+                          {t('common.close')}
+                        </Button>
+                      )}
                     </div>
-                  )}
-                </div>
-              </div>
+                  </div>
+                </motion.div>
+              </div>,
+              document.body,
             );
           })()}
       </Surface>
