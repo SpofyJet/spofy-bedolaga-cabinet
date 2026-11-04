@@ -332,6 +332,14 @@
        В гибких рядах этого мало — там у текста ещё нужен min-w-0 или
        [overflow-wrap:anywhere] на месте. */
     overflow-wrap: break-word;
+    /* Мягкое синее свечение у верхнего края: без него ровный тёмно-синий фон
+       выглядел тускло. Прокручивается вместе со страницей (fixed на iOS не работает). */
+    background-image: radial-gradient(
+      1100px 640px at 50% -220px,
+      rgba(var(--color-accent-500), 0.3),
+      transparent 72%
+    );
+    background-repeat: no-repeat;
   }
 
   /* Иконка в гибком ряду не сжимается: рядом с длинным текстом (почта в
@@ -373,6 +381,11 @@
   /* Light theme - Champagne */
   .light body {
     @apply bg-champagne-200 font-sans text-champagne-900 antialiased;
+    background-image: radial-gradient(
+      1100px 640px at 50% -220px,
+      rgba(var(--color-accent-500), 0.1),
+      transparent 72%
+    );
     overscroll-behavior-y: contain;
     -webkit-overflow-scrolling: touch;
   }

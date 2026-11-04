@@ -121,7 +121,7 @@ export default function DevicesTrafficCard({
 
   return (
     <section
-      className="rounded-3xl bg-dark-900/70 ring-1 ring-inset ring-dark-800/80 p-4"
+      className="rounded-3xl bg-dark-900/70 bg-gradient-to-b from-accent-400/[0.07] to-transparent ring-1 ring-inset ring-accent-300/[0.10] light:from-transparent light:ring-dark-800/80 p-4"
       aria-label={t('dashboard.devicesTraffic.title')}
     >
       <Link to="/subscription" className="group mb-4 flex items-center justify-between gap-2">

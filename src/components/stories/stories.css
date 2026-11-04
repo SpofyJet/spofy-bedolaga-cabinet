@@ -50,13 +50,15 @@
   background:
     radial-gradient(
       90% 90% at 70% 20%,
-      color-mix(in srgb, var(--story-accent) 30%, transparent),
-      transparent 70%
+      color-mix(in srgb, var(--story-accent) 38%, transparent),
+      transparent 72%
     ),
     rgb(var(--color-dark-900));
+  /* Кольцо со свечением: без него ряд кружков на тёмно-синем выглядел тускло. */
   box-shadow:
     0 0 0 2px rgb(var(--color-dark-950)),
-    0 0 0 4px var(--story-accent);
+    0 0 0 4px var(--story-accent),
+    0 0 18px 2px color-mix(in srgb, var(--story-accent) 45%, transparent);
   transition: box-shadow 0.2s ease;
 }
 

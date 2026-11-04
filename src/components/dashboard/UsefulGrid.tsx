@@ -61,10 +61,10 @@ export default function UsefulGrid({ hidePromocode = false }: UsefulGridProps) {
             to={item.to}
             className="group flex flex-col items-center gap-1.5 transition-transform duration-150 active:scale-95"
           >
-            <span className="flex h-12 w-full max-w-[88px] items-center justify-center rounded-2xl bg-dark-800/70 text-accent-300 ring-1 ring-inset ring-dark-700/60 transition-colors duration-200 group-hover:bg-dark-700/70 sm:h-[52px]">
+            <span className="flex h-12 w-full max-w-[88px] items-center justify-center rounded-2xl bg-accent-500/[0.08] text-accent-300 ring-1 ring-inset ring-accent-400/[0.16] transition-colors duration-200 group-hover:bg-accent-500/15 light:text-accent-600 sm:h-[52px]">
               <item.icon className="h-5 w-5" />
             </span>
-            <span className="text-center text-[11.5px] font-semibold leading-none text-dark-300 group-hover:text-dark-100">
+            <span className="text-center text-[11.5px] font-semibold leading-none text-dark-200 group-hover:text-dark-50">
               {item.label}
             </span>
           </Link>

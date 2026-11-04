@@ -130,8 +130,8 @@ export default function QuickActions({
               className={cn(
                 'flex h-12 w-full max-w-[88px] items-center justify-center rounded-2xl transition-colors duration-200 sm:h-[52px]',
                 primary
-                  ? 'bg-cta-500 text-on-cta shadow-[0_8px_24px_-10px_rgba(255,98,66,0.55)] group-hover:bg-cta-600'
-                  : 'bg-dark-800/70 text-accent-300 ring-1 ring-inset ring-dark-700/60 group-hover:bg-dark-700/70',
+                  ? 'bg-cta-500 text-on-cta shadow-[0_8px_24px_-10px_rgba(255,138,42,0.6)] group-hover:bg-cta-600'
+                  : 'bg-accent-500/[0.18] text-accent-200 ring-1 ring-inset ring-accent-400/30 group-hover:bg-accent-500/25 light:bg-accent-500/10 light:text-accent-600 light:ring-accent-500/20',
               )}
             >
               <action.icon className="h-5 w-5" />
@@ -139,7 +139,7 @@ export default function QuickActions({
             <span
               className={cn(
                 'text-[11.5px] font-semibold leading-none',
-                primary ? 'text-dark-50' : 'text-dark-300 group-hover:text-dark-100',
+                primary ? 'text-dark-50' : 'text-dark-200 group-hover:text-dark-50',
               )}
             >
               {action.label}
