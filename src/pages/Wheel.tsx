@@ -3,7 +3,9 @@ import { uiLocale } from '@/utils/uiLocale';
 import { useState, useCallback, useEffect, useRef } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router';
 import { wheelApi, type WheelPrize, type SpinResult, type SpinHistoryItem } from '../api/wheel';
+import { formatPrice } from '@/utils/format';
 import FortuneWheel from '../components/wheel/FortuneWheel';
 import WheelLegend from '../components/wheel/WheelLegend';
 import { usePlatform, useHaptic } from '@/platform';
@@ -13,6 +15,7 @@ import { staggerContainer, staggerItem } from '@/components/motion/transitions';
 import {
   PiCalendarDuotone,
   PiCaretDownBold,
+  PiGiftDuotone,
   PiClockCounterClockwiseDuotone,
   PiSpinnerBallDuotone,
   PiWarningCircleDuotone,
@@ -83,6 +86,7 @@ export default function Wheel() {
   const { openInvoice, capabilities } = usePlatform();
   const haptic = useHaptic();
   const notify = useNotify();
+  const navigate = useNavigate();
 
   const [isSpinning, setIsSpinning] = useState(false);
   const [targetRotation, setTargetRotation] = useState<number | null>(null);
@@ -365,8 +369,16 @@ export default function Wheel() {
     starsInvoiceMutation.mutate();
   };
 
+  // Есть бесплатный спин за пополнение — крутим его, платные способы не трогаем.
+  const freeAvailable = !!config?.topup_spins_enabled && (config?.free_spins ?? 0) > 0;
+  const effectivePayment = freeAvailable ? 'topup_credit' : paymentType;
+
   const spinMutation = useMutation({
-    mutationFn: () => wheelApi.spin(paymentType, selectedSubscriptionId ?? undefined),
+    mutationFn: () =>
+      wheelApi.spin(
+        effectivePayment,
+        effectivePayment === 'topup_credit' ? undefined : (selectedSubscriptionId ?? undefined),
+      ),
     onSuccess: (result) => {
       if (result.success) {
         setTargetRotation(result.rotation_degrees);
@@ -401,6 +413,10 @@ export default function Wheel() {
   };
 
   const handleUnifiedSpin = () => {
+    if (effectivePayment === 'topup_credit') {
+      handleSpin();
+      return;
+    }
     if (noSubscription) return;
     if (paymentType === 'telegram_stars') {
       if (!config?.spin_cost_stars_enabled || !config?.spin_cost_stars) {
@@ -496,6 +512,11 @@ export default function Wheel() {
   const starsEnabled = config.spin_cost_stars_enabled && config.spin_cost_stars;
   const daysEnabled = config.spin_cost_days_enabled && config.spin_cost_days;
   const bothMethodsAvailable = !!(starsEnabled && daysEnabled);
+  const freeMode = !!config.topup_spins_enabled;
+  const paidMethods = !!(starsEnabled || daysEnabled);
+  const threshold = config.topup_spin_threshold_kopeks ?? 0;
+  const progress = config.topup_progress_kopeks ?? 0;
+  const freeSpins = config.free_spins ?? 0;
 
   // Stars via Telegram invoice don't require ruble balance, so only check daily limit
   const dailyLimitReached = config.daily_limit > 0 && config.user_spins_today >= config.daily_limit;
@@ -506,13 +527,15 @@ export default function Wheel() {
     config.eligible_subscriptions.length > 1 &&
     !selectedSubscriptionId;
 
-  const spinDisabled =
-    isSpinning ||
-    isPayingStars ||
-    dailyLimitReached ||
-    noSubscription ||
-    needsSubscriptionPick ||
-    (paymentType === 'telegram_stars' ? !starsEnabled : !config.can_spin);
+  const spinDisabled = freeAvailable
+    ? isSpinning || isPayingStars || !config.can_spin
+    : isSpinning ||
+      isPayingStars ||
+      (freeMode && !paidMethods) ||
+      dailyLimitReached ||
+      noSubscription ||
+      needsSubscriptionPick ||
+      (paymentType === 'telegram_stars' ? !starsEnabled : !config.can_spin);
 
   const segment = (active: boolean) =>
     cn(
@@ -531,11 +554,58 @@ export default function Wheel() {
         title={t('wheel.title')}
         noBack
         subtitle={
-          config.daily_limit > 0
+          config.daily_limit > 0 && paidMethods
             ? `${t('wheel.spinsRemaining')}: ${Math.max(0, config.daily_limit - config.user_spins_today)}/${config.daily_limit}`
             : undefined
         }
       />
+
+      {/* Бесплатные спины за пополнения */}
+      {freeMode && threshold > 0 && (
+        <Surface className="space-y-3">
+          <div className="flex items-center gap-3">
+            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-accent-500/10 text-accent-400 [&>svg]:h-[22px] [&>svg]:w-[22px]">
+              <PiGiftDuotone />
+            </span>
+            <div className="min-w-0 flex-1">
+              <div className="text-[15px] font-semibold text-dark-100">
+                {freeSpins > 0
+                  ? t('wheel.free.available', { count: freeSpins })
+                  : t('wheel.free.none')}
+              </div>
+              <div className="text-[13px] text-dark-400">
+                {t('wheel.free.rule', { amount: formatPrice(threshold) })}
+              </div>
+            </div>
+          </div>
+          <div>
+            <div
+              className="h-2 overflow-hidden rounded-full bg-dark-800"
+              role="progressbar"
+              aria-valuemin={0}
+              aria-valuemax={threshold}
+              aria-valuenow={progress}
+            >
+              <div
+                className="h-full rounded-full bg-accent-500 transition-[width] duration-500"
+                style={{
+                  width: `${Math.min(100, Math.round((progress / threshold) * 100))}%`,
+                }}
+              />
+            </div>
+            <p className="mt-1.5 text-[13px] text-dark-400">
+              {t('wheel.free.left', {
+                amount: formatPrice(config.topup_left_kopeks ?? threshold),
+              })}
+            </p>
+          </div>
+          {freeSpins === 0 && (
+            <Button tone="secondary" className="w-full" onClick={() => navigate('/balance/top-up')}>
+              {t('wheel.free.topUp')}
+            </Button>
+          )}
+        </Surface>
+      )}
 
       {/* Колесо и управление */}
       <Surface className="space-y-5">
@@ -547,7 +617,7 @@ export default function Wheel() {
         />
 
         {/* Payment type selector */}
-        {(starsEnabled || daysEnabled) && (
+        {(starsEnabled || daysEnabled) && !freeAvailable && (
           <div>
             <p className="mb-2 px-1 text-[13px] font-semibold text-dark-400">
               {t('wheel.spinCost')}
@@ -649,22 +719,30 @@ export default function Wheel() {
             {(isSpinning || isPayingStars) && (
               <span className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
             )}
-            {isSpinning ? t('wheel.spinning') : t('wheel.spin')}
+            {isSpinning
+              ? t('wheel.spinning')
+              : freeAvailable
+                ? t('wheel.free.spin', { count: freeSpins })
+                : t('wheel.spin')}
           </Button>
         )}
 
         {/* No subscription hint */}
-        {!isSpinning && noSubscription && (
+        {!isSpinning && noSubscription && !freeMode && (
           <p className={hintWarning}>{t('wheel.errors.noSubscription')}</p>
         )}
         {/* Cannot spin hint — only show for days payment (Stars via invoice always works) */}
-        {!isSpinning && !noSubscription && paymentType !== 'telegram_stars' && !config.can_spin && (
-          <p className={hintMuted}>
-            {config.can_spin_reason === 'daily_limit_reached'
-              ? t('wheel.errors.dailyLimitReached')
-              : t('wheel.errors.cannotSpin')}
-          </p>
-        )}
+        {!isSpinning &&
+          !freeMode &&
+          !noSubscription &&
+          paymentType !== 'telegram_stars' &&
+          !config.can_spin && (
+            <p className={hintMuted}>
+              {config.can_spin_reason === 'daily_limit_reached'
+                ? t('wheel.errors.dailyLimitReached')
+                : t('wheel.errors.cannotSpin')}
+            </p>
+          )}
         {/* Daily limit hint for Stars payment (not covered by can_spin check) */}
         {!isSpinning &&
           !noSubscription &&
@@ -790,10 +868,11 @@ export default function Wheel() {
                           </div>
                         </div>
                         <div className="shrink-0 whitespace-nowrap text-[13px] text-dark-400">
-                          -
-                          {item.payment_type === 'telegram_stars'
-                            ? `${item.payment_amount} ⭐`
-                            : `${item.payment_amount}${t('wheel.days').charAt(0)}`}
+                          {item.payment_type === 'topup_credit'
+                            ? t('wheel.free.historyLabel')
+                            : item.payment_type === 'telegram_stars'
+                              ? `-${item.payment_amount} ⭐`
+                              : `-${item.payment_amount}${t('wheel.days').charAt(0)}`}
                         </div>
                       </motion.div>
                     ))}

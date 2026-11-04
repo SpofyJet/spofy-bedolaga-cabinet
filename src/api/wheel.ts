@@ -8,6 +8,8 @@ export interface WheelPrize {
   prize_type: string;
 }
 
+export type WheelPaymentType = 'telegram_stars' | 'subscription_days' | 'topup_credit';
+
 export interface EligibleSubscription {
   id: number;
   tariff_name: string | null;
@@ -32,6 +34,13 @@ export interface WheelConfig {
   required_balance_kopeks: number;
   has_subscription: boolean;
   eligible_subscriptions: EligibleSubscription[] | null;
+  // Free spins earned by top-ups (Spofy)
+  topup_spins_enabled?: boolean;
+  free_spins?: number;
+  can_pay_free?: boolean;
+  topup_spin_threshold_kopeks?: number;
+  topup_progress_kopeks?: number;
+  topup_left_kopeks?: number;
 }
 
 export interface SpinAvailability {
@@ -134,6 +143,10 @@ export interface AdminWheelConfig {
   min_subscription_days_for_day_payment: number;
   promo_prefix: string;
   promo_validity_days: number;
+  topup_spins_enabled?: boolean;
+  topup_spin_threshold_kopeks?: number;
+  topup_spin_value_kopeks?: number;
+  topup_spins_since?: string | null;
   prizes: WheelPrizeAdmin[];
   created_at: string | null;
   updated_at: string | null;
@@ -197,10 +210,7 @@ export const wheelApi = {
     return response.data;
   },
 
-  spin: async (
-    paymentType: 'telegram_stars' | 'subscription_days',
-    subscriptionId?: number,
-  ): Promise<SpinResult> => {
+  spin: async (paymentType: WheelPaymentType, subscriptionId?: number): Promise<SpinResult> => {
     const response = await apiClient.post<SpinResult>('/cabinet/wheel/spin', {
       payment_type: paymentType,
       ...(subscriptionId != null && { subscription_id: subscriptionId }),
@@ -258,7 +268,9 @@ export const adminWheelApi = {
   },
 
   reorderPrizes: async (prizeIds: number[]): Promise<void> => {
-    await apiClient.post('/cabinet/admin/wheel/prizes/reorder', { prize_ids: prizeIds });
+    await apiClient.post('/cabinet/admin/wheel/prizes/reorder', {
+      prize_ids: prizeIds,
+    });
   },
 
   getStatistics: async (dateFrom?: string, dateTo?: string): Promise<WheelStatistics> => {

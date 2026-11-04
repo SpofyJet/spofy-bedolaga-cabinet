@@ -10,6 +10,7 @@ import { authApi } from '../api/auth';
 import { referralApi } from '../api/referral';
 import { balanceApi } from '../api/balance';
 import { wheelApi } from '../api/wheel';
+import { formatPrice } from '@/utils/format';
 import Onboarding, { useOnboarding } from '../components/Onboarding';
 import PromoOffersSection from '../components/PromoOffersSection';
 import DevicesTrafficCard from '../components/dashboard/DevicesTrafficCard';
@@ -180,10 +181,15 @@ export default function Dashboard() {
       } else {
         setTrafficRefreshCooldown(30);
       }
-      queryClient.invalidateQueries({ queryKey: ['subscription', subscription?.id] });
+      queryClient.invalidateQueries({
+        queryKey: ['subscription', subscription?.id],
+      });
     },
     onError: (error: {
-      response?: { status?: number; headers?: { get?: (key: string) => string } };
+      response?: {
+        status?: number;
+        headers?: { get?: (key: string) => string };
+      };
     }) => {
       if (error.response?.status === 429) {
         const retryAfter = error.response.headers?.get?.('Retry-After');
@@ -531,8 +537,20 @@ export default function Dashboard() {
               <WheelIcon />
             </span>
             <div className="min-w-0 flex-1">
-              <h3 className="text-[15px] font-semibold text-dark-100">{t('wheel.banner.title')}</h3>
-              <p className="text-[13px] text-dark-400">{t('wheel.banner.description')}</p>
+              <h3 className="text-[15px] font-semibold text-dark-100">
+                {(wheelConfig.free_spins ?? 0) > 0
+                  ? t('wheel.banner.freeTitle', {
+                      count: wheelConfig.free_spins,
+                    })
+                  : t('wheel.banner.title')}
+              </h3>
+              <p className="text-[13px] text-dark-400">
+                {wheelConfig.topup_spins_enabled && wheelConfig.topup_spin_threshold_kopeks
+                  ? t('wheel.banner.topupDescription', {
+                      amount: formatPrice(wheelConfig.topup_spin_threshold_kopeks),
+                    })
+                  : t('wheel.banner.description')}
+              </p>
             </div>
           </div>
           <div className="flex-shrink-0 text-dark-500 transition-all duration-300 group-hover:translate-x-1 group-hover:text-accent-400">

@@ -56,6 +56,9 @@ const PRIZE_TYPE_KEYS = [
   { value: 'balance_bonus', key: 'balance_bonus', emoji: '💰' },
   { value: 'traffic_gb', key: 'traffic_gb', emoji: '📊' },
   { value: 'promocode', key: 'promocode', emoji: '🎟️' },
+  { value: 'device_slot', key: 'device_slot', emoji: '📱' },
+  { value: 'discount', key: 'discount', emoji: '🏷️' },
+  { value: 'extra_spin', key: 'extra_spin', emoji: '🔄' },
   { value: 'nothing', key: 'nothing', emoji: '😔' },
 ];
 
@@ -192,6 +195,8 @@ export default function AdminWheel() {
     min_subscription_days_for_day_payment: number | '';
     promo_prefix: string;
     promo_validity_days: number | '';
+    topup_spins_enabled: boolean;
+    topup_spin_threshold_rub: number | '';
   } | null>(null);
 
   // Fetch config
@@ -227,6 +232,8 @@ export default function AdminWheel() {
           min_subscription_days_for_day_payment: config.min_subscription_days_for_day_payment,
           promo_prefix: config.promo_prefix,
           promo_validity_days: config.promo_validity_days,
+          topup_spins_enabled: !!config.topup_spins_enabled,
+          topup_spin_threshold_rub: Math.round((config.topup_spin_threshold_kopeks ?? 15000) / 100),
         };
       });
     }
@@ -246,7 +253,10 @@ export default function AdminWheel() {
       settingsForm.min_subscription_days_for_day_payment !==
         config.min_subscription_days_for_day_payment ||
       settingsForm.promo_prefix !== config.promo_prefix ||
-      settingsForm.promo_validity_days !== config.promo_validity_days);
+      settingsForm.promo_validity_days !== config.promo_validity_days ||
+      settingsForm.topup_spins_enabled !== !!config.topup_spins_enabled ||
+      settingsForm.topup_spin_threshold_rub !==
+        Math.round((config.topup_spin_threshold_kopeks ?? 15000) / 100));
 
   // Update config mutation
   const updateConfigMutation = useMutation({
@@ -313,7 +323,9 @@ export default function AdminWheel() {
   // DnD sensors - PointerSensor handles both mouse and touch
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
-    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    }),
   );
 
   const handleDragStart = useCallback(() => {
@@ -522,7 +534,12 @@ export default function AdminWheel() {
                       }
                       onChange={(e) =>
                         setSettingsForm((prev) =>
-                          prev ? { ...prev, spin_cost_stars_enabled: e.target.checked } : null,
+                          prev
+                            ? {
+                                ...prev,
+                                spin_cost_stars_enabled: e.target.checked,
+                              }
+                            : null,
                         )
                       }
                       className="rounded border-dark-600"
@@ -562,7 +579,12 @@ export default function AdminWheel() {
                       }
                       onChange={(e) =>
                         setSettingsForm((prev) =>
-                          prev ? { ...prev, spin_cost_days_enabled: e.target.checked } : null,
+                          prev
+                            ? {
+                                ...prev,
+                                spin_cost_days_enabled: e.target.checked,
+                              }
+                            : null,
                         )
                       }
                       className="rounded border-dark-600"
@@ -645,12 +667,22 @@ export default function AdminWheel() {
                     const val = e.target.value;
                     if (val === '')
                       return setSettingsForm((prev) =>
-                        prev ? { ...prev, min_subscription_days_for_day_payment: '' } : null,
+                        prev
+                          ? {
+                              ...prev,
+                              min_subscription_days_for_day_payment: '',
+                            }
+                          : null,
                       );
                     const num = parseInt(val);
                     if (!isNaN(num))
                       setSettingsForm((prev) =>
-                        prev ? { ...prev, min_subscription_days_for_day_payment: num } : null,
+                        prev
+                          ? {
+                              ...prev,
+                              min_subscription_days_for_day_payment: num,
+                            }
+                          : null,
                       );
                   }}
                   min={1}
@@ -697,7 +729,10 @@ export default function AdminWheel() {
                     const val = e.target.value;
                     setSettingsForm((prev) =>
                       prev
-                        ? { ...prev, promo_validity_days: val === '' ? '' : parseInt(val) || 0 }
+                        ? {
+                            ...prev,
+                            promo_validity_days: val === '' ? '' : parseInt(val) || 0,
+                          }
                         : null,
                     );
                   }}
@@ -706,6 +741,55 @@ export default function AdminWheel() {
                   className="input w-full"
                 />
               </div>
+            </div>
+          </div>
+
+          {/* Free spins for top-ups */}
+          <div className="space-y-4 rounded-2xl bg-dark-800/40 p-4 ring-1 ring-inset ring-dark-800/80">
+            <label className="flex items-center justify-between gap-3">
+              <span>
+                <span className="block text-sm font-semibold text-dark-100">
+                  {t('admin.wheel.settings.topupSpins')}
+                </span>
+                <span className="block text-[13px] text-dark-400">
+                  {t('admin.wheel.settings.topupSpinsHint')}
+                </span>
+              </span>
+              <input
+                type="checkbox"
+                className="h-5 w-5 shrink-0 accent-accent-500"
+                checked={settingsForm?.topup_spins_enabled ?? !!config.topup_spins_enabled}
+                onChange={(e) =>
+                  setSettingsForm((prev) =>
+                    prev ? { ...prev, topup_spins_enabled: e.target.checked } : null,
+                  )
+                }
+              />
+            </label>
+            <div>
+              <label className="mb-2 block text-sm font-medium text-dark-300">
+                {t('admin.wheel.settings.topupSpinThreshold')}
+              </label>
+              <input
+                type="number"
+                value={
+                  settingsForm?.topup_spin_threshold_rub ??
+                  Math.round((config.topup_spin_threshold_kopeks ?? 15000) / 100)
+                }
+                onChange={(e) => {
+                  const val = e.target.value;
+                  setSettingsForm((prev) =>
+                    prev
+                      ? {
+                          ...prev,
+                          topup_spin_threshold_rub: val === '' ? '' : parseInt(val, 10) || 0,
+                        }
+                      : null,
+                  );
+                }}
+                min={1}
+                className="input w-full"
+              />
             </div>
           </div>
 
@@ -727,8 +811,14 @@ export default function AdminWheel() {
                       // If we can't check, allow saving
                     }
                   }
+                  const { topup_spin_threshold_rub, ...restSettings } = settingsForm;
+                  const thresholdRub = toNumber(
+                    topup_spin_threshold_rub,
+                    Math.round((config.topup_spin_threshold_kopeks ?? 15000) / 100),
+                  );
                   updateConfigMutation.mutate({
-                    ...settingsForm,
+                    ...restSettings,
+                    topup_spin_threshold_kopeks: Math.max(1, thresholdRub) * 100,
                     spin_cost_stars: toNumber(settingsForm.spin_cost_stars, config.spin_cost_stars),
                     spin_cost_days: toNumber(settingsForm.spin_cost_days, config.spin_cost_days),
                     daily_spin_limit: toNumber(
@@ -1061,7 +1151,13 @@ function InlinePrizeForm({
                     ? 'kopeks'
                     : formData.prize_type === 'subscription_days'
                       ? 'days'
-                      : 'gb'
+                      : formData.prize_type === 'discount'
+                        ? 'percent'
+                        : formData.prize_type === 'device_slot'
+                          ? 'devices'
+                          : formData.prize_type === 'extra_spin'
+                            ? 'spins'
+                            : 'gb'
                 }`,
               )}
               )

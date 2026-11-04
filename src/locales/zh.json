@@ -1427,10 +1427,21 @@
     "banner": {
       "title": "试试运气！",
       "description": "转动转盘赢取奖品：订阅天数、余额、流量等！",
-      "button": "前往转盘"
+      "button": "前往转盘",
+      "topupDescription": "每充值 {{amount}} 送一次转动：天数、折扣、设备",
+      "freeTitle_other": "🎁 您有 {{count}} 次免费转动"
     },
     "selectSubscription": "选择订阅",
-    "starsCost": "{{count}} ⭐"
+    "starsCost": "{{count}} ⭐",
+    "free": {
+      "available_other": "{{count}} 次免费转动",
+      "none": "暂无免费转动",
+      "rule": "每充值 {{amount}} 获得 1 次转动",
+      "left": "再充值 {{amount}} 即可获得下一次转动",
+      "topUp": "充值余额",
+      "spin_other": "免费转动 · {{count}}",
+      "historyLabel": "免费"
+    }
   },
   "admin": {
     "backgrounds": {
@@ -2054,7 +2065,10 @@
         "spinCost": "旋转费用",
         "limitsAndRtp": "限制和RTP",
         "promocodes": "促销码",
-        "promoValidityDays": "促销码有效期（天）"
+        "promoValidityDays": "促销码有效期（天）",
+        "topupSpins": "充值赠送免费转动",
+        "topupSpinsHint": "从首次开启时开始计算充值，不受每日限制。",
+        "topupSpinThreshold": "每充值多少卢布送 1 次"
       },
       "starsNotEnabledGlobally": "星星支付未在支付方式中启用。请在「支付方式」中启用「Telegram Stars」。",
       "prizes": {
@@ -2071,7 +2085,10 @@
           "balance_bonus": "余额奖励",
           "traffic_gb": "流量 GB",
           "promocode": "优惠码",
-          "nothing": "无奖品"
+          "nothing": "无奖品",
+          "device_slot": "+ 设备 30 天",
+          "discount": "购买折扣 %",
+          "extra_spin": "再转一次"
         },
         "fields": {
           "type": "类型",
@@ -2088,7 +2105,10 @@
           "valueUnits": {
             "kopeks": "单位：戈比",
             "days": "单位：天",
-            "gb": "单位：GB"
+            "gb": "单位：GB",
+            "percent": "百分比",
+            "devices": "设备",
+            "spins": "次"
           }
         },
         "promo": {

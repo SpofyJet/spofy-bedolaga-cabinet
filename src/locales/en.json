@@ -1516,8 +1516,8 @@
     }
   },
   "wheel": {
-    "title": "Fortune Wheel",
-    "disabled": "Fortune Wheel is currently unavailable",
+    "title": "Prize wheel",
+    "disabled": "The prize wheel is temporarily unavailable",
     "prizes": "Prizes",
     "spinsRemaining": "Spins remaining today",
     "choosePayment": "Choose payment method",
@@ -1563,12 +1563,26 @@
     "noPrize": "No luck this time...",
     "noHistory": "No spin history yet",
     "banner": {
-      "title": "Try your luck!",
-      "description": "Spin the wheel and win prizes: subscription days, balance, traffic and more!",
-      "button": "Go to wheel"
+      "title": "Prize wheel",
+      "description": "Spin the wheel and win days, discounts and bonuses",
+      "button": "Go to wheel",
+      "topupDescription": "A spin for every {{amount}} topped up: days, a discount, a device",
+      "freeTitle_one": "🎁 {{count}} free spin is waiting",
+      "freeTitle_other": "🎁 {{count}} free spins are waiting"
     },
     "selectSubscription": "Select subscription",
-    "starsCost": "{{count}} ⭐"
+    "starsCost": "{{count}} ⭐",
+    "free": {
+      "available_one": "{{count}} free spin",
+      "available_other": "{{count}} free spins",
+      "none": "No free spins yet",
+      "rule": "1 spin for every {{amount}} topped up",
+      "left": "Top up {{amount}} more for the next spin",
+      "topUp": "Top up balance",
+      "spin_one": "Spin for free",
+      "spin_other": "Spin for free · {{count}}",
+      "historyLabel": "free"
+    }
   },
   "admin": {
     "backgrounds": {
@@ -2952,7 +2966,10 @@
         "minSubDays": "Min subscription days for day payment",
         "promocodes": "Promocodes",
         "promoPrefix": "Promo code prefix",
-        "promoValidityDays": "Promo code validity (days)"
+        "promoValidityDays": "Promo code validity (days)",
+        "topupSpins": "Free spins for top-ups",
+        "topupSpinsHint": "Top-ups count from the moment this is first enabled. The daily limit does not apply.",
+        "topupSpinThreshold": "1 spin for every, ₽"
       },
       "starsNotEnabledGlobally": "Star payments are not enabled in Payment Methods. Enable \"Telegram Stars\" in the Payment Methods section.",
       "prizes": {
@@ -2969,7 +2986,10 @@
           "balance_bonus": "Balance Bonus",
           "traffic_gb": "Traffic GB",
           "promocode": "Promo Code",
-          "nothing": "Nothing (Empty)"
+          "nothing": "Nothing (Empty)",
+          "device_slot": "+ Device for 30 days",
+          "discount": "Purchase discount, %",
+          "extra_spin": "One more spin"
         },
         "fields": {
           "type": "Type",
@@ -2986,7 +3006,10 @@
           "valueUnits": {
             "kopeks": "in kopeks",
             "days": "in days",
-            "gb": "in GB"
+            "gb": "in GB",
+            "percent": "in percent",
+            "devices": "devices",
+            "spins": "spins"
           }
         },
         "promo": {

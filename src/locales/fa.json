@@ -1430,14 +1430,25 @@
     "banner": {
       "title": "شانس خود را امتحان کنید!",
       "description": "چرخ را بچرخانید و جایزه ببرید: روز اشتراک، موجودی، ترافیک و بیشتر!",
-      "button": "برو به چرخ"
+      "button": "برو به چرخ",
+      "topupDescription": "یک چرخش برای هر {{amount}} شارژ: روز، تخفیف، دستگاه",
+      "freeTitle_other": "🎁 {{count}} چرخش رایگان منتظر شماست"
     },
     "noPrize": "این بار شانس نیاوردید...",
     "payWithDays": "پرداخت با روز",
     "starsPaymentSuccessCheckHistory": "پرداخت موفق! تاریخچه یا تلگرام را بررسی کنید.",
     "youWon": "شما برنده شدید",
     "selectSubscription": "اشتراک را انتخاب کنید",
-    "starsCost": "{{count}} ⭐"
+    "starsCost": "{{count}} ⭐",
+    "free": {
+      "available_other": "{{count}} چرخش رایگان",
+      "none": "هنوز چرخش رایگانی ندارید",
+      "rule": "۱ چرخش برای هر {{amount}} شارژ",
+      "left": "برای چرخش بعدی {{amount}} دیگر شارژ کنید",
+      "topUp": "شارژ حساب",
+      "spin_other": "چرخش رایگان · {{count}}",
+      "historyLabel": "رایگان"
+    }
   },
   "admin": {
     "backgrounds": {
@@ -1958,7 +1969,10 @@
         "spinCost": "هزینه چرخش",
         "limitsAndRtp": "محدودیت‌ها و RTP",
         "promocodes": "کدهای تخفیف",
-        "promoValidityDays": "اعتبار کد تخفیف (روز)"
+        "promoValidityDays": "اعتبار کد تخفیف (روز)",
+        "topupSpins": "چرخش رایگان برای شارژ",
+        "topupSpinsHint": "شارژها از اولین فعال‌سازی شمرده می‌شوند. محدودیت روزانه اعمال نمی‌شود.",
+        "topupSpinThreshold": "۱ چرخش برای هر، روبل"
       },
       "starsNotEnabledGlobally": "پرداخت با ستاره در روش‌های پرداخت فعال نیست. «Telegram Stars» را در بخش «روش‌های پرداخت» فعال کنید.",
       "prizes": {
@@ -1975,7 +1989,10 @@
           "balance_bonus": "جایزه موجودی",
           "traffic_gb": "ترافیک GB",
           "promocode": "کد تخفیف",
-          "nothing": "هیچی"
+          "nothing": "هیچی",
+          "device_slot": "+ دستگاه برای ۳۰ روز",
+          "discount": "تخفیف خرید، ٪",
+          "extra_spin": "یک چرخش دیگر"
         },
         "fields": {
           "type": "نوع",
@@ -1992,7 +2009,10 @@
           "valueUnits": {
             "kopeks": "به کوپک",
             "days": "به روز",
-            "gb": "به گیگابایت"
+            "gb": "به گیگابایت",
+            "percent": "درصد",
+            "devices": "دستگاه",
+            "spins": "چرخش"
           }
         },
         "promo": {
