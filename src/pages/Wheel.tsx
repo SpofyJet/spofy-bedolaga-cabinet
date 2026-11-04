@@ -22,6 +22,7 @@ import {
   PiXBold,
 } from 'react-icons/pi';
 import { PageHeader } from '@/components/layout/PageHeader';
+import { useFeatureFlags } from '@/hooks/useFeatureFlags';
 import { Button, EmptyState, Page, Row, SectionTitle, Surface } from '@/components/spofy/ui';
 import { cn } from '@/lib/utils';
 import { PageSkeleton, Skeleton } from '@/components/ui/skeleton';
@@ -82,6 +83,10 @@ function neutralRotation(prizes: WheelPrize[]): number {
 
 export default function Wheel() {
   const { t } = useTranslation();
+  // Колесо — вкладка нижней панели, только когда рефералка выключена (mobileNavRoutes);
+  // в остальных случаях на него приходят с главной или из меню, и нужна кнопка «назад».
+  const { referralEnabled } = useFeatureFlags();
+  const isNavTab = referralEnabled === false;
   const queryClient = useQueryClient();
   const { openInvoice, capabilities } = usePlatform();
   const haptic = useHaptic();
@@ -494,7 +499,7 @@ export default function Wheel() {
   if (error || !config) {
     return (
       <Page>
-        <PageHeader title={t('wheel.title')} noBack />
+        <PageHeader title={t('wheel.title')} noBack={isNavTab} />
         <EmptyState icon={<PiWarningCircleDuotone />} title={t('wheel.errors.loadFailed')} />
       </Page>
     );
@@ -503,7 +508,7 @@ export default function Wheel() {
   if (!config.is_enabled) {
     return (
       <Page>
-        <PageHeader title={t('wheel.title')} noBack />
+        <PageHeader title={t('wheel.title')} noBack={isNavTab} />
         <EmptyState icon={<PiSpinnerBallDuotone />} title={t('wheel.disabled')} />
       </Page>
     );
@@ -552,7 +557,7 @@ export default function Wheel() {
     <Page className="pb-8">
       <PageHeader
         title={t('wheel.title')}
-        noBack
+        noBack={isNavTab}
         subtitle={
           config.daily_limit > 0 && paidMethods
             ? `${t('wheel.spinsRemaining')}: ${Math.max(0, config.daily_limit - config.user_spins_today)}/${config.daily_limit}`
