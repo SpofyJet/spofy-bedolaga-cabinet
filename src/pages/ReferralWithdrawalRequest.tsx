@@ -4,6 +4,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 import { withdrawalApi } from '../api/withdrawals';
 import { useCurrency } from '../hooks/useCurrency';
+import { formatPriceShort } from '../utils/format';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { Button, Page, Stat, Surface } from '@/components/spofy/ui';
 
@@ -11,7 +12,7 @@ export default function ReferralWithdrawalRequest() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const { formatWithCurrency, currencySymbol } = useCurrency();
+  const { currencySymbol } = useCurrency();
 
   const [form, setForm] = useState({
     amount_rubles: 0,
@@ -55,7 +56,7 @@ export default function ReferralWithdrawalRequest() {
       <Surface>
         <Stat
           label={t('referral.withdrawal.available')}
-          value={balance ? formatWithCurrency(balance.available_total / 100) : '—'}
+          value={balance ? formatPriceShort(balance.available_total) : '—'}
           hint={t('referral.withdrawal.fields.amountHint', {
             min: balance ? Math.ceil(balance.min_amount_kopeks / 100) : 0,
             currency: currencySymbol,

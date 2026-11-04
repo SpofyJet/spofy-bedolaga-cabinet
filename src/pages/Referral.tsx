@@ -32,6 +32,8 @@ import { partnerApi } from '../api/partners';
 import { withdrawalApi } from '../api/withdrawals';
 import { CampaignCard } from '../components/partner/CampaignCard';
 import { useCurrency } from '../hooks/useCurrency';
+import { formatPriceShort } from '../utils/format';
+import { plainTariffName } from '../utils/plainTariffName';
 import { PageHeader } from '@/components/layout/PageHeader';
 import {
   Button,
@@ -476,7 +478,11 @@ const FRIEND_DAYS = 2;
 export default function Referral() {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
-  const { formatAmount, currencySymbol, formatPositive, formatWithCurrency } = useCurrency();
+  // useCurrency остаётся ради курса: formatPriceShort берёт его из общего кэша.
+  useCurrency();
+  // Суммы целыми рублями: «375 ₽», а не «375,00 ₽»; копейки — только если они есть.
+  const money = useCallback((rubles: number) => formatPriceShort(Math.round(rubles * 100)), []);
+  const plusMoney = useCallback((rubles: number) => `+${money(rubles)}`, [money]);
   const queryClient = useQueryClient();
   const [copiedLink, setCopiedLink] = useState<'cabinet' | 'bot' | null>(null);
   const [rewardChoiceError, setRewardChoiceError] = useState<string | null>(null);
@@ -598,18 +604,21 @@ export default function Referral() {
   const formatEarning = useCallback(
     (earning: ReferralEarning) => {
       const days = earning.days_granted ?? 0;
-      const money = earning.amount_rubles ?? 0;
+      const amount = earning.amount_rubles ?? 0;
       const daysLabel = days
         ? earning.tariff_name
-          ? t('referral.daysWithTariff', { count: days, tariff: earning.tariff_name })
+          ? t('referral.daysWithTariff', {
+              count: days,
+              tariff: plainTariffName(earning.tariff_name),
+            })
           : t('referral.days', { count: days })
         : '';
 
-      if (days && !money) return `+${daysLabel}`;
-      if (days) return `${formatPositive(money)} + ${daysLabel}`;
-      return formatPositive(money);
+      if (days && !amount) return `+${daysLabel}`;
+      if (days) return `${plusMoney(amount)} + ${daysLabel}`;
+      return plusMoney(amount);
     },
-    [formatPositive, t],
+    [plusMoney, t],
   );
 
   const programTerms = useMemo(() => {
@@ -646,7 +655,7 @@ export default function Referral() {
           label={t('referral.terms.minTopup')}
           trailing={
             <span className="text-[15px] font-semibold text-dark-100">
-              {`${formatAmount(terms.minimum_topup_rubles)} ${currencySymbol}`}
+              {formatPriceShort(terms.minimum_topup_kopeks)}
             </span>
           }
         />
@@ -657,7 +666,7 @@ export default function Referral() {
             label={t('referral.terms.newUserBonus')}
             trailing={
               <span className="text-[15px] font-semibold text-success-400">
-                {formatPositive(terms.first_topup_bonus_rubles)}
+                {`+${formatPriceShort(terms.first_topup_bonus_kopeks)}`}
               </span>
             }
           />
@@ -669,14 +678,14 @@ export default function Referral() {
             label={t('referral.terms.inviterBonus')}
             trailing={
               <span className="text-[15px] font-semibold text-success-400">
-                {formatPositive(terms.inviter_bonus_rubles)}
+                {`+${formatPriceShort(terms.inviter_bonus_kopeks)}`}
               </span>
             }
           />
         )}
       </Group>
     );
-  }, [terms, t, formatAmount, formatPositive, currencySymbol]);
+  }, [terms, t]);
 
   const copyLink = async (link: string, type: 'cabinet' | 'bot') => {
     if (!link) return;
@@ -871,7 +880,7 @@ export default function Referral() {
           />
           <Stat
             label={t('referral.stats.earned', 'Заработано')}
-            value={formatPositive(info?.total_earnings_rubles || 0)}
+            value={plusMoney(info?.total_earnings_rubles || 0)}
             hint={
               info?.total_earnings_days
                 ? t('referral.stats.earnedDays', { count: info.total_earnings_days })
@@ -1075,13 +1084,13 @@ export default function Referral() {
                 <div className="p-4 sm:p-5">
                   <Stat
                     label={t('referral.withdrawal.available')}
-                    value={formatWithCurrency(withdrawalBalance.available_total / 100)}
+                    value={formatPriceShort(withdrawalBalance.available_total)}
                     hint={
                       !withdrawalBalance.can_request && withdrawalBalance.cannot_request_reason
                         ? withdrawalBalance.cannot_request_reason
                         : withdrawalBalance.min_amount_kopeks > 0
                           ? t('referral.withdrawal.minAmount', {
-                              amount: formatWithCurrency(withdrawalBalance.min_amount_kopeks / 100),
+                              amount: formatPriceShort(withdrawalBalance.min_amount_kopeks),
                             })
                           : undefined
                     }
@@ -1105,7 +1114,7 @@ export default function Referral() {
                         icon={line.icon}
                         iconTone="muted"
                         label={line.label}
-                        hint={formatWithCurrency(line.kopeks / 100)}
+                        hint={formatPriceShort(line.kopeks)}
                       />
                     ))}
                   </div>
@@ -1127,7 +1136,7 @@ export default function Referral() {
                         статус уходит строкой ниже, а не «₽» и полбейджа. */}
                     <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
                       <span className="whitespace-nowrap text-[15px] font-semibold text-dark-100">
-                        {formatWithCurrency(item.amount_rubles)}
+                        {money(item.amount_rubles)}
                       </span>
                       <Chip tone={withdrawalStatusTone(item.status)}>
                         {t(`referral.withdrawal.status.${item.status}`, item.status)}

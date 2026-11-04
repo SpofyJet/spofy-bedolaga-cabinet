@@ -34,7 +34,7 @@ import { WheelIcon } from '@/components/layout/AppShell/icons';
 import { Skeleton, SkeletonGroup } from '@/components/ui/skeleton';
 import { safeLocal } from '../utils/safeStorage';
 import { getApiErrorMessage } from '../utils/api-error';
-import { formatPriceShort } from '../components/wheel/prizeText';
+import { formatPriceShort } from '../utils/format';
 import { plainTariffName } from '@/utils/plainTariffName';
 
 export default function Dashboard() {
