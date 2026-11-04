@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useNavigate } from 'react-router';
 import { useTranslation } from 'react-i18next';
@@ -26,6 +26,51 @@ const stopPointer = {
   onPointerDown: (e: React.PointerEvent) => e.stopPropagation(),
   onPointerUp: (e: React.PointerEvent) => e.stopPropagation(),
 };
+
+/**
+ * Иллюстрация слайда сжимается, если не помещается между текстом и кнопкой.
+ * Без этого на низком окне Telegram (≈600 px) она стоит по центру и вылезает
+ * и вверх на подзаголовок, и вниз под кнопку.
+ */
+const VISUAL_GLOW_PX = 24; // кольца и тени выходят за рамку блока
+const VISUAL_MIN_SCALE = 0.55;
+
+function FitVisual({ children }: { children: React.ReactNode }) {
+  const outerRef = useRef<HTMLDivElement>(null);
+  const innerRef = useRef<HTMLDivElement>(null);
+  const [scale, setScale] = useState(1);
+
+  useLayoutEffect(() => {
+    const outer = outerRef.current;
+    const inner = innerRef.current;
+    if (!outer || !inner) return;
+    const fit = () => {
+      const cs = getComputedStyle(outer);
+      const avail = outer.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom);
+      // offsetHeight не учитывает transform — это естественная высота.
+      const need = inner.offsetHeight + VISUAL_GLOW_PX;
+      const next = need > avail && avail > 0 ? Math.max(VISUAL_MIN_SCALE, avail / need) : 1;
+      setScale((prev) => (Math.abs(prev - next) < 0.01 ? prev : next));
+    };
+    fit();
+    const ro = new ResizeObserver(fit);
+    ro.observe(outer);
+    ro.observe(inner);
+    return () => ro.disconnect();
+  }, []);
+
+  return (
+    <div ref={outerRef} className="story-visual">
+      <div
+        ref={innerRef}
+        className="story-visual-fit"
+        style={scale < 1 ? { transform: `scale(${scale})` } : undefined}
+      >
+        {children}
+      </div>
+    </div>
+  );
+}
 
 interface StoryViewerProps {
   initialIndex: number;
@@ -279,13 +324,17 @@ export function StoryViewer({ initialIndex, onClose }: StoryViewerProps) {
               <p className="story-subtitle">{slide.subtitle}</p>
             </div>
 
-            <div className="story-visual">
-              {visual && 'image' in visual ? (
+            {visual && 'image' in visual ? (
+              <div className="story-visual">
                 <img className="story-photo" src={visual.image} alt="" draggable={false} />
-              ) : visual ? (
+              </div>
+            ) : visual ? (
+              <FitVisual>
                 <StoryVisual name={visual.visual} accent={meta.accent} />
-              ) : null}
-            </div>
+              </FitVisual>
+            ) : (
+              <div className="story-visual" />
+            )}
 
             <div className="story-footer">
               {isLastSlide && slide.ctaLabel && meta.cta ? (
