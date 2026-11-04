@@ -22,7 +22,7 @@ export function BestValueBadge({ className }: { className?: string }) {
 }
 
 /** Цвет рамки выделенного периода — тот же токен, что и у отметки. */
-export const BEST_VALUE_BORDER = 'rgb(var(--color-urgent-400))';
+export const BEST_VALUE_BORDER = 'rgba(var(--color-urgent-400), 0.5)';
 
 /**
  * Рамка отмеченного варианта — одна на все витрины: золотой контур снаружи,
@@ -33,6 +33,6 @@ export const BEST_VALUE_BORDER = 'rgb(var(--color-urgent-400))';
  */
 export function bestValueFrame(selected: boolean): string {
   return selected
-    ? 'border-2 border-urgent-400 ring-2 ring-inset ring-accent-500'
-    : 'border-2 border-urgent-400';
+    ? 'border-2 border-urgent-400/50 ring-2 ring-inset ring-accent-500'
+    : 'border-2 border-urgent-400/50';
 }

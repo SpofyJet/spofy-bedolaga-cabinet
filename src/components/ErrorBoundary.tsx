@@ -6,7 +6,9 @@ import { safeSession } from '../utils/safeStorage';
 const tr = (key: string, fallback: string) => i18n.t(key, { defaultValue: fallback });
 
 const PRIMARY_BUTTON =
-  'inline-flex h-12 items-center justify-center rounded-2xl bg-cta-500 px-6 text-[15px] font-semibold text-on-cta transition-colors hover:bg-cta-600 active:scale-[0.98]';
+  // Ошибка — не место для коралловой «главной» кнопки: рядом с красной
+  // иконкой два тёплых цвета спорят. Повтор — спокойная вторичная кнопка.
+  'inline-flex h-12 items-center justify-center rounded-2xl bg-dark-800/70 px-6 text-[15px] font-semibold text-dark-100 ring-1 ring-inset ring-dark-700/60 transition-colors hover:bg-dark-700/70 active:scale-[0.98]';
 
 function ErrorIcon() {
   return (

@@ -27,7 +27,7 @@ const MAX_POLL_MS = 10 * 60 * 1000; // 10 minutes
 
 // Кнопки экрана в стиле v10 (как Button из блоков Spofy).
 const primaryBtn =
-  'flex h-12 w-full items-center justify-center gap-2 rounded-2xl px-5 text-[15px] font-semibold text-on-accent transition-colors active:scale-[0.98]';
+  'flex h-12 w-full items-center justify-center gap-2 rounded-2xl px-5 text-[15px] font-semibold text-on-cta transition-colors active:scale-[0.98]';
 const secondaryBtn =
   'flex h-12 w-full items-center justify-center gap-2 rounded-2xl px-5 text-[15px] font-semibold ring-1 ring-inset transition-colors active:scale-[0.98]';
 
@@ -194,7 +194,7 @@ function CabinetCredentialsState({
         disabled={isLoggingIn}
         className={cn(
           primaryBtn,
-          isLoggingIn ? 'cursor-not-allowed bg-accent-500/50' : 'bg-accent-500 hover:bg-accent-600',
+          isLoggingIn ? 'cursor-not-allowed bg-cta-500/50' : 'bg-cta-500 hover:bg-cta-600',
         )}
       >
         {isLoggingIn ? (
@@ -314,7 +314,7 @@ function SuccessState({
           href={botLink}
           target="_blank"
           rel="noopener noreferrer"
-          className={cn(primaryBtn, 'bg-accent-500 hover:bg-accent-600')}
+          className={cn(primaryBtn, 'bg-cta-500 hover:bg-cta-600')}
         >
           {t('landing.openBot')}
         </a>
@@ -442,9 +442,7 @@ function PendingActivationState({
           disabled={isActivating}
           className={cn(
             primaryBtn,
-            isActivating
-              ? 'cursor-not-allowed bg-accent-500/50'
-              : 'bg-accent-500 hover:bg-accent-600',
+            isActivating ? 'cursor-not-allowed bg-cta-500/50' : 'bg-cta-500 hover:bg-cta-600',
           )}
         >
           {isActivating ? (
@@ -556,7 +554,7 @@ function GiftPendingActivationState({
           href={botLink}
           target="_blank"
           rel="noopener noreferrer"
-          className={cn(primaryBtn, 'bg-accent-500 hover:bg-accent-600')}
+          className={cn(primaryBtn, 'bg-cta-500 hover:bg-cta-600')}
         >
           {t('landing.openBot')}
         </a>
@@ -613,7 +611,7 @@ function PollTimedOutState({ onRetry }: { onRetry: () => void }) {
       <button
         type="button"
         onClick={onRetry}
-        className={cn(primaryBtn, 'bg-accent-500 hover:bg-accent-600')}
+        className={cn(primaryBtn, 'bg-cta-500 hover:bg-cta-600')}
       >
         {t('common.retry', 'Retry')}
       </button>

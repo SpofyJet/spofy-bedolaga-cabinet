@@ -306,10 +306,12 @@ export function AppShell({ children }: AppShellProps) {
             </div>
           ) : (
             <div className="flex shrink-0 items-center justify-self-end">
+              {/* Шапка есть на каждой странице: коралловая кнопка здесь давала
+                  вторую «главную» рядом с главной кнопкой самой страницы. */}
               <Link
                 to={connectTo}
                 onClick={handleNavClick}
-                className="flex items-center gap-2 rounded-full bg-cta-500 px-4 py-2 text-[13px] font-semibold text-on-cta shadow-[0_6px_20px_-8px_rgba(255,98,66,0.55)] transition-colors hover:bg-cta-600"
+                className="flex items-center gap-2 rounded-full bg-accent-500/15 px-4 py-2 text-[13px] font-semibold text-accent-300 ring-1 ring-inset ring-accent-500/30 transition-colors hover:bg-accent-500/25"
               >
                 <PowerIcon className="h-4 w-4" />
                 {t('dashboard.quick.connect')}
