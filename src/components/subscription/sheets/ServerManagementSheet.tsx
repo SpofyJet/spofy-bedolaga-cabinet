@@ -82,12 +82,18 @@ export function ServerManagementSheet({
     onSelectedServersChange([]);
   };
 
+  // Число подключённых локаций — только когда оно есть: «0 серверов» под
+  // строкой читается как поломка, хотя локации просто не пришли в ответе.
+  const connectedCount = subscription.servers?.length ?? 0;
+
   return (
     <>
       <Row
         icon={<PiGlobeHemisphereEastDuotone />}
         label={t('subscription.additionalOptions.manageServers')}
-        description={t('subscription.servers', { count: subscription.servers?.length || 0 })}
+        description={
+          connectedCount > 0 ? t('subscription.servers', { count: connectedCount }) : undefined
+        }
         onClick={onOpen}
       />
       <ResponsiveSheet
