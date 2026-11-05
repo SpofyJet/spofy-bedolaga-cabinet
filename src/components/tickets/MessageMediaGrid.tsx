@@ -178,7 +178,7 @@ export function MessageMediaGrid({
           >
             <button
               type="button"
-              className="absolute right-4 top-4 z-10 flex h-12 w-12 items-center justify-center rounded-full bg-white text-black shadow-xl transition-colors hover:bg-gray-200"
+              className="absolute right-4 top-4 z-10 flex h-12 w-12 items-center justify-center rounded-full bg-white text-black transition-colors hover:bg-gray-200"
               onClick={closeFullscreen}
             >
               <XIcon className="h-5 w-5" />
@@ -190,7 +190,7 @@ export function MessageMediaGrid({
                   type="button"
                   disabled={fullscreenIndex === 0}
                   onClick={() => setFullscreenIndex(fullscreenIndex - 1)}
-                  className="absolute left-4 top-1/2 z-10 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-black shadow-xl transition-colors hover:bg-white disabled:opacity-30"
+                  className="absolute left-4 top-1/2 z-10 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-black transition-colors hover:bg-white disabled:opacity-30"
                 >
                   <ChevronLeftIcon className="h-5 w-5" />
                 </button>
@@ -198,7 +198,7 @@ export function MessageMediaGrid({
                   type="button"
                   disabled={fullscreenIndex >= photoItems.length - 1}
                   onClick={() => setFullscreenIndex(fullscreenIndex + 1)}
-                  className="absolute right-4 top-1/2 z-10 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-black shadow-xl transition-colors hover:bg-white disabled:opacity-30"
+                  className="absolute right-4 top-1/2 z-10 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-black transition-colors hover:bg-white disabled:opacity-30"
                 >
                   <ChevronRightIcon className="h-5 w-5" />
                 </button>

@@ -353,7 +353,7 @@ export default function NewsArticlePage() {
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.2 }}
-        className="prose max-w-none rounded-3xl bg-dark-900/70 p-4 ring-1 ring-inset ring-dark-800/80 sm:p-5"
+        className="prose max-w-none rounded-3xl bg-dark-900/70 p-4 sm:p-5"
         dangerouslySetInnerHTML={{ __html: sanitizedContent }}
       />
     </Page>

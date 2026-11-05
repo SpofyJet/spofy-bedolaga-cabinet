@@ -29,7 +29,7 @@ const MAX_POLL_MS = 10 * 60 * 1000; // 10 minutes
 const primaryBtn =
   'flex h-12 w-full items-center justify-center gap-2 rounded-2xl px-5 text-[15px] font-semibold text-on-cta transition-colors active:scale-[0.98]';
 const secondaryBtn =
-  'flex h-12 w-full items-center justify-center gap-2 rounded-2xl px-5 text-[15px] font-semibold ring-1 ring-inset transition-colors active:scale-[0.98]';
+  'flex h-12 w-full items-center justify-center gap-2 rounded-2xl px-5 text-[15px] font-semibold transition-colors active:scale-[0.98]';
 
 /** Крупная иконка состояния (вместо анимированной галочки там, где её нет). */
 function StateIcon({ tone, children }: { tone: 'warning' | 'muted'; children: React.ReactNode }) {
@@ -90,7 +90,7 @@ function CopyableField({ label, value }: { label: string; value: string }) {
   }, [value]);
 
   return (
-    <div className="flex w-full items-center gap-3 rounded-2xl bg-dark-800/50 px-4 py-3 ring-1 ring-inset ring-dark-700/50">
+    <div className="flex w-full items-center gap-3 rounded-2xl bg-dark-800/50 px-4 py-3">
       <div className="min-w-0 flex-1 text-left">
         <p className="text-[13px] text-dark-400">{label}</p>
         <p className="mt-0.5 select-all break-all text-[15px] font-medium text-dark-50">{value}</p>
@@ -340,8 +340,8 @@ function SuccessState({
             className={cn(
               secondaryBtn,
               copied
-                ? 'bg-success-500/10 text-success-400 ring-success-500/25'
-                : 'bg-dark-800/70 text-dark-100 ring-dark-700/60 hover:bg-dark-700/70',
+                ? 'bg-success-500/10 text-success-400'
+                : 'bg-dark-800/70 text-dark-100 hover:bg-dark-700/70',
             )}
           >
             {copied ? (
@@ -463,8 +463,8 @@ function PendingActivationState({
             className={cn(
               secondaryBtn,
               isLoggingIn
-                ? 'cursor-not-allowed bg-dark-800/30 text-dark-400 ring-dark-800/60'
-                : 'bg-dark-800/70 text-dark-100 ring-dark-700/60 hover:bg-dark-700/70',
+                ? 'cursor-not-allowed bg-dark-800/30 text-dark-400'
+                : 'bg-dark-800/70 text-dark-100 hover:bg-dark-700/70',
             )}
           >
             {isLoggingIn ? (

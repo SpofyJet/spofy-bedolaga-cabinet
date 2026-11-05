@@ -65,7 +65,7 @@ export default function ResetPassword() {
           <LanguageSwitcher />
         </div>
         <div className="relative w-full max-w-md text-center">
-          <div className="rounded-3xl bg-dark-900/70 p-6 ring-1 ring-inset ring-dark-800/80">
+          <div className="rounded-3xl bg-dark-900/70 p-6">
             <div className="mb-4 text-5xl text-error-400">!</div>
             <h2 className="mb-2 text-xl font-semibold text-dark-50">
               {t('resetPassword.invalidToken', 'Invalid reset link')}
@@ -96,7 +96,7 @@ export default function ResetPassword() {
       </div>
 
       <div className="relative w-full max-w-md">
-        <div className="rounded-3xl bg-dark-900/70 p-6 ring-1 ring-inset ring-dark-800/80">
+        <div className="rounded-3xl bg-dark-900/70 p-6">
           {status === 'success' ? (
             <div className="text-center">
               <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-success-500/20">
@@ -155,7 +155,7 @@ export default function ResetPassword() {
                 {error && (
                   <div
                     role="alert"
-                    className="rounded-xl border border-error-500/30 bg-error-500/10 px-4 py-3 text-sm text-error-400"
+                    className="rounded-xl bg-error-500/10 px-4 py-3 text-sm text-error-400"
                   >
                     {error}
                   </div>

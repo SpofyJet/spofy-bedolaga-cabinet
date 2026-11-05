@@ -222,10 +222,10 @@ export default function TicketNotificationBell({ isAdmin = false }: TicketNotifi
       {/* Bell button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className={`relative rounded-xl border p-2 transition-all duration-200 ${
+        className={`relative rounded-xl p-2 transition-all duration-200 ${
           isOpen
-            ? 'border-dark-600 bg-dark-700 text-accent-400'
-            : 'border-dark-700/50 bg-dark-800/50 text-dark-400 hover:bg-dark-700 hover:text-accent-400'
+            ? ' bg-dark-700 text-accent-400'
+            : ' bg-dark-800/50 text-dark-400 hover:bg-dark-700 hover:text-accent-400'
         }`}
         title={t('notifications.ticketNotifications', 'Ticket notifications')}
       >
@@ -240,7 +240,7 @@ export default function TicketNotificationBell({ isAdmin = false }: TicketNotifi
       {/* Dropdown */}
       {isOpen && (
         <div
-          className="fixed left-4 right-4 z-50 mt-0 w-auto animate-scale-in overflow-hidden rounded-2xl border border-dark-700/50 bg-dark-900/95 shadow-2xl shadow-black/30 backdrop-blur-xl sm:absolute sm:left-auto sm:right-0 sm:top-auto sm:mt-2 sm:w-96"
+          className="fixed left-4 right-4 z-50 mt-0 w-auto animate-scale-in overflow-hidden rounded-2xl bg-dark-900/95 sm:absolute sm:left-auto sm:right-0 sm:top-auto sm:mt-2 sm:w-96"
           style={isMobileFullscreen ? { top: dropdownTop } : undefined}
         >
           {/* Header */}
@@ -272,7 +272,7 @@ export default function TicketNotificationBell({ isAdmin = false }: TicketNotifi
                   key={notification.id}
                   onClick={() => handleNotificationClick(notification)}
                   className={`w-full border-b border-dark-800/50 px-4 py-3 text-left transition-all duration-200 last:border-b-0 hover:bg-dark-800/50 ${
-                    !notification.is_read ? 'bg-accent-500/5' : ''
+                    !notification.is_read ? 'bg-accent-500/15' : ''
                   }`}
                 >
                   <div className="flex gap-3">
@@ -291,7 +291,7 @@ export default function TicketNotificationBell({ isAdmin = false }: TicketNotifi
                     </div>
                     {!notification.is_read && (
                       <div className="flex-shrink-0 pt-1">
-                        <span className="block h-2.5 w-2.5 rounded-full bg-accent-500 shadow-lg shadow-accent-500/50"></span>
+                        <span className="block h-2.5 w-2.5 rounded-full bg-accent-500"></span>
                       </div>
                     )}
                   </div>

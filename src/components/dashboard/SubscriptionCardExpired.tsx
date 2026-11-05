@@ -134,9 +134,7 @@ export default function SubscriptionCardExpired({
     'flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-cta-500 px-5 text-[15px] font-semibold text-on-cta transition-colors hover:bg-cta-600 active:scale-[0.98] disabled:opacity-50';
 
   return (
-    <section
-      className={`rounded-3xl bg-dark-900/70 p-4 ring-1 ring-inset ring-dark-800/80 ${className ?? ''}`}
-    >
+    <section className={`rounded-3xl bg-dark-900/70 p-4 ${className ?? ''}`}>
       <div className="flex items-start gap-3">
         <span
           className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${
@@ -161,7 +159,7 @@ export default function SubscriptionCardExpired({
 
       {renewError && (
         <div
-          className="mt-3 rounded-xl bg-error-500/10 p-3 text-center text-sm text-error-400 ring-1 ring-inset ring-error-500/25"
+          className="mt-3 rounded-xl bg-error-500/10 p-3 text-center text-sm text-error-400"
           role="alert"
         >
           {renewError}

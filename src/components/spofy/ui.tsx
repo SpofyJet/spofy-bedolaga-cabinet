@@ -4,7 +4,7 @@
  *
  * Правила стиля:
  * - колонка max-w-[600px] по центру, отступы между блоками space-y-6;
- * - поверхность: rounded-3xl bg-dark-900/70 + ring-1 ring-inset ring-dark-800/80, без теней и стекла
+ * - поверхность: rounded-3xl bg-dark-900/70, без обводки, теней и свечения: карточку отделяет заливка;
  *   (с v11 dark-900 заметно светлее фона — карточки отделяются, а не сливаются);
  * - заголовки секций — 13px semibold dark-400, обычным регистром (без КАПСА и моно-шрифта);
  * - иконки — react-icons/pi Duotone в плитке 40×40, цвет по смыслу (tones.ts), синий — только действия;
@@ -34,16 +34,7 @@ export function Surface({
   className?: string;
   as?: 'div' | 'section';
 }) {
-  return (
-    <As
-      className={cn(
-        'rounded-3xl bg-dark-900/70 p-4 ring-1 ring-inset ring-dark-800/80 sm:p-5',
-        className,
-      )}
-    >
-      {children}
-    </As>
-  );
+  return <As className={cn('rounded-3xl bg-dark-900/70 p-4 sm:p-5', className)}>{children}</As>;
 }
 
 export function SectionTitle({ children, right }: { children: ReactNode; right?: ReactNode }) {
@@ -68,7 +59,7 @@ export function Group({
   return (
     <section>
       {title && <SectionTitle right={right}>{title}</SectionTitle>}
-      <div className="divide-y divide-dark-800/70 overflow-hidden rounded-3xl bg-dark-900/70 ring-1 ring-inset ring-dark-800/80">
+      <div className="divide-y divide-dark-800/70 overflow-hidden rounded-3xl bg-dark-900/70">
         {children}
       </div>
     </section>
@@ -164,10 +155,8 @@ export function Button({
 }: ButtonHTMLAttributes<HTMLButtonElement> & { tone?: ButtonTone }) {
   const toneClass = {
     primary: 'bg-cta-500 text-on-cta hover:bg-cta-600 disabled:bg-cta-500/40',
-    secondary:
-      'bg-dark-800/70 text-dark-100 ring-1 ring-inset ring-dark-700/60 hover:bg-dark-700/70',
-    danger:
-      'bg-error-500/10 text-error-400 ring-1 ring-inset ring-error-500/25 hover:bg-error-500/15',
+    secondary: 'bg-dark-800/70 text-dark-100 hover:bg-dark-700/70',
+    danger: 'bg-error-500/10 text-error-400 hover:bg-error-500/15',
     ghost: 'text-accent-400 hover:bg-accent-500/10',
   }[tone];
   return (
@@ -190,7 +179,7 @@ export function Chip({ children, tone = 'accent' }: { children: ReactNode; tone?
   return (
     <span
       className={cn(
-        'inline-flex w-fit items-center rounded-full border px-2.5 py-1 text-2xs font-semibold',
+        'inline-flex w-fit items-center rounded-full px-2.5 py-1 text-2xs font-semibold',
         TONE_CHIP[tone],
       )}
     >

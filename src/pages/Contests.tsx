@@ -85,7 +85,7 @@ export default function Contests() {
       {selectedContest && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center bg-dark-950/80 p-4">
           <div
-            className="max-h-[80vh] w-full max-w-lg overflow-y-auto rounded-3xl bg-dark-900 p-5 ring-1 ring-inset ring-dark-800"
+            className="max-h-[80vh] w-full max-w-lg overflow-y-auto rounded-3xl bg-dark-900 p-5"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="mb-4 flex items-center justify-between">
@@ -108,7 +108,7 @@ export default function Contests() {
 
             {result && (
               <div
-                className={`mb-4 rounded-2xl p-4 ring-1 ring-inset ${result.is_winner ? 'bg-success-500/10 text-success-400 ring-success-500/25' : 'bg-error-500/10 text-error-400 ring-error-500/25'}`}
+                className={`mb-4 rounded-2xl p-4 ${result.is_winner ? 'bg-success-500/10 text-success-400 ' : 'bg-error-500/10 text-error-400 '}`}
               >
                 <p className="font-medium">{result.message}</p>
               </div>

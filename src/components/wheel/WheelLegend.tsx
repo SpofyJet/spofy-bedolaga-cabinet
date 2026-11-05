@@ -29,13 +29,11 @@ const WheelLegend = memo(function WheelLegend({ prizes, context }: WheelLegendPr
   return (
     <div className="grid grid-cols-2 gap-2.5">
       {sorted.map((prize, index) => {
-        const jackpot = prize.rarity === 'jackpot';
         return (
           <div
             key={prize.id}
             className={cn(
-              'relative flex min-h-[132px] flex-col gap-2 overflow-hidden rounded-3xl bg-dark-900/70 p-3.5 ring-1 ring-inset',
-              jackpot ? 'ring-cta-500/50' : 'ring-dark-800/80',
+              'relative flex min-h-[132px] flex-col gap-2 overflow-hidden rounded-3xl bg-dark-900/70 p-3.5',
               // Нечётное число призов — последняя плитка на всю ширину, без дырки в сетке.
               sorted.length % 2 === 1 && index === sorted.length - 1 && 'col-span-2 min-h-[96px]',
             )}

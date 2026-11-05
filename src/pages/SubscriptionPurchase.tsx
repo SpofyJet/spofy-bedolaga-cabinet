@@ -375,9 +375,7 @@ function Notice({
     <Surface
       className={cn(
         'flex items-start gap-3',
-        tone === 'error'
-          ? 'bg-error-500/5 ring-error-500/20'
-          : 'bg-accent-500/5 ring-accent-500/20',
+        tone === 'error' ? 'bg-error-500/5' : 'bg-accent-500/15',
       )}
     >
       <RowIcon tone={tone}>{icon}</RowIcon>

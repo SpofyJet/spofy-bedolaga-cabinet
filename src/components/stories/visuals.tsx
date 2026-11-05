@@ -35,12 +35,7 @@ interface VisualProps {
 
 function Panel({ children, className }: { children: React.ReactNode; className?: string }) {
   return (
-    <div
-      className={cn(
-        'w-full max-w-[320px] rounded-[22px] border border-white/10 bg-white/[0.06] p-3 shadow-[0_24px_60px_-24px_rgba(0,0,0,0.8)] backdrop-blur-sm',
-        className,
-      )}
-    >
+    <div className={cn('w-full max-w-[320px] rounded-[22px] bg-white/[0.06] p-3', className)}>
       {children}
     </div>
   );
@@ -63,11 +58,7 @@ function Row({
         'flex items-center gap-3 rounded-2xl px-3.5 py-3 text-[15px] font-semibold text-white',
         className,
       )}
-      style={
-        highlight
-          ? { background: `${accent}26`, boxShadow: `inset 0 0 0 1.5px ${accent}` }
-          : { background: 'rgba(255,255,255,0.04)' }
-      }
+      style={highlight ? { background: `${accent}33` } : { background: 'rgba(255,255,255,0.04)' }}
     >
       {children}
     </div>
@@ -78,7 +69,7 @@ function AppTile({ label, accent }: { label: string; accent: string }) {
   return (
     <span
       className="flex h-12 w-12 shrink-0 items-center justify-center rounded-[14px] text-sm font-black tracking-tight text-white"
-      style={{ background: `linear-gradient(160deg, ${accent}, ${accent}99)` }}
+      style={{ background: accent }}
     >
       {label}
     </span>
@@ -158,7 +149,6 @@ function Power({ accent }: VisualProps) {
         className="flex h-28 w-28 items-center justify-center rounded-full text-[#0B1F3B]"
         style={{
           background: accent,
-          boxShadow: `0 0 0 10px ${accent}22, 0 0 0 22px ${accent}11`,
         }}
       >
         <PiPowerBold className="h-12 w-12" />
@@ -177,7 +167,7 @@ function Refresh({ accent }: VisualProps) {
         <span className="text-[15px] font-bold text-white">Spofy VPN</span>
         <span
           className="flex h-10 w-10 items-center justify-center rounded-full text-[#0B1F3B]"
-          style={{ background: accent, boxShadow: `0 0 0 6px ${accent}33` }}
+          style={{ background: accent }}
         >
           <PiArrowsClockwiseBold className="h-5 w-5" />
         </span>
@@ -313,10 +303,7 @@ function Slots({ accent }: VisualProps) {
         <span className={slot} style={{ background: `${accent}2e`, color: accent }}>
           <PiLaptopFill className="h-7 w-7" />
         </span>
-        <span
-          className={cn(slot, 'border-2 border-dashed text-white/70')}
-          style={{ borderColor: `${accent}99` }}
-        >
+        <span className={cn(slot, 'bg-white/[0.06] text-white/70')}>
           <PiPlusBold className="h-6 w-6" />
         </span>
       </div>
@@ -384,10 +371,7 @@ function Limit({ accent }: VisualProps) {
         <span className="flex-1">{t('stories.ui.oldLaptop')}</span>
         <PiTrashBold className="h-5 w-5 text-rose-300" />
       </Row>
-      <div
-        className="flex items-center justify-center gap-2 rounded-2xl border-2 border-dashed py-3 text-sm font-bold text-white"
-        style={{ borderColor: `${accent}aa` }}
-      >
+      <div className="flex items-center justify-center gap-2 rounded-2xl bg-white/[0.06] py-3 text-sm font-bold text-white">
         <PiPlusBold className="h-4 w-4" /> {t('dashboard.devicesTraffic.addSlot')}
       </div>
     </Panel>

@@ -53,7 +53,6 @@ export function MobileBottomNav({ items, isMenuOpen = false, badges = {} }: Mobi
         className={cn(
           'fixed z-50 transition-all duration-200 lg:hidden',
           'bg-dark-900',
-          'border border-dark-700/30',
           isKeyboardOpen || isMenuOpen ? HIDDEN_UNDER_KEYBOARD : 'opacity-100',
         )}
         style={{
@@ -67,7 +66,6 @@ export function MobileBottomNav({ items, isMenuOpen = false, badges = {} }: Mobi
           right: 'max(16px, env(safe-area-inset-right, 0px))',
           borderRadius: 'var(--bento-radius, 24px)',
           padding: '8px 4px',
-          boxShadow: '0 4px 30px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.05) inset',
         }}
       >
         <div className="flex justify-around">
@@ -88,7 +86,7 @@ export function MobileBottomNav({ items, isMenuOpen = false, badges = {} }: Mobi
                 {isActive(item.path) && (
                   <motion.div
                     layoutId="bottom-nav-active"
-                    className="absolute top-[7px] h-[26px] w-11 rounded-lg bg-accent-500/15 ring-1 ring-accent-500/25"
+                    className="absolute top-[7px] h-[26px] w-11 rounded-lg bg-accent-500/15"
                     transition={{ type: 'spring', stiffness: 500, damping: 30 }}
                   />
                 )}
@@ -96,7 +94,7 @@ export function MobileBottomNav({ items, isMenuOpen = false, badges = {} }: Mobi
                   <Icon className="h-5 w-5" />
                   {badges[item.key] && (
                     <span
-                      className="absolute -right-1 -top-0.5 h-2.5 w-2.5 rounded-full bg-error-500 ring-2 ring-dark-900"
+                      className="absolute -right-1 -top-0.5 h-2.5 w-2.5 rounded-full bg-error-500"
                       aria-label={t('support.chat.unread', 'Новый ответ')}
                     />
                   )}

@@ -54,7 +54,6 @@ export default function TrafficProgressBar({
             height: barHeight,
             borderRadius: 10,
             background: g.trackBg,
-            border: `1px solid rgba(${zone.mainVarRaw}, 0.12)`,
           }}
         >
           <div
@@ -102,7 +101,6 @@ export default function TrafficProgressBar({
           height: barHeight,
           borderRadius: 10,
           background: g.trackBg,
-          border: `1px solid ${g.trackBorder}`,
         }}
       >
         {/* Warning zone tint backgrounds */}
@@ -167,22 +165,6 @@ export default function TrafficProgressBar({
         ))}
 
         {/* Glow at fill edge */}
-        {clampedPercent > 2 && (
-          <div
-            className="pointer-events-none absolute"
-            style={{
-              top: -4,
-              bottom: -4,
-              left: `calc(${clampedPercent}% - 8px)`,
-              width: 16,
-              borderRadius: '50%',
-              background: `radial-gradient(circle, rgba(${zone.mainVarRaw}, 0.38), transparent)`,
-              filter: 'blur(4px)',
-              transition: 'left 1.2s cubic-bezier(0.16, 1, 0.3, 1)',
-            }}
-            aria-hidden="true"
-          />
-        )}
       </div>
 
       {/* Scale labels */}

@@ -772,12 +772,12 @@ export default function ConnectedAccounts() {
                             />
                           </div>
                           {emailError && (
-                            <div className="rounded-xl border border-error-500/30 bg-error-500/10 p-3 text-sm text-error-400">
+                            <div className="rounded-xl bg-error-500/10 p-3 text-sm text-error-400">
                               {emailError}
                             </div>
                           )}
                           {emailSuccess && (
-                            <div className="rounded-xl border border-success-500/30 bg-success-500/10 p-3 text-sm text-success-400">
+                            <div className="rounded-xl bg-success-500/10 p-3 text-sm text-success-400">
                               {emailSuccess}
                             </div>
                           )}
@@ -845,12 +845,12 @@ export default function ConnectedAccounts() {
                           </div>
 
                           {emailError && (
-                            <div className="rounded-xl border border-error-500/30 bg-error-500/10 p-3 text-sm text-error-400">
+                            <div className="rounded-xl bg-error-500/10 p-3 text-sm text-error-400">
                               {emailError}
                             </div>
                           )}
                           {emailSuccess && (
-                            <div className="rounded-xl border border-success-500/30 bg-success-500/10 p-3 text-sm text-success-400">
+                            <div className="rounded-xl bg-success-500/10 p-3 text-sm text-success-400">
                               {emailSuccess}
                             </div>
                           )}

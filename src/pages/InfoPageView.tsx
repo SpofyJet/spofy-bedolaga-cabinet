@@ -263,11 +263,11 @@ function FaqView({ items }: { items: FaqItem[] }) {
 
       {/* Accordion items */}
       {filteredItems.length === 0 ? (
-        <div className="rounded-3xl bg-dark-900/70 p-6 text-center text-[13px] text-dark-400 ring-1 ring-inset ring-dark-800/80">
+        <div className="rounded-3xl bg-dark-900/70 p-6 text-center text-[13px] text-dark-400">
           {search ? t('admin.infoPages.faq.noResults') : t('admin.infoPages.faq.noQuestions')}
         </div>
       ) : (
-        <div className="divide-y divide-dark-800/70 overflow-hidden rounded-3xl bg-dark-900/70 ring-1 ring-inset ring-dark-800/80">
+        <div className="divide-y divide-dark-800/70 overflow-hidden rounded-3xl bg-dark-900/70">
           {filteredItems.map((item, index) => {
             const key = `${index}-${item.q.slice(0, 50)}`;
             return (
@@ -380,7 +380,7 @@ export default function InfoPageView() {
       ) : (
         /* Regular page content - sanitized with DOMPurify (strict allowlist) */
         <div
-          className="prose max-w-none overflow-x-auto rounded-3xl bg-dark-900/70 p-4 ring-1 ring-inset ring-dark-800/80 sm:p-5"
+          className="prose max-w-none overflow-x-auto rounded-3xl bg-dark-900/70 p-4 sm:p-5"
           dangerouslySetInnerHTML={{ __html: sanitizedContent }}
         />
       )}

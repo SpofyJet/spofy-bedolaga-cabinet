@@ -339,7 +339,7 @@ export function Sheet({
     >
       {/* Backdrop */}
       <div
-        className={`absolute inset-0 bg-dark-950/60 backdrop-blur-sm transition-opacity duration-300 ${
+        className={`absolute inset-0 bg-dark-950/60 transition-opacity duration-300 ${
           isVisible ? 'opacity-100' : 'opacity-0'
         }`}
       />
@@ -350,7 +350,7 @@ export function Sheet({
         role="dialog"
         aria-modal="true"
         aria-label={title}
-        className={`relative flex w-full max-w-lg flex-col overflow-hidden rounded-t-3xl bg-dark-900 shadow-2xl ${
+        className={`relative flex w-full max-w-lg flex-col overflow-hidden rounded-t-3xl bg-dark-900 ${
           isAnimating ? 'transition-transform duration-300 ease-out' : ''
         } ${isVisible ? 'translate-y-0' : 'translate-y-full'} ${className}`}
         style={{

@@ -71,18 +71,14 @@ export function ResponsiveSheet({
 
   return createPortal(
     <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
-      <div
-        className="absolute inset-0 bg-dark-950/70 backdrop-blur-sm"
-        onClick={onClose}
-        aria-hidden
-      />
+      <div className="absolute inset-0 bg-dark-950/70" onClick={onClose} aria-hidden />
       <div
         ref={dialogRef}
         role="dialog"
         aria-modal="true"
         aria-label={title}
         tabIndex={-1}
-        className={`relative flex max-h-[calc(100dvh-2rem)] w-full ${WIDTH[size]} flex-col overflow-hidden rounded-2xl border border-dark-700 bg-dark-900 shadow-2xl`}
+        className={`relative flex max-h-[calc(100dvh-2rem)] w-full ${WIDTH[size]} flex-col overflow-hidden rounded-2xl bg-dark-900 `}
       >
         <div className="flex items-center justify-between gap-3 px-5 pb-3 pt-5">
           <h3 className="text-lg font-semibold text-dark-50">{title}</h3>

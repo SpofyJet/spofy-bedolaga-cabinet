@@ -12,16 +12,7 @@ import { PageHeader } from '@/components/layout/PageHeader';
 
 // Поверхности Spofy вместо старых карточек: плоский фон, тонкое кольцо.
 function Card({ className, children }: { className?: string; children: ReactNode }) {
-  return (
-    <div
-      className={cn(
-        'rounded-3xl bg-dark-900/70 p-4 ring-1 ring-inset ring-dark-800/80 sm:p-5',
-        className,
-      )}
-    >
-      {children}
-    </div>
-  );
+  return <div className={cn('rounded-3xl bg-dark-900/70 p-4 sm:p-5', className)}>{children}</div>;
 }
 function CardHeader({ children }: { children: ReactNode }) {
   return <div className="mb-3">{children}</div>;
@@ -76,8 +67,8 @@ function RadioIndicator({ selected }: { selected: boolean }) {
   return (
     <div
       className={cn(
-        'flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 transition-colors',
-        selected ? 'border-accent-500 bg-accent-500' : 'border-dark-500',
+        'flex h-5 w-5 shrink-0 items-center justify-center rounded-full transition-colors',
+        selected ? 'bg-accent-500' : 'bg-dark-700',
       )}
     >
       {selected && <div className="h-2 w-2 rounded-full bg-white" />}
@@ -99,7 +90,7 @@ function AccountCard({ account, label, isSelected, onSelect, showRadio }: Accoun
   const { t } = useTranslation();
 
   return (
-    <Card className={cn('transition-colors', isSelected && 'bg-accent-500/5 ring-accent-500/50')}>
+    <Card className={cn('transition-colors', isSelected && 'bg-accent-500/15')}>
       <CardHeader>
         <CardTitle>{label}</CardTitle>
       </CardHeader>
@@ -445,7 +436,7 @@ export default function MergeAccounts() {
       {/* Header with warning */}
       <motion.div variants={staggerItem}>
         <PageHeader title={t('merge.title')} backTo="/" />
-        <Card className="bg-warning-500/10 ring-warning-500/25">
+        <Card className="bg-warning-500/10">
           <div className="flex items-start gap-3">
             <WarningIcon className="mt-0.5 h-5 w-5 shrink-0 text-warning-400" />
             <p className="text-sm text-dark-200">{t('merge.description')}</p>
@@ -456,7 +447,7 @@ export default function MergeAccounts() {
       {/* Subscription choice prompt (when both have subs) */}
       {bothHaveSubscriptions && !selectedUserId && (
         <motion.div variants={staggerItem}>
-          <div className="rounded-2xl bg-accent-500/10 px-4 py-3 ring-1 ring-inset ring-accent-500/25">
+          <div className="rounded-2xl bg-accent-500/10 px-4 py-3">
             <p className="text-sm font-medium text-accent-400">{t('merge.chooseSubscription')}</p>
           </div>
         </motion.div>

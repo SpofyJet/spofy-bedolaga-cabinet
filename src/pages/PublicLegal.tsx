@@ -68,11 +68,11 @@ export default function PublicLegal({ doc }: PublicLegalProps) {
             <Skeleton variant="card" count={3} className="h-16 rounded-3xl" />
           </SkeletonGroup>
         ) : isError || !data?.content ? (
-          <div className="rounded-3xl bg-dark-900/70 p-5 text-dark-400 ring-1 ring-inset ring-dark-800/80">
+          <div className="rounded-3xl bg-dark-900/70 p-5 text-dark-400">
             {t('info.documentUnavailable', 'Документ пока недоступен.')}
           </div>
         ) : (
-          <div className="prose prose-invert max-w-none rounded-3xl bg-dark-900/70 p-5 ring-1 ring-inset ring-dark-800/80">
+          <div className="prose prose-invert max-w-none rounded-3xl bg-dark-900/70 p-5">
             <div dangerouslySetInnerHTML={{ __html: formatContent(data.content) }} />
             {data.updated_at && (
               <p className="mt-4 text-xs text-dark-500">

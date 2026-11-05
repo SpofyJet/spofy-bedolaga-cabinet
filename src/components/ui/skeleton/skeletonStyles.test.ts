@@ -28,10 +28,10 @@ describe('skeletonClass', () => {
     expect(cls).not.toContain('w-full');
   });
 
-  it('вариант card даёт рамку, свою заливку и радиус 2xl вместо line-стилей', () => {
+  it('вариант card даёт свою заливку без рамки и радиус 2xl вместо line-стилей', () => {
     const cls = skeletonClass({ variant: 'card' });
     expect(cls).toContain('bg-dark-500/25');
-    expect(cls).toContain('border-dark-500/40');
+    expect(cls).not.toContain('border');
     expect(cls).toContain('rounded-2xl');
     expect(cls).not.toContain('bg-dark-500/40');
     expect(cls).not.toContain('rounded-lg');

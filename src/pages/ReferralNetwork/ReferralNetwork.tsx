@@ -55,7 +55,7 @@ export function ReferralNetwork() {
         } as React.CSSProperties
       }
     >
-      <div className="z-20 border-b border-dark-700/50 bg-dark-900/90 backdrop-blur-md">
+      <div className="z-20 border-b border-dark-800/70 bg-dark-900/90">
         {/* Mobile: two rows — title on top, selector below */}
         <div className="flex flex-col gap-1.5 px-3 py-2 sm:flex-row sm:items-center sm:gap-3 sm:px-4 sm:py-3">
           <div className="flex items-center gap-2">
@@ -141,7 +141,7 @@ export function ReferralNetwork() {
 
         {/* Detail panel (slide-in from right) */}
         <div
-          className={`absolute right-0 top-0 z-30 flex h-full w-full flex-col border-l border-dark-700/50 bg-dark-900/95 backdrop-blur-md transition-transform duration-300 ease-in-out sm:w-[400px] ${
+          className={`absolute right-0 top-0 z-30 flex h-full w-full flex-col border-l border-dark-700/50 bg-dark-900/95 transition-transform duration-300 ease-in-out sm:w-[400px] ${
             isPanelOpen ? 'translate-x-0' : 'translate-x-full'
           }`}
         >

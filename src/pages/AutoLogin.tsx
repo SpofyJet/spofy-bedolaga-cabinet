@@ -48,7 +48,7 @@ export default function AutoLogin() {
 
   return (
     <div className="flex min-h-dvh items-center justify-center bg-dark-950 px-4">
-      <div className="w-full max-w-sm rounded-2xl border border-dark-800/50 bg-dark-900/50 p-8 text-center">
+      <div className="w-full max-w-sm rounded-2xl bg-dark-900/50 p-8 text-center">
         {error ? (
           <div className="space-y-4">
             <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-error-500/10">

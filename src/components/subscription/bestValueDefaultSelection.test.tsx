@@ -89,10 +89,10 @@ afterEach(() => {
 
 // Признак выбора у покупки — заливка accent; рамка выбранного варианта
 // остаётся жёлтой, если оператор отметил его выгодным.
-const SELECTED = 'bg-accent-500/10';
-const BEST_VALUE_RING = 'border-cta-500';
+const SELECTED = 'bg-accent-500/15';
+const BEST_VALUE_RING = 'bg-accent-500/15';
 // Продление: выбор — заливка accent и внутреннее кольцо, выгода — жёлтая рамка.
-const SELECTED_RING = 'ring-accent-500';
+const SELECTED_RING = 'bg-accent-500/15';
 
 // ==================== покупка тарифа ====================
 

@@ -459,7 +459,7 @@ interface ProviderRowProps {
 const COMPACT_BUTTON =
   'inline-flex h-11 items-center justify-center whitespace-nowrap rounded-xl px-3.5 text-[13px] font-semibold transition-colors disabled:opacity-50';
 /** «Подключить» — вторичная кнопка: на странице одна главная кнопка, а не стена акцентных. */
-const CONNECT_BUTTON = `${COMPACT_BUTTON} bg-dark-800/70 text-accent-300 ring-1 ring-inset ring-dark-700/60 hover:bg-dark-700/70`;
+const CONNECT_BUTTON = `${COMPACT_BUTTON} bg-dark-800/70 text-accent-300 hover:bg-dark-700/70`;
 /** Подтверждение ждущей привязки — единственное нужное сейчас действие строки. */
 const CONFIRM_BUTTON = `${COMPACT_BUTTON} bg-accent-500/15 text-accent-300 hover:bg-accent-500/25`;
 const CANCEL_BUTTON = `${COMPACT_BUTTON} px-2.5 text-error-400 hover:bg-error-500/10`;

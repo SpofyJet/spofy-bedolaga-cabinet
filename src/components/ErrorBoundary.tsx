@@ -8,7 +8,7 @@ const tr = (key: string, fallback: string) => i18n.t(key, { defaultValue: fallba
 const PRIMARY_BUTTON =
   // Ошибка — не место для коралловой «главной» кнопки: рядом с красной
   // иконкой два тёплых цвета спорят. Повтор — спокойная вторичная кнопка.
-  'inline-flex h-12 items-center justify-center rounded-2xl bg-dark-800/70 px-6 text-[15px] font-semibold text-dark-100 ring-1 ring-inset ring-dark-700/60 transition-colors hover:bg-dark-700/70 active:scale-[0.98]';
+  'inline-flex h-12 items-center justify-center rounded-2xl bg-dark-800/70 px-6 text-[15px] font-semibold text-dark-100 transition-colors hover:bg-dark-700/70 active:scale-[0.98]';
 
 function ErrorIcon() {
   return (
@@ -85,7 +85,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
     if (level === 'app') {
       return (
         <div className="min-h-viewport flex items-center justify-center bg-dark-950 p-4">
-          <div className="w-full max-w-md rounded-3xl bg-dark-900/70 p-6 text-center ring-1 ring-inset ring-dark-800/80">
+          <div className="w-full max-w-md rounded-3xl bg-dark-900/70 p-6 text-center">
             <ErrorIcon />
             <h1 className="mb-2 text-xl font-bold text-dark-50">
               {tr('errors.boundary.title', 'Что-то пошло не так')}
@@ -107,7 +107,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
 
     if (level === 'widget') {
       return (
-        <div className="rounded-2xl bg-error-500/10 p-4 text-center ring-1 ring-inset ring-error-500/25">
+        <div className="rounded-2xl bg-error-500/10 p-4 text-center">
           <p className="text-sm text-error-400">
             {tr('errors.boundary.widget', 'Не удалось загрузить этот блок')}
           </p>
@@ -125,7 +125,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
     // level === 'page' (default)
     return (
       <div className="flex min-h-[50vh] items-center justify-center p-4">
-        <div className="w-full max-w-md rounded-3xl bg-dark-900/70 p-6 text-center ring-1 ring-inset ring-dark-800/80">
+        <div className="w-full max-w-md rounded-3xl bg-dark-900/70 p-6 text-center">
           <ErrorIcon />
           <h1 className="mb-2 text-xl font-bold text-dark-50">
             {tr('errors.boundary.title', 'Что-то пошло не так')}

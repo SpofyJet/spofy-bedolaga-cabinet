@@ -31,7 +31,7 @@ function CampaignLink({
   return (
     <div>
       <div className="mb-1.5 px-1 text-[13px] font-medium text-dark-400">{label}</div>
-      <div className="flex min-h-12 items-center gap-2 rounded-2xl bg-dark-800/60 py-1.5 pl-4 pr-1.5 ring-1 ring-inset ring-dark-700/50">
+      <div className="flex min-h-12 items-center gap-2 rounded-2xl bg-dark-800/60 py-1.5 pl-4 pr-1.5">
         <span className="min-w-0 flex-1 truncate text-sm text-dark-100" title={value}>
           {value}
         </span>
@@ -139,7 +139,7 @@ export function CampaignCard({ campaign }: CampaignCardProps) {
 
       {/* Bonus info */}
       {campaign.bonus_type !== 'none' && (
-        <div className="rounded-2xl bg-success-500/10 p-3 ring-1 ring-inset ring-success-500/20">
+        <div className="rounded-2xl bg-success-500/10 p-3">
           <div className="mb-0.5 text-xs font-medium text-success-400">
             {t('referral.partner.campaignBonus.title')}
           </div>

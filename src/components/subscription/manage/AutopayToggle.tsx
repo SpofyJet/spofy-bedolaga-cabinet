@@ -41,7 +41,7 @@ export function AutopayToggle({ subscription, subscriptionId }: AutopayTogglePro
       queryClient.invalidateQueries({ queryKey: ['subscription', subscriptionId] });
       queryClient.invalidateQueries({ queryKey: ['subscriptions-list'] });
       // Enabling balance-autopay cancels SBP auto-pay server-side — refresh so
-      // the SBP block doesn't keep showing a now-stale 'active'/'pending' state.
+      // the SBP block doesn't keep showing a now-stale'active'/'pending' state.
       queryClient.invalidateQueries({ queryKey: ['sbp-recurring', subscriptionId] });
     },
   });
@@ -77,7 +77,7 @@ export function AutopayToggle({ subscription, subscriptionId }: AutopayTogglePro
         }`}
       >
         <span
-          className="absolute left-[3px] top-[3px] h-[22px] w-[22px] rounded-full bg-white shadow-sm transition-transform duration-200"
+          className="absolute left-[3px] top-[3px] h-[22px] w-[22px] rounded-full bg-white transition-transform duration-200"
           style={{ transform: on ? 'translateX(20px)' : 'translateX(0)' }}
         />
       </button>

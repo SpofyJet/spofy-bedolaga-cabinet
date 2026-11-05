@@ -180,7 +180,7 @@ export default function ReferralPartnerApply() {
         </Surface>
 
         {applyMutation.isError && (
-          <div className="rounded-2xl bg-error-500/10 p-3 text-sm text-error-400 ring-1 ring-inset ring-error-500/25">
+          <div className="rounded-2xl bg-error-500/10 p-3 text-sm text-error-400">
             {t('referral.partner.applyError')}
           </div>
         )}

@@ -147,21 +147,9 @@ const FortuneWheel = memo(function FortuneWheel({
   return (
     <div className="relative mx-auto w-full max-w-[360px] select-none">
       {/* Мягкое свечение в цвете бренда */}
-      <div
-        aria-hidden
-        className={`pointer-events-none absolute inset-[-24px] rounded-full transition-opacity duration-500 ${
-          isSpinning ? 'opacity-100' : 'opacity-60'
-        }`}
-        style={{
-          background:
-            'radial-gradient(circle, rgba(var(--color-accent-500), 0.35) 0%, transparent 65%)',
-          filter: 'blur(20px)',
-        }}
-      />
-
       {/* Указатель */}
       <div className="absolute left-1/2 top-[-6px] z-20 -translate-x-1/2">
-        <svg width="40" height="50" viewBox="0 0 40 50" className="drop-shadow-lg">
+        <svg width="40" height="50" viewBox="0 0 40 50">
           <path
             d="M20 48 C 14 38, 3 26, 3 17 A 17 17 0 0 1 37 17 C 37 26, 26 38, 20 48 Z"
             fill="#FFFFFF"
@@ -269,15 +257,6 @@ const FortuneWheel = memo(function FortuneWheel({
               );
             })}
           </g>
-
-          {/* Блик поверх секторов — не вращается, свет «стоит» как у настоящего колеса */}
-          <circle
-            cx={center}
-            cy={center}
-            r={prizeRadius}
-            fill="url(#sectorSheen)"
-            pointerEvents="none"
-          />
 
           {/* Обод и огоньки — после вращающейся группы (см. тест порядка слоёв) */}
           <circle

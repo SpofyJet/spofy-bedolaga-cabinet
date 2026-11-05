@@ -63,7 +63,7 @@ export function NetworkFilters({ data, className }: NetworkFiltersProps) {
                   type="checkbox"
                   checked={filters.campaigns.includes(campaign.id)}
                   onChange={() => toggleCampaign(campaign.id)}
-                  className="h-3.5 w-3.5 rounded border-dark-600 bg-dark-800 text-accent-500 focus:ring-accent-500/30"
+                  className="h-3.5 w-3.5 rounded bg-dark-800 text-accent-500 focus:ring-accent-500/30"
                 />
                 <span className="truncate text-dark-200">{campaign.name}</span>
               </label>
@@ -78,7 +78,7 @@ export function NetworkFilters({ data, className }: NetworkFiltersProps) {
           type="checkbox"
           checked={filters.partnersOnly}
           onChange={(e) => updateFilters({ partnersOnly: e.target.checked })}
-          className="h-3.5 w-3.5 rounded border-dark-600 bg-dark-800 text-accent-500 focus:ring-accent-500/30"
+          className="h-3.5 w-3.5 rounded bg-dark-800 text-accent-500 focus:ring-accent-500/30"
         />
         <span className="text-dark-200">{t('admin.referralNetwork.filters.partnersOnly')}</span>
       </label>
@@ -102,7 +102,7 @@ export function NetworkFilters({ data, className }: NetworkFiltersProps) {
       {/* Reset */}
       <button
         onClick={resetFilters}
-        className="w-full rounded-lg border border-dark-700/50 py-1.5 text-xs font-medium text-dark-400 transition-colors hover:border-dark-600 hover:text-dark-200"
+        className="w-full rounded-lg py-1.5 text-xs font-medium text-dark-400 transition-colors hover:text-dark-200"
       >
         {t('admin.referralNetwork.filters.reset')}
       </button>
@@ -115,10 +115,10 @@ export function NetworkFilters({ data, className }: NetworkFiltersProps) {
       <button
         onClick={() => setIsOpen(!isOpen)}
         aria-label={t('admin.referralNetwork.filters.title')}
-        className={`relative flex items-center gap-2 rounded-lg border px-2.5 py-2 text-sm transition-colors ${
+        className={`relative flex items-center gap-2 rounded-lg px-2.5 py-2 text-sm transition-colors ${
           isOpen
-            ? 'border-accent-500/50 bg-dark-800 text-dark-100'
-            : 'border-dark-700/50 bg-dark-800/80 text-dark-300 hover:border-dark-600 hover:text-dark-100'
+            ? ' bg-dark-800 text-dark-100'
+            : ' bg-dark-800/80 text-dark-300 hover:text-dark-100'
         }`}
       >
         <FilterIcon className="h-4 w-4" />
@@ -131,7 +131,7 @@ export function NetworkFilters({ data, className }: NetworkFiltersProps) {
       {/* Desktop: absolute dropdown below button */}
       {isOpen && (
         <div className="absolute right-0 top-full z-50 mt-2 hidden sm:block">
-          <div className="w-64 rounded-xl border border-dark-700/50 bg-dark-900/95 p-4 shadow-xl backdrop-blur-md">
+          <div className="w-64 rounded-xl bg-dark-900/95 p-4">
             <div className="mb-3 flex items-center justify-between">
               <h3 className="text-sm font-semibold text-dark-100">
                 {t('admin.referralNetwork.filters.title')}
@@ -153,7 +153,7 @@ export function NetworkFilters({ data, className }: NetworkFiltersProps) {
       {isOpen && (
         <div className="fixed inset-x-0 top-0 z-50 sm:hidden">
           <div className="fixed inset-0 bg-dark-950/60" onClick={() => setIsOpen(false)} />
-          <div className="relative mx-3 mt-3 rounded-xl border border-dark-700/50 bg-dark-900/95 p-4 backdrop-blur-md">
+          <div className="relative mx-3 mt-3 rounded-xl bg-dark-900/95 p-4">
             <div className="mb-3 flex items-center justify-between">
               <h3 className="text-sm font-semibold text-dark-100">
                 {t('admin.referralNetwork.filters.title')}

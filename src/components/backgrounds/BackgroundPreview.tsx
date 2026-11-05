@@ -20,12 +20,7 @@ export function BackgroundPreview({
 }: BackgroundPreviewProps) {
   if (type === 'none') {
     return (
-      <div
-        className={cn(
-          'relative overflow-hidden rounded-2xl border border-dark-700/50 bg-dark-900',
-          className,
-        )}
-      >
+      <div className={cn('relative overflow-hidden rounded-2xl bg-dark-900', className)}>
         <div className="flex h-full items-center justify-center text-dark-400">—</div>
       </div>
     );
@@ -35,12 +30,7 @@ export function BackgroundPreview({
   if (!Component) return null;
 
   return (
-    <div
-      className={cn(
-        'relative overflow-hidden rounded-2xl border border-dark-700/50 bg-dark-900',
-        className,
-      )}
-    >
+    <div className={cn('relative overflow-hidden rounded-2xl bg-dark-900', className)}>
       <Suspense
         fallback={
           <div className="flex h-full items-center justify-center">

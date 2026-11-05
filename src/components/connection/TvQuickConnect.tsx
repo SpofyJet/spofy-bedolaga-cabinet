@@ -174,10 +174,10 @@ export default function TvQuickConnect({ subscriptionUrl }: Props) {
   }, [tgNative, sendToTV, showToast, onScanDecoded, t]);
 
   const inputClass =
-    'h-12 w-full rounded-2xl bg-dark-800/60 px-4 text-center text-xl font-bold tracking-[0.2em] text-dark-50 outline-none ring-1 ring-inset ring-dark-700/60 placeholder:text-dark-500 focus:ring-2 focus:ring-accent-500';
+    'h-12 w-full rounded-2xl bg-dark-800/60 px-4 text-center text-xl font-bold tracking-[0.2em] text-dark-50 outline-none placeholder:text-dark-500 focus:ring-2 focus:ring-accent-500';
 
   const actionBtnClass =
-    'inline-flex h-11 w-full items-center justify-center gap-2 rounded-2xl bg-dark-800/70 px-4 text-sm font-semibold text-dark-100 ring-1 ring-inset ring-dark-700/60 transition-colors hover:bg-dark-700/70 active:scale-[0.98]';
+    'inline-flex h-11 w-full items-center justify-center gap-2 rounded-2xl bg-dark-800/70 px-4 text-sm font-semibold text-dark-100 transition-colors hover:bg-dark-700/70 active:scale-[0.98]';
 
   return (
     <div className="mt-3 space-y-4">

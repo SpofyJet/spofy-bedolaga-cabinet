@@ -87,9 +87,7 @@ export function NetworkControls({ className }: NetworkControlsProps) {
   ];
 
   return (
-    <div
-      className={`flex gap-1 rounded-xl border border-dark-700/50 bg-dark-900/80 p-1.5 backdrop-blur-md ${className ?? ''}`}
-    >
+    <div className={`flex gap-1 rounded-xl bg-dark-900/80 p-1.5 ${className ?? ''}`}>
       {buttons.map((btn) => (
         <button
           key={btn.label}

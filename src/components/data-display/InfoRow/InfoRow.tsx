@@ -26,7 +26,7 @@ export function InfoRow({ label, value, divider = false, className }: InfoRowPro
     <div
       className={cn(
         'flex items-baseline justify-between gap-4 py-3',
-        divider && 'border-b border-dark-800/50',
+        divider && 'border-b border-dark-800/70',
         className,
       )}
     >

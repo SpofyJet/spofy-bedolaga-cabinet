@@ -29,6 +29,10 @@
   transition: transform 0.18s ease;
 }
 
+.story-cover:focus-visible {
+  border-radius: 16px;
+}
+
 .story-cover:active {
   transform: scale(0.95);
 }
@@ -47,23 +51,21 @@
   justify-content: center;
   border-radius: 9999px;
   color: var(--story-accent);
-  background: rgb(var(--color-dark-900));
-  /* Кольцо без свечения: с v12 фон светлее, а глаз должен идти к главной кнопке. */
+  background: rgb(var(--color-dark-800));
+  transition: box-shadow 0.2s ease;
+}
+
+/* Единственная обводка в интерфейсе: кольцо означает «новое», как в Instagram.
+   Просмотренная история кольцо теряет. */
+.story-cover:not(.story-cover-read) .story-cover-icon {
   box-shadow:
     0 0 0 2px rgb(var(--color-dark-950)),
-    0 0 0 3.5px color-mix(in srgb, var(--story-accent) 70%, transparent);
-  transition: box-shadow 0.2s ease;
+    0 0 0 4px var(--story-accent);
 }
 
 .story-cover-icon svg {
   height: 26px;
   width: 26px;
-}
-
-.story-cover-read .story-cover-icon {
-  box-shadow:
-    0 0 0 2px rgb(var(--color-dark-950)),
-    0 0 0 3.5px rgba(96, 165, 250, 0.3);
 }
 
 .story-cover-title {
@@ -118,18 +120,7 @@
   height: 100dvh;
   overflow: hidden;
   color: #fff;
-  background:
-    radial-gradient(
-      90% 55% at 50% 0%,
-      color-mix(in srgb, var(--story-accent) 34%, transparent),
-      transparent 70%
-    ),
-    radial-gradient(
-      70% 40% at 100% 100%,
-      color-mix(in srgb, var(--story-accent) 14%, transparent),
-      transparent 70%
-    ),
-    linear-gradient(180deg, #0b1f3b 0%, #0b1f3b 100%);
+  background: #0b1f3b;
   touch-action: none;
   user-select: none;
   -webkit-user-select: none;
@@ -140,9 +131,6 @@
     width: min(420px, calc((100dvh - 48px) * 9 / 16));
     height: min(860px, calc(100dvh - 48px));
     border-radius: 28px;
-    box-shadow:
-      0 40px 120px -30px rgba(0, 0, 0, 0.9),
-      inset 0 0 0 1px rgba(255, 255, 255, 0.08);
   }
 }
 
@@ -314,9 +302,6 @@
   object-fit: contain;
   border-radius: 24px;
   background: #fff;
-  box-shadow:
-    0 0 0 1px rgba(255, 255, 255, 0.12),
-    0 30px 70px -28px rgba(0, 0, 0, 0.9);
 }
 
 .story-footer {
@@ -333,9 +318,8 @@
   border-radius: 18px;
   font-size: 16px;
   font-weight: 700;
-  color: #fff;
+  color: #0b1f3b;
   background: var(--story-accent);
-  box-shadow: 0 16px 36px -14px var(--story-accent);
   transition:
     transform 0.15s ease,
     filter 0.15s ease;

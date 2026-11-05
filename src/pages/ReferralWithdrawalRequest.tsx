@@ -111,7 +111,7 @@ export default function ReferralWithdrawalRequest() {
         </Surface>
 
         {withdrawMutation.isError && (
-          <div className="rounded-2xl bg-error-500/10 p-3 text-sm text-error-400 ring-1 ring-inset ring-error-500/25">
+          <div className="rounded-2xl bg-error-500/10 p-3 text-sm text-error-400">
             {t('referral.withdrawal.requestError')}
           </div>
         )}

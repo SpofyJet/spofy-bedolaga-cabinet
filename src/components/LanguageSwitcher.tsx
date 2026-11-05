@@ -47,10 +47,8 @@ export default function LanguageSwitcher() {
     <div className="relative" ref={dropdownRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className={`flex items-center gap-1.5 rounded-xl border px-2.5 py-2 text-sm transition-all ${
-          isOpen
-            ? 'border-dark-600 bg-dark-700'
-            : 'border-dark-700/50 bg-dark-800/50 hover:border-dark-600 hover:bg-dark-700'
+        className={`flex items-center gap-1.5 rounded-xl px-2.5 py-2 text-sm transition-all ${
+          isOpen ? ' bg-dark-700' : ' bg-dark-800/50 hover:bg-dark-700'
         }`}
         aria-label="Change language"
       >
@@ -62,7 +60,7 @@ export default function LanguageSwitcher() {
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 z-50 mt-2 w-40 animate-fade-in rounded-xl border border-dark-700/50 bg-dark-800 py-1 shadow-lg">
+        <div className="absolute right-0 z-50 mt-2 w-40 animate-fade-in rounded-xl bg-dark-800 py-1">
           {availableLanguages.map((lang) => (
             <button
               key={lang.code}

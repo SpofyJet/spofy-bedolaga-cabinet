@@ -85,7 +85,7 @@ export function CampaignDetailPanel({ campaignId, className }: CampaignDetailPan
             </div>
 
             {/* Stats */}
-            <div className="rounded-lg border border-dark-700/50 bg-dark-800/40 p-3">
+            <div className="rounded-lg bg-dark-800/40 p-3">
               <div className="space-y-2">
                 <div className="flex items-center justify-between text-sm">
                   <span className="text-dark-400">
@@ -130,7 +130,7 @@ export function CampaignDetailPanel({ campaignId, className }: CampaignDetailPan
 
             {/* Top referrers */}
             {campaign.top_referrers.length > 0 && (
-              <div className="rounded-lg border border-dark-700/50 bg-dark-800/40 p-3">
+              <div className="rounded-lg bg-dark-800/40 p-3">
                 <h4 className="mb-2 text-xs font-medium uppercase tracking-wider text-dark-500">
                   {t('admin.referralNetwork.campaign.topReferrers')}
                 </h4>

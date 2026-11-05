@@ -19,9 +19,7 @@ function Shell({ children }: { children: React.ReactNode }) {
     <div className="min-h-dvh bg-dark-950 px-4 py-6 sm:py-10">
       <div className="mx-auto w-full max-w-md">
         <PageHeader title={t('coupon.title')} backTo="/" />
-        <div className="rounded-3xl bg-dark-900/70 p-6 ring-1 ring-inset ring-dark-800/80 sm:p-8">
-          {children}
-        </div>
+        <div className="rounded-3xl bg-dark-900/70 p-6 sm:p-8">{children}</div>
       </div>
     </div>
   );
@@ -158,7 +156,7 @@ export default function CouponStatus() {
         </div>
 
         {redeemError && (
-          <div className="mb-4 rounded-2xl bg-error-500/10 p-3 text-sm text-error-400 ring-1 ring-inset ring-error-500/25">
+          <div className="mb-4 rounded-2xl bg-error-500/10 p-3 text-sm text-error-400">
             {redeemError}
           </div>
         )}

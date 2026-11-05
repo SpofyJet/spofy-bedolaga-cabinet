@@ -280,7 +280,7 @@ export function ScopeSelector({
           aria-label={t('admin.referralNetwork.scope.addScope')}
           aria-expanded={isDropdownOpen}
           aria-haspopup="listbox"
-          className={`shrink-0 rounded-lg border border-dark-700/50 bg-dark-800 p-1.5 transition-colors hover:border-accent-500/50 hover:text-accent-400 ${
+          className={`shrink-0 rounded-lg bg-dark-800 p-1.5 transition-colors hover:text-accent-400 ${
             isMaxReached ? 'cursor-not-allowed text-dark-600 opacity-50' : 'text-dark-400'
           }`}
           disabled={isMaxReached && !isDropdownOpen}
@@ -295,7 +295,7 @@ export function ScopeSelector({
           and aria-expanded already announce the popup; AT can navigate into
           it directly. The inner div carries role="listbox". */}
       {isDropdownOpen && (
-        <div className="absolute left-0 right-0 top-full z-50 mt-1 rounded-xl border border-dark-700/50 bg-dark-800 shadow-xl backdrop-blur-md">
+        <div className="absolute left-0 right-0 top-full z-50 mt-1 rounded-xl bg-dark-800">
           {/* Max reached banner */}
           {isMaxReached && (
             <div className="border-b border-dark-700/50 px-3 py-1.5 text-center text-xs text-warning-400">
@@ -306,10 +306,7 @@ export function ScopeSelector({
           {/* Tab bar + search input */}
           {/* На телефоне поиск строкой ниже вкладок: рядом с ними ему оставалось 0 px. */}
           <div className="flex flex-wrap items-center gap-2 border-b border-dark-700/50 px-3 py-2">
-            <div
-              className="flex shrink-0 rounded-lg border border-dark-700/50 bg-dark-900 p-0.5"
-              role="tablist"
-            >
+            <div className="flex shrink-0 rounded-lg bg-dark-900 p-0.5" role="tablist">
               {SCOPE_TABS.map((tab) => (
                 <button
                   key={tab}
@@ -336,7 +333,7 @@ export function ScopeSelector({
                 maxLength={200}
                 onChange={(e) => setSearchInput(e.target.value)}
                 placeholder={placeholders[activeTab]}
-                className="w-full rounded-lg border border-dark-700/50 bg-dark-900/50 py-1.5 pl-8 pr-8 text-sm text-dark-100 placeholder-dark-500 outline-none transition-colors focus:border-accent-500/50 focus:ring-1 focus:ring-accent-500/30"
+                className="w-full rounded-lg bg-dark-900/50 py-1.5 pl-8 pr-8 text-sm text-dark-100 placeholder-dark-500 outline-none transition-colors focus:border-accent-500/50 focus:ring-1 focus:ring-accent-500/30"
               />
               {isLoading && (
                 <div className="absolute right-2.5 top-1/2 -translate-y-1/2">
@@ -349,7 +346,7 @@ export function ScopeSelector({
           {/* List — the full-network option leads every tab, since it is a mode
               rather than an entity of the currently active tab. */}
           <div className="max-h-64 overflow-y-auto" role="listbox" aria-multiselectable="true">
-            <div className="border-b border-dark-700/50">
+            <div className="border-b border-dark-800/70">
               <ScopeListItem
                 type="all"
                 selected={isFullNetwork}

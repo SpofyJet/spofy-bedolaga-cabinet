@@ -162,7 +162,7 @@ function UserLookup({
         <div
           id={`audience-users-${field}-${rowIndex}`}
           role="listbox"
-          className="absolute z-50 mt-1 max-h-64 w-full min-w-64 overflow-y-auto rounded-lg border border-dark-600 bg-dark-800 p-1 shadow-xl"
+          className="absolute z-50 mt-1 max-h-64 w-full min-w-64 overflow-y-auto rounded-lg bg-dark-800 p-1"
         >
           {results.isPending && (
             <p className="px-2 py-1 text-sm text-dark-400">{t('common.loading', 'Загрузка...')}</p>
@@ -620,7 +620,7 @@ export function BroadcastAudienceEditor({
                   onClick={() => removeCondition(index)}
                   disabled={audience.conditions.length === 1}
                   aria-label={t('admin.broadcasts.audience.remove', 'Удалить условие')}
-                  className="h-10 w-10 justify-self-end rounded-lg border border-dark-700 text-dark-300 hover:border-dark-500 disabled:opacity-40"
+                  className="h-10 w-10 justify-self-end rounded-lg text-dark-300 disabled:opacity-40"
                 >
                   ×
                 </button>
@@ -669,7 +669,7 @@ export function BroadcastAudienceEditor({
         >
           <div
             ref={dialogRef}
-            className="w-full max-w-xl rounded-xl border border-dark-700 bg-dark-900 p-5 shadow-xl"
+            className="w-full max-w-xl rounded-xl bg-dark-900 p-5"
             role="dialog"
             aria-modal="true"
             aria-label={t('admin.broadcasts.audience.users', 'Получатели рассылки')}

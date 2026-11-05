@@ -142,7 +142,7 @@ export function SwitchTariffSheet({
 
   return (
     <section
-      className="space-y-4 rounded-3xl bg-dark-900/70 p-4 ring-1 ring-inset ring-dark-800/80 sm:p-5"
+      className="space-y-4 rounded-3xl bg-dark-900/70 p-4 sm:p-5"
       aria-labelledby="switch-review-title"
     >
       <div className="flex flex-wrap items-center justify-between gap-3">

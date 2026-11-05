@@ -27,11 +27,11 @@ describe('Skeleton', () => {
     expect(el.className).toContain('animate-pulse');
   });
 
-  it('вариант card даёт рамку и свою заливку', () => {
+  it('вариант card даёт свою заливку без рамки', () => {
     const { container } = render(<Skeleton variant="card" />);
     const el = only(container);
     expect(el.className).toContain('bg-dark-500/25');
-    expect(el.className).toContain('border-dark-500/40');
+    expect(el.className).not.toContain('border');
     expect(el.className).toContain('rounded-2xl');
   });
 

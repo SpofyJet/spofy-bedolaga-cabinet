@@ -66,7 +66,7 @@ function OptionalGroup({ title, children }: { title: string; children: React.Rea
   return (
     <section className="has-[>div:empty]:hidden">
       <SectionTitle>{title}</SectionTitle>
-      <div className="divide-y divide-dark-800/70 overflow-hidden rounded-3xl bg-dark-900/70 ring-1 ring-inset ring-dark-800/80 empty:hidden">
+      <div className="divide-y divide-dark-800/70 overflow-hidden rounded-3xl bg-dark-900/70 empty:hidden">
         {children}
       </div>
     </section>
@@ -543,7 +543,7 @@ export default function Subscription() {
 
       {/* ─── Трафик закончился ─── */}
       {subscription.is_limited && (
-        <Surface className="flex items-start gap-3 bg-warning-500/5 ring-warning-500/20">
+        <Surface className="flex items-start gap-3 bg-warning-500/5">
           <RowIcon tone="warning">
             <PiWarningDuotone />
           </RowIcon>

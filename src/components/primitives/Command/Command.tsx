@@ -11,7 +11,7 @@ export const Command = forwardRef<HTMLDivElement, CommandProps>(({ className, ..
     ref={ref}
     className={cn(
       'flex h-full w-full flex-col overflow-hidden rounded-linear-lg',
-      'bg-dark-900/95 text-dark-100 backdrop-blur-linear',
+      'bg-dark-900/95 text-dark-100',
       className,
     )}
     {...props}

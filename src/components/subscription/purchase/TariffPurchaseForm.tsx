@@ -162,7 +162,7 @@ export function TariffPurchaseForm({
       <button
         onClick={() => sbpPurchaseMutation.mutate()}
         disabled={sbpPurchaseMutation.isPending || purchaseMutation.isPending}
-        className="mt-2 flex h-12 w-full items-center justify-center rounded-2xl bg-dark-800/70 text-[15px] font-semibold text-dark-100 ring-1 ring-inset ring-dark-700/60 transition-colors hover:bg-dark-700/70 disabled:opacity-50"
+        className="mt-2 flex h-12 w-full items-center justify-center rounded-2xl bg-dark-800/70 text-[15px] font-semibold text-dark-100 transition-colors hover:bg-dark-700/70 disabled:opacity-50"
       >
         {sbpPurchaseMutation.isPending ? (
           <span className="flex items-center justify-center gap-2">
@@ -204,7 +204,7 @@ export function TariffPurchaseForm({
       <button
         onClick={() => lavaPurchaseMutation.mutate()}
         disabled={lavaPurchaseMutation.isPending || purchaseMutation.isPending}
-        className="mt-2 flex h-12 w-full items-center justify-center rounded-2xl bg-dark-800/70 text-[15px] font-semibold text-dark-100 ring-1 ring-inset ring-dark-700/60 transition-colors hover:bg-dark-700/70 disabled:opacity-50"
+        className="mt-2 flex h-12 w-full items-center justify-center rounded-2xl bg-dark-800/70 text-[15px] font-semibold text-dark-100 transition-colors hover:bg-dark-700/70 disabled:opacity-50"
       >
         {lavaPurchaseMutation.isPending ? (
           <span className="flex items-center justify-center gap-2">
@@ -246,7 +246,7 @@ export function TariffPurchaseForm({
       <button
         onClick={() => casheraPurchaseMutation.mutate()}
         disabled={casheraPurchaseMutation.isPending || purchaseMutation.isPending}
-        className="mt-2 flex h-12 w-full items-center justify-center rounded-2xl bg-dark-800/70 text-[15px] font-semibold text-dark-100 ring-1 ring-inset ring-dark-700/60 transition-colors hover:bg-dark-700/70 disabled:opacity-50"
+        className="mt-2 flex h-12 w-full items-center justify-center rounded-2xl bg-dark-800/70 text-[15px] font-semibold text-dark-100 transition-colors hover:bg-dark-700/70 disabled:opacity-50"
       >
         {casheraPurchaseMutation.isPending ? (
           <span className="flex items-center justify-center gap-2">
@@ -292,12 +292,12 @@ export function TariffPurchaseForm({
     );
   const knob = (on: boolean) => (
     <span
-      className="absolute left-[3px] top-[3px] h-[22px] w-[22px] rounded-full bg-white shadow-sm transition-transform duration-200"
+      className="absolute left-[3px] top-[3px] h-[22px] w-[22px] rounded-full bg-white transition-transform duration-200"
       style={{ transform: on ? 'translateX(20px)' : 'translateX(0)' }}
     />
   );
   const numberInput =
-    'w-20 rounded-xl bg-dark-800 px-3 py-2 text-center text-[15px] text-dark-100 outline-none ring-1 ring-inset ring-dark-700 focus:ring-accent-500';
+    'w-20 rounded-xl bg-dark-800 px-3 py-2 text-center text-[15px] text-dark-100 outline-none focus:ring-accent-500';
 
   return (
     <div ref={ref} className="space-y-6">
@@ -444,16 +444,16 @@ export function TariffPurchaseForm({
                       className={cn(
                         'flex min-h-[64px] w-full items-center gap-3 rounded-3xl px-4 py-3 text-left transition-colors',
                         period.is_highlighted
-                          ? `${bestValueFrame(isSelectedPeriod)} ${isSelectedPeriod ? 'bg-accent-500/10' : 'bg-dark-900/70'}`
+                          ? `${bestValueFrame(isSelectedPeriod)} ${isSelectedPeriod ? 'bg-accent-500/15' : 'bg-dark-900/70'}`
                           : isSelectedPeriod
-                            ? 'bg-accent-500/10 ring-2 ring-inset ring-accent-500'
-                            : 'bg-dark-900/70 ring-1 ring-inset ring-dark-800/80 hover:bg-dark-800/50',
+                            ? 'bg-accent-500/15'
+                            : 'bg-dark-900/70 hover:bg-dark-800/50',
                       )}
                     >
                       <span
                         className={cn(
-                          'flex h-5 w-5 shrink-0 items-center justify-center rounded-full ring-2 ring-inset',
-                          isSelectedPeriod ? 'bg-accent-500 ring-accent-500' : 'ring-dark-600',
+                          'flex h-5 w-5 shrink-0 items-center justify-center rounded-full',
+                          isSelectedPeriod ? 'bg-accent-500' : 'bg-dark-700',
                         )}
                         aria-hidden
                       >
@@ -494,7 +494,7 @@ export function TariffPurchaseForm({
             {tariff.periods.length === 0 &&
               !useCustomDays &&
               !(tariff.custom_days_enabled && customDayUnitPrice > 0) && (
-                <Surface className="bg-warning-500/5 text-center ring-warning-500/20">
+                <Surface className="bg-warning-500/5 text-center">
                   <p className="text-[15px] font-semibold text-warning-400">
                     {t('subscription.noPeriodsAvailable')}
                   </p>

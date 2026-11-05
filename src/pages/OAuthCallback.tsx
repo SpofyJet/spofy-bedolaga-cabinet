@@ -164,7 +164,7 @@ export default function OAuthCallback() {
       <div className="min-h-viewport flex items-center justify-center px-4 py-8">
         <div className="fixed inset-0 bg-dark-950" />
         <div className="relative w-full max-w-md text-center">
-          <div className="rounded-3xl bg-dark-900/70 p-6 ring-1 ring-inset ring-dark-800/80">
+          <div className="rounded-3xl bg-dark-900/70 p-6">
             <h2 className="mb-2 text-lg font-semibold text-dark-50">
               {t('profile.accounts.confirmLinkTitle', 'Confirm account linking')}
             </h2>
@@ -198,7 +198,7 @@ export default function OAuthCallback() {
                 setError(t('profile.accounts.linkCancelled', 'Linking cancelled'));
               }}
               disabled={confirmingServerLink}
-              className="inline-flex h-12 items-center justify-center gap-2 rounded-2xl bg-dark-800/70 px-5 text-[15px] font-semibold text-dark-100 ring-1 ring-inset ring-dark-700/60 transition-colors hover:bg-dark-700/70 disabled:cursor-not-allowed disabled:opacity-50 w-full"
+              className="inline-flex h-12 items-center justify-center gap-2 rounded-2xl bg-dark-800/70 px-5 text-[15px] font-semibold text-dark-100 transition-colors hover:bg-dark-700/70 disabled:cursor-not-allowed disabled:opacity-50 w-full"
             >
               {t('common.cancel', 'Cancel')}
             </button>
@@ -222,7 +222,7 @@ export default function OAuthCallback() {
       <div className="min-h-viewport flex items-center justify-center px-4 py-8">
         <div className="fixed inset-0 bg-dark-950" />
         <div className="relative w-full max-w-md text-center">
-          <div className="rounded-3xl bg-dark-900/70 p-6 ring-1 ring-inset ring-dark-800/80">
+          <div className="rounded-3xl bg-dark-900/70 p-6">
             <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-success-500/20">
               <CheckIcon className="h-8 w-8 text-success-400" />
             </div>
@@ -278,7 +278,7 @@ export default function OAuthCallback() {
       <div className="min-h-viewport flex items-center justify-center px-4 py-8">
         <div className="fixed inset-0 bg-dark-950" />
         <div className="relative w-full max-w-md text-center">
-          <div className="rounded-3xl bg-dark-900/70 p-6 ring-1 ring-inset ring-dark-800/80">
+          <div className="rounded-3xl bg-dark-900/70 p-6">
             <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-error-500/20">
               <ExclamationIcon className="h-8 w-8 text-error-400" />
             </div>

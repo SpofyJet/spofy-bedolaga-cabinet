@@ -372,7 +372,7 @@ export default function Balance() {
                 placeholder={t('balance.promocode.placeholder')}
                 autoComplete="off"
                 autoCapitalize="characters"
-                className="h-12 w-full min-w-0 rounded-2xl sm:flex-1 bg-dark-800/60 px-4 text-[15px] font-semibold text-dark-50 ring-1 ring-inset ring-dark-700/60 transition-shadow placeholder:font-normal placeholder:text-dark-500 focus:outline-none focus:ring-2 focus:ring-accent-500/60 disabled:opacity-60"
+                className="h-12 w-full min-w-0 rounded-2xl sm:flex-1 bg-dark-800/60 px-4 text-[15px] font-semibold text-dark-50 transition-shadow placeholder:font-normal placeholder:text-dark-500 focus:outline-none focus:ring-2 focus:ring-accent-500/60 disabled:opacity-60"
                 disabled={promocodeLoading}
               />
               <Button
@@ -424,7 +424,7 @@ export default function Balance() {
                     'К какой подписке применить промокод?',
                   )}
                 </p>
-                <div className="mt-2 divide-y divide-dark-800/70 overflow-hidden rounded-2xl ring-1 ring-inset ring-dark-800/80">
+                <div className="mt-2 divide-y divide-dark-800/70 overflow-hidden rounded-2xl">
                   {promoSelectSubs.map((sub) => (
                     <Row
                       key={sub.id}

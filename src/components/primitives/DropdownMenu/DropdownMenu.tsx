@@ -134,8 +134,8 @@ export const DropdownMenuSubContent = forwardRef<HTMLDivElement, DropdownMenuSub
       ref={ref}
       className={cn(
         'z-50 min-w-[8rem] overflow-hidden',
-        'rounded-xl border border-dark-700 bg-dark-900',
-        'p-1 text-dark-100 shadow-2xl shadow-black/40',
+        'rounded-xl bg-dark-900',
+        'p-1 text-dark-100',
         className,
       )}
       asChild
@@ -176,8 +176,8 @@ export const DropdownMenuContent = forwardRef<HTMLDivElement, DropdownMenuConten
             'z-50 min-w-[8rem] overflow-hidden',
             // Непрозрачный фон: полупрозрачный пропускал текст страницы сквозь пункты
             // (backdrop-blur есть не во всех WebView).
-            'rounded-xl border border-dark-700 bg-dark-900',
-            'p-1 text-dark-100 shadow-2xl shadow-black/40',
+            'rounded-xl bg-dark-900',
+            'p-1 text-dark-100',
             className,
           )}
           onCloseAutoFocus={() => haptic.impact('light')}

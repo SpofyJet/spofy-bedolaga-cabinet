@@ -28,7 +28,7 @@ export type SkeletonVariant = 'line' | 'card';
  */
 const VARIANT_FILL: Record<SkeletonVariant, string> = {
   line: 'bg-dark-500/40',
-  card: 'border border-dark-500/40 bg-dark-500/25',
+  card: 'bg-dark-500/25',
 };
 
 /** Радиусы по канону CLAUDE.md:134-137: строки — lg, внутренние панели — 2xl. */

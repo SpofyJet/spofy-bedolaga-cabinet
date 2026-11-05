@@ -145,7 +145,7 @@ export default function SubscriptionListCard({
   // Подвал — своя зона нажатия, поэтому карточка снаружи не `<button>`:
   // вложенные кнопки невалидны и ведут себя в браузерах непредсказуемо.
   return (
-    <div className="overflow-hidden rounded-3xl bg-dark-900/70 ring-1 ring-inset ring-dark-800/80">
+    <div className="overflow-hidden rounded-3xl bg-dark-900/70">
       <button
         type="button"
         onClick={handleClick}

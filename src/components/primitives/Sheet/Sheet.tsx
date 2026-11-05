@@ -79,7 +79,7 @@ export const SheetOverlay = forwardRef<HTMLDivElement, SheetOverlayProps>(
   ({ className, ...props }, ref) => (
     <DialogPrimitive.Overlay
       ref={ref}
-      className={cn('fixed inset-0 z-50 bg-dark-950/60 backdrop-blur-sm', className)}
+      className={cn('fixed inset-0 z-50 bg-dark-950/60', className)}
       asChild
       {...props}
     >
@@ -148,8 +148,7 @@ export const SheetContent = forwardRef<HTMLDivElement, SheetContentProps>(
                   'fixed inset-x-0 bottom-0 z-50',
                   'flex flex-col',
                   'max-h-[85vh]',
-                  'rounded-t-2xl border-t border-dark-700/50 bg-dark-900/95 backdrop-blur-linear',
-                  'shadow-linear-lg',
+                  'rounded-t-2xl border-t border-dark-800/70 bg-dark-900/95',
                   'focus:outline-none',
                   'pb-[env(safe-area-inset-bottom,0px)]',
                   className,

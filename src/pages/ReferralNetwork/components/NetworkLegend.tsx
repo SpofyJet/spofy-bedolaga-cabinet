@@ -26,9 +26,7 @@ export function NetworkLegend({ className }: NetworkLegendProps) {
   };
 
   return (
-    <div
-      className={`rounded-xl border border-dark-700/50 bg-dark-900/80 p-3 backdrop-blur-md ${className ?? ''}`}
-    >
+    <div className={`rounded-xl bg-dark-900/80 p-3 ${className ?? ''}`}>
       {/* Fill = Subscription status */}
       <h4 className="mb-1.5 text-[10px] font-medium uppercase tracking-wider text-dark-500">
         {t('admin.referralNetwork.legend.fillTitle')}

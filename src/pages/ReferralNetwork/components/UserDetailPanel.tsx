@@ -90,7 +90,7 @@ export function UserDetailPanel({ userId, className }: UserDetailPanelProps) {
             </div>
 
             {/* Subscription */}
-            <div className="rounded-lg border border-dark-700/50 bg-dark-800/40 p-3">
+            <div className="rounded-lg bg-dark-800/40 p-3">
               <h4 className="mb-2 text-xs font-medium uppercase tracking-wider text-dark-500">
                 {t('admin.referralNetwork.user.subscription')}
               </h4>
@@ -130,7 +130,7 @@ export function UserDetailPanel({ userId, className }: UserDetailPanelProps) {
             </div>
 
             {/* Personal stats */}
-            <div className="rounded-lg border border-dark-700/50 bg-dark-800/40 p-3">
+            <div className="rounded-lg bg-dark-800/40 p-3">
               <h4 className="mb-2 text-xs font-medium uppercase tracking-wider text-dark-500">
                 {t('admin.referralNetwork.user.personalStats')}
               </h4>
@@ -157,7 +157,7 @@ export function UserDetailPanel({ userId, className }: UserDetailPanelProps) {
             </div>
 
             {/* Referral branch */}
-            <div className="rounded-lg border border-dark-700/50 bg-dark-800/40 p-3">
+            <div className="rounded-lg bg-dark-800/40 p-3">
               <h4 className="mb-2 text-xs font-medium uppercase tracking-wider text-dark-500">
                 {t('admin.referralNetwork.user.referralBranch')}
               </h4>
@@ -187,7 +187,7 @@ export function UserDetailPanel({ userId, className }: UserDetailPanelProps) {
             </div>
 
             {/* Source */}
-            <div className="rounded-lg border border-dark-700/50 bg-dark-800/40 p-3">
+            <div className="rounded-lg bg-dark-800/40 p-3">
               <h4 className="mb-2 text-xs font-medium uppercase tracking-wider text-dark-500">
                 {t('admin.referralNetwork.user.source')}
               </h4>

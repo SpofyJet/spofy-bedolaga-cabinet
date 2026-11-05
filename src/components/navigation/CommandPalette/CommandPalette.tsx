@@ -123,7 +123,7 @@ export function CommandPalette({
               {/* Backdrop */}
               <DialogPrimitive.Overlay asChild>
                 <motion.div
-                  className="fixed inset-0 z-50 bg-dark-950/60 backdrop-blur-sm"
+                  className="fixed inset-0 z-50 bg-dark-950/60"
                   variants={backdrop}
                   initial="initial"
                   animate="animate"
@@ -139,8 +139,7 @@ export function CommandPalette({
                   style={{ x: '-50%' }}
                   className={cn(
                     'fixed left-1/2 top-[15%] z-50 w-full max-w-lg',
-                    'overflow-hidden rounded-linear-lg border border-dark-700/50 bg-dark-900/95 backdrop-blur-linear',
-                    'shadow-2xl',
+                    'overflow-hidden rounded-linear-lg bg-dark-900/95',
                     'focus:outline-none',
                   )}
                   variants={commandPalette}

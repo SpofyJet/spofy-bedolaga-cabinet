@@ -44,10 +44,7 @@ export default function ReminderCards() {
   return (
     <div className="space-y-3">
       {cards.map((card) => (
-        <div
-          key={card.id}
-          className="relative overflow-hidden rounded-2xl border border-accent-500/30 bg-accent-500/5 p-4"
-        >
+        <div key={card.id} className="relative overflow-hidden rounded-2xl bg-accent-500/15 p-4">
           <button
             type="button"
             aria-label={t('dashboard.reminders.dismiss')}

@@ -32,13 +32,13 @@ export default function BypassSuspendedBanner({
   const primary =
     'inline-flex h-11 items-center justify-center rounded-2xl bg-cta-500 px-4 text-sm font-semibold text-on-cta transition-colors hover:bg-cta-600';
   const secondary =
-    'inline-flex h-11 items-center justify-center rounded-2xl bg-dark-800/70 px-4 text-sm font-semibold text-dark-100 ring-1 ring-inset ring-dark-700/60 transition-colors hover:bg-dark-700/70';
+    'inline-flex h-11 items-center justify-center rounded-2xl bg-dark-800/70 px-4 text-sm font-semibold text-dark-100 transition-colors hover:bg-dark-700/70';
 
   return (
     <div
       role="status"
       data-testid="bypass-suspended-banner"
-      className={`rounded-3xl bg-warning-500/5 p-4 ring-1 ring-inset ring-warning-500/20 sm:p-5 ${className}`}
+      className={`rounded-3xl bg-warning-500/5 p-4 sm:p-5 ${className}`}
     >
       <p className="text-[15px] font-semibold text-dark-50">
         {t(

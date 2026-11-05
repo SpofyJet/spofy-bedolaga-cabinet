@@ -40,49 +40,9 @@ export default function TrialOfferCard({
         // В тёмной теме — та же ступень, что у карточек рядом: белая дымка стекла
         // на тёмно-синем фоне выглядела темнее и выпадала из ряда.
         background: isDark ? 'rgb(var(--color-dark-900))' : g.cardBg,
-        border: isDark
-          ? `1px solid ${g.cardBorder}`
-          : isFree
-            ? '1px solid rgba(var(--color-accent-400), 0.2)'
-            : '1px solid rgba(var(--color-accent-400), 0.2)',
-        boxShadow: isDark
-          ? g.shadow
-          : isFree
-            ? '0 2px 16px rgba(var(--color-accent-400), 0.12), 0 0 0 1px rgba(var(--color-accent-400), 0.06)'
-            : '0 2px 16px rgba(var(--color-accent-400), 0.12), 0 0 0 1px rgba(var(--color-accent-400), 0.06)',
         padding: '32px 28px 28px',
       }}
     >
-      {/* Animated glow background */}
-      <div
-        className="pointer-events-none absolute left-1/2 -translate-x-1/2"
-        style={{
-          top: -100,
-          width: 300,
-          height: 300,
-          borderRadius: '50%',
-          background: isFree
-            ? 'radial-gradient(circle, rgba(var(--color-accent-400), 0.08) 0%, transparent 70%)'
-            : 'radial-gradient(circle, rgba(var(--color-accent-400), 0.07) 0%, transparent 70%)',
-          transition: 'background 0.5s ease',
-        }}
-        aria-hidden="true"
-      />
-      {/* Grid pattern */}
-      <div
-        className="pointer-events-none absolute inset-0"
-        style={{
-          opacity: isDark ? 0.025 : 0.04,
-          backgroundImage: isDark
-            ? `linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
-               linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)`
-            : `linear-gradient(rgba(0,0,0,0.06) 1px, transparent 1px),
-               linear-gradient(90deg, rgba(0,0,0,0.06) 1px, transparent 1px)`,
-          backgroundSize: '40px 40px',
-        }}
-        aria-hidden="true"
-      />
-
       {/* Icon */}
       <div
         className="relative mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-2xl"
@@ -94,9 +54,6 @@ export default function TrialOfferCard({
             : isFree
               ? 'linear-gradient(135deg, rgba(var(--color-accent-400), 0.15), rgba(var(--color-accent-400), 0.08))'
               : 'linear-gradient(135deg, rgba(var(--color-accent-400), 0.15), rgba(var(--color-accent-400), 0.08))',
-          border: isFree
-            ? '1px solid rgba(var(--color-accent-400), 0.25)'
-            : '1px solid rgba(var(--color-accent-400), 0.25)',
           transition: 'all 0.5s ease',
         }}
       >
@@ -117,16 +74,6 @@ export default function TrialOfferCard({
             <BoltIcon className="h-[26px] w-[26px]" />
           </span>
         )}
-        {/* Glow effect */}
-        <div
-          className="absolute inset-[-1px] animate-trial-glow rounded-2xl"
-          style={{
-            boxShadow: isFree
-              ? '0 0 20px rgba(var(--color-accent-400), 0.15)'
-              : '0 0 20px rgba(var(--color-accent-400), 0.12)',
-          }}
-          aria-hidden="true"
-        />
       </div>
 
       {/* Title */}
@@ -143,7 +90,6 @@ export default function TrialOfferCard({
           className="mb-5 inline-flex items-baseline gap-1 rounded-xl px-5 py-2"
           style={{
             background: 'rgba(var(--color-accent-400), 0.08)',
-            border: '1px solid rgba(var(--color-accent-400), 0.15)',
           }}
         >
           <span
@@ -193,10 +139,7 @@ export default function TrialOfferCard({
         </p>
       )}
       {!isFree && trialInfo.price_rubles > 0 && showBalance && (
-        <div
-          className="mb-4 space-y-2 rounded-xl p-4 text-left"
-          style={{ background: g.innerBg, border: `1px solid ${g.innerBorder}` }}
-        >
+        <div className="mb-4 space-y-2 rounded-xl p-4 text-left" style={{ background: g.innerBg }}>
           <div className="flex items-center justify-between">
             <span className="text-sm text-dark-400">{t('balance.currentBalance')}</span>
             <span
@@ -217,7 +160,7 @@ export default function TrialOfferCard({
 
       {/* Error */}
       {trialError && (
-        <div className="mb-4 rounded-xl border border-error-500/30 bg-error-500/10 p-3 text-center text-sm text-error-400">
+        <div className="mb-4 rounded-xl bg-error-500/10 p-3 text-center text-sm text-error-400">
           {trialError}
         </div>
       )}

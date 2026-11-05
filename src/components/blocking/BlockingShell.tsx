@@ -18,17 +18,17 @@ const accentMap: Record<
   }
 > = {
   warning: {
-    medallion: 'bg-warning-500/10 ring-warning-500/25',
+    medallion: 'bg-warning-500/10',
     iconColor: 'text-warning-400',
     dot: 'bg-warning-500',
   },
   error: {
-    medallion: 'bg-error-500/10 ring-error-500/25',
+    medallion: 'bg-error-500/10',
     iconColor: 'text-error-400',
     dot: 'bg-error-500',
   },
   info: {
-    medallion: 'bg-accent-500/10 ring-accent-500/25',
+    medallion: 'bg-accent-500/10',
     iconColor: 'text-accent-400',
     dot: 'bg-accent-500',
   },
@@ -97,7 +97,7 @@ export default function BlockingShell({
           transition={scaleTransition}
           aria-live={ariaLive === 'polite' ? 'polite' : undefined}
           aria-atomic={ariaLive === 'polite' ? true : undefined}
-          className="relative w-full max-w-md overflow-hidden rounded-3xl bg-dark-900/70 p-6 text-center ring-1 ring-inset ring-dark-800/80 sm:p-8"
+          className="relative w-full max-w-md overflow-hidden rounded-3xl bg-dark-900/70 p-6 text-center sm:p-8"
         >
           {/* Icon tile */}
           <motion.div
@@ -109,7 +109,7 @@ export default function BlockingShell({
           >
             <span
               className={cn(
-                'relative flex h-16 w-16 items-center justify-center rounded-2xl ring-1 ring-inset',
+                'relative flex h-16 w-16 items-center justify-center rounded-2xl',
                 a.medallion,
               )}
             >

@@ -560,12 +560,9 @@ export default function Wheel() {
   const segment = (active: boolean) =>
     cn(
       'flex h-11 items-center justify-center gap-2 rounded-xl px-3 text-sm font-semibold transition-colors',
-      active
-        ? 'bg-dark-800 text-dark-50 ring-1 ring-inset ring-dark-700/60'
-        : 'text-dark-400 hover:text-dark-200',
+      active ? 'bg-dark-800 text-dark-50' : 'text-dark-400 hover:text-dark-200',
     );
-  const hintWarning =
-    'rounded-2xl bg-warning-500/10 p-3 text-center text-sm text-warning-400 ring-1 ring-inset ring-warning-500/25';
+  const hintWarning = 'rounded-2xl bg-warning-500/10 p-3 text-center text-sm text-warning-400';
   const hintMuted = 'rounded-2xl bg-dark-800/50 p-3 text-center text-sm text-dark-300';
 
   return (
@@ -646,7 +643,7 @@ export default function Wheel() {
             </p>
             <div
               className={cn(
-                'grid gap-1 rounded-2xl bg-dark-800/40 p-1 ring-1 ring-inset ring-dark-800/80',
+                'grid gap-1 rounded-2xl bg-dark-800/40 p-1',
                 bothMethodsAvailable ? 'grid-cols-2' : 'grid-cols-1',
               )}
             >
@@ -697,10 +694,10 @@ export default function Wheel() {
                     disabled={isSpinning}
                     aria-pressed={selectedSubscriptionId === sub.id}
                     className={cn(
-                      'flex min-h-12 w-full items-center justify-between gap-2 rounded-2xl px-4 py-2 text-sm ring-1 ring-inset transition-colors',
+                      'flex min-h-12 w-full items-center justify-between gap-2 rounded-2xl px-4 py-2 text-sm transition-colors',
                       selectedSubscriptionId === sub.id
-                        ? 'bg-accent-500/10 text-dark-50 ring-accent-500/40'
-                        : 'bg-dark-800/40 text-dark-200 ring-dark-800/80 hover:bg-dark-800/70',
+                        ? 'bg-accent-500/10 text-dark-50'
+                        : 'bg-dark-800/40 text-dark-200 hover:bg-dark-800/70',
                     )}
                   >
                     <span className="min-w-0 truncate font-semibold">
@@ -719,7 +716,7 @@ export default function Wheel() {
 
         {/* Stars confirmation panel */}
         {showStarsConfirm && !isSpinning && !isPayingStars ? (
-          <div className="space-y-3 rounded-2xl bg-accent-500/10 p-4 ring-1 ring-inset ring-accent-500/25">
+          <div className="space-y-3 rounded-2xl bg-accent-500/10 p-4">
             <p className="text-center text-sm text-dark-200">{t('wheel.confirmStarsPayment')}</p>
             <div className="grid grid-cols-2 gap-2">
               <Button tone="secondary" onClick={() => setShowStarsConfirm(false)}>
@@ -801,7 +798,7 @@ export default function Wheel() {
             // не замечали («я даже не понял, что выиграл»).
             return createPortal(
               <div
-                className="fixed inset-0 z-[100] flex items-center justify-center bg-black/65 p-4 backdrop-blur-sm"
+                className="fixed inset-0 z-[100] flex items-center justify-center bg-black/65 p-4"
                 onClick={closeResultModal}
                 role="presentation"
               >
@@ -814,10 +811,8 @@ export default function Wheel() {
                   transition={{ type: 'spring', stiffness: 320, damping: 22 }}
                   onClick={(e) => e.stopPropagation()}
                   className={cn(
-                    'relative w-full max-w-[360px] overflow-hidden rounded-3xl p-6 text-center shadow-[0_30px_80px_-20px_rgba(0,0,0,0.9)] ring-1 ring-inset',
-                    spinResult.success
-                      ? 'bg-dark-900 ring-dark-700/70'
-                      : 'bg-dark-900 ring-error-500/30',
+                    'relative w-full max-w-[360px] overflow-hidden rounded-3xl p-6 text-center',
+                    spinResult.success ? 'bg-dark-900' : 'bg-dark-900',
                   )}
                 >
                   <button
@@ -903,7 +898,7 @@ export default function Wheel() {
       </section>
 
       {/* History Section - collapsible */}
-      <div className="overflow-hidden rounded-3xl bg-dark-900/70 ring-1 ring-inset ring-dark-800/80">
+      <div className="overflow-hidden rounded-3xl bg-dark-900/70">
         <Row
           icon={<PiClockCounterClockwiseDuotone />}
           iconTone="muted"

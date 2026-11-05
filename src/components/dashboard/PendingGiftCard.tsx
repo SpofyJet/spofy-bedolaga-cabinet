@@ -23,7 +23,7 @@ export default function PendingGiftCard({ gifts, className }: PendingGiftCardPro
           key={gift.token}
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="relative overflow-hidden rounded-3xl bg-dark-900/70 p-5 ring-1 ring-inset ring-accent-500/30"
+          className="relative overflow-hidden rounded-3xl bg-dark-900/70 p-5"
         >
           <div className="relative flex items-start gap-4">
             {/* Gift icon */}

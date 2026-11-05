@@ -158,7 +158,7 @@ export default function TelegramRedirect() {
 
       <div className="relative w-full max-w-sm text-center">
         {/* Logo */}
-        <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center overflow-hidden rounded-2xl bg-accent-500/10 ring-1 ring-inset ring-accent-500/25">
+        <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center overflow-hidden rounded-2xl bg-accent-500/10">
           {branding?.has_custom_logo && logoUrl ? (
             <img src={logoUrl} alt={appName} className="h-full w-full object-cover" />
           ) : (
@@ -205,7 +205,7 @@ export default function TelegramRedirect() {
               </button>
               <button
                 onClick={() => navigate('/login')}
-                className="inline-flex h-12 items-center justify-center gap-2 rounded-2xl bg-dark-800/70 px-5 text-[15px] font-semibold text-dark-100 ring-1 ring-inset ring-dark-700/60 transition-colors hover:bg-dark-700/70 disabled:cursor-not-allowed disabled:opacity-50 w-full"
+                className="inline-flex h-12 items-center justify-center gap-2 rounded-2xl bg-dark-800/70 px-5 text-[15px] font-semibold text-dark-100 transition-colors hover:bg-dark-700/70 disabled:cursor-not-allowed disabled:opacity-50 w-full"
               >
                 {t('telegramRedirect.loginAlternative')}
               </button>

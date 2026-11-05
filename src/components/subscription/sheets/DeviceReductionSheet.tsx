@@ -137,7 +137,7 @@ export function DeviceReductionSheet({
                 incrementLabel={t('subscription.additionalOptions.incrementDevices', 'Увеличить')}
               />
 
-              <div className="divide-y divide-dark-800/70 overflow-hidden rounded-3xl bg-dark-800/40 text-[14px] ring-1 ring-inset ring-dark-800/80">
+              <div className="divide-y divide-dark-800/70 overflow-hidden rounded-3xl bg-dark-800/40 text-[14px]">
                 {[
                   t('subscription.additionalOptions.currentDeviceLimit', {
                     count: deviceReductionInfo.current_device_limit,

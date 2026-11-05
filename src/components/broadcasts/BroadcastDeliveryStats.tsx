@@ -77,7 +77,7 @@ export function BroadcastDeliveryStats({
   return (
     <div className="space-y-4">
       {isBroadcastInFlight(status) && (
-        <div className="rounded-xl border border-dark-700 bg-dark-800/50 p-4">
+        <div className="rounded-xl bg-dark-800/50 p-4">
           <div className="mb-2 flex justify-between text-sm">
             <span className="text-dark-400">{t('admin.broadcasts.progress')}</span>
             <span className="font-medium text-dark-100">{progressPercent.toFixed(1)}%</span>

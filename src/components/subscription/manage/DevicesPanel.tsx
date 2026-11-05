@@ -109,7 +109,7 @@ export function DevicesPanel({ subscription, subscriptionId, footer }: DevicesPa
           <Skeleton variant="card" count={2} className="h-[60px] rounded-3xl" />
         </SkeletonGroup>
       ) : devicesData && devicesData.devices.length > 0 ? (
-        <div className="divide-y divide-dark-800/70 overflow-hidden rounded-3xl bg-dark-900/70 ring-1 ring-inset ring-dark-800/80">
+        <div className="divide-y divide-dark-800/70 overflow-hidden rounded-3xl bg-dark-900/70">
           {devicesData.devices.map((device) => {
             const isEditing = editingDeviceHwid === device.hwid;
             // Display priority: user alias → device model → platform.
@@ -146,7 +146,7 @@ export function DevicesPanel({ subscription, subscriptionId, footer }: DevicesPa
                           setEditingDeviceName('');
                         }
                       }}
-                      className="w-full rounded-xl bg-dark-800 px-3 py-1.5 text-[15px] font-semibold text-dark-50 outline-none ring-1 ring-inset ring-dark-700 focus:ring-accent-500"
+                      className="w-full rounded-xl bg-dark-800 px-3 py-1.5 text-[15px] font-semibold text-dark-50 outline-none focus:ring-accent-500"
                     />
                   ) : (
                     <div className="truncate text-[15px] font-semibold text-dark-100">
@@ -226,7 +226,7 @@ export function DevicesPanel({ subscription, subscriptionId, footer }: DevicesPa
           })}
         </div>
       ) : (
-        <div className="rounded-3xl bg-dark-900/70 px-4 py-6 text-center text-[13px] text-dark-400 ring-1 ring-inset ring-dark-800/80">
+        <div className="rounded-3xl bg-dark-900/70 px-4 py-6 text-center text-[13px] text-dark-400">
           {t('subscription.noDevices')}
         </div>
       )}

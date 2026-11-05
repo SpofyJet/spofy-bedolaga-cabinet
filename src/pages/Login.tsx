@@ -432,7 +432,7 @@ export default function Login() {
       <div className="relative w-full max-w-md space-y-5">
         {/* Logo & branding */}
         <div className="text-center">
-          <div className="relative mx-auto mb-3 flex h-12 w-12 items-center justify-center overflow-hidden rounded-xl border border-dark-700/50 bg-dark-800/80 shadow-md">
+          <div className="relative mx-auto mb-3 flex h-12 w-12 items-center justify-center overflow-hidden rounded-xl bg-dark-800/80">
             {/* Letter fallback */}
             <span
               className={`absolute text-lg font-bold text-accent-400 transition-opacity duration-200 ${branding?.has_custom_logo && logoLoaded ? 'opacity-0' : 'opacity-100'}`}
@@ -457,7 +457,7 @@ export default function Login() {
 
           {/* Referral Banner */}
           {referralCode && isEmailAuthEnabled && (
-            <div className="mt-3 rounded-xl border border-accent-500/30 bg-accent-500/10 p-2.5">
+            <div className="mt-3 rounded-xl bg-accent-500/10 p-2.5">
               <div className="flex items-center justify-center gap-2 text-accent-400">
                 <UsersIcon className="h-4 w-4 flex-shrink-0" />
                 <span className="text-xs font-medium">{t('auth.referralInvite')}</span>
@@ -487,11 +487,11 @@ export default function Login() {
           />
         ) : (
           /* Main auth card */
-          <div className="rounded-3xl bg-dark-900/70 p-6 ring-1 ring-inset ring-dark-800/80">
+          <div className="rounded-3xl bg-dark-900/70 p-6">
             {error && (
               <div
                 role="alert"
-                className="mb-4 rounded-xl border border-error-500/30 bg-error-500/10 px-4 py-2.5 text-sm text-error-400"
+                className="mb-4 rounded-xl bg-error-500/10 px-4 py-2.5 text-sm text-error-400"
               >
                 {error}
               </div>
@@ -540,7 +540,7 @@ export default function Login() {
                       type="button"
                       onClick={() => handleOAuthLogin(provider.name)}
                       disabled={oauthLoading !== null}
-                      className="flex flex-1 flex-col items-center justify-center gap-1.5 rounded-xl border border-dark-700 bg-dark-800/80 py-2.5 transition-all hover:border-dark-600 hover:bg-dark-700 disabled:opacity-50"
+                      className="flex flex-1 flex-col items-center justify-center gap-1.5 rounded-xl bg-dark-800/80 py-2.5 transition-all hover:bg-dark-700 disabled:opacity-50"
                       title={provider.display_name}
                     >
                       {oauthLoading === provider.name ? (
@@ -565,7 +565,7 @@ export default function Login() {
                   <button
                     type="button"
                     onClick={() => setShowEmailForm(!showEmailForm)}
-                    className="flex items-center gap-1.5 rounded-full border border-dark-700 bg-dark-800/60 px-3.5 py-1.5 text-xs font-medium text-dark-300 transition-all hover:border-dark-600 hover:bg-dark-700 hover:text-dark-200"
+                    className="flex items-center gap-1.5 rounded-full bg-dark-800/60 px-3.5 py-1.5 text-xs font-medium text-dark-300 transition-all hover:bg-dark-700 hover:text-dark-200"
                   >
                     <EmailIcon className="h-3.5 w-3.5 text-dark-400" />
                     <span>{t('auth.loginWithEmail')}</span>
@@ -603,7 +603,7 @@ export default function Login() {
                             </p>
                             {/* Тот же тупик, что и после регистрации: письма нет,
                                 и человек не знает, где смотреть. */}
-                            <p className="rounded-xl border border-dark-700 bg-dark-800/60 p-3 text-left text-xs leading-relaxed text-dark-400">
+                            <p className="rounded-xl bg-dark-800/60 p-3 text-left text-xs leading-relaxed text-dark-400">
                               {t('auth.spamHint')}
                             </p>
                             <button

@@ -130,7 +130,7 @@ export default function Polls() {
             aria-modal="true"
             aria-labelledby="poll-dialog-title"
             tabIndex={-1}
-            className="relative max-h-[80vh] w-full max-w-lg overflow-y-auto rounded-3xl bg-dark-900 p-5 ring-1 ring-inset ring-dark-800"
+            className="relative max-h-[80vh] w-full max-w-lg overflow-y-auto rounded-3xl bg-dark-900 p-5"
           >
             <div className="mb-4 flex items-center justify-between">
               <h2 id="poll-dialog-title" className="text-lg font-bold text-dark-50">
@@ -153,7 +153,7 @@ export default function Polls() {
 
             {completionMessage && (
               <div className="space-y-4">
-                <div className="flex flex-col items-center rounded-2xl bg-success-500/10 p-4 text-center text-success-400 ring-1 ring-inset ring-success-500/25">
+                <div className="flex flex-col items-center rounded-2xl bg-success-500/10 p-4 text-center text-success-400">
                   <CheckIcon className="h-5 w-5" />
                   <p className="mt-2 font-medium">{completionMessage.message}</p>
                   {completionMessage.reward && (
@@ -188,7 +188,7 @@ export default function Polls() {
                       key={option.id}
                       onClick={() => handleAnswer(option.id)}
                       disabled={answerMutation.isPending}
-                      className="min-h-12 w-full rounded-2xl bg-dark-800/70 px-4 py-3 text-left text-[15px] text-dark-100 ring-1 ring-inset ring-dark-700/60 transition-colors hover:bg-dark-700/70 disabled:opacity-50"
+                      className="min-h-12 w-full rounded-2xl bg-dark-800/70 px-4 py-3 text-left text-[15px] text-dark-100 transition-colors hover:bg-dark-700/70 disabled:opacity-50"
                     >
                       {option.text}
                     </button>

@@ -133,7 +133,7 @@ export function DeviceTopupSheet({
               )}
 
               {devicePriceData?.available && devicePriceData.price_per_device_label && (
-                <div className="space-y-2 rounded-3xl bg-dark-800/40 p-4 ring-1 ring-inset ring-dark-800/80">
+                <div className="space-y-2 rounded-3xl bg-dark-800/40 p-4">
                   <div className="flex items-center justify-between gap-3 px-1 text-[13px] text-dark-400">
                     <span>
                       {hasDiscount && devicePriceData.original_price_per_device_kopeks ? (

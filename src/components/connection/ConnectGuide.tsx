@@ -386,13 +386,13 @@ function ChoiceGroup({
             onClick={() => onSelect(item.key)}
             style={rest ? { gridColumn: `span ${spanOf(index)}` } : undefined}
             className={cn(
-              'min-w-0 rounded-2xl ring-inset transition-colors active:scale-[0.98]',
+              'min-w-0 rounded-2xl transition-colors active:scale-[0.98]',
               variant === 'tile'
                 ? 'flex min-h-[76px] flex-col items-center justify-center gap-1.5 px-2 py-3 text-center'
                 : 'flex min-h-[64px] items-center gap-3 px-3 py-2.5 text-left',
               checked
-                ? 'bg-accent-500/10 text-dark-50 ring-2 ring-accent-500'
-                : 'bg-dark-900/70 text-dark-300 ring-1 ring-dark-800/80 hover:bg-dark-800/60',
+                ? 'bg-accent-500/10 text-dark-50'
+                : 'bg-dark-900/70 text-dark-300 hover:bg-dark-800/60',
             )}
           >
             {item.icon}
@@ -420,7 +420,7 @@ function ChoiceGroup({
 }
 
 const smallBtn =
-  'inline-flex h-11 min-w-0 items-center justify-center gap-2 rounded-2xl bg-dark-800/70 px-4 text-sm font-semibold text-dark-100 ring-1 ring-inset ring-dark-700/60 transition-colors hover:bg-dark-700/70 active:scale-[0.98] disabled:opacity-50';
+  'inline-flex h-11 min-w-0 items-center justify-center gap-2 rounded-2xl bg-dark-800/70 px-4 text-sm font-semibold text-dark-100 transition-colors hover:bg-dark-700/70 active:scale-[0.98] disabled:opacity-50';
 
 function Steps({
   app,
@@ -746,7 +746,7 @@ function ManualCopy({ text }: { text: string }) {
         aria-label={t('subscription.connection.copyLink')}
         value={text}
         onFocus={(event) => event.currentTarget.select()}
-        className="w-full resize-none break-all rounded-xl bg-dark-900/80 p-2.5 text-[13px] text-dark-100 outline-none ring-1 ring-inset ring-dark-700/60"
+        className="w-full resize-none break-all rounded-xl bg-dark-900/80 p-2.5 text-[13px] text-dark-100 outline-none"
       />
     </div>
   );

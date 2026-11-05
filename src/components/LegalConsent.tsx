@@ -56,7 +56,7 @@ export default function LegalConsent({
               checked={Boolean(accepted[document])}
               disabled={disabled}
               onChange={(e) => onChange(document, e.target.checked)}
-              className="mt-0.5 h-4 w-4 shrink-0 cursor-pointer rounded border-dark-600 bg-dark-800 text-accent-500 focus:ring-accent-500"
+              className="mt-0.5 h-4 w-4 shrink-0 cursor-pointer rounded bg-dark-800 text-accent-500 focus:ring-accent-500"
             />
             <span>
               {t('auth.legalConsentPrefix', 'Я ознакомлен(а) с документом')}{' '}

@@ -111,7 +111,7 @@ export function ServerManagementSheet({
               <SheetNote>{t('subscription.serverManagement.statusLegend')}</SheetNote>
 
               {countriesData.discount_percent > 0 && (
-                <div className="rounded-lg border border-success-500/30 bg-success-500/10 p-2 text-xs text-success-400">
+                <div className="rounded-lg bg-success-500/10 p-2 text-xs text-success-400">
                   🎁{' '}
                   {t('subscription.serverManagement.discountBanner', {
                     percent: countriesData.discount_percent,
@@ -141,14 +141,14 @@ export function ServerManagementSheet({
                           }
                         }}
                         disabled={!country.is_available && !isCurrentlyConnected}
-                        className={`flex w-full items-center justify-between gap-3 rounded-2xl border p-3 text-left transition-all ${
+                        className={`flex w-full items-center justify-between gap-3 rounded-2xl p-3 text-left transition-all ${
                           isSelected
                             ? willBeAdded
-                              ? 'border-success-500 bg-success-500/10'
-                              : 'border-accent-500 bg-accent-500/10'
+                              ? 'bg-success-500/10'
+                              : 'bg-accent-500/10'
                             : willBeRemoved
-                              ? 'border-error-500/50 bg-error-500/5'
-                              : 'border-dark-700/50 bg-dark-800/40 hover:border-dark-600'
+                              ? 'bg-error-500/5'
+                              : 'bg-dark-800/40'
                         } ${!country.is_available && !isCurrentlyConnected ? 'cursor-not-allowed opacity-50' : ''}`}
                       >
                         <div className="flex min-w-0 items-center gap-3">

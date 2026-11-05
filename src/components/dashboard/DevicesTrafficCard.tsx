@@ -7,14 +7,13 @@ import { formatTraffic } from '@/utils/formatTraffic';
 import type { Device } from '@/types';
 import { platformIcon } from '@/components/subscription/platformIcon';
 
-const PANEL =
-  'flex min-w-0 flex-col rounded-2xl bg-dark-800/45 p-2.5 ring-1 ring-inset min-[360px]:p-3';
+const PANEL = 'flex min-w-0 flex-col rounded-2xl bg-dark-800/45 p-2.5 min-[360px]:p-3';
 /**
  * Обводка панели — её состояние, а не украшение: зелёная — всё в порядке,
  * жёлтая — места или трафик на исходе. Синий остаётся за кнопками.
  */
-const PANEL_OK = 'ring-success-500/30';
-const PANEL_WARN = 'ring-warning-500/40';
+const PANEL_OK = '';
+const PANEL_WARN = '';
 const TILE_OK = 'bg-success-500/15 text-success-400';
 const TILE =
   'flex aspect-square w-full max-w-[32px] items-center justify-center rounded-lg min-[360px]:rounded-[10px]';
@@ -121,7 +120,7 @@ export default function DevicesTrafficCard({
 
   return (
     <section
-      className="rounded-3xl bg-dark-900/70 ring-1 ring-inset ring-accent-300/[0.10] light:ring-dark-800/80 p-4"
+      className="rounded-3xl bg-dark-900/70 p-4"
       aria-label={t('dashboard.devicesTraffic.title')}
     >
       <Link
@@ -153,9 +152,7 @@ export default function DevicesTrafficCard({
             >
               {tiles.map((tile, i) => {
                 if (tile.kind === 'free')
-                  return (
-                    <span key={i} className={cn(TILE, 'border border-dashed border-dark-600/70')} />
-                  );
+                  return <span key={i} className={cn(TILE, 'bg-dark-700/40')} />;
                 if (tile.kind === 'more')
                   return (
                     <span key={i} className={cn(TILE, TILE_OK, 'text-[13px] font-bold')}>

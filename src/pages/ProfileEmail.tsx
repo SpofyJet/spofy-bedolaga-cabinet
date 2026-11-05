@@ -189,7 +189,7 @@ export default function ProfileEmail() {
             />
 
             {!user.email_verified && isEmailVerificationEnabled && (
-              <div className="rounded-linear border border-warning-500/30 bg-warning-500/10 p-4">
+              <div className="rounded-linear bg-warning-500/10 p-4">
                 <p className="mb-4 text-sm text-warning-400">{t('profile.verificationRequired')}</p>
                 <div className="flex flex-wrap items-center gap-3">
                   <Button
@@ -279,7 +279,7 @@ export default function ProfileEmail() {
                   className="overflow-hidden"
                 >
                   <div className="space-y-3 border-t border-dark-800/50 pt-4">
-                    <div className="rounded-linear border border-accent-500/30 bg-accent-500/10 p-3">
+                    <div className="rounded-linear bg-accent-500/10 p-3">
                       <p className="text-sm text-accent-400">
                         {t('profile.changeEmail.codeSentTo', { email: newEmail })}
                       </p>
@@ -346,7 +346,7 @@ export default function ProfileEmail() {
                   className="overflow-hidden"
                 >
                   <div className="border-t border-dark-800/50 pt-4">
-                    <div className="flex items-center gap-3 rounded-linear border border-success-500/30 bg-success-500/10 p-4">
+                    <div className="flex items-center gap-3 rounded-linear bg-success-500/10 p-4">
                       <PiCheckBold className="text-success-400" />
                       <div>
                         <p className="font-medium text-success-400">
@@ -372,12 +372,12 @@ export default function ProfileEmail() {
         {(error || success) && user?.email && (
           <div className="mt-4">
             {error && (
-              <div className="rounded-linear border border-error-500/30 bg-error-500/10 p-4 text-sm text-error-400">
+              <div className="rounded-linear bg-error-500/10 p-4 text-sm text-error-400">
                 {error}
               </div>
             )}
             {success && (
-              <div className="rounded-linear border border-success-500/30 bg-success-500/10 p-4 text-sm text-success-400">
+              <div className="rounded-linear bg-success-500/10 p-4 text-sm text-success-400">
                 {success}
               </div>
             )}

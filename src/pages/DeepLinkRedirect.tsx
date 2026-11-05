@@ -168,7 +168,7 @@ export default function DeepLinkRedirect() {
 
       <div className="relative w-full max-w-sm text-center">
         {/* Logo with pulse animation */}
-        <div className="mx-auto mb-6 flex h-20 w-20 animate-pulse items-center justify-center overflow-hidden rounded-2xl bg-accent-500/10 ring-1 ring-inset ring-accent-500/25">
+        <div className="mx-auto mb-6 flex h-20 w-20 animate-pulse items-center justify-center overflow-hidden rounded-2xl bg-accent-500/10">
           {branding?.has_custom_logo && logoUrl ? (
             <img src={logoUrl} alt={projectName || 'Logo'} className="h-full w-full object-cover" />
           ) : (
@@ -186,7 +186,7 @@ export default function DeepLinkRedirect() {
 
         {/* Countdown State */}
         {status === 'countdown' && (
-          <div className="rounded-3xl bg-dark-900/70 ring-1 ring-inset ring-dark-800/80 p-6">
+          <div className="rounded-3xl bg-dark-900/70 p-6">
             {/* App icon */}
             <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-accent-500/20">
               <span className="text-2xl font-bold text-accent-400">{appIcon}</span>
@@ -227,7 +227,7 @@ export default function DeepLinkRedirect() {
 
         {/* Fallback State - App didn't open */}
         {status === 'fallback' && (
-          <div className="rounded-3xl bg-dark-900/70 ring-1 ring-inset ring-dark-800/80 p-6">
+          <div className="rounded-3xl bg-dark-900/70 p-6">
             {/* App icon */}
             <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-accent-500/20">
               <span className="text-2xl font-bold text-accent-400">{appIcon}</span>
@@ -255,7 +255,7 @@ export default function DeepLinkRedirect() {
               {/* Try again button */}
               <button
                 onClick={openDeepLink}
-                className="inline-flex h-12 items-center justify-center gap-2 rounded-2xl bg-dark-800/70 px-5 text-[15px] font-semibold text-dark-100 ring-1 ring-inset ring-dark-700/60 transition-colors hover:bg-dark-700/70 disabled:cursor-not-allowed disabled:opacity-50 w-full"
+                className="inline-flex h-12 items-center justify-center gap-2 rounded-2xl bg-dark-800/70 px-5 text-[15px] font-semibold text-dark-100 transition-colors hover:bg-dark-700/70 disabled:cursor-not-allowed disabled:opacity-50 w-full"
               >
                 <ExternalLinkIcon className="h-5 w-5" />
                 {t('deepLink.tryAgain')}
@@ -271,7 +271,7 @@ export default function DeepLinkRedirect() {
             </div>
 
             {/* Instructions */}
-            <div className="mt-6 rounded-xl border border-dark-700 bg-dark-900/50 p-4 text-left">
+            <div className="mt-6 rounded-xl bg-dark-900/50 p-4 text-left">
               <h3 className="mb-2 text-sm font-medium text-dark-200">{t('deepLink.howToAdd')}</h3>
               <ol className="list-inside list-decimal space-y-1.5 text-xs text-dark-400">
                 <li>{t('deepLink.step1')}</li>
@@ -287,7 +287,7 @@ export default function DeepLinkRedirect() {
 
         {/* Error State */}
         {status === 'error' && (
-          <div className="rounded-3xl bg-dark-900/70 ring-1 ring-inset ring-dark-800/80 p-6">
+          <div className="rounded-3xl bg-dark-900/70 p-6">
             <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-error-500/20">
               <ExclamationIcon className="h-8 w-8 text-error-400" />
             </div>

@@ -217,7 +217,7 @@ function ReplacementFaqView({ items }: { items: FaqItem[] }) {
   }, []);
 
   return (
-    <div className="divide-y divide-dark-800/70 overflow-hidden rounded-3xl bg-dark-900/70 ring-1 ring-inset ring-dark-800/80">
+    <div className="divide-y divide-dark-800/70 overflow-hidden rounded-3xl bg-dark-900/70">
       {items.map((item, index) => {
         const key = `${index}-${item.q.slice(0, 50)}`;
         return (
@@ -400,7 +400,7 @@ export default function Info() {
 
     if (!infoPage) {
       return (
-        <div className="rounded-3xl bg-dark-900/70 px-6 py-10 text-center text-[13px] text-dark-400 ring-1 ring-inset ring-dark-800/80">
+        <div className="rounded-3xl bg-dark-900/70 px-6 py-10 text-center text-[13px] text-dark-400">
           {t('info.noContent')}
         </div>
       );
@@ -409,7 +409,7 @@ export default function Info() {
     if (infoPage.page_type === 'faq') {
       if (infoPageFaqItems.length === 0) {
         return (
-          <div className="rounded-3xl bg-dark-900/70 px-6 py-10 text-center text-[13px] text-dark-400 ring-1 ring-inset ring-dark-800/80">
+          <div className="rounded-3xl bg-dark-900/70 px-6 py-10 text-center text-[13px] text-dark-400">
             {t('info.noFaq')}
           </div>
         );
@@ -419,14 +419,14 @@ export default function Info() {
 
     if (!infoPageHtml) {
       return (
-        <div className="rounded-3xl bg-dark-900/70 px-6 py-10 text-center text-[13px] text-dark-400 ring-1 ring-inset ring-dark-800/80">
+        <div className="rounded-3xl bg-dark-900/70 px-6 py-10 text-center text-[13px] text-dark-400">
           {t('info.noContent')}
         </div>
       );
     }
 
     return (
-      <div className="rounded-3xl bg-dark-900/70 p-4 ring-1 ring-inset ring-dark-800/80 sm:p-5 prose prose-invert max-w-none">
+      <div className="rounded-3xl bg-dark-900/70 p-4 sm:p-5 prose prose-invert max-w-none">
         <div className="overflow-x-auto" dangerouslySetInnerHTML={{ __html: infoPageHtml }} />
       </div>
     );
@@ -463,14 +463,14 @@ export default function Info() {
 
       if (!faqPages || faqPages.length === 0) {
         return (
-          <div className="rounded-3xl bg-dark-900/70 px-6 py-10 text-center text-[13px] text-dark-400 ring-1 ring-inset ring-dark-800/80">
+          <div className="rounded-3xl bg-dark-900/70 px-6 py-10 text-center text-[13px] text-dark-400">
             {t('info.noFaq')}
           </div>
         );
       }
 
       return (
-        <div className="divide-y divide-dark-800/70 overflow-hidden rounded-3xl bg-dark-900/70 ring-1 ring-inset ring-dark-800/80">
+        <div className="divide-y divide-dark-800/70 overflow-hidden rounded-3xl bg-dark-900/70">
           {faqPages.map((faq: FaqPage) => (
             <div key={faq.id} className="overflow-hidden">
               <button
@@ -502,14 +502,14 @@ export default function Info() {
 
       if (!rules?.content) {
         return (
-          <div className="rounded-3xl bg-dark-900/70 px-6 py-10 text-center text-[13px] text-dark-400 ring-1 ring-inset ring-dark-800/80">
+          <div className="rounded-3xl bg-dark-900/70 px-6 py-10 text-center text-[13px] text-dark-400">
             {t('info.noContent')}
           </div>
         );
       }
 
       return (
-        <div className="rounded-3xl bg-dark-900/70 p-4 ring-1 ring-inset ring-dark-800/80 sm:p-5 prose prose-invert max-w-none">
+        <div className="rounded-3xl bg-dark-900/70 p-4 sm:p-5 prose prose-invert max-w-none">
           <div
             className="overflow-x-auto"
             dangerouslySetInnerHTML={{ __html: formatContent(rules.content) }}
@@ -534,14 +534,14 @@ export default function Info() {
 
       if (!privacy?.content) {
         return (
-          <div className="rounded-3xl bg-dark-900/70 px-6 py-10 text-center text-[13px] text-dark-400 ring-1 ring-inset ring-dark-800/80">
+          <div className="rounded-3xl bg-dark-900/70 px-6 py-10 text-center text-[13px] text-dark-400">
             {t('info.noContent')}
           </div>
         );
       }
 
       return (
-        <div className="rounded-3xl bg-dark-900/70 p-4 ring-1 ring-inset ring-dark-800/80 sm:p-5 prose prose-invert max-w-none">
+        <div className="rounded-3xl bg-dark-900/70 p-4 sm:p-5 prose prose-invert max-w-none">
           <div
             className="overflow-x-auto"
             dangerouslySetInnerHTML={{ __html: formatContent(privacy.content) }}
@@ -566,14 +566,14 @@ export default function Info() {
 
       if (!offer?.content) {
         return (
-          <div className="rounded-3xl bg-dark-900/70 px-6 py-10 text-center text-[13px] text-dark-400 ring-1 ring-inset ring-dark-800/80">
+          <div className="rounded-3xl bg-dark-900/70 px-6 py-10 text-center text-[13px] text-dark-400">
             {t('info.noContent')}
           </div>
         );
       }
 
       return (
-        <div className="rounded-3xl bg-dark-900/70 p-4 ring-1 ring-inset ring-dark-800/80 sm:p-5 prose prose-invert max-w-none">
+        <div className="rounded-3xl bg-dark-900/70 p-4 sm:p-5 prose prose-invert max-w-none">
           <div
             className="overflow-x-auto"
             dangerouslySetInnerHTML={{ __html: formatContent(offer.content) }}
@@ -598,7 +598,7 @@ export default function Info() {
 
       if (!loyaltyData || loyaltyData.tiers.length === 0) {
         return (
-          <div className="rounded-3xl bg-dark-900/70 px-6 py-10 text-center text-[13px] text-dark-400 ring-1 ring-inset ring-dark-800/80">
+          <div className="rounded-3xl bg-dark-900/70 px-6 py-10 text-center text-[13px] text-dark-400">
             {t('info.noLoyaltyTiers')}
           </div>
         );
@@ -647,7 +647,7 @@ export default function Info() {
       return (
         <div className="space-y-6">
           {/* Progress Card */}
-          <div className="rounded-3xl bg-dark-900/70 p-4 ring-1 ring-inset ring-dark-800/80 sm:p-5">
+          <div className="rounded-3xl bg-dark-900/70 p-4 sm:p-5">
             <h3 className="mb-4 text-[15px] font-semibold text-dark-50">
               {t('info.yourProgress')}
             </h3>
@@ -706,12 +706,12 @@ export default function Info() {
             {loyaltyData.tiers.map((tier) => (
               <div
                 key={tier.id}
-                className={`rounded-3xl p-4 ring-1 ring-inset transition-colors ${
+                className={`rounded-3xl p-4 transition-colors ${
                   tier.is_current
-                    ? 'bg-accent-500/5 ring-accent-500/40'
+                    ? 'bg-accent-500/15'
                     : tier.is_achieved
-                      ? 'bg-dark-900/70 ring-success-500/25'
-                      : 'bg-dark-900/70 opacity-70 ring-dark-800/80'
+                      ? 'bg-dark-900/70'
+                      : 'bg-dark-900/70 opacity-70'
                 }`}
               >
                 {/* Левая группа сжимается, плашка статуса — нет: раньше она уходила
@@ -794,10 +794,10 @@ export default function Info() {
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
-            className={`flex min-h-[40px] shrink-0 items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold ring-1 ring-inset transition-colors [&>svg]:h-4 [&>svg]:w-4 ${
+            className={`flex min-h-[40px] shrink-0 items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition-colors [&>svg]:h-4 [&>svg]:w-4 ${
               activeTab === tab.id
-                ? 'bg-accent-500/15 text-accent-300 ring-accent-500/40'
-                : 'bg-dark-900/70 text-dark-300 ring-dark-800/80 hover:bg-dark-800/70'
+                ? 'bg-accent-500/15 text-accent-300'
+                : 'bg-dark-900/70 text-dark-300 hover:bg-dark-800/70'
             }`}
           >
             {tab.emoji ? <span className="text-base">{tab.emoji}</span> : <tab.icon />}

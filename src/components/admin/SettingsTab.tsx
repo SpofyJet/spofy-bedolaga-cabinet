@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { SettingDefinition, adminSettingsApi } from '../../api/adminSettings';
+import { type SettingDefinition, adminSettingsApi } from '../../api/adminSettings';
 import { QuickToggles } from './QuickToggles';
 import { SettingsTableRow } from './SettingsTableRow';
 

@@ -137,7 +137,7 @@ export function WebSocketProvider({ children }: { children: React.ReactNode }) {
         // Attempt to reconnect if not closed intentionally
         if (event.code !== 1000 && reconnectAttemptsRef.current < maxReconnectAttempts) {
           const delay = Math.min(
-            1000 * Math.pow(2, reconnectAttemptsRef.current),
+            1000 * 2 ** reconnectAttemptsRef.current,
             WS.MAX_RECONNECT_DELAY_MS,
           );
           if (isDev)

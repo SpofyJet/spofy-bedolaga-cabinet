@@ -355,7 +355,7 @@ export default function Dashboard() {
         <Link
           to="/profile"
           aria-label={t('nav.profile')}
-          className="relative flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-accent-500/10 ring-1 ring-inset ring-dark-800/80 transition-opacity hover:opacity-85"
+          className="relative flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-accent-500/10 transition-opacity hover:opacity-85"
         >
           {avatarUrl ? (
             <img src={avatarUrl} alt="" className="h-full w-full object-cover" />
@@ -377,7 +377,7 @@ export default function Dashboard() {
           <Link
             to="/gift"
             aria-label={t('nav.gift')}
-            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-dark-700/50 bg-dark-800/50 text-dark-300 transition-colors hover:border-accent-500/40 hover:text-accent-300"
+            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-dark-800/50 text-dark-300 transition-colors hover:text-accent-300"
           >
             <GiftIcon className="h-5 w-5" />
           </Link>
@@ -458,7 +458,7 @@ export default function Dashboard() {
           {multiSubData.subscriptions.length > 3 && (
             <Link
               to="/subscriptions"
-              className="flex w-full items-center justify-center rounded-2xl border border-dashed border-white/15 p-3 text-xs opacity-50 transition-opacity hover:opacity-80"
+              className="flex w-full items-center justify-center rounded-2xl p-3 text-xs opacity-50 transition-opacity hover:opacity-80"
             >
               {t('dashboard.showAll', 'Показать все')} ({multiSubData.subscriptions.length})
             </Link>
@@ -486,7 +486,7 @@ export default function Dashboard() {
       {/* Subscription Status Card — hidden in multi-tariff (managed via /subscriptions) */}
       {!isMultiTariff &&
         (subLoading ? (
-          <SkeletonGroup className="rounded-3xl bg-dark-900/70 ring-1 ring-inset ring-dark-800/80 p-4">
+          <SkeletonGroup className="rounded-3xl bg-dark-900/70 p-4">
             <Skeleton className="mb-4 h-5 w-40" />
             <div className="grid grid-cols-2 gap-3">
               <Skeleton className="h-16 w-full rounded-xl" />
@@ -532,7 +532,7 @@ export default function Dashboard() {
             to="/subscription/purchase"
             className={
               trialInfo?.is_available
-                ? 'flex w-full items-center justify-center gap-2 rounded-2xl bg-dark-800/70 p-3.5 text-sm font-semibold text-dark-100 ring-1 ring-inset ring-dark-700/60 transition-colors hover:bg-dark-700/70'
+                ? 'flex w-full items-center justify-center gap-2 rounded-2xl bg-dark-800/70 p-3.5 text-sm font-semibold text-dark-100 transition-colors hover:bg-dark-700/70'
                 : 'flex w-full items-center justify-center gap-2 rounded-2xl bg-cta-500 p-3.5 text-sm font-semibold text-on-cta transition-colors hover:bg-cta-600'
             }
           >
@@ -549,7 +549,7 @@ export default function Dashboard() {
       {wheelConfig?.is_enabled && (
         <Link
           to="/wheel"
-          className="rounded-3xl bg-dark-900/70 ring-1 ring-inset ring-dark-800/80 cursor-pointer transition-colors hover:bg-dark-800/50 active:bg-dark-800/70 group flex items-center justify-between p-4"
+          className="rounded-3xl bg-dark-900/70 cursor-pointer transition-colors hover:bg-dark-800/50 active:bg-dark-800/70 group flex items-center justify-between p-4"
         >
           <div className="flex items-center gap-3">
             <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-accent-500/10 text-accent-400 [&>svg]:h-[22px] [&>svg]:w-[22px]">

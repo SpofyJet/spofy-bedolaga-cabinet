@@ -187,10 +187,8 @@ export function AppShell({ children }: AppShellProps) {
             layoutId="desktop-nav-active"
             className={cn(
               // Подсветка-пилюля активного пункта — «приподнята» над треком капсулы
-              'absolute inset-0 rounded-full shadow-sm',
-              admin
-                ? 'bg-warning-500/15 ring-1 ring-warning-500/20'
-                : 'bg-dark-700/80 ring-1 ring-dark-600/40',
+              'absolute inset-0 rounded-full',
+              admin ? 'bg-warning-500/15' : 'bg-dark-700/80',
             )}
             transition={{ type: 'spring', stiffness: 500, damping: 35 }}
           />
@@ -199,7 +197,7 @@ export function AppShell({ children }: AppShellProps) {
         <span className="relative whitespace-nowrap">{label}</span>
         {dot && (
           <span
-            className="absolute right-1.5 top-1 h-2 w-2 rounded-full bg-error-500 ring-2 ring-dark-950"
+            className="absolute right-1.5 top-1 h-2 w-2 rounded-full bg-error-500"
             aria-label={t('support.chat.unread', 'Новый ответ')}
           />
         )}
@@ -262,7 +260,7 @@ export function AppShell({ children }: AppShellProps) {
           {/* Navigation — единая «капсула» (segmented control): все пункты видны
               всегда, без скролла/сжатия/сворачивания. Центрируется средней
               колонкой grid (justify-self-center), а не auto-margin'ами. */}
-          <nav className="flex items-center gap-0.5 justify-self-center rounded-full border border-dark-800/70 bg-dark-900/50 p-1 shadow-sm backdrop-blur-sm">
+          <nav className="flex items-center gap-0.5 justify-self-center rounded-full bg-dark-900/70 p-1">
             {desktopNav.map((item) =>
               renderNavLink(item.path, item.label, item.icon, false, 'dot' in item && !!item.dot),
             )}
@@ -284,7 +282,7 @@ export function AppShell({ children }: AppShellProps) {
                   toggleTheme();
                 }}
                 className={cn(
-                  'rounded-xl border border-dark-700/50 bg-dark-800/50 p-2 text-dark-400 transition-colors duration-200 hover:bg-dark-700 hover:text-accent-400',
+                  'rounded-xl bg-dark-800/50 p-2 text-dark-400 transition-colors duration-200 hover:bg-dark-700 hover:text-accent-400',
                   !canToggleTheme && 'hidden',
                 )}
                 aria-label={
@@ -311,7 +309,7 @@ export function AppShell({ children }: AppShellProps) {
               <Link
                 to={connectTo}
                 onClick={handleNavClick}
-                className="flex items-center gap-2 rounded-full bg-accent-500/15 px-4 py-2 text-[13px] font-semibold text-accent-300 ring-1 ring-inset ring-accent-500/30 transition-colors hover:bg-accent-500/25"
+                className="flex items-center gap-2 rounded-full bg-accent-500/15 px-4 py-2 text-[13px] font-semibold text-accent-300 transition-colors hover:bg-accent-500/25"
               >
                 <PowerIcon className="h-4 w-4" />
                 {t('dashboard.quick.connect')}
@@ -344,7 +342,7 @@ export function AppShell({ children }: AppShellProps) {
       {!isAdminRoute && (
         <div
           aria-hidden
-          className="pointer-events-none fixed inset-x-0 top-0 z-40 bg-dark-950/85 backdrop-blur-md lg:hidden"
+          className="pointer-events-none fixed inset-x-0 top-0 z-40 bg-dark-950/85 lg:hidden"
           style={{ height: topInsetCss }}
         />
       )}

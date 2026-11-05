@@ -12,30 +12,17 @@ export const buttonVariants = cva(
   {
     variants: {
       variant: {
-        primary: [
-          'bg-accent-500 text-on-accent',
-          // Верхний блик — кнопка выглядит объёмной, а не плоской заливкой.
-          'shadow-[inset_0_1px_0_rgba(255,255,255,0.22),inset_0_-1px_0_rgba(0,0,0,0.12),0_1px_2px_rgba(0,0,0,0.25)]',
-          'hover:bg-accent-600',
-          'active:bg-accent-700 active:shadow-[inset_0_2px_4px_rgba(0,0,0,0.15)]',
-          'shadow-linear-sm hover:shadow-linear',
-        ],
-        secondary: [
-          'bg-dark-800/80 text-dark-100',
-          'border border-dark-700/50',
-          'hover:bg-dark-700/80 hover:border-dark-600/50',
-          'active:bg-dark-800',
-        ],
+        primary: ['bg-accent-500 text-on-accent', 'hover:bg-accent-600', 'active:bg-accent-700'],
+        secondary: ['bg-dark-800/80 text-dark-100', 'hover:bg-dark-700/80', 'active:bg-dark-800'],
         ghost: ['text-dark-300', 'hover:text-dark-100 hover:bg-dark-800/50', 'active:bg-dark-800'],
         destructive: [
           'bg-error-500/10 text-error-400',
-          'border border-error-500/20',
-          'hover:bg-error-500/20 hover:border-error-500/30',
+          'hover:bg-error-500/20',
           'active:bg-error-500/30',
         ],
         outline: [
-          'border border-dark-700/50 text-dark-200',
-          'hover:bg-dark-800/50 hover:border-dark-600/50 hover:text-dark-100',
+          'bg-dark-800/60 text-dark-200',
+          'hover:bg-dark-800/50 hover:text-dark-100',
           'active:bg-dark-800',
         ],
         link: [

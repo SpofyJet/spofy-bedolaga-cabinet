@@ -122,7 +122,7 @@ function CodeOnlySuccessState({
       </div>
 
       {/* Gift code display */}
-      <div className="w-full rounded-2xl bg-accent-500/10 p-4 ring-1 ring-inset ring-accent-500/25">
+      <div className="w-full rounded-2xl bg-accent-500/10 p-4">
         <p className="mb-1 text-[13px] font-medium text-dark-400">
           {t('gift.codeLabel', 'Gift code')}
         </p>
@@ -189,7 +189,7 @@ function CodeOnlySuccessState({
       <button
         type="button"
         onClick={() => navigate('/gift?tab=myGifts')}
-        className="h-12 w-full rounded-2xl bg-dark-800/70 px-6 text-[15px] font-semibold text-dark-100 ring-1 ring-inset ring-dark-700/60 transition-colors hover:bg-dark-700/70"
+        className="h-12 w-full rounded-2xl bg-dark-800/70 px-6 text-[15px] font-semibold text-dark-100 transition-colors hover:bg-dark-700/70"
       >
         {t('gift.tabMyGifts', 'My Gifts')}
       </button>
@@ -245,7 +245,7 @@ function DeliveredState({
       </div>
 
       {warning && (
-        <div className="w-full rounded-2xl bg-warning-500/10 p-3 ring-1 ring-inset ring-warning-500/25">
+        <div className="w-full rounded-2xl bg-warning-500/10 p-3">
           <p className="text-sm text-warning-400">{t(`gift.warning.${warning}`)}</p>
         </div>
       )}
@@ -315,7 +315,7 @@ function PendingActivationState({
       </div>
 
       {warning && (
-        <div className="w-full rounded-2xl bg-warning-500/10 p-3 ring-1 ring-inset ring-warning-500/25">
+        <div className="w-full rounded-2xl bg-warning-500/10 p-3">
           <p className="text-sm text-warning-400">{t(`gift.warning.${warning}`)}</p>
         </div>
       )}
@@ -524,7 +524,7 @@ export default function GiftResult() {
       <Page>
         <PageHeader title={t('gift.pageTitle')} backTo="/gift" />
         <div
-          className="rounded-3xl bg-dark-900/70 p-6 ring-1 ring-inset ring-dark-800/80 sm:p-8"
+          className="rounded-3xl bg-dark-900/70 p-6 sm:p-8"
           aria-live="polite"
           aria-atomic="true"
         >
@@ -548,11 +548,7 @@ export default function GiftResult() {
   return (
     <Page>
       <PageHeader title={t('gift.pageTitle')} backTo="/gift" />
-      <div
-        className="rounded-3xl bg-dark-900/70 p-6 ring-1 ring-inset ring-dark-800/80 sm:p-8"
-        aria-live="polite"
-        aria-atomic="true"
-      >
+      <div className="rounded-3xl bg-dark-900/70 p-6 sm:p-8" aria-live="polite" aria-atomic="true">
         {isError ? (
           <PollErrorState />
         ) : isClaimablePaid ? (

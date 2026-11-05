@@ -80,10 +80,10 @@ export default function InfoCards({
 
   const chipClass =
     subChip?.tone === 'success'
-      ? 'border-success-500/25 bg-success-500/10 text-success-400'
+      ? 'bg-success-500/10 text-success-400'
       : subChip?.tone === 'trial'
         ? TONE_CHIP.promo
-        : 'border-warning-500/25 bg-warning-500/10 text-warning-400';
+        : 'bg-warning-500/10 text-warning-400';
 
   // Доля «с друзей» не может быть больше самого баланса (потратил — её нет),
   // а «+0 ₽» или копейки ничего не сообщают.
@@ -105,7 +105,7 @@ export default function InfoCards({
               ? '/subscription'
               : '/subscription/purchase'
         }
-        className="on-primary rounded-3xl bg-dark-900/70 ring-1 ring-inset ring-accent-300/[0.10] light:ring-dark-800/80 cursor-pointer transition-colors hover:bg-dark-800/50 active:bg-dark-800/70 group flex min-h-[118px] flex-col justify-between p-4"
+        className="on-primary rounded-3xl bg-dark-900/70 cursor-pointer transition-colors hover:bg-dark-800/50 active:bg-dark-800/70 group flex min-h-[118px] flex-col justify-between p-4"
       >
         <span className="text-sm font-medium text-dark-400">
           {t('dashboard.info.subscription.title', 'Подписка')}
@@ -160,7 +160,7 @@ export default function InfoCards({
           <Skeleton className="mt-2 h-6 w-20 rounded-full" />
         ) : subChip ? (
           <span
-            className={`mt-2 inline-flex w-fit items-center rounded-full border px-2.5 py-1 text-2xs font-semibold ${chipClass}`}
+            className={`mt-2 inline-flex w-fit items-center rounded-full px-2.5 py-1 text-2xs font-semibold ${chipClass}`}
           >
             {subChip.label}
           </span>
@@ -172,7 +172,7 @@ export default function InfoCards({
       {/* Баланс */}
       <Link
         to="/balance"
-        className="rounded-3xl bg-dark-900/70 ring-1 ring-inset ring-accent-300/[0.10] light:ring-dark-800/80 cursor-pointer transition-colors hover:bg-dark-800/50 active:bg-dark-800/70 group flex min-h-[118px] flex-col justify-between p-4"
+        className="rounded-3xl bg-dark-900/70 cursor-pointer transition-colors hover:bg-dark-800/50 active:bg-dark-800/70 group flex min-h-[118px] flex-col justify-between p-4"
       >
         <span className="text-sm font-medium text-dark-400">
           {t('dashboard.info.balance.title', 'Баланс')}
@@ -192,7 +192,7 @@ export default function InfoCards({
         </span>
         {fromFriends >= 1 ? (
           <span
-            className={`mt-2 inline-flex w-fit items-center rounded-xl border px-2.5 py-1 text-2xs font-semibold ${TONE_CHIP.friends}`}
+            className={`mt-2 inline-flex w-fit items-center rounded-xl px-2.5 py-1 text-2xs font-semibold ${TONE_CHIP.friends}`}
           >
             {t('dashboard.info.balance.fromFriends', {
               amount: fromFriends.toLocaleString('ru-RU'),

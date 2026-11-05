@@ -210,8 +210,6 @@ export function ClassicPurchaseWizard({
       className="relative overflow-hidden rounded-3xl"
       style={{
         background: g.cardBg,
-        border: `1px solid ${g.cardBorder}`,
-        boxShadow: g.shadow,
         padding: '24px 28px',
       }}
     >
@@ -282,7 +280,7 @@ export function ClassicPurchaseWizard({
                       }
                     }}
                     className={`bento-card-hover relative p-4 text-left transition-all ${
-                      selectedPeriod?.id === period.id ? 'bento-card-glow border-accent-500' : ''
+                      selectedPeriod?.id === period.id ? '!bg-accent-500/15' : ''
                     }`}
                   >
                     {/* Скидка — в строке с названием, а не поверх него: значок в углу
@@ -293,7 +291,7 @@ export function ClassicPurchaseWizard({
                       </div>
                       {promoPeriod.percent != null && promoPeriod.percent > 0 && (
                         <div
-                          className={`shrink-0 rounded-full px-2 py-0.5 text-xs font-medium text-white shadow-sm ${
+                          className={`shrink-0 rounded-full px-2 py-0.5 text-xs font-medium text-white ${
                             promoPeriod.isPromoGroup ? 'bg-success-500' : 'bg-warning-500'
                           }`}
                         >
@@ -332,7 +330,7 @@ export function ClassicPurchaseWizard({
                     onClick={() => setSelectedTraffic(option.value)}
                     disabled={!option.is_available}
                     className={`bento-card-hover relative p-4 text-center transition-all ${
-                      selectedTraffic === option.value ? 'bento-card-glow border-accent-500' : ''
+                      selectedTraffic === option.value ? '!bg-accent-500/15' : ''
                     } ${!option.is_available ? 'cursor-not-allowed opacity-50' : ''}`}
                   >
                     {/* Скидка — в строке с названием, а не поверх него: значок в углу
@@ -343,7 +341,7 @@ export function ClassicPurchaseWizard({
                       </div>
                       {promoTraffic.percent != null && promoTraffic.percent > 0 && (
                         <div
-                          className={`shrink-0 rounded-full px-2 py-0.5 text-xs font-medium text-white shadow-sm ${
+                          className={`shrink-0 rounded-full px-2 py-0.5 text-xs font-medium text-white ${
                             promoTraffic.isPromoGroup ? 'bg-success-500' : 'bg-warning-500'
                           }`}
                         >
@@ -387,19 +385,19 @@ export function ClassicPurchaseWizard({
                       key={server.uuid}
                       onClick={() => toggleServer(server.uuid)}
                       disabled={!server.is_available}
-                      className={`relative rounded-xl border p-4 text-left transition-all ${
+                      className={`relative rounded-xl p-4 text-left transition-all ${
                         selectedServers.includes(server.uuid)
-                          ? 'border-accent-500 bg-accent-500/10'
+                          ? 'bg-accent-500/10'
                           : server.is_available
-                            ? 'border-dark-700/50 bg-dark-800/50 hover:border-dark-600'
-                            : 'cursor-not-allowed border-dark-800/30 bg-dark-900/30 opacity-50'
+                            ? 'bg-dark-800/50'
+                            : 'cursor-not-allowed bg-dark-900/30 opacity-50'
                       }`}
                     >
                       {promoServer.percent && promoServer.percent > 0 ? (
                         <div
                           // За угол, как у периодов в покупке тарифа: внутри угла
                           // значок наезжал на название сервера.
-                          className={`absolute -right-2 -top-2 z-10 rounded-full px-2 py-0.5 text-xs font-medium text-white shadow-sm ${
+                          className={`absolute -right-2 -top-2 z-10 rounded-full px-2 py-0.5 text-xs font-medium text-white ${
                             promoServer.isPromoGroup ? 'bg-success-500' : 'bg-warning-500'
                           }`}
                         >
@@ -408,10 +406,8 @@ export function ClassicPurchaseWizard({
                       ) : null}
                       <div className="flex items-center gap-3">
                         <div
-                          className={`flex h-5 w-5 flex-shrink-0 items-center justify-center rounded border-2 ${
-                            selectedServers.includes(server.uuid)
-                              ? 'border-accent-500 bg-accent-500'
-                              : 'border-dark-600'
+                          className={`flex h-5 w-5 flex-shrink-0 items-center justify-center rounded ${
+                            selectedServers.includes(server.uuid) ? 'bg-accent-500' : ''
                           }`}
                         >
                           {selectedServers.includes(server.uuid) && <CheckIcon />}
@@ -495,7 +491,7 @@ export function ClassicPurchaseWizard({
               ) : preview ? (
                 <div className="space-y-4 rounded-xl bg-dark-800/50 p-5">
                   {activeDiscount?.is_active && activeDiscount.discount_percent && (
-                    <div className="flex items-center justify-center gap-2 rounded-lg border border-warning-500/30 bg-warning-500/10 p-3">
+                    <div className="flex items-center justify-center gap-2 rounded-lg bg-warning-500/10 p-3">
                       <SparklesIcon className="h-4 w-4 text-warning-400" />
                       <span className="text-sm font-medium text-warning-400">
                         {t('promo.discountApplied')} -{activeDiscount.discount_percent}%

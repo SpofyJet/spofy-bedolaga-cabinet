@@ -117,7 +117,7 @@ describe('выделенный период при продлении', () => {
     expect(cardFor(180).contains(badges[0])).toBe(true);
   });
 
-  it('обведён рамкой, а не только подписан — и когда выбран, и когда нет', async () => {
+  it('выделен заливкой и подписан — и когда выбран, и когда нет', async () => {
     state.options = [
       option({ period_days: 30 }),
       option({ period_days: 180, price_kopeks: 270000, is_highlighted: true }),
@@ -125,12 +125,13 @@ describe('выделенный период при продлении', () => {
     await renderRenew();
     await screen.findByText(ru('subscription.bestValue'));
 
-    expect(cardFor(180).className).toContain('border-2');
-    expect(cardFor(30).className).not.toContain('border-cta-500');
+    expect(cardFor(180).className).toContain('bg-accent-500/15');
+    expect(cardFor(30).className).not.toContain('bg-accent-500/15');
 
-    // Человек ушёл на другой период — жёлтая рамка выгодного никуда не делась.
+    // Человек ушёл на другой период: заливка переходит к выбору, плашка остаётся.
     fireEvent.click(cardFor(30));
-    expect(cardFor(180).className).toContain('border-2');
+    expect(cardFor(30).className).toContain('bg-accent-500/15');
+    expect(cardFor(180).textContent).toContain(ru('subscription.bestValue'));
   });
 
   it('ничего не выделяет, когда оператор не выбрал период', async () => {
@@ -171,17 +172,14 @@ describe('выделенный тариф в списке', () => {
     const badges = await screen.findAllByText(ru('subscription.bestValue'));
     expect(badges).toHaveLength(1);
     expect(tariffCard('Про').contains(badges[0])).toBe(true);
-    expect(tariffCard('Про').className).toContain('border-2');
-    expect(tariffCard('Базовый').className).not.toContain('border-cta-500');
   });
 
-  it('текущий тариф важнее подсказки: двух рамок сразу не бывает', async () => {
+  it('текущий тариф важнее подсказки: двух выделений сразу не бывает', async () => {
     const { render: renderGrid, cardFor: tariffCard } = await import('./tariffGridHarness');
     renderGrid([{ id: 2, name: 'Про', is_highlighted: true }], { currentTariffId: 2 });
 
     expect(screen.queryByText(ru('subscription.bestValue'))).toBeNull();
-    // Текущий обведён кольцом выбора, жёлтой рамки «Выгодно» у него нет.
-    expect(tariffCard('Про').className).toContain('ring-accent-500');
-    expect(tariffCard('Про').className).not.toContain('border-cta-500');
+    // Текущий выделен заливкой, плашки «Выгодно» на нём нет.
+    expect(tariffCard('Про').className).toContain('bg-accent-500/15');
   });
 });

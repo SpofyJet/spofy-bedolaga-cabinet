@@ -109,7 +109,7 @@ export function TrafficTopupSheet({
             <SheetNote>{t('subscription.additionalOptions.trafficUnavailable')}</SheetNote>
           ) : (
             <>
-              <div className="divide-y divide-dark-800/70 overflow-hidden rounded-3xl bg-dark-800/40 ring-1 ring-inset ring-dark-800/80">
+              <div className="divide-y divide-dark-800/70 overflow-hidden rounded-3xl bg-dark-800/40">
                 {trafficPackages.map((pkg) => {
                   const selected = selectedTrafficPackage === pkg.gb;
                   const discounted = pkg.discount_percent != null && pkg.discount_percent > 0;
@@ -126,8 +126,8 @@ export function TrafficTopupSheet({
                     >
                       <span
                         className={cn(
-                          'flex h-5 w-5 shrink-0 items-center justify-center rounded-full ring-2 ring-inset',
-                          selected ? 'bg-accent-500 ring-accent-500' : 'ring-dark-600',
+                          'flex h-5 w-5 shrink-0 items-center justify-center rounded-full',
+                          selected ? 'bg-accent-500' : 'bg-dark-700',
                         )}
                         aria-hidden
                       >

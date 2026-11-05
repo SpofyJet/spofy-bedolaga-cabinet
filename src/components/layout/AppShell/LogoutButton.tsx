@@ -29,7 +29,7 @@ export function LogoutButton({ variant, onLogout }: LogoutButtonProps) {
     <button
       type="button"
       onClick={onLogout}
-      className="rounded-xl border border-dark-700/50 bg-dark-800/50 p-2 text-dark-400 transition-colors duration-200 hover:bg-dark-700 hover:text-accent-400"
+      className="rounded-xl bg-dark-800/50 p-2 text-dark-400 transition-colors duration-200 hover:bg-dark-700 hover:text-accent-400"
       title={t('nav.logout')}
     >
       <LogoutIcon className="h-5 w-5" />

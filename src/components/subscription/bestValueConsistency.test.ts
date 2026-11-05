@@ -29,7 +29,7 @@ describe('плашка «Выгодно» на витринах', () => {
   });
 
   it.each(showcases.map((s) => [s.path, s.code]))(
-    '%s: у отмеченного варианта общая золотая рамка',
+    '%s: у отмеченного варианта общее выделение',
     (_path, code) => {
       expect(/bestValueFrame\(|BEST_VALUE_BORDER/.test(code)).toBe(true);
     },

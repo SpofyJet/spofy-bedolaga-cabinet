@@ -95,7 +95,7 @@ function ErrorState({ message }: { message: string }) {
 
 /** Поле ввода лендинга в стиле v10. */
 const inputClass =
-  'w-full rounded-2xl bg-dark-800/60 px-4 py-3 text-[15px] text-dark-50 placeholder-dark-500 outline-none ring-1 ring-inset ring-dark-700/60 transition-shadow focus:ring-2 focus:ring-accent-500';
+  'w-full rounded-2xl bg-dark-800/60 px-4 py-3 text-[15px] text-dark-50 placeholder-dark-500 outline-none transition-shadow focus:ring-2 focus:ring-accent-500';
 
 function PeriodTabs({
   periods,
@@ -119,7 +119,7 @@ function PeriodTabs({
             'h-10 whitespace-nowrap rounded-full px-4 text-sm font-semibold transition-colors active:scale-[0.98]',
             selectedDays === period.days
               ? 'bg-accent-500 text-on-accent'
-              : 'bg-dark-900/70 text-dark-200 ring-1 ring-inset ring-dark-800/80 hover:bg-dark-800/70',
+              : 'bg-dark-900/70 text-dark-200 hover:bg-dark-800/70',
           )}
         >
           {formatPeriodLabel(period.days, t)}
@@ -141,7 +141,7 @@ function GiftToggle({ isGift, onToggle }: { isGift: boolean; onToggle: (v: boole
     <div
       role="group"
       aria-label={t('landing.giftToggleLabel', 'Purchase type')}
-      className="flex rounded-2xl bg-dark-900/70 p-1 ring-1 ring-inset ring-dark-800/80"
+      className="flex rounded-2xl bg-dark-900/70 p-1"
     >
       <button
         type="button"
@@ -277,10 +277,10 @@ function TariffCard({
       className={cn(
         'relative flex w-full flex-col rounded-3xl p-4 text-start transition-colors sm:p-5',
         tariff.is_highlighted
-          ? cn(bestValueFrame(isSelected), isSelected ? 'bg-accent-500/5' : 'bg-dark-900/70')
+          ? cn(bestValueFrame(isSelected), isSelected ? 'bg-accent-500/15' : 'bg-dark-900/70')
           : isSelected
-            ? 'bg-accent-500/5 ring-2 ring-inset ring-accent-500'
-            : 'bg-dark-900/70 ring-1 ring-inset ring-dark-800/80 hover:bg-dark-800/50',
+            ? 'bg-accent-500/15'
+            : 'bg-dark-900/70 hover:bg-dark-800/50',
       )}
     >
       {/* Отметка оператора первой строкой, как в покупке и продлении: этот тариф
@@ -297,7 +297,7 @@ function TariffCard({
           aria-hidden
           className={cn(
             'flex h-6 w-6 shrink-0 items-center justify-center rounded-full transition-colors',
-            isSelected ? 'bg-accent-500 text-on-accent' : 'ring-2 ring-inset ring-dark-600',
+            isSelected ? 'bg-accent-500 text-on-accent' : 'bg-dark-700',
           )}
         >
           {isSelected && <PiCheckBold className="h-3.5 w-3.5" />}
@@ -361,7 +361,7 @@ function PaymentMethodCard({
         onClick={onSelect}
         className={cn(
           'flex min-h-[60px] w-full items-center gap-3 px-4 py-2.5 text-start transition-colors',
-          isSelected ? 'bg-accent-500/5' : 'hover:bg-dark-800/40',
+          isSelected ? 'bg-accent-500/15' : 'hover:bg-dark-800/40',
         )}
       >
         {method.icon_url && (
@@ -383,7 +383,7 @@ function PaymentMethodCard({
           aria-hidden
           className={cn(
             'flex h-6 w-6 shrink-0 items-center justify-center rounded-full transition-colors',
-            isSelected ? 'bg-accent-500' : 'ring-2 ring-inset ring-dark-600',
+            isSelected ? 'bg-accent-500' : 'bg-dark-700',
           )}
         >
           {isSelected && <span className="h-2 w-2 rounded-full bg-on-accent" />}
@@ -393,7 +393,7 @@ function PaymentMethodCard({
       {isSelected && hasSubOptions && (
         <div
           className={cn(
-            'flex flex-wrap gap-2 bg-accent-500/5 px-4 pb-4',
+            'flex flex-wrap gap-2 bg-accent-500/15 px-4 pb-4',
             method.icon_url && 'pl-[68px]',
           )}
         >
@@ -406,7 +406,7 @@ function PaymentMethodCard({
                 'h-9 rounded-full px-4 text-sm font-semibold transition-colors',
                 selectedSubOption === opt.id
                   ? 'bg-accent-500 text-on-accent'
-                  : 'bg-dark-800/70 text-dark-200 ring-1 ring-inset ring-dark-700/60 hover:bg-dark-700/70',
+                  : 'bg-dark-800/70 text-dark-200 hover:bg-dark-700/70',
               )}
             >
               {opt.name}
@@ -543,7 +543,7 @@ function SummaryCard({
             initial={{ opacity: 0, y: -8 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
-            className="rounded-2xl bg-error-500/10 px-3.5 py-3 ring-1 ring-inset ring-error-500/20"
+            className="rounded-2xl bg-error-500/10 px-3.5 py-3"
           >
             <p className="text-[13px] text-error-400">{submitError}</p>
           </motion.div>
@@ -567,9 +567,9 @@ function SummaryCard({
                   const el = document.getElementById('contact-input');
                   if (el) {
                     el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    el.classList.add('!border-error-500', '!ring-2', '!ring-error-500/50');
+                    el.classList.add('!', '!', '!');
                     setTimeout(() => {
-                      el.classList.remove('!border-error-500', '!ring-2', '!ring-error-500/50');
+                      el.classList.remove('!', '!', '!');
                     }, 2000);
                   }
                   return;
@@ -610,12 +610,12 @@ function SummaryCard({
               const el = document.getElementById('contact-input');
               if (el) {
                 el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                el.classList.add('!border-error-500', '!ring-2', '!ring-error-500/50');
+                el.classList.add('!', '!', '!');
                 setTimeout(() => {
                   el.focus();
                 }, 300);
                 setTimeout(() => {
-                  el.classList.remove('!border-error-500', '!ring-2', '!ring-error-500/50');
+                  el.classList.remove('!', '!', '!');
                 }, 2000);
               }
               return;
@@ -726,7 +726,7 @@ function DiscountBanner({
       initial={{ opacity: 0, y: -10 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -10 }}
-      className="overflow-hidden rounded-3xl bg-accent-500/5 ring-1 ring-inset ring-accent-500/30"
+      className="overflow-hidden rounded-3xl bg-accent-500/5"
     >
       <div className="flex flex-col items-center gap-4 p-4 sm:flex-row sm:justify-between sm:p-5">
         {/* Left: badge + text */}
@@ -1199,7 +1199,7 @@ export default function QuickPurchase() {
                 <div
                   role="radiogroup"
                   aria-label={t('landing.paymentMethod', 'Payment method')}
-                  className="divide-y divide-dark-800/70 overflow-hidden rounded-3xl bg-dark-900/70 ring-1 ring-inset ring-dark-800/80"
+                  className="divide-y divide-dark-800/70 overflow-hidden rounded-3xl bg-dark-900/70"
                 >
                   {config.payment_methods.map((method) => (
                     <PaymentMethodCard

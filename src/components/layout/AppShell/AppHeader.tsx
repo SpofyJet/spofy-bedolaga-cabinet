@@ -171,7 +171,7 @@ export function AppHeader({
           режима задаёт .app-mobile-header в globals.css (display-mode: standalone),
           чтобы не было ни отдельного светлого блока, ни жёсткой границы. */}
       <header
-        className="glass header-tint app-mobile-header fixed left-0 right-0 top-0 z-50 shadow-lg shadow-black/10 lg:hidden"
+        className="glass header-tint app-mobile-header fixed left-0 right-0 top-0 z-50 lg:hidden"
         style={{
           paddingTop: isFullscreen
             ? `${Math.max(safeAreaInset.top, contentSafeAreaInset.top) + (telegramPlatform === 'android' ? 48 : 45)}px`
@@ -191,7 +191,7 @@ export function AppHeader({
               onClick={() => setMobileMenuOpen(false)}
               className={cn('flex flex-shrink-0 items-center gap-2.5', !appName && 'mr-4')}
             >
-              <div className="relative flex h-10 w-10 flex-shrink-0 items-center justify-center overflow-hidden rounded-linear-lg border border-dark-700/50 bg-dark-800/80 shadow-md">
+              <div className="relative flex h-10 w-10 flex-shrink-0 items-center justify-center overflow-hidden rounded-linear-lg bg-dark-800/80">
                 <span
                   className={cn(
                     'absolute text-lg font-bold text-accent-400 transition-opacity duration-200',
@@ -247,7 +247,7 @@ export function AppHeader({
                     toggleTheme();
                     setMobileMenuOpen(false);
                   }}
-                  className="relative rounded-linear-lg border border-dark-700/50 bg-dark-800/50 p-2 text-dark-400 transition-all duration-200 hover:bg-dark-700 hover:text-accent-400"
+                  className="relative rounded-linear-lg bg-dark-800/50 p-2 text-dark-400 transition-all duration-200 hover:bg-dark-700 hover:text-accent-400"
                   title={isDark ? t('theme.light') || 'Light mode' : t('theme.dark') || 'Dark mode'}
                 >
                   <div className="relative h-5 w-5">

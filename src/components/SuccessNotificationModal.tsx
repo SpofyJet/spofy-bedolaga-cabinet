@@ -162,7 +162,7 @@ export default function SuccessNotificationModal() {
   const modalContent = (
     <div className="fixed inset-0 z-[100] flex items-center justify-center">
       {/* Backdrop */}
-      <div className="absolute inset-0 bg-dark-950/80 backdrop-blur-sm" onClick={handleClose} />
+      <div className="absolute inset-0 bg-dark-950/80" onClick={handleClose} />
 
       {/* Modal */}
       <div
@@ -171,7 +171,7 @@ export default function SuccessNotificationModal() {
         aria-modal="true"
         aria-labelledby="success-modal-title"
         tabIndex={-1}
-        className="relative mx-4 w-full max-w-sm overflow-hidden rounded-3xl border border-dark-700/50 bg-dark-900 shadow-2xl"
+        className="relative mx-4 w-full max-w-sm overflow-hidden rounded-3xl bg-dark-900"
         style={{
           marginBottom: safeBottom ? `${safeBottom}px` : undefined,
         }}
@@ -299,7 +299,7 @@ export default function SuccessNotificationModal() {
             {isSubscription && (
               <button
                 onClick={isConnectionNext ? handleGoToConnection : handleGoToSubscription}
-                className="flex w-full items-center justify-center gap-2 rounded-xl bg-cta-500 py-3.5 font-bold text-on-cta shadow-lg shadow-cta-500/25 transition-colors hover:bg-cta-400 active:bg-cta-600"
+                className="flex w-full items-center justify-center gap-2 rounded-xl bg-cta-500 py-3.5 font-bold text-on-cta transition-colors hover:bg-cta-400 active:bg-cta-600"
               >
                 <RocketIcon className="h-8 w-8" />
                 <span>
@@ -313,7 +313,7 @@ export default function SuccessNotificationModal() {
             {isBalanceTopup && (
               <button
                 onClick={handleGoToBalance}
-                className="flex w-full items-center justify-center gap-2 rounded-xl bg-success-500 py-3.5 font-bold text-white shadow-lg shadow-success-500/25 transition-colors hover:bg-success-400 active:bg-success-600"
+                className="flex w-full items-center justify-center gap-2 rounded-xl bg-success-500 py-3.5 font-bold text-white transition-colors hover:bg-success-400 active:bg-success-600"
               >
                 <WalletIcon className="h-8 w-8" />
                 <span>{t('successNotification.goToBalance', 'Go to Balance')}</span>
@@ -323,7 +323,7 @@ export default function SuccessNotificationModal() {
             {isDevicesPurchased && (
               <button
                 onClick={handleGoToSubscription}
-                className="flex w-full items-center justify-center gap-2 rounded-xl bg-cta-500 py-3.5 font-bold text-on-cta shadow-lg shadow-cta-500/25 transition-colors hover:bg-cta-400 active:bg-cta-600"
+                className="flex w-full items-center justify-center gap-2 rounded-xl bg-cta-500 py-3.5 font-bold text-on-cta transition-colors hover:bg-cta-400 active:bg-cta-600"
               >
                 <DevicesIcon className="h-8 w-8" />
                 <span>{t('successNotification.goToSubscription', 'Go to Subscription')}</span>
@@ -333,7 +333,7 @@ export default function SuccessNotificationModal() {
             {isTrafficPurchased && (
               <button
                 onClick={handleGoToSubscription}
-                className="flex w-full items-center justify-center gap-2 rounded-xl bg-success-500 py-3.5 font-bold text-white shadow-lg shadow-success-500/25 transition-colors hover:bg-success-400 active:bg-success-600"
+                className="flex w-full items-center justify-center gap-2 rounded-xl bg-success-500 py-3.5 font-bold text-white transition-colors hover:bg-success-400 active:bg-success-600"
               >
                 <TrafficIcon className="h-8 w-8" />
                 <span>{t('successNotification.goToSubscription', 'Go to Subscription')}</span>

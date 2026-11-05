@@ -40,27 +40,27 @@ const sizeClasses: Record<BentoSize, string> = {
 };
 
 const baseClasses = `
-  bento-card
-  rounded-[var(--bento-radius)]
-  p-[var(--bento-padding)]
-  bg-dark-900/70
-  border border-dark-700/40
-  duration-300 ease-smooth
-  transition-[border-color,background-color,box-shadow,transform]
+ bento-card
+ rounded-[var(--bento-radius)]
+ p-[var(--bento-padding)]
+ bg-dark-900/70
+ 
+ duration-300 ease-smooth
+ transition-[border-color,background-color,box-shadow,transform]
 `;
 
 const hoverClasses = `
-  cursor-pointer
-  hover:bg-dark-800/60
-  hover:border-dark-600/50
-  hover:shadow-lg
-  hover:scale-[1.01]
-  active:scale-[0.99]
+ cursor-pointer
+ hover:bg-dark-800/60
+ 
+ 
+ hover:scale-[1.01]
+ active:scale-[0.99]
 `;
 
 const glowClasses = `
-  hover:shadow-glow
-  hover:border-accent-500/30
+ 
+ 
 `;
 
 export const BentoCard = forwardRef<HTMLDivElement, BentoCardProps>((props, ref) => {

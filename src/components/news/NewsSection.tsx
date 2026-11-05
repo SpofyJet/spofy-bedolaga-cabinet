@@ -55,14 +55,12 @@ const CategoryBadge = memo(function CategoryBadge({
       style={{
         color: c,
         background: `${c}15`,
-        border: `1px solid ${c}30`,
       }}
     >
       <span
         className="h-1.5 w-1.5 animate-pulse rounded-full"
         style={{
           background: c,
-          boxShadow: `0 0 8px ${c}`,
         }}
       />
       {category}
@@ -82,7 +80,6 @@ const TagBadge = memo(function TagBadge({ text, color }: TagBadgeProps) {
       className="inline-block rounded px-2 py-0.5 font-mono text-[13px] font-bold"
       style={{
         color: c,
-        border: `1px solid ${c}33`,
         background: `${c}11`,
       }}
     >
@@ -114,8 +111,8 @@ const FilterTabs = memo(function FilterTabs({ categories, active, onChange }: Fi
         className={cn(
           'min-h-[44px] rounded-lg px-4 py-2.5 text-xs font-semibold tracking-wide transition-all duration-300',
           active === ''
-            ? 'border border-accent-400 bg-accent-400 text-dark-950'
-            : 'border border-dark-700 bg-dark-800 text-dark-400 hover:border-accent-400/30 hover:text-accent-400',
+            ? 'bg-accent-400 text-dark-950'
+            : 'bg-dark-800 text-dark-400 hover:text-accent-400',
         )}
       >
         {t('news.filterAll')}
@@ -134,8 +131,8 @@ const FilterTabs = memo(function FilterTabs({ categories, active, onChange }: Fi
             className={cn(
               'min-h-[44px] rounded-lg px-4 py-2.5 text-xs font-semibold tracking-wide transition-all duration-300',
               isActive
-                ? 'border border-accent-400 bg-accent-400 text-dark-950'
-                : 'border border-dark-700 bg-dark-800 text-dark-400 hover:border-accent-400/30 hover:text-accent-400',
+                ? 'bg-accent-400 text-dark-950'
+                : 'bg-dark-800 text-dark-400 hover:text-accent-400',
             )}
           >
             {cat}
@@ -181,14 +178,6 @@ const FeaturedCard = memo(function FeaturedCard({ item, onClick }: FeaturedCardP
     >
       <div className="relative flex min-h-[220px] flex-col justify-between overflow-hidden rounded-[15px] bg-dark-900 p-7 sm:p-10">
         {/* Corner decoration */}
-        <div
-          className="pointer-events-none absolute right-0 top-0 h-[200px] w-[200px]"
-          style={{
-            background:
-              'radial-gradient(circle at top right, rgba(var(--color-accent-400), 0.08), transparent 70%)',
-          }}
-        />
-
         {/* Shimmer top border */}
         <div
           className="absolute -top-px left-[20%] right-[20%] h-px"
@@ -269,14 +258,6 @@ const NewsCard = memo(function NewsCard({ item, index, onClick }: NewsCardProps)
       onClick={onClick}
     >
       <div className="relative flex h-full min-h-[210px] flex-col justify-between overflow-hidden rounded-[13px] bg-dark-900 p-7">
-        {/* Subtle corner glow on hover */}
-        <div
-          className="pointer-events-none absolute -bottom-5 -right-5 h-[100px] w-[100px] opacity-0 transition-opacity duration-500 group-hover:opacity-100"
-          style={{
-            background: `radial-gradient(circle, ${color}08, transparent 70%)`,
-          }}
-        />
-
         <div>
           <div className="mb-3.5 flex items-center gap-2.5">
             <span
@@ -287,7 +268,6 @@ const NewsCard = memo(function NewsCard({ item, index, onClick }: NewsCardProps)
                 className="h-[5px] w-[5px] rounded-full"
                 style={{
                   background: color,
-                  boxShadow: `0 0 6px ${color}80`,
                 }}
               />
               {item.category}
@@ -403,7 +383,7 @@ export default function NewsSection() {
   }
 
   return (
-    <section className="relative overflow-hidden rounded-2xl bg-dark-850/80 backdrop-blur-xl">
+    <section className="relative overflow-hidden rounded-2xl bg-dark-850/80">
       <div className="px-5 py-8 sm:px-6 sm:py-10">
         {/* Header */}
         <motion.div
@@ -455,7 +435,7 @@ export default function NewsSection() {
           >
             <button
               onClick={handleLoadMore}
-              className="min-h-[44px] rounded-xl border border-dark-700 bg-transparent px-8 py-3 text-[13px] font-semibold tracking-wide text-dark-400 transition-all duration-300 hover:border-accent-400/30 hover:text-accent-400"
+              className="min-h-[44px] rounded-xl bg-transparent px-8 py-3 text-[13px] font-semibold tracking-wide text-dark-400 transition-all duration-300 hover:text-accent-400"
             >
               {t('news.loadMore')}
             </button>

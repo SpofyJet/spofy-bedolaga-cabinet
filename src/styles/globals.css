@@ -340,14 +340,6 @@
     overflow-wrap: break-word;
     /* Цифры одной ширины: даты, гигабайты и цены не прыгают и стоят в столбик. */
     font-variant-numeric: tabular-nums;
-    /* Мягкое синее свечение у верхнего края: без него ровный тёмно-синий фон
-       выглядел тускло. Прокручивается вместе со страницей (fixed на iOS не работает). */
-    background-image: radial-gradient(
-      1100px 640px at 50% -220px,
-      rgba(var(--color-accent-500), 0.22),
-      transparent 72%
-    );
-    background-repeat: no-repeat;
   }
 
   /* Иконка в гибком ряду не сжимается: рядом с длинным текстом (почта в
@@ -389,11 +381,6 @@
   /* Light theme - Champagne */
   .light body {
     @apply bg-champagne-200 font-sans text-champagne-900 antialiased;
-    background-image: radial-gradient(
-      1100px 640px at 50% -220px,
-      rgba(var(--color-accent-500), 0.1),
-      transparent 72%
-    );
     overscroll-behavior-y: contain;
     -webkit-overflow-scrolling: touch;
   }
@@ -468,7 +455,6 @@
   .light .on-primary:hover,
   .light .on-primary:active {
     background-color: rgb(11, 31, 59);
-    --tw-ring-color: rgb(11, 31, 59);
     --color-dark-50: 240, 247, 255;
     --color-dark-100: 240, 247, 255;
     --color-dark-200: 217, 230, 246;
@@ -487,6 +473,11 @@
   /* В тёмной теме та же роль — ступень выше соседних карточек. */
   .dark .on-primary {
     background-color: rgb(var(--color-dark-800));
+  }
+
+  /* Без обводки карточку отделяет только заливка: в светлой теме она сплошная. */
+  .light .bg-dark-900\/70:not(.on-primary) {
+    background-color: rgb(var(--color-dark-900));
   }
 
   /* Custom scrollbar - Dark */
@@ -536,17 +527,10 @@ img.twemoji {
   /* ========== BENTO DESIGN SYSTEM ========== */
 
   .bento-card {
-    /* Панель «пульта»: слоистый градиент вместо плоского заливки,
-       hairline-граница + верхний блик. Светлая тема переопределяет ниже. */
-    background:
-      linear-gradient(180deg, rgba(255, 255, 255, 0.028), rgba(255, 255, 255, 0) 42%),
-      rgb(var(--color-dark-900) / 0.72);
-    border: 1px solid rgba(148, 163, 184, 0.1);
+    /* Плоская панель: без обводки, блика и тени. Светлая тема — ниже. */
+    background: rgb(var(--color-dark-900) / 0.72);
     border-radius: var(--bento-radius);
     padding: var(--bento-padding);
-    box-shadow:
-      inset 0 1px 0 0 rgba(255, 255, 255, 0.05),
-      0 1px 2px rgba(0, 0, 0, 0.2);
     /* Stagger animation support */
     animation: bentoFadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
     animation-delay: calc(var(--stagger, 0) * 50ms);
@@ -611,28 +595,7 @@ img.twemoji {
   }
 
   .bento-card-hover:hover {
-    @apply border-dark-600/50 bg-dark-800/60 shadow-lg;
-    transform: translateY(-2px) translateZ(0);
-    /* Intensify Glass Border & Add Top Spotlight */
-    box-shadow:
-      inset 0 1px 0 0 rgba(255, 255, 255, 0.1),
-      0 10px 40px -10px rgba(0, 0, 0, 0.5);
-  }
-
-  /* CSS Spotlight Effect via pseudo-element */
-  .bento-card-hover::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(circle at top, rgba(255, 255, 255, 0.06), transparent 60%);
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    pointer-events: none;
-    z-index: 10;
-  }
-
-  .bento-card-hover:hover::after {
-    opacity: 1;
+    @apply bg-dark-800/60;
   }
 
   .bento-card-hover:active {
@@ -649,8 +612,7 @@ img.twemoji {
   }
 
   .bento-card-glow:hover {
-    @apply border-accent-500/30 shadow-glow;
-    transform: translateY(-2px) translateZ(0);
+    @apply bg-dark-800/60;
   }
 
   .bento-card-glow:active {
@@ -678,9 +640,7 @@ img.twemoji {
   }
 
   .light .bento-card {
-    @apply border-champagne-300/50 bg-champagne-50/90 shadow-sm;
-    /* Light Theme Glass Border */
-    box-shadow: inset 0 1px 0 0 rgba(0, 0, 0, 0.03);
+    @apply bg-champagne-50/90;
   }
 
   @media (min-width: 1024px) {
@@ -689,32 +649,17 @@ img.twemoji {
     }
   }
 
-  .light .bento-card-hover:hover {
-    @apply border-champagne-400/50 bg-champagne-50 shadow-md;
-    transform: translateY(-2px) translateZ(0);
-    /* Intensify Light Theme Glass Border */
-    box-shadow:
-      inset 0 1px 0 0 rgba(0, 0, 0, 0.06),
-      0 10px 40px -10px rgba(160, 139, 94, 0.15);
-  }
-
-  /* Adjust spotlight for light theme to be a warm glow */
-  .light .bento-card-hover::after {
-    background: radial-gradient(circle at top, rgba(255, 253, 249, 0.8), transparent 70%);
-  }
-
+  .light .bento-card-hover:hover,
   .light .bento-card-glow:hover {
-    @apply border-accent-400/40 shadow-lg;
-    transform: translateY(-2px) translateZ(0);
+    @apply bg-champagne-50;
   }
 
   /* ========== DARK THEME COMPONENTS (default) ========== */
 
   /* Cards - Dark (unified style) */
   .card {
-    @apply border border-dark-700/40 bg-dark-900/70 p-5 transition-colors duration-200 sm:p-6;
+    @apply bg-dark-900/70 p-5 transition-colors duration-200 sm:p-6;
     border-radius: var(--bento-radius);
-    box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.05);
   }
 
   @media (min-width: 1024px) {
@@ -724,11 +669,11 @@ img.twemoji {
   }
 
   .card-hover {
-    @apply card cursor-pointer hover:border-dark-600/50 hover:bg-dark-800/60 active:scale-[0.98];
+    @apply card cursor-pointer hover:bg-dark-800/60 active:scale-[0.98];
   }
 
   .card-glow {
-    @apply card cursor-pointer hover:border-accent-500/30 hover:shadow-glow;
+    @apply card cursor-pointer hover:bg-dark-800/60;
   }
 
   .card-animated {
@@ -737,7 +682,7 @@ img.twemoji {
 
   /* Glass effect - Dark (optimized for mobile) */
   .glass {
-    @apply border border-dark-700/30 bg-dark-900/80;
+    @apply bg-dark-900/80;
   }
 
   /* Ярлык «На экран Домой» (standalone): мобильная шапка продолжается под
@@ -749,14 +694,7 @@ img.twemoji {
      меняется. */
   @media (display-mode: standalone) {
     .glass.app-mobile-header {
-      @apply border-x-0 border-t-0 bg-dark-950/95;
-    }
-  }
-
-  /* Enable backdrop-blur only on desktop where it's performant */
-  @media (min-width: 1024px) {
-    .glass {
-      @apply bg-dark-900/30 backdrop-blur-xl;
+      @apply bg-dark-950/95;
     }
   }
 
@@ -776,31 +714,19 @@ img.twemoji {
   }
 
   .btn-primary {
-    @apply btn border border-accent-400/60 bg-gradient-to-b from-accent-400 to-accent-600 text-on-accent shadow-lg shadow-accent-500/30 hover:border-accent-300/70 hover:shadow-xl hover:shadow-accent-500/40 focus-visible:ring-accent-500 active:border-accent-600 active:from-accent-500 active:to-accent-700;
-    /* Тонкая верхняя бликовая линия — стеклянный объём вместо плоского заливки. */
-    box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.22),
-      0 1px 2px rgba(0, 0, 0, 0.3),
-      0 8px 24px -12px rgba(var(--color-accent-500), 0.55);
-  }
-  .btn-primary:hover {
-    box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.28),
-      0 2px 4px rgba(0, 0, 0, 0.3),
-      0 12px 32px -12px rgba(var(--color-accent-500), 0.65);
+    @apply btn bg-accent-500 text-on-accent hover:bg-accent-600 focus-visible:ring-accent-500 active:bg-accent-700;
   }
 
   .btn-secondary {
-    @apply btn border border-dark-600/60 bg-dark-800/70 text-dark-200 hover:border-dark-500/70 hover:bg-dark-700/70 hover:text-dark-100 focus-visible:ring-dark-500 active:bg-dark-600/70;
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    @apply btn bg-dark-800/70 text-dark-200 hover:bg-dark-700/70 hover:text-dark-100 focus-visible:ring-dark-500 active:bg-dark-600/70;
   }
 
   .btn-ghost {
-    @apply btn border border-dark-800/80 text-dark-400 hover:border-dark-700 hover:bg-dark-800/60 hover:text-dark-100 focus-visible:ring-dark-500;
+    @apply btn text-dark-400 hover:bg-dark-800/60 hover:text-dark-100 focus-visible:ring-dark-500;
   }
 
   .btn-danger {
-    @apply btn border border-error-500/30 bg-error-500/10 text-error-400 hover:border-error-500/50 hover:bg-error-500/20 focus-visible:ring-error-500 active:bg-error-500/30;
+    @apply btn bg-error-500/10 text-error-400 hover:bg-error-500/20 focus-visible:ring-error-500 active:bg-error-500/30;
   }
 
   /* Highlighted button for onboarding */
@@ -810,12 +736,12 @@ img.twemoji {
 
   /* Inputs - Dark */
   .input {
-    @apply w-full rounded-xl border border-dark-700/50 bg-dark-800/50 px-4 py-3 text-sm text-dark-100 placeholder-dark-500 duration-200 focus:border-accent-500/50 focus:outline-none focus:ring-2 focus:ring-accent-500/20;
-    transition-property: color, background-color, border-color, box-shadow;
+    @apply w-full rounded-xl border-0 bg-dark-800/50 px-4 py-3 text-sm text-dark-100 placeholder-dark-500 duration-200 focus:bg-dark-800 focus:outline-none;
+    transition-property: color, background-color;
   }
 
   .input-error {
-    @apply input border-error-500/50 focus:border-error-500 focus:ring-error-500/20;
+    @apply input bg-error-500/10 focus:bg-error-500/15;
   }
 
   /* Remove tap highlight and focus outline on mobile */
@@ -849,23 +775,23 @@ img.twemoji {
   }
 
   .badge-success {
-    @apply badge border border-success-500/30 bg-success-500/15 text-success-400;
+    @apply badge bg-success-500/15 text-success-400;
   }
 
   .badge-warning {
-    @apply badge border border-warning-500/30 bg-warning-500/15 text-warning-400;
+    @apply badge bg-warning-500/15 text-warning-400;
   }
 
   .badge-error {
-    @apply badge border border-error-500/30 bg-error-500/15 text-error-400;
+    @apply badge bg-error-500/15 text-error-400;
   }
 
   .badge-info {
-    @apply badge border border-accent-500/30 bg-accent-500/15 text-accent-400;
+    @apply badge bg-accent-500/15 text-accent-400;
   }
 
   .badge-neutral {
-    @apply badge border border-dark-600/50 bg-dark-700/50 text-dark-300;
+    @apply badge bg-dark-700/50 text-dark-300;
   }
 
   /* Stat card - Dark */
@@ -912,9 +838,8 @@ img.twemoji {
 
   /* Cards - Light */
   .light .card {
-    @apply border-champagne-300/50 bg-champagne-50/90 p-5 shadow-sm sm:p-6;
+    @apply bg-champagne-50/90 p-5 sm:p-6;
     border-radius: var(--bento-radius);
-    box-shadow: inset 0 1px 0 0 rgba(0, 0, 0, 0.03);
   }
 
   @media (min-width: 1024px) {
@@ -924,22 +849,16 @@ img.twemoji {
   }
 
   .light .card-hover {
-    @apply hover:border-champagne-400/50 hover:bg-champagne-50 hover:shadow-md;
+    @apply hover:bg-champagne-50;
   }
 
   .light .card-glow {
-    @apply hover:border-accent-400/40 hover:shadow-lg;
+    @apply hover:bg-champagne-50;
   }
 
   /* Glass effect - Light (optimized for mobile) */
   .light .glass {
-    @apply border border-champagne-300/40 bg-champagne-50/90;
-  }
-
-  @media (min-width: 1024px) {
-    .light .glass {
-      @apply bg-champagne-50/60 backdrop-blur-xl;
-    }
+    @apply bg-champagne-50/90;
   }
 
   /* Ярлык «На экран Домой» в светлой теме — то же, что для тёмной выше: шапка
@@ -948,7 +867,7 @@ img.twemoji {
      одинаковая специфичность, и иначе стекло светлой темы перебивало бы его. */
   @media (display-mode: standalone) {
     .light .glass.app-mobile-header {
-      @apply border-x-0 border-t-0 bg-dark-950/95;
+      @apply bg-dark-950/95;
     }
   }
 
@@ -957,16 +876,8 @@ img.twemoji {
     @apply focus-visible:ring-offset-champagne-100;
   }
 
-  .light .btn-primary {
-    @apply border-champagne-600/70 bg-gradient-to-b from-champagne-600 to-champagne-800 text-white shadow-lg shadow-champagne-500/25 hover:from-champagne-500 hover:to-champagne-700 hover:shadow-xl hover:shadow-champagne-500/30 focus-visible:ring-champagne-500 active:from-champagne-700 active:to-champagne-900;
-    box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.25),
-      0 8px 24px -12px rgba(var(--color-champagne-700), 0.5);
-  }
-
   .light .btn-secondary {
-    @apply border border-champagne-300 bg-champagne-50 text-champagne-800 hover:border-champagne-400 hover:bg-champagne-100 hover:text-champagne-900 focus-visible:ring-champagne-400 active:bg-champagne-200;
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
+    @apply bg-dark-800 text-champagne-800 hover:bg-dark-800/70 hover:text-champagne-900 focus-visible:ring-champagne-400 active:bg-dark-800;
   }
 
   .light .btn-ghost {
@@ -974,7 +885,7 @@ img.twemoji {
   }
 
   .light .btn-danger {
-    @apply border border-error-200 bg-error-50 text-error-600 hover:border-error-300 hover:bg-error-100 active:bg-error-200;
+    @apply bg-error-50 text-error-600 hover:bg-error-100 active:bg-error-200;
   }
 
   .light .btn-icon {
@@ -983,11 +894,11 @@ img.twemoji {
 
   /* Inputs - Light */
   .light .input {
-    @apply rounded-xl border border-champagne-300 bg-champagne-50 text-champagne-900 placeholder-champagne-400 focus:border-accent-400 focus:ring-accent-300/30;
+    @apply rounded-xl bg-dark-800/50 text-champagne-900 placeholder-champagne-500 focus:bg-dark-800;
   }
 
   .light .input-error {
-    @apply border-error-300 focus:border-error-400 focus:ring-error-300/30;
+    @apply bg-error-50 focus:bg-error-100;
   }
 
   .light .label {
@@ -996,23 +907,23 @@ img.twemoji {
 
   /* Badge - Light */
   .light .badge-success {
-    @apply border border-success-200 bg-success-50 text-success-700;
+    @apply bg-success-50 text-success-700;
   }
 
   .light .badge-warning {
-    @apply border border-warning-200 bg-warning-50 text-warning-700;
+    @apply bg-warning-50 text-warning-700;
   }
 
   .light .badge-error {
-    @apply border border-error-200 bg-error-50 text-error-700;
+    @apply bg-error-50 text-error-700;
   }
 
   .light .badge-info {
-    @apply border border-accent-200 bg-accent-50 text-accent-700;
+    @apply bg-accent-50 text-accent-700;
   }
 
   .light .badge-neutral {
-    @apply border border-champagne-300 bg-champagne-200/50 text-champagne-700;
+    @apply bg-champagne-200/50 text-champagne-700;
   }
 
   /* Stat card - Light */
@@ -1314,21 +1225,6 @@ img.twemoji {
     @apply bg-gradient-to-r from-accent-400 to-accent-600 bg-clip-text text-transparent;
   }
 
-  /* Glow effects */
-  .glow-accent {
-    box-shadow: 0 0 20px theme("colors.accent.500 / 30%");
-  }
-
-  .glow-success {
-    box-shadow: 0 0 20px theme("colors.success.500 / 30%");
-  }
-
-  /* Blur backdrop */
-  .blur-backdrop {
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-  }
-
   /* Safe area insets for mobile bottom sheets */
   .safe-area-inset-bottom {
     padding-bottom: max(1rem, env(safe-area-inset-bottom, 0px));
@@ -1414,22 +1310,14 @@ input[type="range"]::-webkit-slider-thumb {
   width: 24px;
   height: 24px;
   border-radius: 50%;
-  background: white;
+  background: rgb(var(--color-accent-500));
   cursor: pointer;
-  border: 2px solid rgba(0, 0, 0, 0.15);
-  box-shadow:
-    0 2px 6px rgba(0, 0, 0, 0.3),
-    0 0 0 1px rgba(255, 255, 255, 0.1);
-  transition:
-    transform 0.15s ease,
-    box-shadow 0.15s ease;
+  border: 0;
+  transition: transform 0.15s ease;
 }
 
 input[type="range"]::-webkit-slider-thumb:hover {
   transform: scale(1.1);
-  box-shadow:
-    0 3px 8px rgba(0, 0, 0, 0.4),
-    0 0 0 2px rgba(255, 255, 255, 0.2);
 }
 
 input[type="range"]::-webkit-slider-thumb:active {
@@ -1448,22 +1336,14 @@ input[type="range"]::-moz-range-thumb {
   width: 24px;
   height: 24px;
   border-radius: 50%;
-  background: white;
+  background: rgb(var(--color-accent-500));
   cursor: pointer;
-  border: 2px solid rgba(0, 0, 0, 0.15);
-  box-shadow:
-    0 2px 6px rgba(0, 0, 0, 0.3),
-    0 0 0 1px rgba(255, 255, 255, 0.1);
-  transition:
-    transform 0.15s ease,
-    box-shadow 0.15s ease;
+  border: 0;
+  transition: transform 0.15s ease;
 }
 
 input[type="range"]::-moz-range-thumb:hover {
   transform: scale(1.1);
-  box-shadow:
-    0 3px 8px rgba(0, 0, 0, 0.4),
-    0 0 0 2px rgba(255, 255, 255, 0.2);
 }
 
 /* Desktop: smaller thumb */
@@ -1491,20 +1371,17 @@ input[type="checkbox"] {
   appearance: none;
   width: 1.25rem;
   height: 1.25rem;
-  border: 1.5px solid rgb(var(--color-dark-600));
+  border: 0;
   border-radius: 0.375rem;
-  background-color: rgb(var(--color-dark-700));
+  background-color: rgb(var(--color-dark-600));
   cursor: pointer;
-  transition:
-    border-color 0.15s ease,
-    background-color 0.15s ease;
+  transition: background-color 0.15s ease;
   position: relative;
   flex-shrink: 0;
 }
 
 input[type="checkbox"]:checked {
   background-color: rgb(var(--color-accent-500));
-  border-color: rgb(var(--color-accent-500));
 }
 
 input[type="checkbox"]:checked::after {
@@ -1521,12 +1398,14 @@ input[type="checkbox"]:checked::after {
 
 input[type="checkbox"]:focus {
   outline: none;
-  box-shadow: 0 0 0 2px rgba(var(--color-accent-500), 0.3);
+}
+
+input[type="checkbox"]:focus-visible {
+  box-shadow: 0 0 0 2px rgba(var(--color-accent-500), 0.5);
 }
 
 input[type="checkbox"]:hover:not(:checked) {
-  border-color: rgb(var(--color-dark-500));
-  background-color: rgb(var(--color-dark-600));
+  background-color: rgb(var(--color-dark-500));
 }
 
 /* Recharts: bars, pie sectors and dots become focusable, so clicking one draws
@@ -1585,11 +1464,10 @@ input[type="checkbox"]:hover:not(:checked) {
   outline: 2px solid rgb(var(--color-accent-500));
   outline-offset: 1px;
 }
-/* Today: accent-tinted text + subtle ring (loses to the filled "selected" look). */
+/* Today: accent-tinted bold text (loses to the filled "selected" look). */
 .rdp-dark .rdp-today:not(.rdp-outside) .rdp-day_button {
   color: rgb(var(--color-accent-400));
   font-weight: 700;
-  box-shadow: inset 0 0 0 1px rgb(var(--color-accent-500) / 0.45);
 }
 .rdp-dark .rdp-selected .rdp-day_button {
   background-color: rgb(var(--color-accent-500));
@@ -1646,20 +1524,18 @@ input[type="checkbox"]:hover:not(:checked) {
 .onboarding-spotlight {
   @apply pointer-events-auto absolute;
   border-radius: 16px;
-  box-shadow:
-    0 0 0 9999px rgba(0, 0, 0, 0.75),
-    0 0 30px rgba(59, 130, 246, 0.4);
+  box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.75);
   transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .onboarding-tooltip {
-  @apply pointer-events-auto absolute max-w-xs rounded-2xl border border-accent-500/30 bg-dark-900 p-5 shadow-xl shadow-accent-500/10 sm:max-w-sm;
+  @apply pointer-events-auto absolute max-w-xs rounded-2xl bg-dark-900 p-5 sm:max-w-sm;
   animation: scaleInBounce 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .onboarding-tooltip::before {
   content: "";
-  @apply absolute h-3 w-3 border-l border-t border-accent-500/30 bg-dark-900;
+  @apply absolute h-3 w-3 bg-dark-900;
   transform: rotate(45deg);
 }
 
@@ -1669,17 +1545,15 @@ input[type="checkbox"]:hover:not(:checked) {
 }
 
 .light .onboarding-spotlight {
-  box-shadow:
-    0 0 0 9999px rgba(0, 0, 0, 0.5),
-    0 0 30px rgba(160, 139, 94, 0.4);
+  box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.5);
 }
 
 .light .onboarding-tooltip {
-  @apply border-champagne-400/50 bg-white shadow-champagne-500/20;
+  @apply bg-white;
 }
 
 .light .onboarding-tooltip::before {
-  @apply border-champagne-400/50 bg-white;
+  @apply bg-white;
 }
 
 .onboarding-tooltip.tooltip-top::before {

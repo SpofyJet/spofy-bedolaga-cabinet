@@ -15,7 +15,7 @@ function linkButton(tone: 'primary' | 'secondary', extra?: string) {
     'inline-flex h-12 items-center justify-center gap-2 rounded-2xl px-4 text-center text-[15px] font-semibold leading-tight transition-colors active:scale-[0.98]',
     tone === 'primary'
       ? 'bg-cta-500 text-on-cta hover:bg-cta-600'
-      : 'bg-dark-800/70 text-dark-100 ring-1 ring-inset ring-dark-700/60 hover:bg-dark-700/70',
+      : 'bg-dark-800/70 text-dark-100 hover:bg-dark-700/70',
     extra,
   );
 }

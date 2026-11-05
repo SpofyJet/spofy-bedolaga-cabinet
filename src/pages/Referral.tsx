@@ -93,10 +93,8 @@ function ChoiceButton({
       onClick={onClick}
       aria-pressed={selected}
       className={cn(
-        'flex w-full items-center gap-3 rounded-2xl p-3 text-left ring-1 ring-inset transition-colors disabled:opacity-60',
-        selected
-          ? 'bg-accent-500/10 ring-accent-500/40'
-          : 'bg-dark-800/40 ring-dark-800/80 hover:bg-dark-800/70',
+        'flex w-full items-center gap-3 rounded-2xl p-3 text-left transition-colors disabled:opacity-60',
+        selected ? 'bg-accent-500/10' : 'bg-dark-800/40 hover:bg-dark-800/70',
       )}
     >
       {icon ? (
@@ -105,8 +103,8 @@ function ChoiceButton({
         <span
           aria-hidden="true"
           className={cn(
-            'flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-full border-2',
-            selected ? 'border-accent-400' : 'border-dark-600',
+            'flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-full',
+            selected ? 'bg-accent-500/20' : 'bg-dark-700',
           )}
         >
           {selected && <span className="h-2 w-2 rounded-full bg-accent-400" />}
@@ -309,10 +307,8 @@ export function ProgrammeTerms({ terms }: { terms: ReferralTerms }) {
               <li
                 key={lvl.level}
                 className={cn(
-                  'rounded-2xl p-3 ring-1 ring-inset',
-                  lvl.is_current
-                    ? 'bg-accent-500/10 ring-accent-500/40'
-                    : 'bg-dark-800/40 ring-dark-800/80',
+                  'rounded-2xl p-3',
+                  lvl.is_current ? 'bg-accent-500/10' : 'bg-dark-800/40',
                 )}
               >
                 <div className="flex flex-wrap items-center gap-2">
@@ -379,7 +375,7 @@ export function ProgrammeTerms({ terms }: { terms: ReferralTerms }) {
         )}
 
         {terms.personal_percent != null && (
-          <p className="rounded-2xl bg-warning-500/10 p-3 text-sm text-warning-300 ring-1 ring-inset ring-warning-500/25">
+          <p className="rounded-2xl bg-warning-500/10 p-3 text-sm text-warning-300">
             {t('referral.terms.personalRate', { percent: terms.personal_percent })}
           </p>
         )}
@@ -443,7 +439,7 @@ function LinkField({
         {icon}
         {label}
       </div>
-      <div className="flex min-h-12 items-center gap-2 rounded-2xl bg-dark-800/60 py-1.5 pl-4 pr-1.5 ring-1 ring-inset ring-dark-700/50">
+      <div className="flex min-h-12 items-center gap-2 rounded-2xl bg-dark-800/60 py-1.5 pl-4 pr-1.5">
         <span className="min-w-0 flex-1 truncate text-sm text-dark-100" title={value}>
           {value}
         </span>
@@ -911,7 +907,7 @@ export default function Referral() {
           {/* Ошибка сохранения обязана быть видна: без неё нажатие выглядит
               принятым, а выбор остаётся прежним. */}
           {rewardChoiceError && (
-            <p className="mt-2 rounded-2xl bg-error-500/10 p-3 text-sm text-error-400 ring-1 ring-inset ring-error-500/25">
+            <p className="mt-2 rounded-2xl bg-error-500/10 p-3 text-sm text-error-400">
               {rewardChoiceError}
             </p>
           )}
@@ -1084,7 +1080,7 @@ export default function Referral() {
           {withdrawalEnabled && withdrawalBalance && (
             <section>
               <SectionTitle>{t('referral.withdrawal.title')}</SectionTitle>
-              <div className="overflow-hidden rounded-3xl bg-dark-900/70 ring-1 ring-inset ring-dark-800/80">
+              <div className="overflow-hidden rounded-3xl bg-dark-900/70">
                 <div className="p-4 sm:p-5">
                   <Stat
                     label={t('referral.withdrawal.available')}

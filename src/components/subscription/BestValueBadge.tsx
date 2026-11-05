@@ -21,7 +21,7 @@ export function BestValueBadge({ className }: { className?: string }) {
   );
 }
 
-/** Цвет рамки выделенного периода — тот же токен, что и у отметки. */
+/** Цвет выделенного периода — тот же токен, что и у отметки. */
 export const BEST_VALUE_BORDER = 'rgba(var(--color-cta-500), 0.25)';
 
 /**
@@ -32,7 +32,5 @@ export const BEST_VALUE_BORDER = 'rgba(var(--color-cta-500), 0.25)';
  * BEST_VALUE_BORDER — там стили карточки инлайновые.
  */
 export function bestValueFrame(selected: boolean): string {
-  return selected
-    ? 'border-2 border-cta-500/25 ring-2 ring-inset ring-accent-500'
-    : 'border-2 border-cta-500/25';
+  return selected ? 'bg-accent-500/15' : '';
 }

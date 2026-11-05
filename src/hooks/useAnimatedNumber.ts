@@ -16,7 +16,7 @@ export function useAnimatedNumber(target: number, duration = 1200): number {
     const animate = (now: number) => {
       const elapsed = now - startTime;
       const progress = Math.min(elapsed / duration, 1);
-      const ease = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
+      const ease = progress === 1 ? 1 : 1 - 2 ** (-10 * progress);
       const current = start + (target - start) * ease;
       currentRef.current = current;
       setValue(current);

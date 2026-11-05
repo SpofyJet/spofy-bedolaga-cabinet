@@ -172,7 +172,7 @@ export default function RenewSubscription() {
           text={t('subscription.v10.lifetimeNoRenew', 'Продлевать её не нужно.')}
           action={
             <Link
-              className="inline-flex h-12 items-center justify-center rounded-2xl bg-dark-800/70 px-5 text-[15px] font-semibold text-dark-100 ring-1 ring-inset ring-dark-700/60 transition-colors hover:bg-dark-700/70"
+              className="inline-flex h-12 items-center justify-center rounded-2xl bg-dark-800/70 px-5 text-[15px] font-semibold text-dark-100 transition-colors hover:bg-dark-700/70"
               to={`/subscriptions/${subId}`}
             >
               {t('subscription.v10.toSubscription', 'К подписке')}
@@ -193,7 +193,7 @@ export default function RenewSubscription() {
           <DailyPausePanel subscription={subscription} subscriptionId={subId} />
           {canOpenTariffSwitch(subscription) && (
             <Link
-              className="flex h-12 w-full items-center justify-center rounded-2xl bg-dark-800/70 text-[15px] font-semibold text-dark-100 ring-1 ring-inset ring-dark-700/60 transition-colors hover:bg-dark-700/70"
+              className="flex h-12 w-full items-center justify-center rounded-2xl bg-dark-800/70 text-[15px] font-semibold text-dark-100 transition-colors hover:bg-dark-700/70"
               to={tariffSelectionPath(subId)}
             >
               {t('subscription.switchTariff.title')}
@@ -240,16 +240,16 @@ export default function RenewSubscription() {
                   className={cn(
                     'flex min-h-[64px] w-full items-center gap-3 rounded-3xl px-4 py-3 text-left transition-colors',
                     isBestValue
-                      ? `${bestValueFrame(isSelected)} ${isSelected ? 'bg-accent-500/10' : 'bg-dark-900/70'}`
+                      ? `${bestValueFrame(isSelected)} ${isSelected ? 'bg-accent-500/15' : 'bg-dark-900/70'}`
                       : isSelected
-                        ? 'bg-accent-500/10 ring-2 ring-inset ring-accent-500'
-                        : 'bg-dark-900/70 ring-1 ring-inset ring-dark-800/80 hover:bg-dark-800/50',
+                        ? 'bg-accent-500/15'
+                        : 'bg-dark-900/70 hover:bg-dark-800/50',
                   )}
                 >
                   <span
                     className={cn(
-                      'flex h-5 w-5 shrink-0 items-center justify-center rounded-full ring-2 ring-inset',
-                      isSelected ? 'bg-accent-500 ring-accent-500' : 'ring-dark-600',
+                      'flex h-5 w-5 shrink-0 items-center justify-center rounded-full',
+                      isSelected ? 'bg-accent-500' : 'bg-dark-700',
                     )}
                     aria-hidden
                   >

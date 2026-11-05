@@ -91,7 +91,7 @@ export default function Profile() {
       </h1>
 
       {/* Кто я */}
-      <div className="flex items-center gap-4 rounded-3xl bg-dark-900/70 p-4 ring-1 ring-inset ring-dark-800/80">
+      <div className="flex items-center gap-4 rounded-3xl bg-dark-900/70 p-4">
         <span className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-accent-500/15">
           {avatarUrl ? (
             <img src={avatarUrl} alt="" className="h-full w-full object-cover" />
@@ -231,7 +231,7 @@ export default function Profile() {
             haptic.impact('light');
             logout();
           }}
-          className="flex w-full items-center justify-center gap-2 rounded-2xl py-3.5 text-[15px] font-semibold text-error-400 ring-1 ring-inset ring-dark-800/80 transition-colors hover:bg-error-500/10"
+          className="flex w-full items-center justify-center gap-2 rounded-2xl py-3.5 text-[15px] font-semibold text-error-400 transition-colors hover:bg-error-500/10"
         >
           <PiSignOutDuotone className="h-5 w-5" />
           {t('nav.logout')}
@@ -245,7 +245,7 @@ function MenuGroup({ title, children }: { title: string; children: ReactNode }) 
   return (
     <section>
       <h2 className="mb-2 px-1 text-[13px] font-semibold text-dark-400">{title}</h2>
-      <div className="divide-y divide-dark-800/70 overflow-hidden rounded-3xl bg-dark-900/70 ring-1 ring-inset ring-dark-800/80">
+      <div className="divide-y divide-dark-800/70 overflow-hidden rounded-3xl bg-dark-900/70">
         {children}
       </div>
     </section>
@@ -329,7 +329,7 @@ function Segmented({
             aria-checked={active}
             onClick={() => !active && onChange(o.value)}
             className={`min-h-[44px] min-w-[44px] rounded-lg px-3 text-[13px] font-semibold transition-colors ${
-              active ? 'bg-dark-600 text-dark-50 shadow-sm' : 'text-dark-400 hover:text-dark-200'
+              active ? 'bg-dark-600 text-dark-50 ' : 'text-dark-400 hover:text-dark-200'
             }`}
           >
             {o.label}

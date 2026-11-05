@@ -517,7 +517,7 @@ export default function TopUpAmount() {
       {hasOptions && orderedOptions.length > 0 && (
         <section>
           <SectionTitle>{t('balance.paymentMethod')}</SectionTitle>
-          <div className="flex rounded-2xl bg-dark-900/70 p-1 ring-1 ring-inset ring-dark-800/80">
+          <div className="flex rounded-2xl bg-dark-900/70 p-1">
             {orderedOptions.map((opt) => {
               const active = selectedOption === opt.id;
               return (
@@ -528,9 +528,7 @@ export default function TopUpAmount() {
                   onClick={() => setSelectedOption(opt.id)}
                   className={cn(
                     'h-10 min-w-0 flex-1 truncate rounded-xl px-3 text-[13px] font-semibold transition-colors',
-                    active
-                      ? 'bg-dark-700 text-dark-50 shadow-sm'
-                      : 'text-dark-400 hover:text-dark-200',
+                    active ? 'bg-dark-700 text-dark-50' : 'text-dark-400 hover:text-dark-200',
                   )}
                 >
                   {opt.name}
@@ -563,7 +561,7 @@ export default function TopUpAmount() {
               setError(null);
             }}
             aria-describedby="payment-email-help"
-            className="mt-2 h-12 w-full rounded-2xl bg-dark-800/60 px-4 text-[15px] text-dark-50 ring-1 ring-inset ring-dark-700/60 placeholder:text-dark-500 focus:outline-none focus:ring-2 focus:ring-accent-500/60"
+            className="mt-2 h-12 w-full rounded-2xl bg-dark-800/60 px-4 text-[15px] text-dark-50 placeholder:text-dark-500 focus:outline-none focus:ring-2 focus:ring-accent-500/60"
           />
           <p id="payment-email-help" className="mt-2 px-1 text-[13px] leading-snug text-dark-400">
             {t('balance.paymentEmailHelp')}
@@ -581,10 +579,8 @@ export default function TopUpAmount() {
         </label>
         <div
           className={cn(
-            'relative mt-2 rounded-2xl bg-dark-800/60 transition-shadow',
-            isInputFocused
-              ? 'ring-2 ring-inset ring-accent-500/60'
-              : 'ring-1 ring-inset ring-dark-700/60',
+            'relative mt-2 rounded-2xl transition-colors',
+            isInputFocused ? 'bg-dark-800' : 'bg-dark-800/60',
           )}
         >
           <input
@@ -655,7 +651,7 @@ export default function TopUpAmount() {
                   className={cn(
                     'h-10 min-w-0 truncate rounded-xl px-1 text-[13px] font-semibold transition-colors',
                     isSelected
-                      ? 'bg-accent-500/15 text-accent-400 ring-1 ring-inset ring-accent-500/50'
+                      ? 'bg-accent-500/15 text-accent-400'
                       : 'bg-dark-800/60 text-dark-200 hover:bg-dark-800',
                   )}
                 >
@@ -723,7 +719,7 @@ export default function TopUpAmount() {
                     key={alt.id}
                     type="button"
                     onClick={() => goToAlternativeMethod(alt.id)}
-                    className="flex h-10 items-center gap-2 rounded-xl bg-dark-800/60 pl-1.5 pr-3 text-[13px] font-semibold text-dark-100 ring-1 ring-inset ring-dark-700/60 transition-colors hover:bg-dark-800"
+                    className="flex h-10 items-center gap-2 rounded-xl bg-dark-800/60 pl-1.5 pr-3 text-[13px] font-semibold text-dark-100 transition-colors hover:bg-dark-800"
                   >
                     <PaymentMethodIcon
                       method={spofyPaymentIcon(alt.id)}
@@ -778,7 +774,7 @@ export default function TopUpAmount() {
           </Button>
 
           <div className="flex items-center gap-2">
-            <div className="min-w-0 flex-1 rounded-xl bg-dark-800/60 px-3 py-2.5 ring-1 ring-inset ring-dark-700/60">
+            <div className="min-w-0 flex-1 rounded-xl bg-dark-800/60 px-3 py-2.5">
               <p className="truncate text-xs text-dark-400">{paymentUrl}</p>
             </div>
             <button

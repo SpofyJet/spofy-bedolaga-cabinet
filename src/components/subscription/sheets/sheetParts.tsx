@@ -36,7 +36,7 @@ export function SheetNote({
 }
 
 const stepBtn =
-  'flex h-12 w-12 items-center justify-center rounded-2xl bg-dark-800/70 text-dark-100 ring-1 ring-inset ring-dark-700/60 transition-colors hover:bg-dark-700/70 active:scale-95 disabled:opacity-40';
+  'flex h-12 w-12 items-center justify-center rounded-2xl bg-dark-800/70 text-dark-100 transition-colors hover:bg-dark-700/70 active:scale-95 disabled:opacity-40';
 
 /** Счётчик «− N +» с подписью под числом. */
 export function Stepper({
@@ -59,7 +59,7 @@ export function Stepper({
   incrementLabel: string;
 }) {
   return (
-    <div className="flex items-center justify-between gap-4 rounded-3xl bg-dark-800/40 p-3 ring-1 ring-inset ring-dark-800/80">
+    <div className="flex items-center justify-between gap-4 rounded-3xl bg-dark-800/40 p-3">
       <button
         type="button"
         onClick={onDecrement}
