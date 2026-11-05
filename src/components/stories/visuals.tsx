@@ -5,7 +5,6 @@ import {
   PiPowerBold,
   PiArrowsClockwiseBold,
   PiCaretRightBold,
-  PiGearSixFill,
   PiCellSignalFullBold,
   PiDeviceMobileFill,
   PiLaptopFill,
@@ -99,7 +98,7 @@ function Install({ accent }: VisualProps) {
           </span>
         </span>
         <span
-          className="rounded-full px-3 py-1.5 text-xs font-bold text-white"
+          className="rounded-full px-3 py-1.5 text-xs font-bold text-[#0B1F3B]"
           style={{ background: accent }}
         >
           {t('stories.ui.get')}
@@ -130,15 +129,10 @@ function AddSub({ accent }: VisualProps) {
   const { t } = useTranslation();
   return (
     <Panel className="space-y-3 p-4">
-      <div className="text-xs font-semibold uppercase tracking-wider text-white/50">
-        {t('stories.ui.step2')}
-      </div>
+      <div className="text-xs font-semibold text-white/50">{t('stories.ui.step2')}</div>
       <div
-        className="flex items-center justify-center gap-2 rounded-2xl py-4 text-base font-bold text-white"
-        style={{
-          background: accent,
-          boxShadow: `0 0 0 6px ${accent}33, 0 14px 30px -10px ${accent}`,
-        }}
+        className="flex items-center justify-center gap-2 rounded-2xl py-4 text-base font-bold text-[#0B1F3B]"
+        style={{ background: accent }}
       >
         <PiPlusBold className="h-4 w-4" /> {t('stories.ui.addToIncy')}
       </div>
@@ -161,10 +155,10 @@ function Power({ accent }: VisualProps) {
         </Row>
       </Panel>
       <span
-        className="flex h-28 w-28 items-center justify-center rounded-full text-white"
+        className="flex h-28 w-28 items-center justify-center rounded-full text-[#0B1F3B]"
         style={{
-          background: `radial-gradient(circle at 50% 35%, ${accent}, ${accent}aa)`,
-          boxShadow: `0 0 0 10px ${accent}22, 0 0 0 22px ${accent}11, 0 20px 50px -10px ${accent}`,
+          background: accent,
+          boxShadow: `0 0 0 10px ${accent}22, 0 0 0 22px ${accent}11`,
         }}
       >
         <PiPowerBold className="h-12 w-12" />
@@ -182,7 +176,7 @@ function Refresh({ accent }: VisualProps) {
       <div className="flex items-center justify-between px-1.5 py-1">
         <span className="text-[15px] font-bold text-white">Spofy VPN</span>
         <span
-          className="flex h-10 w-10 items-center justify-center rounded-full text-white"
+          className="flex h-10 w-10 items-center justify-center rounded-full text-[#0B1F3B]"
           style={{ background: accent, boxShadow: `0 0 0 6px ${accent}33` }}
         >
           <PiArrowsClockwiseBold className="h-5 w-5" />
@@ -210,13 +204,9 @@ function ResetPath({ accent }: VisualProps) {
         const last = i === steps.length - 1;
         return (
           <Row key={label} accent={last ? '#F43F5E' : accent} highlight={last}>
-            {i === 0 ? (
-              <PiGearSixFill className="h-5 w-5 text-white/70" />
-            ) : (
-              <span className="flex h-5 w-5 items-center justify-center text-xs font-bold text-white/50">
-                {i + 1}
-              </span>
-            )}
+            <span className="flex h-5 w-5 items-center justify-center text-xs font-bold text-white/50">
+              {i + 1}
+            </span>
             <span className={cn('flex-1', last && 'text-rose-300')}>{label}</span>
             <PiCaretRightBold className="h-4 w-4 text-white/50" />
           </Row>
@@ -241,7 +231,7 @@ function Servers({ accent }: VisualProps) {
           <span className="flex-1">{s.name}</span>
           {s.best && (
             <span
-              className="rounded-full px-2 py-0.5 text-[11px] font-bold text-white"
+              className="rounded-full px-2 py-0.5 text-[13px] font-bold text-[#0B1F3B]"
               style={{ background: accent }}
             >
               {t('stories.ui.best')}
@@ -281,7 +271,7 @@ function Bypass({ accent }: VisualProps) {
       </Panel>
       <Panel className="p-2.5">
         <div className="flex items-center gap-2.5 px-1 text-xs leading-snug text-white/70">
-          <span className="rounded-md bg-white/10 px-1.5 py-0.5 text-[10px] font-bold uppercase text-white/80">
+          <span className="rounded-md bg-white/10 px-1.5 py-0.5 text-[13px] font-bold text-white/80">
             Android
           </span>
           {t('stories.ui.androidProfiles')}
@@ -302,7 +292,7 @@ function Support({ accent }: VisualProps) {
         <div className="mt-0.5 text-[15px] font-medium text-white">{t('support.chat.welcome')}</div>
       </div>
       <div
-        className="ml-auto max-w-[80%] rounded-2xl rounded-br-md px-3.5 py-2.5 text-[15px] font-medium text-white"
+        className="ml-auto max-w-[80%] rounded-2xl rounded-br-md px-3.5 py-2.5 text-[15px] font-medium text-[#0B1F3B]"
         style={{ background: accent }}
       >
         {t('stories.ui.userMessage')}
@@ -349,7 +339,7 @@ function Web({ accent }: VisualProps) {
         <PiTelegramLogoFill className="h-5 w-5" /> {t('stories.ui.loginTelegram')}
       </div>
       <div
-        className="flex items-center justify-center gap-2 rounded-2xl py-3.5 text-[15px] font-bold text-white"
+        className="flex items-center justify-center gap-2 rounded-2xl py-3.5 text-[15px] font-bold text-[#0B1F3B]"
         style={{ background: accent }}
       >
         <PiPowerBold className="h-4 w-4" /> {t('dashboard.quick.connect')}

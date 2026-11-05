@@ -22,7 +22,7 @@ const VALUE =
   'mt-3 truncate text-base font-bold leading-tight tracking-tight text-dark-50 min-[400px]:text-lg';
 const CAPTION = 'mt-0.5 text-xs leading-snug';
 const ACTION =
-  'mt-3 flex h-10 items-center justify-center gap-1.5 whitespace-nowrap rounded-xl px-2 text-[13px] font-semibold transition-colors min-[360px]:text-sm';
+  'mt-3 flex h-11 items-center justify-center gap-1.5 whitespace-nowrap rounded-xl px-2 text-[13px] font-semibold transition-colors min-[360px]:text-sm';
 const ACTION_HOT = 'bg-cta-500 text-on-cta hover:bg-cta-600';
 const ACTION_QUIET = 'bg-dark-700/60 text-dark-100 hover:bg-dark-700';
 
@@ -121,10 +121,13 @@ export default function DevicesTrafficCard({
 
   return (
     <section
-      className="rounded-3xl bg-dark-900/70 bg-gradient-to-b from-accent-400/[0.07] to-transparent ring-1 ring-inset ring-accent-300/[0.10] light:from-transparent light:ring-dark-800/80 p-4"
+      className="rounded-3xl bg-dark-900/70 ring-1 ring-inset ring-accent-300/[0.10] light:ring-dark-800/80 p-4"
       aria-label={t('dashboard.devicesTraffic.title')}
     >
-      <Link to="/subscription" className="group mb-4 flex items-center justify-between gap-2">
+      <Link
+        to="/subscription"
+        className="group -my-2.5 mb-1.5 flex min-h-[44px] items-center justify-between gap-2"
+      >
         <h2 className="text-base font-bold tracking-tight text-dark-50">
           {t('dashboard.devicesTraffic.title')}
         </h2>
@@ -155,7 +158,7 @@ export default function DevicesTrafficCard({
                   );
                 if (tile.kind === 'more')
                   return (
-                    <span key={i} className={cn(TILE, TILE_OK, 'text-[11px] font-bold')}>
+                    <span key={i} className={cn(TILE, TILE_OK, 'text-[13px] font-bold')}>
                       +{tile.count}
                     </span>
                   );

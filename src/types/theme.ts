@@ -39,17 +39,17 @@ export const DEFAULT_ENABLED_THEMES: EnabledThemes = {
 
 // Default theme colors
 export const DEFAULT_THEME_COLORS: ThemeColors = {
-  accent: '#3b82f6',
+  accent: '#2563eb',
 
-  darkBackground: '#070d1c',
-  darkSurface: '#1c2740',
-  darkText: '#f1f5f9',
-  darkTextSecondary: '#94a3b8',
+  darkBackground: '#0b1f3b',
+  darkSurface: '#1a3662',
+  darkText: '#f0f7ff',
+  darkTextSecondary: '#a9c2e3',
 
-  lightBackground: '#e9ecf1',
+  lightBackground: '#f0f7ff',
   lightSurface: '#ffffff',
-  lightText: '#11141b',
-  lightTextSecondary: '#5f6877',
+  lightText: '#0b1f3b',
+  lightTextSecondary: '#3d5a80',
 
   success: '#22c55e',
   warning: '#f59e0b',

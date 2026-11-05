@@ -328,7 +328,7 @@ function Segmented({
             role="radio"
             aria-checked={active}
             onClick={() => !active && onChange(o.value)}
-            className={`rounded-lg px-3 py-1.5 text-[13px] font-semibold transition-colors ${
+            className={`min-h-[44px] min-w-[44px] rounded-lg px-3 text-[13px] font-semibold transition-colors ${
               active ? 'bg-dark-600 text-dark-50 shadow-sm' : 'text-dark-400 hover:text-dark-200'
             }`}
           >

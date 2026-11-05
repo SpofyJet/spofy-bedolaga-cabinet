@@ -370,7 +370,7 @@ export function AppHeader({
                 {isAdmin && (
                   <>
                     <div className="divider my-3" />
-                    <div className="px-4 py-1 text-xs font-medium uppercase tracking-wider text-dark-500">
+                    <div className="px-4 py-1 text-xs font-medium text-dark-500">
                       {t('admin.nav.title')}
                     </div>
                     <Link

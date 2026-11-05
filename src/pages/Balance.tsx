@@ -17,7 +17,7 @@ import {
   PiPlusBold,
   PiReceiptDuotone,
   PiShieldCheckDuotone,
-  PiTicketDuotone,
+  PiTicketBold,
   PiUsersThreeDuotone,
   PiWarningCircleDuotone,
   PiWarningDuotone,
@@ -348,7 +348,7 @@ export default function Balance() {
             {t('balance.topUp')}
           </Button>
           <Button tone="secondary" onClick={openPromo} aria-expanded={promoVisible}>
-            <PiTicketDuotone className="h-5 w-5" aria-hidden />
+            <PiTicketBold className="h-4 w-4" aria-hidden />
             {t('balance.promocode.title')}
           </Button>
         </div>
@@ -594,7 +594,7 @@ function TransactionRow({ tx }: { tx: Transaction }) {
   const isZero = tx.amount_rubles === 0;
   const isPositive = tx.amount_rubles > 0;
   const sign = isZero ? '' : isPositive ? '+' : '−';
-  const colorClass = isZero ? 'text-dark-400' : isPositive ? 'text-success-400' : 'text-error-400';
+  const colorClass = isZero ? 'text-dark-400' : isPositive ? 'text-success-400' : 'text-dark-100';
   const date = txDate(tx.created_at);
   const amount = Math.abs(tx.amount_rubles);
   // «Пополнение · Пополнение» не повторяем: тип — только если описание о другом.

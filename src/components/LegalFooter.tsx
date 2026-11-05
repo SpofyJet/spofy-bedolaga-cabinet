@@ -23,7 +23,7 @@ export default function LegalFooter({ className = '' }: LegalFooterProps) {
     // Ссылки разведены зазором, без «·» между ними: на узком экране ряд
     // переносится, и точка оставалась висеть в конце первой строки.
     <footer
-      className={`flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-center text-[11px] leading-relaxed text-dark-500 ${className}`}
+      className={`flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-center text-[13px] leading-relaxed text-dark-500 ${className}`}
     >
       {LINKS.map((link) => (
         <a

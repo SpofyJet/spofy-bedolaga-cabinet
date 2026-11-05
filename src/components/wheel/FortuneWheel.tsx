@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, memo } from 'react';
 import type { WheelPrize } from '../../api/wheel';
+import { prizeGlyph } from './PrizeGlyph';
 
 const SIZE = 400;
 const CENTER = SIZE / 2;
@@ -48,12 +49,11 @@ interface FortuneWheelProps {
 
 const FALLBACK_COLORS = [
   '#2563EB',
-  '#4F46E5',
-  '#0284C7',
-  '#0F766E',
-  '#7C3AED',
-  '#059669',
-  '#D97706',
+  '#0B1F3B',
+  '#1E40AF',
+  '#2563EB',
+  '#0B1F3B',
+  '#1E40AF',
   '#1D4ED8',
 ];
 const LED_COUNT = 24;
@@ -165,7 +165,7 @@ const FortuneWheel = memo(function FortuneWheel({
           <path
             d="M20 48 C 14 38, 3 26, 3 17 A 17 17 0 0 1 37 17 C 37 26, 26 38, 20 48 Z"
             fill="#FFFFFF"
-            stroke="#0F172A"
+            stroke="#0B1F3B"
             strokeOpacity="0.25"
             strokeWidth="1.5"
           />
@@ -178,7 +178,7 @@ const FortuneWheel = memo(function FortuneWheel({
           <defs>
             <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="100%">
               <stop offset="0%" stopColor="#334155" />
-              <stop offset="50%" stopColor="#0F172A" />
+              <stop offset="50%" stopColor="#0B1F3B" />
               <stop offset="100%" stopColor="#1E293B" />
             </linearGradient>
             <radialGradient id="hubGrad" cx="35%" cy="30%" r="75%">
@@ -192,8 +192,8 @@ const FortuneWheel = memo(function FortuneWheel({
               <stop offset="100%" stopColor="#000000" stopOpacity="0.22" />
             </radialGradient>
             <radialGradient id="ledGlowGrad">
-              <stop offset="0%" stopColor="#E0F2FE" stopOpacity="0.95" />
-              <stop offset="100%" stopColor="#E0F2FE" stopOpacity="0" />
+              <stop offset="0%" stopColor="#DBEAFE" stopOpacity="0.95" />
+              <stop offset="100%" stopColor="#DBEAFE" stopOpacity="0" />
             </radialGradient>
           </defs>
 
@@ -222,17 +222,29 @@ const FortuneWheel = memo(function FortuneWheel({
               const label = labels?.[index];
               const emojiY = center - emojiRadius;
               const labelY = center - labelRadius;
+              const Glyph = prizeGlyph(prize.prize_type, prize.rarity);
+              const glyphSize = dense ? 22 : 28;
               return (
                 <g key={`content-${prize.id}`} transform={`rotate(${mid} ${center} ${center})`}>
-                  <text
-                    x={center}
-                    y={emojiY}
-                    textAnchor="middle"
-                    dominantBaseline="middle"
-                    fontSize={dense ? 22 : 28}
-                  >
-                    {prize.emoji}
-                  </text>
+                  {Glyph ? (
+                    <Glyph
+                      aria-hidden
+                      x={center - glyphSize / 2}
+                      y={emojiY - glyphSize / 2}
+                      size={glyphSize}
+                      color="#FFFFFF"
+                    />
+                  ) : (
+                    <text
+                      x={center}
+                      y={emojiY}
+                      textAnchor="middle"
+                      dominantBaseline="middle"
+                      fontSize={glyphSize}
+                    >
+                      {prize.emoji}
+                    </text>
+                  )}
                   {label && (
                     <text
                       x={center}
@@ -246,7 +258,9 @@ const FortuneWheel = memo(function FortuneWheel({
                       strokeWidth="3"
                       paintOrder="stroke"
                       letterSpacing="0.01em"
-                      transform={`rotate(90 ${center} ${labelY})`}
+                      // Подпись идёт вдоль радиуса: на правой половине разворачиваем её,
+                      // иначе в покое «−15%» и «+7 дней» стоят вверх ногами.
+                      transform={`rotate(${((mid % 360) + 360) % 360 < 180 ? -90 : 90} ${center} ${labelY})`}
                     >
                       {label}
                     </text>
@@ -287,7 +301,7 @@ const FortuneWheel = memo(function FortuneWheel({
             {`
               @keyframes ledChase {
                 0%, 100% { fill: #334155; }
-                10%, 30% { fill: #E0F2FE; }
+                10%, 30% { fill: #DBEAFE; }
               }
               @keyframes ledGlow {
                 0%, 100% { fill-opacity: 0; }

@@ -85,7 +85,7 @@ export function SubscriptionConnectFooter({
           : t('subscription.connectFooter.connect', 'Подключить устройство')}
       </span>
       <span
-        className={cn('ml-auto text-[11px] tabular-nums', isFull && 'text-warning-400')}
+        className={cn('ml-auto text-[13px] tabular-nums', isFull && 'text-warning-400')}
         style={isFull ? undefined : { color: mutedColor }}
       >
         {counter}

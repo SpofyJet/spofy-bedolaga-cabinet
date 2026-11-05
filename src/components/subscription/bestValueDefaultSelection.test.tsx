@@ -90,7 +90,7 @@ afterEach(() => {
 // Признак выбора у покупки — заливка accent; рамка выбранного варианта
 // остаётся жёлтой, если оператор отметил его выгодным.
 const SELECTED = 'bg-accent-500/10';
-const BEST_VALUE_RING = 'border-urgent-400';
+const BEST_VALUE_RING = 'border-cta-500';
 // Продление: выбор — заливка accent и внутреннее кольцо, выгода — жёлтая рамка.
 const SELECTED_RING = 'ring-accent-500';
 
@@ -160,7 +160,7 @@ describe('продление: выбранный по умолчанию пер�
     await renderRenew();
     await screen.findByText(ru('subscription.bestValue'));
 
-    // Рамка выбранного выгодного остаётся жёлтой, выбор виден заливкой и
+    // Рамка выбранного выгодного остаётся на месте, выбор виден заливкой и
     // внутренним контуром — обе метки сразу.
     expect(cardFor(360).className).toContain(BEST_VALUE_RING);
     expect(cardFor(360).className).toContain(SELECTED);

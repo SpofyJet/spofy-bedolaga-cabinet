@@ -41,7 +41,7 @@ export function PageHeader({ title, backTo = '/', noBack, subtitle, right }: Pag
           type="button"
           onClick={goBack}
           aria-label={t('common.back', 'Назад')}
-          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-dark-900/70 text-dark-200 ring-1 ring-inset ring-dark-800/80 transition-colors hover:bg-dark-800/70 hover:text-dark-50 active:scale-95"
+          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-dark-900/70 text-dark-200 ring-1 ring-inset ring-dark-800/80 transition-colors hover:bg-dark-800/70 hover:text-dark-50 active:scale-95"
         >
           <PiCaretLeftBold className="h-[18px] w-[18px]" />
         </button>

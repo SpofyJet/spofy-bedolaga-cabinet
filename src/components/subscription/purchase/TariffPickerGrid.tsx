@@ -174,7 +174,7 @@ export function TariffPickerGrid({
                 key={tariff.id}
                 data-tariff-card
                 className={cn(
-                  'rounded-3xl bg-dark-900/70 p-4 ring-1 ring-inset ring-dark-800/80 sm:p-5',
+                  'rounded-3xl border-2 border-transparent bg-dark-900/70 p-4 ring-1 ring-inset ring-dark-800/80 sm:p-5',
                   isCurrentTariff
                     ? 'ring-2 ring-accent-500'
                     : // Текущий тариф важнее подсказки: две «активные» рамки

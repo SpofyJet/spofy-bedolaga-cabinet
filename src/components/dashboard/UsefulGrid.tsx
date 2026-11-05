@@ -64,18 +64,24 @@ export default function UsefulGrid({ hidePromocode = false }: UsefulGridProps) {
             <span className="flex h-12 w-full max-w-[88px] items-center justify-center rounded-2xl bg-accent-500/[0.08] text-accent-300 ring-1 ring-inset ring-accent-400/[0.16] transition-colors duration-200 group-hover:bg-accent-500/15 light:text-accent-600 sm:h-[52px]">
               <item.icon className="h-5 w-5" />
             </span>
-            <span className="text-center text-[11.5px] font-semibold leading-none text-dark-200 group-hover:text-dark-50">
+            <span className="tile-label text-center text-[13px] font-semibold leading-none text-dark-200 group-hover:text-dark-50">
               {item.label}
             </span>
           </Link>
         ))}
       </div>
-      <div className="mt-6 flex items-center justify-center gap-4 text-xs text-dark-500">
-        <Link to="/offer" className="transition-colors hover:text-dark-300">
+      <div className="mt-4 flex flex-col items-center text-xs text-dark-500 min-[440px]:flex-row min-[440px]:justify-center min-[440px]:gap-4">
+        <Link
+          to="/offer"
+          className="inline-flex min-h-[44px] items-center transition-colors hover:text-dark-300"
+        >
           {t('legal.serviceRules', 'Правила сервиса')}
         </Link>
-        <span aria-hidden className="h-3 w-px bg-dark-700" />
-        <Link to="/privacy" className="transition-colors hover:text-dark-300">
+        <span aria-hidden className="hidden h-3 w-px bg-dark-700 min-[440px]:block" />
+        <Link
+          to="/privacy"
+          className="inline-flex min-h-[44px] items-center text-center transition-colors hover:text-dark-300"
+        >
           {t('legal.privacy', 'Политика конфиденциальности')}
         </Link>
       </div>

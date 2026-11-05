@@ -105,7 +105,7 @@ export default function InfoCards({
               ? '/subscription'
               : '/subscription/purchase'
         }
-        className="rounded-3xl bg-dark-900/70 bg-gradient-to-b from-accent-400/[0.07] to-transparent ring-1 ring-inset ring-accent-300/[0.10] light:from-transparent light:ring-dark-800/80 cursor-pointer transition-colors hover:bg-dark-800/50 active:bg-dark-800/70 group flex min-h-[118px] flex-col justify-between p-4"
+        className="on-primary rounded-3xl bg-dark-900/70 ring-1 ring-inset ring-accent-300/[0.10] light:ring-dark-800/80 cursor-pointer transition-colors hover:bg-dark-800/50 active:bg-dark-800/70 group flex min-h-[118px] flex-col justify-between p-4"
       >
         <span className="text-sm font-medium text-dark-400">
           {t('dashboard.info.subscription.title', 'Подписка')}
@@ -140,7 +140,11 @@ export default function InfoCards({
           <span className="mt-1 block">
             {/* «Закончилась» в узком окне Telegram (~340 px) не влезала в карточку
                 при 22 px: размер теперь следует за шириной экрана. */}
-            <span className="block whitespace-nowrap text-[length:clamp(16px,5vw,22px)] font-bold leading-none tracking-tight text-dark-50">
+            <span
+              className={`block whitespace-nowrap text-[length:clamp(16px,5vw,22px)] font-bold leading-[26px] tracking-tight ${
+                status === 'expired' ? 'text-error-400' : 'text-dark-50'
+              }`}
+            >
               {status === 'expired'
                 ? t('dashboard.info.subscription.expired', 'Закончилась')
                 : t('dashboard.info.subscription.none', 'Нет подписки')}
@@ -168,7 +172,7 @@ export default function InfoCards({
       {/* Баланс */}
       <Link
         to="/balance"
-        className="rounded-3xl bg-dark-900/70 bg-gradient-to-b from-accent-400/[0.07] to-transparent ring-1 ring-inset ring-accent-300/[0.10] light:from-transparent light:ring-dark-800/80 cursor-pointer transition-colors hover:bg-dark-800/50 active:bg-dark-800/70 group flex min-h-[118px] flex-col justify-between p-4"
+        className="rounded-3xl bg-dark-900/70 ring-1 ring-inset ring-accent-300/[0.10] light:ring-dark-800/80 cursor-pointer transition-colors hover:bg-dark-800/50 active:bg-dark-800/70 group flex min-h-[118px] flex-col justify-between p-4"
       >
         <span className="text-sm font-medium text-dark-400">
           {t('dashboard.info.balance.title', 'Баланс')}
@@ -188,7 +192,7 @@ export default function InfoCards({
         </span>
         {fromFriends >= 1 ? (
           <span
-            className={`mt-2 inline-flex w-fit items-center rounded-full border px-2.5 py-1 text-2xs font-semibold ${TONE_CHIP.friends}`}
+            className={`mt-2 inline-flex w-fit items-center rounded-xl border px-2.5 py-1 text-2xs font-semibold ${TONE_CHIP.friends}`}
           >
             {t('dashboard.info.balance.fromFriends', {
               amount: fromFriends.toLocaleString('ru-RU'),

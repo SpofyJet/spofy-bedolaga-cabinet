@@ -46,11 +46,35 @@ function shadeLightness(shade: ShadeLevel, baseLightness: number): number {
   return Math.min(baseLightness, baseLightness - share * (baseLightness - LADDER_BOTTOM));
 }
 
+// Палитра бренда (v12) задана дизайном, а не считается: лестница по HSL из
+// #2563EB уводит 400-й в сиреневый (#6a90f0), а нужен именно Secondary #60A5FA,
+// 100-й — Surface #DBEAFE, 950-й — Primary #0B1F3B. Другой акцент оператора
+// по-прежнему считается лестницей.
+const CURATED_PALETTES: Record<string, ColorPalette> = {
+  '#2563eb': {
+    50: '240, 247, 255',
+    100: '219, 234, 254',
+    200: '191, 219, 254',
+    300: '147, 197, 253',
+    400: '96, 165, 250',
+    500: '37, 99, 235',
+    600: '31, 87, 214',
+    700: '29, 78, 216',
+    800: '30, 64, 175',
+    850: '30, 61, 156',
+    900: '30, 58, 138',
+    950: '11, 31, 59',
+  },
+};
+
 // Generate color palette from base color (returns RGB strings).
 // Шейд 500 — сам выбранный цвет. Раньше он принудительно получал L = 50 %:
 // оператор выбирал один цвет, а кнопки красились другим (пастель становилась
 // насыщенной, дефолтный #3b82f6 уезжал в 11,100,244 против статики globals.css).
 function generatePalette(baseHex: string): ColorPalette {
+  const curated = CURATED_PALETTES[baseHex.toLowerCase()];
+  if (curated) return curated;
+
   const base = hexToRgb(baseHex);
   const { h, s, l } = hexToHsl(baseHex);
   const palette: Partial<ColorPalette> = {};
@@ -215,11 +239,19 @@ function withReadableTextShades(
 ): ColorPalette {
   const readable = (shade: ShadeLevel, towards: Rgb, bg: Rgb, min: number) =>
     tripletOf(ensureReadable(parseTriplet(palette[shade]), towards, bg, min));
+  // Подмешивание идёт шагами по 10 %, и у тёмного акцента 400-й может перешагнуть
+  // 300-й: он стартует темнее и берёт больший шаг. Лестница не должна ломаться.
+  const shade400 = readable(400, dark.text, dark.surface, TEXT_SHADE_MIN_RATIO);
+  const shade300 = readable(300, dark.text, dark.surface, TEXT_SHADE_MIN_RATIO);
+  const lighter300 =
+    relativeLuminance(parseTriplet(shade300)) >= relativeLuminance(parseTriplet(shade400))
+      ? shade300
+      : shade400;
   return {
     ...palette,
     500: tripletOf(ensureFillCarriesText(parseTriplet(palette[500]))),
-    300: readable(300, dark.text, dark.surface, TEXT_SHADE_MIN_RATIO),
-    400: readable(400, dark.text, dark.surface, TEXT_SHADE_MIN_RATIO),
+    300: lighter300,
+    400: shade400,
     700: readable(700, light.text, light.surface, LIGHT_TEXT_SHADE_MIN_RATIO),
     800: readable(800, light.text, light.surface, LIGHT_TEXT_SHADE_MIN_RATIO),
   };

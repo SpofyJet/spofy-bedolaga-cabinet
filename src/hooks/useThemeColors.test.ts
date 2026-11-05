@@ -101,10 +101,24 @@ describe('applyThemeColors: статусные палитры', () => {
     // Иначе после загрузки JS цвета «уезжают» относительно первой отрисовки.
     applyThemeColors(DEFAULT_THEME_COLORS);
 
-    expect(readVar('--color-accent-500')).toBe('59, 130, 246');
+    expect(readVar('--color-accent-500')).toBe('37, 99, 235');
     expect(readVar('--color-success-500')).toBe('34, 197, 94');
     expect(readVar('--color-warning-500')).toBe('245, 158, 11');
     expect(readVar('--color-error-500')).toBe('239, 68, 68');
+  });
+
+  it('цвета палитры бренда доходят до страницы без искажений', () => {
+    // Защита контраста молча подмешивает к шейду цвет текста, если он не дотягивает
+    // до AA на поверхности: при darkSurface #1c3a68 Secondary давал 4.45 и становился
+    // светлее заданного. Поверхность подобрана так, чтобы этого не случалось.
+    applyThemeColors(DEFAULT_THEME_COLORS);
+
+    expect(readVar('--color-accent-100')).toBe(hexToTriplet('#dbeafe'));
+    expect(readVar('--color-accent-400')).toBe(hexToTriplet('#60a5fa'));
+    expect(readVar('--color-accent-500')).toBe(hexToTriplet('#2563eb'));
+    expect(readVar('--color-accent-950')).toBe(hexToTriplet('#0b1f3b'));
+    expect(readVar('--color-dark-950')).toBe(hexToTriplet('#0b1f3b'));
+    expect(readVar('--color-champagne-200')).toBe(hexToTriplet('#f0f7ff'));
   });
 
   it.each([
@@ -149,11 +163,15 @@ describe('applyThemeColors: статусные палитры', () => {
     applyThemeColors({ ...DEFAULT_THEME_COLORS, accent: NAVY_ACCENT });
     expect(readVar('--color-on-accent')).toBe('255, 255, 255');
 
-    // Дефолтный синий: белый даёт 3.68 — ниже AA для текста, поэтому берётся
+    // Дефолтный #2563EB держит белый: 5.17, выше AA.
+    applyThemeColors(DEFAULT_THEME_COLORS);
+    expect(readVar('--color-on-accent')).toBe('255, 255, 255');
+
+    // Синий #3b82f6: белый даёт 3.68 — ниже AA для текста, поэтому берётся
     // тёмная надпись (4.85). Прежнее правило («белый пока ≥3:1») оставляло
     // кнопку на грани, и это же правило роняло надписи операторских палитр:
     // розовый #ec4899 держал белый на 3.4 против тёмного 5.2.
-    applyThemeColors(DEFAULT_THEME_COLORS);
+    applyThemeColors({ ...DEFAULT_THEME_COLORS, accent: '#3b82f6' });
     expect(readVar('--color-on-accent')).toBe('15, 23, 42');
     expect(readVar('--color-on-error')).toBe('15, 23, 42');
     expect(readVar('--color-on-success')).toBe('15, 23, 42');

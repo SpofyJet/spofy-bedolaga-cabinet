@@ -89,7 +89,7 @@ export function DeviceReductionSheet({
         <button
           type="button"
           onClick={onOpen}
-          className="mx-auto mt-2 flex items-center gap-1.5 rounded-xl px-3 py-2 text-[13px] font-medium text-dark-400 transition-colors hover:bg-dark-800/40 hover:text-dark-200"
+          className="mx-auto mt-2 flex items-center gap-1.5 rounded-xl px-3 min-h-[44px] py-2 text-[13px] font-medium text-dark-400 transition-colors hover:bg-dark-800/40 hover:text-dark-200"
         >
           <PiMinusCircleDuotone className="h-4 w-4" aria-hidden />
           {t('subscription.additionalOptions.reduceDevices')}

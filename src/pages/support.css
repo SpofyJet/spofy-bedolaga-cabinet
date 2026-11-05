@@ -54,8 +54,8 @@
 
 .support-head-link {
   display: flex;
-  height: 40px;
-  width: 40px;
+  height: 44px;
+  width: 44px;
   flex-shrink: 0;
   align-items: center;
   justify-content: center;
@@ -106,7 +106,7 @@
   margin: 12px 0 6px;
   padding: 3px 10px;
   border-radius: 999px;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 600;
   color: rgb(var(--color-dark-400));
   background: rgba(var(--color-dark-800), 0.6);
@@ -135,7 +135,7 @@
 
 .support-msg-author {
   margin: 0 0 4px 12px;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 600;
   color: rgb(var(--color-accent-400));
 }
@@ -194,7 +194,7 @@
   display: block;
   margin-top: 2px;
   text-align: right;
-  font-size: 11px;
+  font-size: 13px;
   opacity: 0.6;
 }
 
@@ -238,8 +238,8 @@
 .support-attach,
 .support-send {
   display: flex;
-  height: 40px;
-  width: 40px;
+  height: 44px;
+  width: 44px;
   flex-shrink: 0;
   align-items: center;
   justify-content: center;
@@ -272,7 +272,7 @@
 }
 
 .support-input {
-  min-height: 40px;
+  min-height: 44px;
   min-width: 0;
   flex: 1;
   resize: none;
@@ -335,7 +335,7 @@
   height: 100%;
   align-items: center;
   justify-content: center;
-  font-size: 11px;
+  font-size: 13px;
   font-weight: 700;
   text-transform: uppercase;
   color: rgb(var(--color-dark-300));
@@ -432,8 +432,8 @@
 
 .support-head-back {
   display: flex;
-  height: 40px;
-  width: 40px;
+  height: 44px;
+  width: 44px;
   flex-shrink: 0;
   align-items: center;
   justify-content: center;
@@ -516,7 +516,7 @@
   min-width: 20px;
   padding: 0 6px;
   border-radius: 999px;
-  font-size: 11.5px;
+  font-size: 13px;
   line-height: 18px;
   color: rgb(var(--color-dark-300));
   background: rgba(var(--color-dark-700), 0.7);

@@ -27,6 +27,7 @@ import { useFeatureFlags } from '@/hooks/useFeatureFlags';
 import { Button, EmptyState, Page, Row, SectionTitle, Surface } from '@/components/spofy/ui';
 import { cn } from '@/lib/utils';
 import { PageSkeleton, Skeleton } from '@/components/ui/skeleton';
+import { PrizeGlyph } from '../components/wheel/PrizeGlyph';
 
 /**
  * Rotation (mod 360) that brings sector `prizeIndex` under the top pointer.
@@ -265,7 +266,7 @@ export default function Wheel() {
                   prize_value: 0,
                   prize_display_name: '',
                   emoji: '🎰',
-                  color: '#8B5CF6',
+                  color: '#2563EB',
                   rotation_degrees: 0,
                   message: t('wheel.starsPaymentSuccessCheckHistory'),
                   promocode: null,
@@ -290,7 +291,7 @@ export default function Wheel() {
                 prize_value: 0,
                 prize_display_name: '',
                 emoji: '🎰',
-                color: '#8B5CF6',
+                color: '#2563EB',
                 rotation_degrees: 0,
                 message: t('wheel.starsPaymentSuccessCheckHistory'),
                 promocode: null,
@@ -331,7 +332,7 @@ export default function Wheel() {
           prize_value: 0,
           prize_display_name: '',
           emoji: '⭐',
-          color: '#8B5CF6',
+          color: '#2563EB',
           rotation_degrees: 0,
           message: t('wheel.starsPaymentRedirected'),
           promocode: null,
@@ -460,7 +461,7 @@ export default function Wheel() {
           prize_value: 0,
           prize_display_name: '',
           emoji: '🎰',
-          color: '#8B5CF6',
+          color: '#2563EB',
           rotation_degrees: 0,
           message: t('wheel.starsPaymentSuccessCheckHistory'),
           promocode: null,
@@ -786,7 +787,6 @@ export default function Wheel() {
                 : undefined;
             const isWin =
               spinResult.success && !!spinResult.prize_type && spinResult.prize_type !== 'nothing';
-            const color = wonPrize?.color || spinResult.color || '#2563EB';
             const action = isWin ? prizeAction(spinResult.prize_type) : null;
             const title = wonPrize
               ? prizeShortLabel(wonPrize, t)
@@ -820,37 +820,24 @@ export default function Wheel() {
                       : 'bg-dark-900 ring-error-500/30',
                   )}
                 >
-                  {isWin && (
-                    <span
-                      aria-hidden
-                      className="pointer-events-none absolute inset-x-0 -top-16 mx-auto h-40 w-40 rounded-full opacity-40 blur-3xl"
-                      style={{ backgroundColor: color }}
-                    />
-                  )}
                   <button
                     type="button"
                     onClick={closeResultModal}
                     aria-label={t('common.close')}
-                    className="absolute right-2 top-2 flex h-9 w-9 items-center justify-center rounded-xl text-dark-400 transition-colors hover:bg-dark-800/60 hover:text-dark-200"
+                    className="absolute right-2 top-2 flex h-11 w-11 items-center justify-center rounded-xl text-dark-400 transition-colors hover:bg-dark-800/60 hover:text-dark-200"
                   >
                     <PiXBold className="h-4 w-4" />
                   </button>
                   <div className="relative">
-                    <span
-                      className="mx-auto flex h-16 w-16 items-center justify-center rounded-3xl text-[34px]"
-                      style={
-                        isWin
-                          ? {
-                              backgroundColor: `${color}33`,
-                              boxShadow: `inset 0 0 0 1px ${color}66`,
-                            }
-                          : undefined
-                      }
-                    >
-                      {spinResult.success ? spinResult.emoji || '🎉' : '😔'}
+                    <span className="mx-auto flex h-16 w-16 items-center justify-center rounded-3xl bg-accent-500/15 text-[34px]">
+                      <PrizeGlyph
+                        type={spinResult.success ? spinResult.prize_type : 'nothing'}
+                        emoji={spinResult.emoji || '🎉'}
+                        className="h-8 w-8 text-accent-400"
+                      />
                     </span>
                     {isWin && (
-                      <p className="mt-3 text-[13px] font-semibold uppercase tracking-wide text-dark-400">
+                      <p className="mt-3 text-[13px] font-semibold text-dark-400">
                         {t('wheel.youWon')}
                       </p>
                     )}
@@ -962,7 +949,11 @@ export default function Wheel() {
                         className="flex min-h-[60px] items-center gap-3 px-4 py-2.5"
                       >
                         <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-dark-800/80 text-xl">
-                          {item.emoji}
+                          <PrizeGlyph
+                            type={item.prize_type}
+                            emoji={item.emoji}
+                            className="h-5 w-5 text-accent-400"
+                          />
                         </span>
                         <div className="min-w-0 flex-1">
                           <div className="truncate text-[15px] font-semibold text-dark-100">

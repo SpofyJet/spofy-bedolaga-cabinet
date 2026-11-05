@@ -42,70 +42,78 @@ export function MobileBottomNav({ items, isMenuOpen = false, badges = {} }: Mobi
   };
 
   return (
-    <nav
-      className={cn(
-        'fixed z-50 transition-all duration-200 lg:hidden',
-        'bg-dark-900/95 backdrop-blur-linear',
-        'border border-dark-700/30',
-        isKeyboardOpen || isMenuOpen ? HIDDEN_UNDER_KEYBOARD : 'opacity-100',
-      )}
-      style={{
-        // Отступ снизу и просвет под панелью объявлены в globals.css
-        // (--mobile-nav-*): в standalone iOS inset около 34pt, и панель стоит
-        // вплотную к безопасной зоне, в браузере — 16px.
-        bottom: 'var(--mobile-nav-offset)',
-        // По бокам та же логика: в альбомной ориентации iPhone вырезы слева и
-        // справа около 59pt, панель не должна уходить под чёлку и углы.
-        left: 'max(16px, env(safe-area-inset-left, 0px))',
-        right: 'max(16px, env(safe-area-inset-right, 0px))',
-        borderRadius: 'var(--bento-radius, 24px)',
-        padding: '8px 4px',
-        boxShadow: '0 4px 30px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.05) inset',
-      }}
-    >
-      <div className="flex justify-around">
-        {items.map((item) => {
-          const Icon = ICONS[item.key];
-          return (
-            <Link
-              key={item.path}
-              to={item.path}
-              onClick={handleNavClick}
-              className={cn(
-                // Четыре вкладки — у каждой в запасе ~85px, подпись помещается
-                // без многоточия даже с длинными переводами (fa/zh).
-                'relative flex min-w-0 flex-1 flex-col items-center justify-center rounded-2xl px-0 py-2.5 transition-all duration-200',
-                isActive(item.path) ? 'text-accent-400' : 'text-dark-400 hover:text-dark-200',
-              )}
-            >
-              {isActive(item.path) && (
-                <motion.div
-                  layoutId="bottom-nav-active"
-                  className="absolute top-1.5 h-9 w-9 rounded-xl bg-accent-500/15 ring-1 ring-accent-500/25"
-                  transition={{ type: 'spring', stiffness: 500, damping: 30 }}
-                />
-              )}
-              <span className="relative z-10">
-                <Icon className="h-5 w-5" />
-                {badges[item.key] && (
-                  <span
-                    className="absolute -right-1 -top-0.5 h-2.5 w-2.5 rounded-full bg-error-500 ring-2 ring-dark-900"
-                    aria-label={t('support.chat.unread', 'Новый ответ')}
-                  />
-                )}
-              </span>
-              <span
+    <>
+      {/* Страница уходит под панель мягко, а не торчит обрезанными карточками по её краям. */}
+      <div
+        aria-hidden
+        className="pointer-events-none fixed inset-x-0 bottom-0 z-40 bg-gradient-to-t from-dark-950 from-75% to-transparent lg:hidden"
+        style={{ height: 'calc(var(--mobile-nav-clearance) + 12px)' }}
+      />
+      <nav
+        className={cn(
+          'fixed z-50 transition-all duration-200 lg:hidden',
+          'bg-dark-900',
+          'border border-dark-700/30',
+          isKeyboardOpen || isMenuOpen ? HIDDEN_UNDER_KEYBOARD : 'opacity-100',
+        )}
+        style={{
+          // Отступ снизу и просвет под панелью объявлены в globals.css
+          // (--mobile-nav-*): в standalone iOS inset около 34pt, и панель стоит
+          // вплотную к безопасной зоне, в браузере — 16px.
+          bottom: 'var(--mobile-nav-offset)',
+          // По бокам та же логика: в альбомной ориентации iPhone вырезы слева и
+          // справа около 59pt, панель не должна уходить под чёлку и углы.
+          left: 'max(16px, env(safe-area-inset-left, 0px))',
+          right: 'max(16px, env(safe-area-inset-right, 0px))',
+          borderRadius: 'var(--bento-radius, 24px)',
+          padding: '8px 4px',
+          boxShadow: '0 4px 30px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.05) inset',
+        }}
+      >
+        <div className="flex justify-around">
+          {items.map((item) => {
+            const Icon = ICONS[item.key];
+            return (
+              <Link
+                key={item.path}
+                to={item.path}
+                onClick={handleNavClick}
                 className={cn(
-                  'relative z-10 mt-1 max-w-full truncate text-2xs transition-colors',
-                  isActive(item.path) ? 'font-semibold text-dark-100' : 'font-medium',
+                  // Четыре вкладки — у каждой в запасе ~85px, подпись помещается
+                  // без многоточия даже с длинными переводами (fa/zh).
+                  'relative flex min-w-0 flex-1 flex-col items-center justify-center rounded-2xl px-0 py-2.5 transition-all duration-200',
+                  isActive(item.path) ? 'text-accent-400' : 'text-dark-400 hover:text-dark-200',
                 )}
               >
-                {t(`navShort.${item.key}`, { defaultValue: t(`nav.${item.key}`) })}
-              </span>
-            </Link>
-          );
-        })}
-      </div>
-    </nav>
+                {isActive(item.path) && (
+                  <motion.div
+                    layoutId="bottom-nav-active"
+                    className="absolute top-[7px] h-[26px] w-11 rounded-lg bg-accent-500/15 ring-1 ring-accent-500/25"
+                    transition={{ type: 'spring', stiffness: 500, damping: 30 }}
+                  />
+                )}
+                <span className="relative z-10">
+                  <Icon className="h-5 w-5" />
+                  {badges[item.key] && (
+                    <span
+                      className="absolute -right-1 -top-0.5 h-2.5 w-2.5 rounded-full bg-error-500 ring-2 ring-dark-900"
+                      aria-label={t('support.chat.unread', 'Новый ответ')}
+                    />
+                  )}
+                </span>
+                <span
+                  className={cn(
+                    'tile-label relative z-10 mt-2 max-w-full truncate text-2xs transition-colors',
+                    isActive(item.path) ? 'font-semibold text-dark-100' : 'font-medium',
+                  )}
+                >
+                  {t(`navShort.${item.key}`, { defaultValue: t(`nav.${item.key}`) })}
+                </span>
+              </Link>
+            );
+          })}
+        </div>
+      </nav>
+    </>
   );
 }

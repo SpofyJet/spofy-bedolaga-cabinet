@@ -72,7 +72,7 @@ export function AutopayToggle({ subscription, subscriptionId }: AutopayTogglePro
         role="switch"
         aria-checked={on}
         aria-label={t('subscription.autopay', 'Auto-payment')}
-        className={`relative h-7 w-12 shrink-0 rounded-full transition-colors duration-200 disabled:opacity-60 ${
+        className={`relative h-7 w-12 shrink-0 rounded-full before:absolute before:-inset-2 before:content-[''] transition-colors duration-200 disabled:opacity-60 ${
           on ? 'bg-accent-500' : 'bg-dark-700'
         }`}
       >

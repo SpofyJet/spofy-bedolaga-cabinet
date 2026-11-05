@@ -126,7 +126,7 @@ describe('выделенный период при продлении', () => {
     await screen.findByText(ru('subscription.bestValue'));
 
     expect(cardFor(180).className).toContain('border-2');
-    expect(cardFor(30).className).not.toContain('border-2');
+    expect(cardFor(30).className).not.toContain('border-cta-500');
 
     // Человек ушёл на другой период — жёлтая рамка выгодного никуда не делась.
     fireEvent.click(cardFor(30));
@@ -172,7 +172,7 @@ describe('выделенный тариф в списке', () => {
     expect(badges).toHaveLength(1);
     expect(tariffCard('Про').contains(badges[0])).toBe(true);
     expect(tariffCard('Про').className).toContain('border-2');
-    expect(tariffCard('Базовый').className).not.toContain('border-2');
+    expect(tariffCard('Базовый').className).not.toContain('border-cta-500');
   });
 
   it('текущий тариф важнее подсказки: двух рамок сразу не бывает', async () => {
@@ -182,6 +182,6 @@ describe('выделенный тариф в списке', () => {
     expect(screen.queryByText(ru('subscription.bestValue'))).toBeNull();
     // Текущий обведён кольцом выбора, жёлтой рамки «Выгодно» у него нет.
     expect(tariffCard('Про').className).toContain('ring-accent-500');
-    expect(tariffCard('Про').className).not.toContain('border-urgent-400');
+    expect(tariffCard('Про').className).not.toContain('border-cta-500');
   });
 });

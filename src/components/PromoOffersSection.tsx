@@ -304,7 +304,7 @@ export default function PromoOffersSection({ className = '' }: PromoOffersSectio
                   <div className="mb-1 flex items-center gap-2">
                     <h3 className="font-semibold text-dark-100">{getOfferTitle(offer, t)}</h3>
                     {offer.effect_type === 'test_access' && (
-                      <span className="rounded bg-purple-500/20 px-2 py-0.5 text-xs text-purple-400">
+                      <span className="rounded bg-accent-500/20 px-2 py-0.5 text-xs text-accent-400">
                         {t('promo.offers.test')}
                       </span>
                     )}

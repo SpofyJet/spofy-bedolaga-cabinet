@@ -90,7 +90,7 @@ describe('тема до первой отрисовки', () => {
     document.head.append(inline);
     try {
       // До CSS приложения заглушка обязана рисовать светлый фон, не тёмный.
-      expect(bodyBg()).toBe('rgb(233, 236, 241)');
+      expect(bodyBg()).toBe('rgb(240, 247, 255)');
 
       document.head.append(app);
       expect(bodyBg()).toBe('rgb(1, 2, 3)');

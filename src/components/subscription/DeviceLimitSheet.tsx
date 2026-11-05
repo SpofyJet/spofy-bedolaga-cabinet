@@ -87,7 +87,7 @@ export function DeviceLimitSheet({
         </div>
 
         <div>
-          <div className="mb-2 text-[11px] uppercase tracking-wider text-dark-500">
+          <div className="mb-2 text-[13px] text-dark-500">
             {t('subscription.connectFooter.connectedDevices', 'Подключённые устройства')}
           </div>
           <div className="space-y-2">
@@ -103,13 +103,13 @@ export function DeviceLimitSheet({
                     <div className="truncate text-[13px] text-dark-100">
                       {device.local_name || device.device_model || device.platform}
                     </div>
-                    <div className="text-[11px] text-dark-500">{device.platform}</div>
+                    <div className="text-[13px] text-dark-500">{device.platform}</div>
                   </div>
                   <button
                     type="button"
                     disabled={disconnect.isPending}
                     onClick={() => disconnect.mutate(device.hwid)}
-                    className="flex min-h-[36px] shrink-0 items-center gap-1.5 rounded-lg bg-error-500/10 px-2.5 text-[12px] font-medium text-error-400 transition-colors hover:bg-error-500/20 disabled:opacity-50"
+                    className="flex min-h-[36px] shrink-0 items-center gap-1.5 rounded-lg bg-error-500/10 px-2.5 text-[13px] font-medium text-error-400 transition-colors hover:bg-error-500/20 disabled:opacity-50"
                   >
                     <TrashIcon className="h-3.5 w-3.5" />
                     {t('subscription.connectFooter.disconnect', 'Отключить')}
@@ -121,7 +121,7 @@ export function DeviceLimitSheet({
         </div>
 
         {error && (
-          <p className="rounded-xl bg-error-500/10 px-3 py-2 text-[12px] text-error-400">{error}</p>
+          <p className="rounded-xl bg-error-500/10 px-3 py-2 text-[13px] text-error-400">{error}</p>
         )}
 
         {canAddSlots ? (
@@ -130,7 +130,7 @@ export function DeviceLimitSheet({
             {t('subscription.connectFooter.addSlots', 'Добавить слоты')}
           </button>
         ) : (
-          <p className="rounded-xl bg-dark-800/60 px-3 py-2.5 text-[12px] leading-snug text-dark-400">
+          <p className="rounded-xl bg-dark-800/60 px-3 py-2.5 text-[13px] leading-snug text-dark-400">
             {t(
               'subscription.connectFooter.noTopupHint',
               'На тестовой подписке слоты докупить нельзя — освободите занятый или оформите платный тариф.',

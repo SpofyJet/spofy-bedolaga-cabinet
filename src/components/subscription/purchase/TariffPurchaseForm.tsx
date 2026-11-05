@@ -173,7 +173,7 @@ export function TariffPurchaseForm({
           t('subscription.sbpRecurring.purchaseButton')
         )}
       </button>
-      <div className="mt-1.5 text-center text-[12px] text-dark-500">
+      <div className="mt-1.5 text-center text-[13px] text-dark-500">
         {t('subscription.sbpRecurring.purchaseHint')}
       </div>
       {sbpPurchaseMutation.isError && (
@@ -215,7 +215,7 @@ export function TariffPurchaseForm({
           t('subscription.lavaRecurring.purchaseButton')
         )}
       </button>
-      <div className="mt-1.5 text-center text-[12px] text-dark-500">
+      <div className="mt-1.5 text-center text-[13px] text-dark-500">
         {t('subscription.lavaRecurring.purchaseHint')}
       </div>
       {lavaPurchaseMutation.isError && (
@@ -257,7 +257,7 @@ export function TariffPurchaseForm({
           t('subscription.casheraRecurring.purchaseButton')
         )}
       </button>
-      <div className="mt-1.5 text-center text-[12px] text-dark-500">
+      <div className="mt-1.5 text-center text-[13px] text-dark-500">
         {t('subscription.casheraRecurring.purchaseHint')}
       </div>
       {casheraPurchaseMutation.isError && (
@@ -287,7 +287,7 @@ export function TariffPurchaseForm({
     ) : null;
   const switchClass = (on: boolean) =>
     cn(
-      'relative h-7 w-12 shrink-0 rounded-full transition-colors duration-200',
+      "relative h-7 w-12 shrink-0 rounded-full transition-colors duration-200 before:absolute before:-inset-2 before:content-['']",
       on ? 'bg-accent-500' : 'bg-dark-700',
     );
   const knob = (on: boolean) => (
@@ -479,7 +479,7 @@ export function TariffPurchaseForm({
                           {formatPrice(displayPrice)}
                         </span>
                         {displayOriginal && displayOriginal > displayPrice && (
-                          <span className="whitespace-nowrap text-[12px] text-dark-500 line-through">
+                          <span className="whitespace-nowrap text-[13px] text-dark-500 line-through">
                             {formatPrice(displayOriginal)}
                           </span>
                         )}
@@ -714,7 +714,7 @@ export function TariffPurchaseForm({
                 );
                 const struck = (v?: number | null) =>
                   v ? (
-                    <span className="text-[12px] text-dark-500 line-through">{formatPrice(v)}</span>
+                    <span className="text-[13px] text-dark-500 line-through">{formatPrice(v)}</span>
                   ) : null;
 
                 return (

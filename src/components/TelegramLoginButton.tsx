@@ -507,7 +507,7 @@ export default function TelegramLoginButton({ referralCode }: TelegramLoginButto
               <div className="rounded-2xl bg-white p-4">
                 <QRCodeSVG value={deepLinkUrl} size={180} level="M" includeMargin={false} />
               </div>
-              <p className="text-[11px] text-dark-500">{t('auth.scanQrToLogin')}</p>
+              <p className="text-[13px] text-dark-500">{t('auth.scanQrToLogin')}</p>
             </div>
 
             {/* Open bot button */}
@@ -525,7 +525,7 @@ export default function TelegramLoginButton({ referralCode }: TelegramLoginButto
 
             {/* Manual command */}
             <div className="flex w-full max-w-xs flex-col items-center space-y-1.5">
-              <p className="text-[11px] text-dark-500">{t('auth.orSendCommand')}</p>
+              <p className="text-[13px] text-dark-500">{t('auth.orSendCommand')}</p>
               <button
                 type="button"
                 onClick={() => {
@@ -540,7 +540,7 @@ export default function TelegramLoginButton({ referralCode }: TelegramLoginButto
                 className="group flex w-full items-center justify-between rounded-lg border border-dark-700 bg-dark-800/50 px-3 py-2 transition-colors hover:border-dark-600"
               >
                 <code className="truncate text-xs text-dark-300">{startCommand}</code>
-                <span className="ml-2 flex-shrink-0 text-[10px] text-dark-500 transition-colors group-hover:text-dark-300">
+                <span className="ml-2 flex-shrink-0 text-[13px] text-dark-500 transition-colors group-hover:text-dark-300">
                   {copied ? t('auth.commandCopied') : t('common.copy')}
                 </span>
               </button>
@@ -649,7 +649,7 @@ export default function TelegramLoginButton({ referralCode }: TelegramLoginButto
 
       <div className="flex w-full max-w-xs items-center gap-3">
         <div className="h-px flex-1 bg-dark-700" />
-        <span className="text-[11px] text-dark-500">{t('common.or')}</span>
+        <span className="text-[13px] text-dark-500">{t('common.or')}</span>
         <div className="h-px flex-1 bg-dark-700" />
       </div>
 

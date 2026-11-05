@@ -434,7 +434,7 @@
       "balance": {
         "title": "Баланс",
         "renewals": "Оплата продлений",
-        "fromFriends": "из них {{amount}} ₽ с друзей"
+        "fromFriends": "{{amount}} ₽ с друзей"
       }
     },
     "useful": {
@@ -593,6 +593,14 @@
       "titlePaid": "Пробная подписка",
       "description": "Попробуйте наш VPN сервис!",
       "days": "дней",
+      "daysWord_one": "день",
+      "daysWord_few": "дня",
+      "daysWord_many": "дней",
+      "daysWord_other": "дней",
+      "devicesWord_one": "устройство",
+      "devicesWord_few": "устройства",
+      "devicesWord_many": "устройств",
+      "devicesWord_other": "устройств",
       "days_one": "{{count}} день",
       "days_few": "{{count}} дня",
       "days_many": "{{count}} дней",
@@ -721,7 +729,7 @@
       "remainingDays": "Осталось дней",
       "upgradeCost": "Доплата",
       "free": "Бесплатно",
-      "switch": "Перейти",
+      "switch": "Выбрать",
       "switched": "Тариф изменён",
       "notEnoughBalance": "Недостаточно средств",
       "dailyPayment": "Оплата за день",
@@ -8857,7 +8865,7 @@
     },
     "series": {
       "connect": {
-        "coverTitle": "Как подключиться",
+        "coverTitle": "Как подключить",
         "slides": [
           {
             "title": "Установите INCY",
@@ -8901,7 +8909,7 @@
         ]
       },
       "no-connection": {
-        "coverTitle": "VPN не подключается",
+        "coverTitle": "VPN не работает",
         "slides": [
           {
             "title": "Обновите подписку",

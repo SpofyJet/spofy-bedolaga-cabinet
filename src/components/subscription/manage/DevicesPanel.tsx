@@ -94,7 +94,7 @@ export function DevicesPanel({ subscription, subscriptionId, footer }: DevicesPa
                 if (confirmed) deleteAllDevicesMutation.mutate();
               }}
               disabled={deleteAllDevicesMutation.isPending}
-              className="text-[13px] font-medium text-error-400 transition-colors hover:text-error-300 disabled:opacity-50"
+              className="inline-flex min-h-[44px] items-center text-[13px] font-medium text-error-400 transition-colors hover:text-error-300 disabled:opacity-50"
             >
               {t('subscription.deleteAllDevices')}
             </button>
@@ -120,7 +120,7 @@ export function DevicesPanel({ subscription, subscriptionId, footer }: DevicesPa
             };
             const PlatformIcon = platformIcon(device.platform, 'duotone');
             const iconBtn =
-              'flex h-9 w-9 items-center justify-center rounded-xl text-dark-400 transition-colors hover:bg-dark-800/70 hover:text-dark-100 disabled:opacity-50';
+              'flex h-11 w-11 items-center justify-center rounded-xl text-dark-400 transition-colors hover:bg-dark-800/70 hover:text-dark-100 disabled:opacity-50';
 
             return (
               <div key={device.hwid} className="flex min-h-[60px] items-center gap-3 px-4 py-2.5">
@@ -153,7 +153,7 @@ export function DevicesPanel({ subscription, subscriptionId, footer }: DevicesPa
                       {displayName}
                     </div>
                   )}
-                  <div className="mt-0.5 flex flex-wrap items-center gap-x-1.5 text-[12px] text-dark-400">
+                  <div className="mt-0.5 flex flex-wrap items-center gap-x-1.5 text-[13px] text-dark-400">
                     <span className="truncate">{device.platform}</span>
                     <span className="min-w-0 select-all break-all text-dark-500">
                       {device.hwid}

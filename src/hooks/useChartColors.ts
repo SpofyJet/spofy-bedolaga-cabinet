@@ -16,12 +16,12 @@ const CSS_VARS = {
 /** Fallback hex colors (default dark theme) */
 const FALLBACK: Record<keyof typeof CSS_VARS, string> = {
   earnings: '#34d399',
-  referrals: '#818cf8',
-  grid: '#374151',
-  tooltipBg: '#1f2937',
-  tooltipBorder: '#4b5563',
-  tick: '#9ca3af',
-  label: '#d1d5db',
+  referrals: '#60a5fa',
+  grid: '#47669a',
+  tooltipBg: '#1a3662',
+  tooltipBorder: '#6f8db8',
+  tick: '#a9c2e3',
+  label: '#bfd2ec',
 };
 
 function cssVarToHex(varName: string, fallback: string): string {

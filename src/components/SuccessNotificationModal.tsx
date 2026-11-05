@@ -124,15 +124,15 @@ export default function SuccessNotificationModal() {
     } else if (data.type === 'subscription_activated') {
       title = t('successNotification.subscriptionActivated.title', 'Subscription activated!');
       icon = <RocketIcon className="h-8 w-8" />;
-      gradientClass = 'from-accent-500 to-purple-600';
+      gradientClass = 'from-accent-500 to-accent-700';
     } else if (data.type === 'subscription_renewed') {
       title = t('successNotification.subscriptionRenewed.title', 'Subscription renewed!');
       icon = <RocketIcon className="h-8 w-8" />;
-      gradientClass = 'from-accent-500 to-purple-600';
+      gradientClass = 'from-accent-500 to-accent-700';
     } else if (data.type === 'subscription_purchased') {
       title = t('successNotification.subscriptionPurchased.title', 'Subscription purchased!');
       icon = <RocketIcon className="h-8 w-8" />;
-      gradientClass = 'from-accent-500 to-purple-600';
+      gradientClass = 'from-accent-500 to-accent-700';
     } else if (data.type === 'devices_purchased') {
       title = t('successNotification.devicesPurchased.title', 'Devices added!');
       icon = <DevicesIcon className="h-8 w-8" />;

@@ -89,7 +89,7 @@
 
 /* Aceternity UI background CSS variables */
 :root {
-  --blue-500: #3b82f6;
+  --blue-500: #2563eb;
   --indigo-300: #a5b4fc;
   --blue-300: #93c5fd;
   --violet-200: #ddd6fe;
@@ -146,44 +146,44 @@
 
     /* Theme colors - RGB format for opacity support */
     /* Dark palette (RGB values) */
-    --color-dark-50: 241, 245, 249;
-    --color-dark-100: 241, 245, 249;
-    --color-dark-200: 210, 218, 228;
-    --color-dark-300: 180, 191, 206;
-    --color-dark-400: 148, 163, 184;
-    --color-dark-500: 142, 153, 170;
-    --color-dark-600: 76, 89, 112;
-    --color-dark-700: 52, 64, 88;
-    --color-dark-800: 28, 39, 64;
-    --color-dark-850: 24, 34, 57;
-    --color-dark-900: 20, 29, 50;
-    --color-dark-950: 7, 13, 28;
+    --color-dark-50: 240, 247, 255;
+    --color-dark-100: 240, 247, 255;
+    --color-dark-200: 217, 230, 246;
+    --color-dark-300: 193, 212, 237;
+    --color-dark-400: 169, 194, 227;
+    --color-dark-500: 150, 171, 199;
+    --color-dark-600: 83, 110, 150;
+    --color-dark-700: 55, 82, 124;
+    --color-dark-800: 26, 54, 98;
+    --color-dark-850: 23, 49, 90;
+    --color-dark-900: 20, 45, 82;
+    --color-dark-950: 11, 31, 59;
 
     /* Champagne palette (RGB values) */
     --color-champagne-50: 255, 255, 255;
-    --color-champagne-100: 248, 249, 251;
-    --color-champagne-200: 233, 236, 241;
-    --color-champagne-300: 205, 210, 217;
-    --color-champagne-400: 178, 183, 192;
-    --color-champagne-500: 97, 102, 112;
-    --color-champagne-600: 95, 104, 119;
-    --color-champagne-700: 69, 76, 89;
-    --color-champagne-800: 44, 49, 58;
-    --color-champagne-900: 17, 20, 27;
-    --color-champagne-950: 17, 20, 27;
+    --color-champagne-100: 250, 253, 255;
+    --color-champagne-200: 240, 247, 255;
+    --color-champagne-300: 204, 216, 230;
+    --color-champagne-400: 168, 184, 204;
+    --color-champagne-500: 84, 104, 131;
+    --color-champagne-600: 61, 90, 128;
+    --color-champagne-700: 44, 71, 105;
+    --color-champagne-800: 28, 51, 82;
+    --color-champagne-900: 11, 31, 59;
+    --color-champagne-950: 11, 31, 59;
 
     /* Accent palette (RGB values) - dynamically set by ThemeColorsProvider */
-    --color-accent-50: 239, 246, 255;
+    --color-accent-50: 240, 247, 255;
     --color-accent-100: 219, 234, 254;
     --color-accent-200: 191, 219, 254;
     --color-accent-300: 147, 197, 253;
     --color-accent-400: 96, 165, 250;
-    --color-accent-500: 59, 130, 246;
-    --color-accent-600: 37, 99, 235;
+    --color-accent-500: 37, 99, 235;
+    --color-accent-600: 31, 87, 214;
     --color-accent-700: 29, 78, 216;
     --color-accent-800: 30, 64, 175;
     --color-accent-900: 30, 58, 138;
-    --color-accent-950: 23, 37, 84;
+    --color-accent-950: 11, 31, 59;
 
     /* Success palette (RGB values) */
     --color-success-50: 240, 253, 244;
@@ -231,16 +231,22 @@
     --color-urgent-400: 255, 184, 0; /* #FFB800 — expiring soon */
     --color-critical-500: 255, 59, 92; /* #FF3B5C — expired */
 
-    /* Theme semantic colors (hex for direct use) */
-    --color-dark-bg: #070d1c;
-    --color-dark-surface: #1c2740;
-    --color-dark-text: #f1f5f9;
-    --color-dark-text-secondary: #94a3b8;
+    /* Главная кнопка экрана. Тёмная тема: Secondary + тёмно-синяя надпись. */
+    --color-cta-400: 147, 197, 253;
+    --color-cta-500: 96, 165, 250;
+    --color-cta-600: 147, 197, 253;
+    --color-on-cta: 11, 31, 59;
 
-    --color-light-bg: #e9ecf1;
+    /* Theme semantic colors (hex for direct use) */
+    --color-dark-bg: #0b1f3b;
+    --color-dark-surface: #1a3662;
+    --color-dark-text: #f0f7ff;
+    --color-dark-text-secondary: #a9c2e3;
+
+    --color-light-bg: #f0f7ff;
     --color-light-surface: #ffffff;
-    --color-light-text: #11141b;
-    --color-light-text-secondary: #5f6877;
+    --color-light-text: #0b1f3b;
+    --color-light-text-secondary: #3d5a80;
   }
 
   html {
@@ -332,11 +338,13 @@
        В гибких рядах этого мало — там у текста ещё нужен min-w-0 или
        [overflow-wrap:anywhere] на месте. */
     overflow-wrap: break-word;
+    /* Цифры одной ширины: даты, гигабайты и цены не прыгают и стоят в столбик. */
+    font-variant-numeric: tabular-nums;
     /* Мягкое синее свечение у верхнего края: без него ровный тёмно-синий фон
        выглядел тускло. Прокручивается вместе со страницей (fixed на iOS не работает). */
     background-image: radial-gradient(
       1100px 640px at 50% -220px,
-      rgba(var(--color-accent-500), 0.3),
+      rgba(var(--color-accent-500), 0.22),
       transparent 72%
     );
     background-repeat: no-repeat;
@@ -402,11 +410,21 @@
     --color-dark-500: var(--color-champagne-500) !important;
     --color-dark-600: var(--color-champagne-400) !important;
     --color-dark-700: var(--color-champagne-300) !important;
-    --color-dark-800: var(--color-champagne-50) !important;
     --color-dark-850: var(--color-champagne-100) !important;
     /* Карточки (bg-dark-900/70) — белые на сером фоне, а не бежевое на бежевом. */
     --color-dark-900: var(--color-champagne-50) !important;
     --color-dark-950: var(--color-champagne-200) !important;
+
+    /* Третий уровень светлой темы: фон #F0F7FF → белая карточка → #DBEAFE (Surface
+       палитры) — края карточек, разделители, вторичные кнопки, плитки. Раньше
+       dark-800 был белым: кольцо карточки и вторичная кнопка сливались с ней. */
+    --color-dark-800: var(--color-accent-100) !important;
+
+    /* Главная кнопка: Accent + белая надпись. */
+    --color-cta-400: 37, 99, 235;
+    --color-cta-500: 37, 99, 235;
+    --color-cta-600: 29, 78, 216;
+    --color-on-cta: 255, 255, 255;
 
     /* Статусные палитры генерируются под тёмную тему: текстовые оттенки
        300/400 (зелёные суммы, жёлтая «Админка», бейджи) на светлом фоне
@@ -423,6 +441,52 @@
     --color-warning-400: var(--color-warning-800) !important;
     --color-error-300: var(--color-error-800) !important;
     --color-error-400: var(--color-error-800) !important;
+  }
+
+  /* Плотная разрядка Manrope съедает пробелы: «Какподключиться». */
+  .tracking-tight,
+  .tile-label,
+  button,
+  h1,
+  h2,
+  h3 {
+    word-spacing: 0.08em;
+  }
+
+  /* Подписи плиток в ряду из четырёх: ширина колонки фиксирована, и при крупном системном
+     шрифте одно слово («Подключить») уже не влезает и наезжает на соседнее. Здесь размер
+     держим, остальной текст страницы масштабируется как обычно. */
+  .tile-label {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+
+  /* Главная карточка экрана — цвет Primary палитры (v12). Самая тёмная ступень на светлой
+     странице: глаз сразу находит состояние подписки. Токены внутри возвращаются к значениям
+     тёмной темы, иначе тёмный текст светлой темы лёг бы на тёмный фон. */
+  .light .on-primary,
+  .light .on-primary:hover,
+  .light .on-primary:active {
+    background-color: rgb(11, 31, 59);
+    --tw-ring-color: rgb(11, 31, 59);
+    --color-dark-50: 240, 247, 255;
+    --color-dark-100: 240, 247, 255;
+    --color-dark-200: 217, 230, 246;
+    --color-dark-300: 193, 212, 237;
+    --color-dark-400: 169, 194, 227;
+    --color-dark-500: 169, 194, 227;
+    --color-dark-700: 55, 82, 124;
+    --color-dark-800: 26, 54, 98;
+    --color-accent-300: 147, 197, 253;
+    --color-accent-400: 96, 165, 250;
+    --color-success-400: 74, 222, 128;
+    --color-warning-400: 251, 191, 36;
+    --color-error-400: 248, 113, 113;
+  }
+
+  /* В тёмной теме та же роль — ступень выше соседних карточек. */
+  .dark .on-primary {
+    background-color: rgb(var(--color-dark-800));
   }
 
   /* Custom scrollbar - Dark */

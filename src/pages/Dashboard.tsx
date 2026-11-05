@@ -377,12 +377,25 @@ export default function Dashboard() {
           <Link
             to="/gift"
             aria-label={t('nav.gift')}
-            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl border border-dark-700/50 bg-dark-800/50 text-dark-300 transition-colors hover:border-accent-500/40 hover:text-accent-300"
+            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-dark-700/50 bg-dark-800/50 text-dark-300 transition-colors hover:border-accent-500/40 hover:text-accent-300"
           >
             <GiftIcon className="h-5 w-5" />
           </Link>
         )}
       </div>
+
+      {/* Без подписки главное — пробный период: его кнопка должна быть на первом экране,
+          внизу она оказывалась под панелью навигации. */}
+      {hasNoSubscription && !trialLoading && trialInfo?.is_available && (
+        <TrialOfferCard
+          trialInfo={trialInfo}
+          balanceKopeks={balanceData?.balance_kopeks || 0}
+          balanceRubles={balanceData?.balance_rubles || 0}
+          activateTrialMutation={activateTrialMutation}
+          trialError={trialError}
+          showBalance={false}
+        />
+      )}
 
       {/* Сторис — самый верх под шапкой: инструкция рядом с входом, не ниже
           сгиба, раньше любых карточек. Без заголовка — лента говорит сама. */}
@@ -513,16 +526,6 @@ export default function Dashboard() {
           с мульти-тариф блоком). */}
       {hasNoSubscription && !trialLoading && (
         <div className="space-y-3">
-          {trialInfo?.is_available && (
-            <TrialOfferCard
-              trialInfo={trialInfo}
-              balanceKopeks={balanceData?.balance_kopeks || 0}
-              balanceRubles={balanceData?.balance_rubles || 0}
-              activateTrialMutation={activateTrialMutation}
-              trialError={trialError}
-              showBalance={false}
-            />
-          )}
           {/* Одна главная кнопка на экране: при доступном пробном периоде это
               «Активировать», покупка рядом — вторичная. */}
           <Link

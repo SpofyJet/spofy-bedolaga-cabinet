@@ -5,7 +5,7 @@ import type { TrialInfo } from '../../types';
 import { useCurrency } from '../../hooks/useCurrency';
 import { useTheme } from '../../hooks/useTheme';
 import { getGlassColors } from '../../utils/glassTheme';
-import { BoltIcon, SparklesIcon } from '@/components/icons';
+import { BoltIcon, GiftIcon } from '@/components/icons';
 
 interface TrialOfferCardProps {
   trialInfo: TrialInfo;
@@ -37,17 +37,19 @@ export default function TrialOfferCard({
     <div
       className="relative overflow-hidden rounded-3xl text-center"
       style={{
-        background: g.cardBg,
+        // В тёмной теме — та же ступень, что у карточек рядом: белая дымка стекла
+        // на тёмно-синем фоне выглядела темнее и выпадала из ряда.
+        background: isDark ? 'rgb(var(--color-dark-900))' : g.cardBg,
         border: isDark
           ? `1px solid ${g.cardBorder}`
           : isFree
             ? '1px solid rgba(var(--color-accent-400), 0.2)'
-            : '1px solid rgba(255,184,0,0.2)',
+            : '1px solid rgba(var(--color-accent-400), 0.2)',
         boxShadow: isDark
           ? g.shadow
           : isFree
             ? '0 2px 16px rgba(var(--color-accent-400), 0.12), 0 0 0 1px rgba(var(--color-accent-400), 0.06)'
-            : '0 2px 16px rgba(255,184,0,0.12), 0 0 0 1px rgba(255,184,0,0.06)',
+            : '0 2px 16px rgba(var(--color-accent-400), 0.12), 0 0 0 1px rgba(var(--color-accent-400), 0.06)',
         padding: '32px 28px 28px',
       }}
     >
@@ -61,7 +63,7 @@ export default function TrialOfferCard({
           borderRadius: '50%',
           background: isFree
             ? 'radial-gradient(circle, rgba(var(--color-accent-400), 0.08) 0%, transparent 70%)'
-            : 'radial-gradient(circle, rgba(255,184,0,0.07) 0%, transparent 70%)',
+            : 'radial-gradient(circle, rgba(var(--color-accent-400), 0.07) 0%, transparent 70%)',
           transition: 'background 0.5s ease',
         }}
         aria-hidden="true"
@@ -88,13 +90,13 @@ export default function TrialOfferCard({
           background: isDark
             ? isFree
               ? 'linear-gradient(135deg, rgba(var(--color-accent-900), 0.5), rgba(var(--color-accent-950), 0.6))'
-              : 'linear-gradient(135deg, #3a3020, #282418)'
+              : 'linear-gradient(135deg, rgba(var(--color-accent-900), 0.5), rgba(var(--color-accent-950), 0.6))'
             : isFree
               ? 'linear-gradient(135deg, rgba(var(--color-accent-400), 0.15), rgba(var(--color-accent-400), 0.08))'
-              : 'linear-gradient(135deg, rgba(255,184,0,0.15), rgba(255,184,0,0.08))',
+              : 'linear-gradient(135deg, rgba(var(--color-accent-400), 0.15), rgba(var(--color-accent-400), 0.08))',
           border: isFree
             ? '1px solid rgba(var(--color-accent-400), 0.25)'
-            : '1px solid rgba(255,184,0,0.25)',
+            : '1px solid rgba(var(--color-accent-400), 0.25)',
           transition: 'all 0.5s ease',
         }}
       >
@@ -104,7 +106,7 @@ export default function TrialOfferCard({
             style={{ color: 'rgb(var(--color-accent-400))' }}
             aria-hidden="true"
           >
-            <SparklesIcon className="h-[26px] w-[26px]" />
+            <GiftIcon className="h-[26px] w-[26px]" />
           </span>
         ) : (
           <span
@@ -121,7 +123,7 @@ export default function TrialOfferCard({
           style={{
             boxShadow: isFree
               ? '0 0 20px rgba(var(--color-accent-400), 0.15)'
-              : '0 0 20px rgba(255,184,0,0.12)',
+              : '0 0 20px rgba(var(--color-accent-400), 0.12)',
           }}
           aria-hidden="true"
         />
@@ -140,8 +142,8 @@ export default function TrialOfferCard({
         <div
           className="mb-5 inline-flex items-baseline gap-1 rounded-xl px-5 py-2"
           style={{
-            background: 'rgba(255,184,0,0.08)',
-            border: '1px solid rgba(255,184,0,0.15)',
+            background: 'rgba(var(--color-accent-400), 0.08)',
+            border: '1px solid rgba(var(--color-accent-400), 0.15)',
           }}
         >
           <span
@@ -160,16 +162,19 @@ export default function TrialOfferCard({
       )}
 
       {/* Trial stats */}
-      <div className="mb-7 flex justify-center gap-8">
+      <div className="mb-7 grid grid-cols-3 gap-2">
         {[
-          { value: String(trialInfo.duration_days), label: t('subscription.trial.days') },
+          {
+            value: String(trialInfo.duration_days),
+            label: t('subscription.trial.daysWord', { count: trialInfo.duration_days }),
+          },
           {
             value: trialInfo.traffic_limit_gb === 0 ? '∞' : String(trialInfo.traffic_limit_gb),
             label: t('common.units.gb'),
           },
           {
             value: trialInfo.device_limit === 0 ? '∞' : String(trialInfo.device_limit),
-            label: t('subscription.trial.devices'),
+            label: t('subscription.trial.devicesWord', { count: trialInfo.device_limit }),
           },
         ].map((stat, i) => (
           <div key={i} className="text-center">
@@ -223,12 +228,7 @@ export default function TrialOfferCard({
           <button
             onClick={() => !activateTrialMutation.isPending && activateTrialMutation.mutate()}
             disabled={activateTrialMutation.isPending}
-            className="w-full rounded-[14px] py-4 text-base font-bold tracking-tight transition-all duration-300 disabled:opacity-50"
-            style={{
-              background: 'linear-gradient(135deg, #FFB800, #FF8C42)',
-              color: '#1a1200',
-              boxShadow: '0 4px 20px rgba(255,184,0,0.2)',
-            }}
+            className="w-full rounded-[14px] bg-cta-500 py-4 text-base font-bold tracking-tight text-on-cta transition-all duration-300 hover:bg-cta-600 disabled:opacity-50"
           >
             {activateTrialMutation.isPending
               ? t('common.loading')
@@ -237,12 +237,7 @@ export default function TrialOfferCard({
         ) : (
           <Link
             to="/balance"
-            className="block w-full rounded-[14px] py-4 text-center text-base font-bold tracking-tight transition-all duration-300"
-            style={{
-              background: 'linear-gradient(135deg, #FFB800, #FF8C42)',
-              color: '#1a1200',
-              boxShadow: '0 4px 20px rgba(255,184,0,0.2)',
-            }}
+            className="block w-full rounded-[14px] bg-cta-500 py-4 text-center text-base font-bold tracking-tight text-on-cta transition-all duration-300 hover:bg-cta-600"
           >
             {t('subscription.trial.topUpToActivate')}
           </Link>
@@ -251,22 +246,8 @@ export default function TrialOfferCard({
         <button
           onClick={() => !activateTrialMutation.isPending && activateTrialMutation.mutate()}
           disabled={activateTrialMutation.isPending}
-          // Единственная главная кнопка экрана без подписки: в тёмной теме —
-          // сплошной акцент, как у остальных основных кнопок (была
-          // полупрозрачной и проигрывала кнопке покупки под ней).
-          className={`w-full rounded-[14px] py-4 text-base font-bold tracking-tight transition-all duration-300 disabled:opacity-50${
-            isDark ? ' bg-cta-500 text-on-cta hover:bg-cta-600' : ''
-          }`}
-          style={
-            isDark
-              ? undefined
-              : {
-                  background:
-                    'linear-gradient(135deg, rgb(var(--color-accent-400)), rgb(var(--color-accent-500)))',
-                  color: '#0a2a1e',
-                  boxShadow: '0 4px 20px rgba(var(--color-accent-400), 0.25)',
-                }
-          }
+          // Единственная главная кнопка экрана без подписки.
+          className="w-full rounded-[14px] bg-cta-500 py-4 text-base font-bold tracking-tight text-on-cta transition-all duration-300 hover:bg-cta-600 disabled:opacity-50"
         >
           {activateTrialMutation.isPending ? t('common.loading') : t('subscription.trial.activate')}
         </button>

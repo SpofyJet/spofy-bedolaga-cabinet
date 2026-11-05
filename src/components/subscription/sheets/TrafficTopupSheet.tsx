@@ -144,7 +144,7 @@ export function TrafficTopupSheet({
                           {formatPrice(pkg.price_kopeks)}
                         </span>
                         {discounted && pkg.base_price_kopeks ? (
-                          <span className="whitespace-nowrap text-[12px] text-dark-500 line-through">
+                          <span className="whitespace-nowrap text-[13px] text-dark-500 line-through">
                             {formatPrice(pkg.base_price_kopeks)}
                           </span>
                         ) : null}

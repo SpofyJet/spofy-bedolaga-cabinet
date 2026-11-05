@@ -487,7 +487,7 @@ export default function Subscription() {
                     ? `${t('common.refresh')} · ${trafficRefreshCooldown}s`
                     : t('common.refresh')
                 }
-                className="flex h-8 w-8 items-center justify-center rounded-xl text-dark-400 transition-colors hover:bg-dark-800/70 hover:text-dark-200 disabled:opacity-40"
+                className="-my-3 -mr-3.5 flex h-11 w-11 items-center justify-center rounded-xl text-dark-200 transition-colors hover:bg-dark-800/70 hover:text-dark-200 disabled:opacity-40"
               >
                 <PiArrowsClockwiseBold
                   className={cn('h-4 w-4', refreshTrafficMutation.isPending && 'animate-spin')}

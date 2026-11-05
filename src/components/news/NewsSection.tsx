@@ -49,7 +49,7 @@ const CategoryBadge = memo(function CategoryBadge({
   return (
     <span
       className={cn(
-        'inline-flex items-center gap-1.5 rounded-md px-3 py-1 font-mono text-[11px] font-bold uppercase tracking-widest',
+        'inline-flex items-center gap-1.5 rounded-md px-3 py-1 font-mono text-[13px] font-boldst',
         className,
       )}
       style={{
@@ -79,7 +79,7 @@ const TagBadge = memo(function TagBadge({ text, color }: TagBadgeProps) {
   const c = safeColor(color);
   return (
     <span
-      className="inline-block rounded px-2 py-0.5 font-mono text-[10px] font-bold uppercase tracking-wider"
+      className="inline-block rounded px-2 py-0.5 font-mono text-[13px] font-bold"
       style={{
         color: c,
         border: `1px solid ${c}33`,
@@ -203,7 +203,7 @@ const FeaturedCard = memo(function FeaturedCard({ item, onClick }: FeaturedCardP
           <div className="mb-4 flex flex-wrap items-center gap-3">
             <CategoryBadge category={item.category} color={item.category_color} />
             {item.tag && <TagBadge text={item.tag} color={item.category_color} />}
-            <span className="ml-auto font-mono text-[11px] text-dark-500">
+            <span className="ml-auto font-mono text-[13px] text-dark-500">
               {item.read_time_minutes} {t('news.readTime')}
             </span>
           </div>
@@ -280,7 +280,7 @@ const NewsCard = memo(function NewsCard({ item, index, onClick }: NewsCardProps)
         <div>
           <div className="mb-3.5 flex items-center gap-2.5">
             <span
-              className="inline-flex items-center gap-1.5 font-mono text-[10px] font-bold uppercase tracking-widest"
+              className="inline-flex items-center gap-1.5 font-mono text-[13px] font-boldst"
               style={{ color }}
             >
               <span
@@ -305,10 +305,10 @@ const NewsCard = memo(function NewsCard({ item, index, onClick }: NewsCardProps)
         </div>
 
         <div className="mt-5 flex items-center justify-between border-t border-dark-700/50 pt-3.5">
-          <span className="font-mono text-[11px] text-dark-600">
+          <span className="font-mono text-[13px] text-dark-600">
             {item.published_at ? new Date(item.published_at).toLocaleDateString(i18n.language) : ''}
           </span>
-          <span className="font-mono text-[11px] text-dark-500">
+          <span className="font-mono text-[13px] text-dark-500">
             {item.read_time_minutes} {t('news.readTime')}
           </span>
         </div>
@@ -417,9 +417,7 @@ export default function NewsSection() {
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-accent-400 to-accent-600">
               <NewsIcon className="h-[18px] w-[18px] text-dark-950" />
             </div>
-            <span className="font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-dark-500">
-              {t('news.title')}
-            </span>
+            <span className="font-mono text-[13px] font-bold text-dark-500">{t('news.title')}</span>
           </div>
 
           {categories.length > 0 && (

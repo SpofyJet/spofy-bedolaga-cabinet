@@ -280,7 +280,7 @@ export default function RenewSubscription() {
                         : money(option.price_kopeks)}
                     </span>
                     {option.original_price_kopeks && (
-                      <span className="whitespace-nowrap text-[12px] text-dark-500 line-through">
+                      <span className="whitespace-nowrap text-[13px] text-dark-500 line-through">
                         {money(option.original_price_kopeks)}
                       </span>
                     )}

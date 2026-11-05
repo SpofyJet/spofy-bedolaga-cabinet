@@ -173,7 +173,7 @@ export default function Support() {
           >
             {o.title}
           </span>
-          {o.when && <span className="shrink-0 text-[12px] text-dark-400">{o.when}</span>}
+          {o.when && <span className="shrink-0 text-[13px] text-dark-400">{o.when}</span>}
         </span>
         <span className="mt-0.5 flex items-start gap-2">
           <span className="line-clamp-2 min-w-0 flex-1 text-[13.5px] leading-snug text-dark-400">
@@ -243,7 +243,11 @@ export default function Support() {
                   to: '/support/new',
                   title: t('support.chat.newTicket'),
                   text: t('support.chat.invite'),
-                  trailing: <Chip>{t('support.chat.writeShort')}</Chip>,
+                  trailing: (
+                    <span className="rounded-full bg-cta-500 px-3.5 py-1.5 text-[13px] font-semibold text-on-cta">
+                      {t('support.chat.writeShort')}
+                    </span>
+                  ),
                 })}
           </Group>
         </>
@@ -261,7 +265,7 @@ export default function Support() {
         </Group>
       )}
 
-      <p className="flex items-start gap-2 px-1 text-[12.5px] leading-snug text-dark-500">
+      <p className="flex items-start gap-2 px-1 text-[13px] leading-snug text-dark-500">
         <PiLockKeyDuotone className="mt-px h-4 w-4 shrink-0" aria-hidden />
         {t('support.chat.safety')}
       </p>

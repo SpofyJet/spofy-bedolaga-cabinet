@@ -548,7 +548,7 @@ export default function Login() {
                       ) : (
                         <OAuthProviderIcon provider={provider.name} className="h-5 w-5" />
                       )}
-                      <span className="text-[10px] leading-none text-dark-500">
+                      <span className="text-[13px] leading-none text-dark-500">
                         {provider.display_name}
                       </span>
                     </button>

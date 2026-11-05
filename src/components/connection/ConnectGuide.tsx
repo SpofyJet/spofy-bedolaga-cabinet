@@ -682,7 +682,7 @@ function Steps({
               )}
               {failed?.key.startsWith(`${index}:`) && <ManualCopy text={failed.text} />}
               {anyCopy && !failed?.key.startsWith(`${index}:`) && (
-                <p className="mt-2 text-[12.5px] leading-snug text-dark-400">
+                <p className="mt-2 text-[13px] leading-snug text-dark-400">
                   {t(
                     'subscription.connection.v10.personalKey',
                     'Это ваш личный ключ — никому его не пересылайте',

@@ -664,7 +664,7 @@ function TimeUnit({ value, label }: { value: number; label: string }) {
       <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-dark-800/80 text-lg font-bold tabular-nums text-dark-50 sm:h-12 sm:w-12 sm:text-xl">
         {String(value).padStart(2, '0')}
       </span>
-      <span className="mt-1 text-[11px] text-dark-500">{label}</span>
+      <span className="mt-1 text-[13px] text-dark-500">{label}</span>
     </div>
   );
 }

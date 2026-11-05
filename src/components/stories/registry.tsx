@@ -17,7 +17,7 @@ export const STORY_SERIES: readonly StorySeriesMeta[] = [
   {
     id: 'connect',
     order: 1,
-    accent: '#3B82F6',
+    accent: '#60A5FA',
     icon: PiPlugsConnectedDuotone,
     slides: [{ visual: 'install' }, { visual: 'add-sub' }, { visual: 'power' }],
     cta: 'connect',
@@ -25,7 +25,7 @@ export const STORY_SERIES: readonly StorySeriesMeta[] = [
   {
     id: 'appstore-region',
     order: 2,
-    accent: '#38BDF8',
+    accent: '#60A5FA',
     icon: PiAppStoreLogoDuotone,
     slides: [
       { image: '/img/story-region-1.jpg' },
@@ -39,7 +39,7 @@ export const STORY_SERIES: readonly StorySeriesMeta[] = [
   {
     id: 'no-connection',
     order: 3,
-    accent: '#F59E0B',
+    accent: '#60A5FA',
     icon: PiWrenchDuotone,
     slides: [
       { visual: 'refresh' },
@@ -53,7 +53,7 @@ export const STORY_SERIES: readonly StorySeriesMeta[] = [
   {
     id: 'add-device',
     order: 4,
-    accent: '#A78BFA',
+    accent: '#60A5FA',
     icon: PiDevicesDuotone,
     slides: [{ visual: 'slots' }, { visual: 'web' }, { visual: 'tv-qr' }, { visual: 'limit' }],
     cta: 'devices',

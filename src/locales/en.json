@@ -570,6 +570,10 @@
     "insufficientBalance": "Insufficient balance. Missing {{missing}} ₽",
     "trial": {
       "title": "Free Trial",
+      "daysWord_one": "day",
+      "daysWord_other": "days",
+      "devicesWord_one": "device",
+      "devicesWord_other": "devices",
       "titlePaid": "Trial Subscription",
       "description": "Try our VPN service!",
       "days": "days",

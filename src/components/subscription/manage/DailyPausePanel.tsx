@@ -121,7 +121,7 @@ export function DailyPausePanel({ subscription, subscriptionId }: DailyPausePane
               <div className="text-sm font-semibold text-warning-400">
                 {t('subscription.pause.pausedInfo')}
               </div>
-              <div className="mt-1 text-[12px] text-dark-400">
+              <div className="mt-1 text-[13px] text-dark-400">
                 {t('subscription.pause.pausedDescription')}{' '}
                 {new Date(subscription.end_date).toLocaleDateString(uiLocale())} (
                 {t('subscription.pause.days', { count: subscription.days_left })})
