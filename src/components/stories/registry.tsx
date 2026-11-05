@@ -75,6 +75,11 @@ export function cabinetHost(): string {
   return typeof window === 'undefined' ? '' : window.location.host;
 }
 
+/** Все фото из серий: просмотрщик загружает их заранее. */
+export const STORY_PHOTOS = STORY_SERIES.flatMap((meta) =>
+  meta.slides.flatMap((visual) => ('image' in visual ? [visual.image] : [])),
+);
+
 /**
  * Серии с текстом текущей локали. returnObjects отдаёт массив слайдов из JSON;
  * на случай битого бандла локали — пустой массив.

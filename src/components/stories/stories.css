@@ -242,7 +242,6 @@
   height: 100%;
   min-height: 0;
   flex-direction: column;
-  will-change: transform, opacity;
 }
 
 .story-text {
@@ -301,7 +300,6 @@
   aspect-ratio: 1;
   object-fit: contain;
   border-radius: 24px;
-  background: #fff;
 }
 
 .story-footer {

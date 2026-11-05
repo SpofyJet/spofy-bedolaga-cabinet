@@ -2,12 +2,11 @@ import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react
 import { createPortal } from 'react-dom';
 import { useNavigate } from 'react-router';
 import { useTranslation } from 'react-i18next';
-import { motion } from 'framer-motion';
 import { PiXBold } from 'react-icons/pi';
 
 import { useBranding } from '@/hooks/useBranding';
 import { useHeaderHeight } from '@/hooks/useHeaderHeight';
-import { STORY_CTA_ROUTES, useStorySeries } from './registry';
+import { STORY_CTA_ROUTES, STORY_PHOTOS, useStorySeries } from './registry';
 import { markStoryRead } from './useStoryRead';
 import { StoryVisual } from './visuals';
 
@@ -86,7 +85,6 @@ export function StoryViewer({ initialIndex, onClose }: StoryViewerProps) {
 
   const [seriesIdx, setSeriesIdx] = useState(initialIndex);
   const [slideIdx, setSlideIdx] = useState(0);
-  const [direction, setDirection] = useState(1);
   const [paused, setPaused] = useState(false);
 
   // Индексы и пауза в ref — rAF-цикл не зависит от ререндеров.
@@ -103,8 +101,7 @@ export function StoryViewer({ initialIndex, onClose }: StoryViewerProps) {
   const series = seriesList[seriesIdx];
   const slides = series?.slides ?? [];
 
-  const goTo = useCallback((nextSeries: number, nextSlide: number, dir: number) => {
-    setDirection(dir);
+  const goTo = useCallback((nextSeries: number, nextSlide: number) => {
     setSeriesIdx(nextSeries);
     setSlideIdx(nextSlide);
   }, []);
@@ -113,16 +110,16 @@ export function StoryViewer({ initialIndex, onClose }: StoryViewerProps) {
     const s = seriesRef.current;
     const i = slideRef.current;
     const count = seriesList[s]?.slides.length ?? 0;
-    if (i < count - 1) goTo(s, i + 1, 1);
-    else if (s < seriesList.length - 1) goTo(s + 1, 0, 1);
+    if (i < count - 1) goTo(s, i + 1);
+    else if (s < seriesList.length - 1) goTo(s + 1, 0);
     else onClose();
   }, [seriesList, goTo, onClose]);
 
   const prev = useCallback(() => {
     const s = seriesRef.current;
     const i = slideRef.current;
-    if (i > 0) goTo(s, i - 1, -1);
-    else if (s > 0) goTo(s - 1, (seriesList[s - 1]?.slides.length ?? 1) - 1, -1);
+    if (i > 0) goTo(s, i - 1);
+    else if (s > 0) goTo(s - 1, (seriesList[s - 1]?.slides.length ?? 1) - 1);
   }, [seriesList, goTo]);
 
   // Таймер перезапускается только по смене слайда/серии.
@@ -182,16 +179,18 @@ export function StoryViewer({ initialIndex, onClose }: StoryViewerProps) {
     if (id) markStoryRead(id);
   }, [seriesIdx, seriesList]);
 
-  // Все фото серии — сразу при открытии и декодированными: иначе картинка
-  // слайда догружалась уже после анимации и «прыгала».
+  // Фото всех серий — сразу при открытии и декодированными: иначе при переходе в
+  // следующую серию картинка догружалась уже на экране. Ссылки держим в ref, чтобы
+  // браузер не выгрузил декодированные кадры, пока просмотрщик открыт.
+  const photosRef = useRef<HTMLImageElement[]>([]);
   useEffect(() => {
-    for (const visual of series?.meta.slides ?? []) {
-      if (!('image' in visual)) continue;
+    photosRef.current = STORY_PHOTOS.map((src) => {
       const img = new Image();
-      img.src = visual.image;
+      img.src = src;
       img.decode?.().catch(() => undefined);
-    }
-  }, [series]);
+      return img;
+    });
+  }, []);
 
   const handlePointerDown = (e: React.PointerEvent) => {
     holdStart.current = { x: e.clientX, y: e.clientY, t: performance.now(), consumed: false };
@@ -292,8 +291,9 @@ export function StoryViewer({ initialIndex, onClose }: StoryViewerProps) {
         </div>
 
         {/* Жесты — на постоянном слое: он не пересоздаётся при смене слайда, поэтому
-            свайп не обрывается, а старый и новый слайды не рисуются друг поверх друга
-            (как было с AnimatePresence popLayout — отсюда «лаг» при перелистывании). */}
+            свайп не обрывается, а старый и новый слайды не рисуются друг поверх друга.
+            Слайд меняется мгновенно, без анимации: новый слайд, проявляющийся из
+            прозрачного, давал моргание пустым фоном на каждом переключении. */}
         <div
           className="story-slide"
           onPointerDown={handlePointerDown}
@@ -304,13 +304,7 @@ export function StoryViewer({ initialIndex, onClose }: StoryViewerProps) {
             setPaused(false);
           }}
         >
-          <motion.div
-            key={`${meta.id}-${slideIdx}`}
-            className="story-slide-inner"
-            initial={{ opacity: 0, x: direction * 18 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
-          >
+          <div key={`${meta.id}-${slideIdx}`} className="story-slide-inner">
             <div className="story-text">
               {slides.length > 1 && (
                 <span className="story-step">
@@ -326,7 +320,13 @@ export function StoryViewer({ initialIndex, onClose }: StoryViewerProps) {
 
             {visual && 'image' in visual ? (
               <div className="story-visual">
-                <img className="story-photo" src={visual.image} alt="" draggable={false} />
+                <img
+                  className="story-photo"
+                  src={visual.image}
+                  alt=""
+                  decoding="sync"
+                  draggable={false}
+                />
               </div>
             ) : visual ? (
               <FitVisual>
@@ -347,7 +347,7 @@ export function StoryViewer({ initialIndex, onClose }: StoryViewerProps) {
                 </span>
               )}
             </div>
-          </motion.div>
+          </div>
         </div>
       </div>
     </div>,
