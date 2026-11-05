@@ -5,6 +5,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 import { createPortal } from 'react-dom';
 import { useNavigate } from 'react-router';
+import { useWheelPromoLink } from '../hooks/useWheelPromoLink';
 import { wheelApi, type WheelPrize, type SpinResult, type SpinHistoryItem } from '../api/wheel';
 import FortuneWheel from '../components/wheel/FortuneWheel';
 import WheelLegend from '../components/wheel/WheelLegend';
@@ -94,6 +95,7 @@ export default function Wheel() {
   const haptic = useHaptic();
   const notify = useNotify();
   const navigate = useNavigate();
+  const promoNotice = useWheelPromoLink();
 
   const [isSpinning, setIsSpinning] = useState(false);
   const [targetRotation, setTargetRotation] = useState<number | null>(null);
@@ -576,6 +578,18 @@ export default function Wheel() {
             : undefined
         }
       />
+
+      {/* Ответ на ссылку со спином. Если спин уже забран, но не прокручен, он и так виден ниже. */}
+      {promoNotice && !(promoNotice === 'alreadyUsed' && freeSpins > 0) && (
+        <Surface className="space-y-3">
+          <p className="text-[15px] text-dark-100">{t(`wheel.promoLink.${promoNotice}`)}</p>
+          {promoNotice === 'paid' && (
+            <Button className="w-full" onClick={() => navigate('/subscription/purchase')}>
+              {t('wheel.promoLink.paidAction')}
+            </Button>
+          )}
+        </Surface>
+      )}
 
       {/* Бесплатные спины за пополнения */}
       {freeMode && threshold > 0 && (

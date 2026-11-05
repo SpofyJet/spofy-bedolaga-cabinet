@@ -292,6 +292,7 @@ export default function Balance() {
         'no_subscription_for_days',
         'subscription_not_found',
         'not_first_purchase',
+        'paid_subscription_required',
         'daily_limit',
         'trial_subscription_exists',
         'trial_provisioning_failed',

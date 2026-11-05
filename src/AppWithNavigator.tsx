@@ -1,4 +1,4 @@
-import { useEffect, useRef, useCallback } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { BrowserRouter, useLocation, useNavigate, useNavigationType } from 'react-router';
 import {
   showBackButton,
@@ -187,6 +187,8 @@ const START_PARAM_ROUTES: Array<{ re: RegExp; to: (match: RegExpExecArray) => st
   // Paid-trial «Активировать триал» link in the bot's rich main menu — the
   // dashboard renders TrialOfferCard with the pay-and-activate flow.
   { re: /^trial$/, to: () => '/' },
+  // Ссылка на спин из канала: колесо открывается сразу, код применяется сам.
+  { re: /^spin_([A-Za-z0-9]+)$/, to: (match) => `/wheel?promo=${match[1]}` },
 ];
 
 /**
@@ -196,44 +198,39 @@ const START_PARAM_ROUTES: Array<{ re: RegExp; to: (match: RegExpExecArray) => st
  * Mini App via `t.me/<bot>/<app>?startapp=<param>` deep links: admin ticket
  * notifications in GROUP/channel chats (bot issue #2988) and the bot's rich
  * main-menu «Продлить» links for expired subscriptions. Telegram delivers the
- * param as `tgWebAppStartParam`; we map it to a route once on mount. Access is
- * still gated by each route's own guards (e.g. `PermissionRoute`).
+ * param as `tgWebAppStartParam`. Access is still gated by each route's own guards
+ * (e.g. `PermissionRoute`).
+ *
+ * Адрес меняем до старта роутера: иначе на первом открытии без сохранённого входа
+ * редирект на /login запоминал главную, и ссылка терялась.
  */
-function StartParamNavigator() {
-  const navigate = useNavigate();
-  const handled = useRef(false);
+function applyStartParamRoute() {
+  let startParam: string | undefined;
+  try {
+    startParam = retrieveLaunchParams().tgWebAppStartParam;
+  } catch {
+    return;
+  }
+  if (!startParam) return;
 
-  useEffect(() => {
-    if (handled.current) return;
-    handled.current = true;
-
-    let startParam: string | undefined;
-    try {
-      startParam = retrieveLaunchParams().tgWebAppStartParam;
-    } catch {
+  for (const { re, to } of START_PARAM_ROUTES) {
+    const match = re.exec(startParam);
+    if (match) {
+      window.history.replaceState(null, '', to(match) + window.location.hash);
       return;
     }
-    if (!startParam) return;
-
-    for (const { re, to } of START_PARAM_ROUTES) {
-      const match = re.exec(startParam);
-      if (match) {
-        navigate(to(match), { replace: true });
-        return;
-      }
-    }
-  }, [navigate]);
-
-  return null;
+  }
 }
 
 export function AppWithNavigator() {
   const isTelegram = isInTelegramWebApp();
+  useState(() => {
+    if (isTelegram) applyStartParamRoute();
+  });
 
   return (
     <BrowserRouter>
       {isTelegram && <TelegramBackButton />}
-      {isTelegram && <StartParamNavigator />}
       <ErrorBoundary level="page">
         <PlatformProvider>
           <ThemeColorsProvider>

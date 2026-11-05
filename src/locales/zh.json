@@ -988,6 +988,7 @@
         "active_discount_exists": "您已有一个生效中的折扣，请先停用它。",
         "no_subscription_for_days": "此优惠码需要有效或已过期的订阅",
         "subscription_not_found": "未找到订阅",
+        "paid_subscription_required": "此优惠码仅适用于有效的付费订阅，试用期内不可用",
         "not_first_purchase": "此优惠码仅限首次购买使用",
         "daily_limit": "今日优惠码激活次数过多",
         "trial_subscription_exists": "您已有订阅，因此无法使用此试用优惠码",
@@ -1445,6 +1446,13 @@
       "topUp": "充值余额",
       "spin_other": "免费转动 · {{count}}",
       "historyLabel": "免费"
+    },
+    "promoLink": {
+      "paid": "此次转盘需要有效的付费订阅，试用期内不可用。",
+      "paidAction": "购买订阅",
+      "alreadyUsed": "您已领取过此次转盘机会。",
+      "ended": "此链接的转盘机会已用完。",
+      "failed": "领取失败，请重新打开链接。"
     },
     "showcaseTitle": "可能获得的奖品",
     "rarity": {

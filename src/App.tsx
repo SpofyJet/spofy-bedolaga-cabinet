@@ -201,7 +201,7 @@ function ProtectedRoute({
 
   if (!isAuthenticated) {
     saveReturnUrl();
-    return <Navigate to="/login" replace state={{ from: location.pathname }} />;
+    return <Navigate to="/login" replace state={{ from: location.pathname + location.search }} />;
   }
 
   // След пользователя: каждый открытый экран уходит в «Активность» его карточки.
