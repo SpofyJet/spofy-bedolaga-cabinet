@@ -58,8 +58,8 @@ export default function GiftClaim() {
     // Poll only while the payment is still settling (not yet claimable / terminal).
     refetchInterval: (query) => {
       const data = query.state.data;
-      if (!data) return 3000;
       if (Date.now() - startedAt.current > MAX_POLL_MS) return false;
+      if (!data) return 3000;
       const settled = data.is_claimable || data.status === 'delivered' || data.status === 'failed';
       return settled ? false : 3000;
     },

@@ -223,9 +223,10 @@ export default function TopUpResult() {
     enabled: canPollById && !pollTimedOut,
     refetchInterval: (query) => {
       const payment = query.state.data;
-      if (!payment) return POLL_INTERVAL_MS;
-
-      if (payment.is_paid || isPaidStatus(payment.status) || isFailedStatus(payment.status)) {
+      if (
+        payment &&
+        (payment.is_paid || isPaidStatus(payment.status) || isFailedStatus(payment.status))
+      ) {
         return false;
       }
 
@@ -246,9 +247,10 @@ export default function TopUpResult() {
     enabled: canPollByMethod && !pollTimedOut,
     refetchInterval: (query) => {
       const payment = query.state.data;
-      if (!payment) return POLL_INTERVAL_MS;
-
-      if (payment.is_paid || isPaidStatus(payment.status) || isFailedStatus(payment.status)) {
+      if (
+        payment &&
+        (payment.is_paid || isPaidStatus(payment.status) || isFailedStatus(payment.status))
+      ) {
         return false;
       }
 

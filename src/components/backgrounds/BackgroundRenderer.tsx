@@ -1,4 +1,4 @@
-import { Suspense, useMemo } from 'react';
+import { Component, Suspense, useMemo, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import { useQuery } from '@tanstack/react-query';
 import { brandingApi } from '@/api/branding';
@@ -70,12 +70,25 @@ function RenderBackground({ config }: { config: AnimationConfig }) {
         backfaceVisibility: 'hidden',
       }}
     >
-      <Suspense fallback={null}>
-        <Component settings={settings} />
-      </Suspense>
+      <BackgroundBoundary>
+        <Suspense fallback={null}>
+          <Component settings={settings} />
+        </Suspense>
+      </BackgroundBoundary>
     </div>,
     document.body,
   );
+}
+
+/** Не загрузился чанк фона: остаётся обычный фон страницы, а приложение работает дальше. */
+class BackgroundBoundary extends Component<{ children: ReactNode }, { failed: boolean }> {
+  state = { failed: false };
+  static getDerivedStateFromError() {
+    return { failed: true };
+  }
+  render() {
+    return this.state.failed ? null : this.props.children;
+  }
 }
 
 export function BackgroundRenderer() {

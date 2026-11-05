@@ -1,3 +1,4 @@
+import { isAxiosError } from 'axios';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -142,7 +143,19 @@ if ('requestIdleCallback' in window) {
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      retry: 1,
+      // Повторяем только сбои сети и сервера: 4xx не исправится, а лишние запросы бьют по перегрузке.
+      retry: (failureCount, error) => {
+        if (failureCount >= 1) return false;
+        const status = isAxiosError(error) ? error.response?.status : undefined;
+        return status === undefined || status === 408 || status >= 500;
+      },
+      // Пауза из Retry-After с разбросом, чтобы клиенты не вернулись одной волной.
+      retryDelay: (_attempt, error) => {
+        const header = isAxiosError(error) ? Number(error.response?.headers?.['retry-after']) : NaN;
+        const base = header > 0 ? Math.min(header, 30) * 1000 : 1000;
+        return base * (0.75 + Math.random() * 0.5);
+      },
+      staleTime: 30_000,
       refetchOnWindowFocus: false,
     },
   },
@@ -169,7 +182,12 @@ const themeColorsReady: Promise<void> = readThemeColorsHint()
 // дефолтом — по-английски, отчего форма выглядела наполовину переведённой.
 // i18nReady не реджектится и сам снимается по таймауту, так что не приехавший
 // чанк даёт непереведённый текст, а не белый экран.
-void Promise.all([i18nReady, telegramLanguageReady, themeColorsReady]).then(() => {
+const telegramLanguageCapped = Promise.race([
+  telegramLanguageReady.catch(() => undefined),
+  new Promise<void>((resolve) => setTimeout(resolve, 5000)),
+]);
+
+void Promise.all([i18nReady, telegramLanguageCapped, themeColorsReady]).then(() => {
   ReactDOM.createRoot(document.getElementById('root')!).render(
     <React.StrictMode>
       <ErrorBoundary level="app">

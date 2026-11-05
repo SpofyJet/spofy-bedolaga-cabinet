@@ -62,14 +62,26 @@ export default function Dashboard() {
   });
 
   // Multi-tariff: check if user has multiple subscriptions
-  const { data: multiSubData, isPending: multiSubPending } = useQuery({
+  const {
+    data: multiSubData,
+    isPending: multiSubPending,
+    isError: multiSubError,
+    errorUpdatedAt: multiSubErrorAt,
+    refetch: refetchMultiSub,
+  } = useQuery({
     queryKey: ['subscriptions-list'],
     queryFn: () => subscriptionApi.getSubscriptions(),
     staleTime: 60_000,
   });
   const isMultiTariff = multiSubData?.multi_tariff_enabled ?? false;
 
-  const { data: subscriptionResponse, isLoading: subLoading } = useQuery({
+  const {
+    data: subscriptionResponse,
+    isLoading: subLoading,
+    isError: subError,
+    errorUpdatedAt: subErrorAt,
+    refetch: refetchSub,
+  } = useQuery({
     queryKey: ['subscription'],
     queryFn: () => subscriptionApi.getSubscription(),
     retry: false,
@@ -319,7 +331,24 @@ export default function Dashboard() {
   // мультитарифа, сама подписка). До этого всё, что от него зависит, — заглушки:
   // раньше главная сначала рисовала «Продлить · Тарифы» и «Закончилась», а через
   // мгновение — «Подключить» и «214 дней».
-  const statusReady = !multiSubPending && (isMultiTariff || !subLoading);
+  // Если запросы упали, статус неизвестен. Выводить из пустых данных «Закончилась» нельзя:
+  // платящий человек видит красный статус и кнопку продления из-за сбоя сети.
+  const statusUnknown =
+    !hasActiveAccess &&
+    ((multiSubError && !multiSubData) || (!isMultiTariff && subError && !subscriptionResponse));
+  const statusReady = !multiSubPending && (isMultiTariff || !subLoading) && !statusUnknown;
+
+  useEffect(() => {
+    if (!statusUnknown) return;
+    const timer = setTimeout(
+      () => {
+        void refetchMultiSub();
+        void refetchSub();
+      },
+      15_000 + Math.random() * 5_000,
+    );
+    return () => clearTimeout(timer);
+  }, [statusUnknown, multiSubErrorAt, subErrorAt, refetchMultiSub, refetchSub]);
 
   // Статус доступа одной фразой: главный вопрос главной — «работает ли моя подписка».
   const status: 'active' | 'expired' | 'none' = hasActiveAccess

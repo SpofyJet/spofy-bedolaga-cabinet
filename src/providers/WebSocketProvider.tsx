@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, useCallback } from 'react';
 import { useAuthStore } from '../store/auth';
 import { WebSocketContext, type MessageHandler, type WSMessage } from './WebSocketContext';
 import { WS } from '../config/constants';
+import { tokenStorage } from '../utils/token';
 
 // Re-export for backward compatibility
 export type { WSMessage } from './WebSocketContext';
@@ -56,6 +57,8 @@ export function WebSocketProvider({ children }: { children: React.ReactNode }) {
       pingIntervalRef.current = null;
     }
     if (wsRef.current) {
+      // Иначе намеренное закрытие запускает повторное подключение из старого замыкания.
+      wsRef.current.onclose = null;
       wsRef.current.close();
       wsRef.current = null;
     }
@@ -73,7 +76,8 @@ export function WebSocketProvider({ children }: { children: React.ReactNode }) {
 
     cleanup();
 
-    const wsUrl = buildWebSocketUrl(accessToken);
+    // В store токен устаревает: обновление пишет его только в tokenStorage.
+    const wsUrl = buildWebSocketUrl(tokenStorage.getAccessToken() ?? accessToken);
 
     try {
       const ws = new WebSocket(wsUrl);
@@ -136,10 +140,10 @@ export function WebSocketProvider({ children }: { children: React.ReactNode }) {
 
         // Attempt to reconnect if not closed intentionally
         if (event.code !== 1000 && reconnectAttemptsRef.current < maxReconnectAttempts) {
-          const delay = Math.min(
-            1000 * 2 ** reconnectAttemptsRef.current,
-            WS.MAX_RECONNECT_DELAY_MS,
-          );
+          // Разброс: после перезапуска бота клиенты не возвращаются одной волной.
+          const delay =
+            Math.min(1000 * 2 ** reconnectAttemptsRef.current, WS.MAX_RECONNECT_DELAY_MS) *
+            (0.5 + Math.random());
           if (isDev)
             console.log(
               `[WS] Reconnecting in ${delay}ms (attempt ${reconnectAttemptsRef.current + 1})`,

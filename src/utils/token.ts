@@ -277,6 +277,10 @@ class TokenRefreshManager {
       if (isBackendUnavailableError(err)) {
         this.lastFailureWasTransport = true;
         void reportPossibleBackendDown();
+      } else if (axios.isAxiosError(err)) {
+        // Перегрузка не отказ в токене: 429 и 5xx не должны стирать сессию.
+        const status = err.response?.status ?? 0;
+        if (status === 408 || status === 429 || status >= 500) this.lastFailureWasTransport = true;
       }
       return null;
     }

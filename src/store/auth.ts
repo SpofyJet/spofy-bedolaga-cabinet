@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 import type { CampaignBonusInfo, RegisterResponse, User } from '../types';
@@ -226,8 +227,7 @@ export const useAuthStore = create<AuthState>()(
             if (!isTokenValid(accessToken)) {
               const newToken = await tokenRefreshManager.refreshAccessToken();
               if (newToken) {
-                const user = await authApi.getMe();
-                await get().checkAdminStatus();
+                const [user] = await Promise.all([authApi.getMe(), get().checkAdminStatus()]);
                 applySession(newToken, refreshToken, user);
               } else if (tokenRefreshManager.lastFailureWasTransport) {
                 // Backend unreachable, not a rejected token — keep the session
@@ -241,19 +241,20 @@ export const useAuthStore = create<AuthState>()(
             }
 
             try {
-              const user = await authApi.getMe();
-              await get().checkAdminStatus();
+              const [user] = await Promise.all([authApi.getMe(), get().checkAdminStatus()]);
               applySession(accessToken, refreshToken, user);
             } catch (error) {
               if (isBackendUnavailableError(error)) throw error;
               const newToken = await tokenRefreshManager.refreshAccessToken();
               if (newToken) {
                 try {
-                  const user = await authApi.getMe();
-                  await get().checkAdminStatus();
+                  const [user] = await Promise.all([authApi.getMe(), get().checkAdminStatus()]);
                   applySession(newToken, refreshToken, user);
                 } catch (error) {
-                  if (isBackendUnavailableError(error)) throw error;
+                  // Токен только что обновился: стираем сессию лишь при явном отказе.
+                  // 429 и 500 в наплыв не повод выкидывать человека на вход.
+                  const status = axios.isAxiosError(error) ? error.response?.status : undefined;
+                  if (status !== 401 && status !== 403) throw error;
                   clearSession();
                 }
               } else if (tokenRefreshManager.lastFailureWasTransport) {
@@ -268,11 +269,9 @@ export const useAuthStore = create<AuthState>()(
           } catch (error) {
             // A profile request may fail after a successful refresh as well.
             // Keep credentials and allow recovery to rerun the incomplete boot.
-            if (isBackendUnavailableError(error)) {
-              keepSessionForRetry();
-            } else {
-              throw error;
-            }
+            // Любая другая ошибка тоже не повод висеть на загрузчике без кнопки.
+            keepSessionForRetry();
+            if (!isBackendUnavailableError(error)) console.warn('Auth bootstrap failed', error);
           } finally {
             initState.isInitializing = false;
             initState.isInitialized = !retryableFailure;
