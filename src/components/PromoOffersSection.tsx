@@ -251,7 +251,7 @@ export default function PromoOffersSection({ className = '' }: PromoOffersSectio
             </div>
           </div>
           <div className="mt-4 flex flex-col gap-2 sm:flex-row">
-            <Button className="flex-1" onClick={handleUseNow}>
+            <Button className="w-full sm:w-auto sm:flex-1" onClick={handleUseNow}>
               {t('promo.useNow')}
             </Button>
             <Button tone="ghost" onClick={handleDeactivateClick} className="text-dark-400">

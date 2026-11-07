@@ -148,7 +148,8 @@ export default function SuccessNotificationModal() {
   // Строки деталей: одна группа с разделителями, как в профиле.
   const rows: Array<{ key: string; label: string; value: string; accent?: boolean }> = [];
   if (formattedAmount) {
-    const plus = isDevicesPurchased || isTrafficPurchased ? '' : '+';
+    // «+» и зелёный — только у пополнения: у продления и покупок это цена, а не приход.
+    const plus = isBalanceTopup ? '+' : '';
     rows.push({
       key: 'amount',
       label: isBalanceTopup
