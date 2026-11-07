@@ -57,8 +57,24 @@
           location.search.indexOf('tgWebApp') !== -1;
         if (isTelegram) {
           var s = document.createElement('script');
-          s.src = 'https://telegram.org/js/telegram-web-app.js';
+          // ?59 — свежая версия скрипта, а не старая из кэша WebView.
+          s.src = 'https://telegram.org/js/telegram-web-app.js?59';
           s.async = true;
+          // На весь экран сразу при открытии на телефоне — тем же официальным
+          // вызовом, что сработал на проверочной странице. Путь через SDK в
+          // main.tsx остаётся; повторный запрос Telegram просто игнорирует.
+          // Выключено, только если админ явно снял галочку (кэш = 'false').
+          s.onload = function () {
+            try {
+              var tg = window.Telegram && window.Telegram.WebApp;
+              if (!tg || !tg.isVersionAtLeast || !tg.isVersionAtLeast('8.0')) return;
+              if (tg.platform !== 'ios' && tg.platform !== 'android') return;
+              if (localStorage.getItem('cabinet_fullscreen_enabled') === 'false') return;
+              tg.ready();
+              tg.expand();
+              if (!tg.isFullscreen) tg.requestFullscreen();
+            } catch (e) {}
+          };
           document.head.appendChild(s);
         }
       })();
