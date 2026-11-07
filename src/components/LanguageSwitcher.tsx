@@ -5,7 +5,7 @@ import { infoApi } from '@/api/info';
 import { ChevronDownIcon } from '@/components/icons';
 
 export default function LanguageSwitcher() {
-  const { i18n } = useTranslation();
+  const { i18n, t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -50,7 +50,7 @@ export default function LanguageSwitcher() {
         className={`flex items-center gap-1.5 rounded-xl px-2.5 py-2 text-sm transition-all ${
           isOpen ? ' bg-dark-700' : ' bg-dark-800/50 hover:bg-dark-700'
         }`}
-        aria-label="Change language"
+        aria-label={t('common.changeLanguage')}
       >
         <span>{currentLang.flag}</span>
         <span className="font-medium text-dark-200">{currentLang.code.toUpperCase()}</span>

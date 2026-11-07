@@ -58,7 +58,8 @@
     "dayTime": {
       "today": "امروز، {{time}}",
       "yesterday": "دیروز، {{time}}"
-    }
+    },
+    "changeLanguage": "تغییر زبان"
   },
   "navShort": {
     "wheel": "گردونه",
@@ -1494,7 +1495,8 @@
       "toSubscription": "رفتن به اشتراک",
       "toBalance": "رفتن به اعتبار",
       "spinAgain": "دوباره بچرخان"
-    }
+    },
+    "noPrizes": "هنوز جایزه‌ای تنظیم نشده"
   },
   "admin": {
     "backgrounds": {
@@ -7052,7 +7054,9 @@
     "trafficDiscount": "ترافیک",
     "deviceDiscount": "دستگاه‌ها",
     "periodDiscount": "{{days}} روز",
-    "noDiscounts": "بدون تخفیف"
+    "noDiscounts": "بدون تخفیف",
+    "emptyHint": "کمک لازم دارید؟ به ما پیام دهید.",
+    "writeSupport": "تماس با پشتیبانی"
   },
   "onboarding": {
     "skip": "رد کردن",

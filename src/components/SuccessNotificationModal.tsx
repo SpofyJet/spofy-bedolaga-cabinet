@@ -24,6 +24,9 @@ import {
   WalletIcon,
 } from '@/components/icons';
 import { plainTariffName } from '@/utils/plainTariffName';
+import { Button } from '@/components/spofy/ui';
+import { TONE_TILE } from '@/components/spofy/tones';
+import { cn } from '@/lib/utils';
 
 export default function SuccessNotificationModal() {
   const { t } = useTranslation();
@@ -113,36 +116,94 @@ export default function SuccessNotificationModal() {
   // Determine title and message
   let title = data.title;
   const message = data.message;
-  let icon = <CheckCircleIcon className="h-16 w-16" />;
-  let gradientClass = 'from-success-500 to-success-600';
+  let Icon = CheckCircleIcon;
+  // Цвет плитки по смыслу: деньги и трафик — зелёный «готово», подписка и устройства — синий.
+  let tone: 'success' | 'accent' = 'success';
+
+  if (isBalanceTopup) Icon = WalletIcon;
+  else if (isSubscription) {
+    Icon = RocketIcon;
+    tone = 'accent';
+  } else if (isDevicesPurchased) {
+    Icon = DevicesIcon;
+    tone = 'accent';
+  } else if (isTrafficPurchased) Icon = TrafficIcon;
 
   if (!title) {
     if (isBalanceTopup) {
       title = t('successNotification.balanceTopup.title', 'Balance topped up!');
-      icon = <WalletIcon className="h-8 w-8" />;
-      gradientClass = 'from-success-500 to-success-600';
     } else if (data.type === 'subscription_activated') {
       title = t('successNotification.subscriptionActivated.title', 'Subscription activated!');
-      icon = <RocketIcon className="h-8 w-8" />;
-      gradientClass = 'from-accent-500 to-accent-700';
     } else if (data.type === 'subscription_renewed') {
       title = t('successNotification.subscriptionRenewed.title', 'Subscription renewed!');
-      icon = <RocketIcon className="h-8 w-8" />;
-      gradientClass = 'from-accent-500 to-accent-700';
     } else if (data.type === 'subscription_purchased') {
       title = t('successNotification.subscriptionPurchased.title', 'Subscription purchased!');
-      icon = <RocketIcon className="h-8 w-8" />;
-      gradientClass = 'from-accent-500 to-accent-700';
     } else if (data.type === 'devices_purchased') {
       title = t('successNotification.devicesPurchased.title', 'Devices added!');
-      icon = <DevicesIcon className="h-8 w-8" />;
-      gradientClass = 'from-blue-500 to-cyan-600';
     } else if (data.type === 'traffic_purchased') {
       title = t('successNotification.trafficPurchased.title', 'Traffic added!');
-      icon = <TrafficIcon className="h-8 w-8" />;
-      gradientClass = 'from-success-500 to-success-600';
     }
   }
+
+  // Строки деталей: одна группа с разделителями, как в профиле.
+  const rows: Array<{ key: string; label: string; value: string; accent?: boolean }> = [];
+  if (formattedAmount) {
+    const plus = isDevicesPurchased || isTrafficPurchased ? '' : '+';
+    rows.push({
+      key: 'amount',
+      label: isBalanceTopup
+        ? t('successNotification.amount', 'Amount')
+        : t('successNotification.price', 'Price'),
+      value: `${plus}${formattedAmount}`,
+      accent: !!plus,
+    });
+  }
+  if (isDevicesPurchased && data.devicesAdded)
+    rows.push({
+      key: 'devices',
+      label: t('successNotification.devicesAdded', 'Devices added'),
+      value: `+${data.devicesAdded}`,
+      accent: true,
+    });
+  if (isDevicesPurchased && data.newDeviceLimit)
+    rows.push({
+      key: 'deviceLimit',
+      label: t('successNotification.totalDevices', 'Total devices'),
+      value: String(data.newDeviceLimit),
+    });
+  if (isTrafficPurchased && data.trafficGbAdded)
+    rows.push({
+      key: 'traffic',
+      label: t('successNotification.trafficAdded', 'Traffic added'),
+      value: `+${data.trafficGbAdded}\u00A0${t('common.units.gb', 'GB')}`,
+      accent: true,
+    });
+  if (isTrafficPurchased && data.newTrafficLimitGb)
+    rows.push({
+      key: 'trafficLimit',
+      label: t('successNotification.totalTraffic', 'Total traffic'),
+      value: `${data.newTrafficLimitGb}\u00A0${t('common.units.gb', 'GB')}`,
+    });
+  if (isBalanceTopup && formattedBalance)
+    rows.push({
+      key: 'balance',
+      label: t('successNotification.newBalance', 'New balance'),
+      value: formattedBalance,
+    });
+  if (data.tariffName)
+    rows.push({
+      key: 'tariff',
+      label: t('successNotification.tariff', 'Tariff'),
+      value: plainTariffName(data.tariffName),
+    });
+  if (formattedExpiry)
+    rows.push({
+      key: 'expiry',
+      label: lifetimeExpiry
+        ? t('subscription.lifetime.term')
+        : t('successNotification.validUntil', 'Valid until'),
+      value: formattedExpiry,
+    });
 
   const handleGoToSubscription = () => {
     hide();
@@ -177,7 +238,6 @@ export default function SuccessNotificationModal() {
         }}
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Close button */}
         <button
           onClick={handleClose}
           aria-label={t('common.close')}
@@ -186,166 +246,67 @@ export default function SuccessNotificationModal() {
           <CloseIcon />
         </button>
 
-        {/* Success header with animation */}
-        <div
-          className={`flex flex-col items-center bg-gradient-to-br ${gradientClass} px-6 pb-8 pt-10`}
-        >
-          {/* Use animate-pulse for celebration; bounce easing reads dated and
-              the lift is the moment, not the bounce. */}
-          <div className="mb-4 animate-pulse text-white">{icon}</div>
-          <h2 id="success-modal-title" className="text-center text-2xl font-bold text-white">
+        <div className="flex flex-col items-center px-6 pb-5 pt-8 text-center">
+          <span
+            className={cn(
+              'flex h-14 w-14 items-center justify-center rounded-2xl [&>svg]:h-7 [&>svg]:w-7',
+              TONE_TILE[tone],
+            )}
+          >
+            <Icon />
+          </span>
+          <h2 id="success-modal-title" className="mt-4 text-xl font-bold text-dark-50">
             {title}
           </h2>
-          {message && <p className="mt-2 text-center text-white/80">{message}</p>}
+          {message && <p className="mt-1.5 text-[15px] leading-snug text-dark-400">{message}</p>}
         </div>
 
-        {/* Details */}
-        <div className="space-y-4 p-6">
-          {/* Amount */}
-          {formattedAmount && (
-            <div className="flex items-center justify-between rounded-xl bg-dark-800/50 px-4 py-3">
-              <span className="text-dark-400">
-                {isBalanceTopup
-                  ? t('successNotification.amount', 'Amount')
-                  : t('successNotification.price', 'Price')}
-              </span>
-              <span
-                className={`text-lg font-bold ${isDevicesPurchased || isTrafficPurchased ? 'text-dark-100' : 'text-success-400'}`}
-              >
-                {isDevicesPurchased || isTrafficPurchased ? '' : '+'}
-                {formattedAmount}
-              </span>
+        <div className="space-y-4 px-4 pb-4">
+          {rows.length > 0 && (
+            <div className="divide-y divide-dark-700/50 overflow-hidden rounded-2xl bg-dark-800/50">
+              {rows.map((row) => (
+                <div
+                  key={row.key}
+                  className="flex min-h-[48px] items-center justify-between gap-3 px-4 py-2.5"
+                >
+                  <span className="shrink-0 text-[14px] text-dark-400">{row.label}</span>
+                  <span
+                    className={cn(
+                      'min-w-0 truncate text-[15px] font-semibold',
+                      row.accent ? 'text-success-400' : 'text-dark-100',
+                    )}
+                  >
+                    {row.value}
+                  </span>
+                </div>
+              ))}
             </div>
           )}
 
-          {/* Devices info (for devices purchase) */}
-          {isDevicesPurchased && data.devicesAdded && (
-            <div className="flex items-center justify-between rounded-xl bg-dark-800/50 px-4 py-3">
-              <span className="text-dark-400">
-                {t('successNotification.devicesAdded', 'Devices added')}
-              </span>
-              <span className="text-lg font-bold text-blue-400">+{data.devicesAdded}</span>
-            </div>
-          )}
-
-          {isDevicesPurchased && data.newDeviceLimit && (
-            <div className="flex items-center justify-between rounded-xl bg-dark-800/50 px-4 py-3">
-              <span className="text-dark-400">
-                {t('successNotification.totalDevices', 'Total devices')}
-              </span>
-              <span className="font-semibold text-dark-100">{data.newDeviceLimit}</span>
-            </div>
-          )}
-
-          {/* Traffic info (for traffic purchase) */}
-          {isTrafficPurchased && data.trafficGbAdded && (
-            <div className="flex items-center justify-between rounded-xl bg-dark-800/50 px-4 py-3">
-              <span className="text-dark-400">
-                {t('successNotification.trafficAdded', 'Traffic added')}
-              </span>
-              <span className="text-lg font-bold text-success-400">
-                +{data.trafficGbAdded} {t('common.units.gb', 'GB')}
-              </span>
-            </div>
-          )}
-
-          {isTrafficPurchased && data.newTrafficLimitGb && (
-            <div className="flex items-center justify-between rounded-xl bg-dark-800/50 px-4 py-3">
-              <span className="text-dark-400">
-                {t('successNotification.totalTraffic', 'Total traffic')}
-              </span>
-              <span className="font-semibold text-dark-100">
-                {data.newTrafficLimitGb} {t('common.units.gb', 'GB')}
-              </span>
-            </div>
-          )}
-
-          {/* New balance (for top-up) */}
-          {isBalanceTopup && formattedBalance && (
-            <div className="flex items-center justify-between rounded-xl bg-dark-800/50 px-4 py-3">
-              <span className="text-dark-400">
-                {t('successNotification.newBalance', 'New balance')}
-              </span>
-              <span className="text-lg font-bold text-dark-100">{formattedBalance}</span>
-            </div>
-          )}
-
-          {/* Tariff name */}
-          {data.tariffName && (
-            <div className="flex items-center justify-between gap-3 rounded-xl bg-dark-800/50 px-4 py-3">
-              <span className="shrink-0 text-dark-400">
-                {t('successNotification.tariff', 'Tariff')}
-              </span>
-              <span className="min-w-0 truncate font-semibold text-dark-100">
-                {plainTariffName(data.tariffName)}
-              </span>
-            </div>
-          )}
-
-          {/* Expiry date */}
-          {formattedExpiry && (
-            <div className="flex items-center justify-between rounded-xl bg-dark-800/50 px-4 py-3">
-              <span className="text-dark-400">
-                {lifetimeExpiry
-                  ? t('subscription.lifetime.term')
-                  : t('successNotification.validUntil', 'Valid until')}
-              </span>
-              <span className="font-semibold text-dark-100">{formattedExpiry}</span>
-            </div>
-          )}
-
-          {/* Action buttons */}
-          <div className="space-y-2 pt-2">
+          <div className="space-y-2">
             {isSubscription && (
-              <button
+              <Button
+                className="w-full"
                 onClick={isConnectionNext ? handleGoToConnection : handleGoToSubscription}
-                className="flex w-full items-center justify-center gap-2 rounded-xl bg-cta-500 py-3.5 font-bold text-on-cta transition-colors hover:bg-cta-400 active:bg-cta-600"
               >
-                <RocketIcon className="h-8 w-8" />
-                <span>
-                  {isConnectionNext
-                    ? t('successNotification.connectDevice', 'Connect device')
-                    : t('successNotification.goToSubscription', 'Go to Subscription')}
-                </span>
-              </button>
+                {isConnectionNext
+                  ? t('successNotification.connectDevice', 'Connect device')
+                  : t('successNotification.goToSubscription', 'Go to Subscription')}
+              </Button>
             )}
-
             {isBalanceTopup && (
-              <button
-                onClick={handleGoToBalance}
-                className="flex w-full items-center justify-center gap-2 rounded-xl bg-success-500 py-3.5 font-bold text-white transition-colors hover:bg-success-400 active:bg-success-600"
-              >
-                <WalletIcon className="h-8 w-8" />
-                <span>{t('successNotification.goToBalance', 'Go to Balance')}</span>
-              </button>
+              <Button className="w-full" onClick={handleGoToBalance}>
+                {t('successNotification.goToBalance', 'Go to Balance')}
+              </Button>
             )}
-
-            {isDevicesPurchased && (
-              <button
-                onClick={handleGoToSubscription}
-                className="flex w-full items-center justify-center gap-2 rounded-xl bg-cta-500 py-3.5 font-bold text-on-cta transition-colors hover:bg-cta-400 active:bg-cta-600"
-              >
-                <DevicesIcon className="h-8 w-8" />
-                <span>{t('successNotification.goToSubscription', 'Go to Subscription')}</span>
-              </button>
+            {(isDevicesPurchased || isTrafficPurchased) && (
+              <Button className="w-full" onClick={handleGoToSubscription}>
+                {t('successNotification.goToSubscription', 'Go to Subscription')}
+              </Button>
             )}
-
-            {isTrafficPurchased && (
-              <button
-                onClick={handleGoToSubscription}
-                className="flex w-full items-center justify-center gap-2 rounded-xl bg-success-500 py-3.5 font-bold text-white transition-colors hover:bg-success-400 active:bg-success-600"
-              >
-                <TrafficIcon className="h-8 w-8" />
-                <span>{t('successNotification.goToSubscription', 'Go to Subscription')}</span>
-              </button>
-            )}
-
-            <button
-              onClick={handleClose}
-              className="w-full rounded-xl bg-dark-800 py-3 font-semibold text-dark-300 transition-colors hover:bg-dark-700 hover:text-dark-100"
-            >
+            <Button tone="secondary" className="w-full" onClick={handleClose}>
               {t('common.close', 'Close')}
-            </button>
+            </Button>
           </div>
         </div>
       </div>

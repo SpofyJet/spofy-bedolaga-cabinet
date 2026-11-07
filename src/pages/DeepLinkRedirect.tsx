@@ -68,7 +68,8 @@ export default function DeepLinkRedirect() {
   });
 
   const projectName = branding ? branding.name : import.meta.env.VITE_APP_NAME || 'VPN';
-  const logoLetter = branding?.logo_letter || import.meta.env.VITE_APP_LOGO || 'V';
+  // Пока брендинг не пришёл, плитка пустая: буква по умолчанию («V») мелькала и сменялась логотипом.
+  const logoLetter = branding ? branding.logo_letter || import.meta.env.VITE_APP_LOGO || 'S' : '';
   const logoUrl = branding ? brandingApi.getLogoUrl(branding) : null;
 
   // Parse raw query string to preserve '+' chars in base64 crypto links.

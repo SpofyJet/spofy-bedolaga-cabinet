@@ -53,7 +53,8 @@
     "dayTime": {
       "today": "今天 {{time}}",
       "yesterday": "昨天 {{time}}"
-    }
+    },
+    "changeLanguage": "切换语言"
   },
   "navShort": {
     "wheel": "转盘",
@@ -1487,7 +1488,8 @@
       "toSubscription": "前往订阅",
       "toBalance": "前往余额",
       "spinAgain": "再转一次"
-    }
+    },
+    "noPrizes": "暂无奖品"
   },
   "admin": {
     "backgrounds": {
@@ -6996,7 +6998,9 @@
     "trafficDiscount": "流量",
     "deviceDiscount": "设备",
     "periodDiscount": "{{days}}天",
-    "noDiscounts": "无折扣"
+    "noDiscounts": "无折扣",
+    "emptyHint": "需要帮助？请联系我们。",
+    "writeSupport": "联系客服"
   },
   "onboarding": {
     "skip": "跳过",

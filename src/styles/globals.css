@@ -714,7 +714,8 @@ img.twemoji {
   }
 
   .btn-primary {
-    @apply btn bg-accent-500 text-on-accent hover:bg-accent-600 focus-visible:ring-accent-500 active:bg-accent-700;
+    /* Тот же цвет, что у главной кнопки Spofy (ui.tsx Button), чтобы на экране не было двух «главных». */
+    @apply btn bg-cta-500 text-on-cta hover:bg-cta-600 focus-visible:ring-accent-500 active:bg-cta-600;
   }
 
   .btn-secondary {
@@ -1888,131 +1889,6 @@ input[type="checkbox"]:hover:not(:checked) {
 
 @media (prefers-reduced-motion: reduce) {
   .admin-orb {
-    animation: none;
-  }
-}
-
-/* ── Hero: стеклянный фокус-визуал главной ─────────────────────────── */
-.hero-visual {
-  position: relative;
-  overflow: hidden;
-  border-radius: 24px;
-  border: 1px solid rgba(148, 163, 184, 0.1);
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.028), rgba(255, 255, 255, 0) 42%),
-    rgb(var(--color-dark-900) / 0.72);
-  box-shadow:
-    0 1px 2px rgba(0, 0, 0, 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.04);
-}
-
-/* Дрейфующие акцентные пятна — живой фон за стеклом */
-.hero-ambient {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-}
-
-.hero-ambient::before,
-.hero-ambient::after {
-  content: "";
-  position: absolute;
-  border-radius: 9999px;
-  filter: blur(48px);
-}
-
-.hero-ambient::before {
-  width: 220px;
-  height: 220px;
-  right: -40px;
-  top: -60px;
-  background: radial-gradient(closest-side, rgba(var(--color-accent-400), 0.22), transparent 70%);
-  animation: heroDrift 14s ease-in-out infinite alternate;
-}
-
-.hero-ambient::after {
-  width: 170px;
-  height: 170px;
-  left: -30px;
-  bottom: -50px;
-  background: radial-gradient(closest-side, rgba(56, 189, 248, 0.14), transparent 70%);
-  animation: heroDrift 18s ease-in-out infinite alternate-reverse;
-}
-
-@keyframes heroDrift {
-  from {
-    transform: translate3d(0, 0, 0) scale(1);
-  }
-  to {
-    transform: translate3d(-18px, 14px, 0) scale(1.12);
-  }
-}
-
-/* Стеклянный объект — растворяется в фоне радиальной маской */
-.hero-orb {
-  position: absolute;
-  right: -14%;
-  top: 50%;
-  width: 78%;
-  max-width: 320px;
-  transform: translateY(-50%);
-  mix-blend-mode: screen;
-  opacity: 0.92;
-  pointer-events: none;
-  animation: heroFloat 11s ease-in-out infinite alternate;
-  mask-image: radial-gradient(72% 72% at 50% 50%, #000 42%, transparent 74%);
-  -webkit-mask-image: radial-gradient(72% 72% at 50% 50%, #000 42%, transparent 74%);
-}
-
-/* Медленное парение стекла — единственное заметное движение hero. */
-@keyframes heroFloat {
-  from {
-    transform: translateY(-53%) rotate(-1.2deg);
-  }
-  to {
-    transform: translateY(-47%) rotate(1.2deg);
-  }
-}
-
-.hero-orb-cluster {
-  right: -18%;
-  width: 84%;
-  opacity: 0.85;
-}
-
-/* Пилюля с градиентной каёмкой — бейдж тарифа */
-.hero-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 5px 12px;
-  border-radius: 999px;
-  font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: rgb(226 232 240);
-  background:
-    linear-gradient(rgb(var(--color-dark-950) / 0.92), rgb(var(--color-dark-950) / 0.92))
-    padding-box,
-    linear-gradient(100deg, rgba(var(--color-accent-400), 0.75), rgba(56, 189, 248, 0.3)) border-box;
-  border: 1px solid transparent;
-}
-
-/* Гигантская цифра оставшихся дней */
-.hero-numeral {
-  font-family: Outfit, Manrope, system-ui, sans-serif;
-  font-size: clamp(72px, 21vw, 104px);
-  font-weight: 700;
-  line-height: 0.9;
-  letter-spacing: -0.03em;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .hero-ambient::before,
-  .hero-ambient::after,
-  .hero-orb {
     animation: none;
   }
 }

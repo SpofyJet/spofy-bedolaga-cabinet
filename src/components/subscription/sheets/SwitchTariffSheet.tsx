@@ -289,17 +289,13 @@ export function SwitchTariffSheet({
             disabled={switchMutation.isPending || !switchPreview.can_switch}
             className={cn(
               buttonVariants({ variant: 'primary', size: 'lg', fullWidth: true }),
-              'shadow-none hover:bg-accent-500 hover:shadow-none active:bg-accent-500 focus-visible:ring-dark-100',
+              'shadow-none hover:bg-cta-600 hover:shadow-none active:bg-cta-600 focus-visible:ring-dark-100',
             )}
           >
-            {switchMutation.isPending ? (
-              <>
-                <Spinner className="h-4 w-4 border-current border-t-transparent" />
-                {t('common.loading')}
-              </>
-            ) : (
-              t('subscription.switchTariff.confirm')
+            {switchMutation.isPending && (
+              <Spinner className="h-4 w-4 border-current border-t-transparent" />
             )}
+            {t('subscription.switchTariff.confirm')}
           </button>
           {switchMutation.isError && !shouldUsePurchaseFlow(switchMutation.error) && (
             <p role="alert" className="text-sm text-error-400">

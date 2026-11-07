@@ -4,7 +4,8 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router';
 import { promoApi, type PromoOffer } from '../api/promo';
 import { getApiErrorMessage } from '../utils/api-error';
-import { ClockIcon, CheckIcon, XCircleIcon } from './icons';
+import { ClockIcon, CheckIcon, GiftIcon, PercentIcon, RocketIcon, XCircleIcon } from './icons';
+import { Button, RowIcon } from '@/components/spofy/ui';
 import { useDestructiveConfirm } from '@/platform/hooks/useNativeDialog';
 import { Skeleton, SkeletonGroup } from '@/components/ui/skeleton';
 
@@ -42,9 +43,9 @@ const formatTimeLeft = (
 };
 
 const getOfferIcon = (effectType: string, discountPercent?: number | null) => {
-  if (effectType === 'test_access') return <span className="text-2xl">🚀</span>;
-  if (discountPercent) return <span className="text-2xl">🏷️</span>;
-  return <span className="text-2xl">🎁</span>;
+  if (effectType === 'test_access') return <RocketIcon />;
+  if (discountPercent) return <PercentIcon />;
+  return <GiftIcon />;
 };
 
 const getOfferTitle = (
@@ -218,135 +219,111 @@ export default function PromoOffersSection({ className = '' }: PromoOffersSectio
   }
 
   return (
-    <div className={`space-y-4 ${className}`}>
-      {/* Active Discount Banner with actions */}
+    <div className={`space-y-3 ${className}`}>
+      {/* Действующая скидка: одна плоская карточка, главная кнопка — «Использовать». */}
       {activeDiscount && activeDiscount.is_active && activeDiscount.discount_percent > 0 && (
-        <div className="card bg-gradient-to-br from-success-500/10 to-accent-500/5">
-          <div className="flex flex-col gap-4">
-            {/* Header */}
-            <div className="flex items-center gap-4">
-              <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-success-500/20 text-success-400">
-                <span className="text-2xl">🏷️</span>
+        <div className="rounded-3xl bg-dark-900/70 p-4">
+          <div className="flex items-center gap-3">
+            <RowIcon tone="success">
+              <PercentIcon />
+            </RowIcon>
+            <div className="min-w-0 flex-1">
+              <div className="flex flex-wrap items-center gap-2">
+                <h3 className="text-[15px] font-semibold text-dark-100">
+                  {t('promo.offers.discountActiveTitle', {
+                    percent: activeDiscount.discount_percent,
+                  })}
+                </h3>
+                <span className="rounded-full bg-success-500/10 px-2 py-0.5 text-2xs font-semibold text-success-400">
+                  −{activeDiscount.discount_percent}%
+                </span>
               </div>
-              <div className="min-w-0 flex-1">
-                <div className="mb-1 flex flex-wrap items-center gap-2">
-                  <h3 className="font-semibold text-dark-100">
-                    {t('promo.offers.discountActiveTitle', {
-                      percent: activeDiscount.discount_percent,
+              {activeDiscount.expires_at && (
+                <div className="mt-0.5 flex items-center gap-1 text-[13px] text-dark-400">
+                  <ClockIcon className="h-3.5 w-3.5" />
+                  <span>
+                    {t('promo.offers.expires', {
+                      time: formatTimeLeft(activeDiscount.expires_at, t),
                     })}
-                  </h3>
-                  <span className="rounded bg-success-500/20 px-2 py-0.5 text-xs font-bold text-success-400">
-                    -{activeDiscount.discount_percent}%
                   </span>
                 </div>
-                <div className="flex items-center gap-4 text-sm text-dark-400">
-                  {activeDiscount.expires_at && (
-                    <div className="flex items-center gap-1">
-                      <ClockIcon />
-                      <span>
-                        {t('promo.offers.expires', {
-                          time: formatTimeLeft(activeDiscount.expires_at, t),
-                        })}
-                      </span>
-                    </div>
-                  )}
-                </div>
-              </div>
+              )}
             </div>
-
-            {/* Action Buttons */}
-            <div className="flex flex-col gap-2 sm:flex-row">
-              <button
-                onClick={handleUseNow}
-                className="flex-1 rounded-xl bg-gradient-to-r from-success-500 to-success-600 px-4 py-2.5 font-semibold text-white transition-all hover:from-success-400 hover:to-success-500 active:from-success-600 active:to-success-700"
-              >
-                {t('promo.useNow')}
-              </button>
-              <button
-                onClick={handleDeactivateClick}
-                className="flex items-center justify-center gap-1.5 rounded-xl bg-dark-900/50 px-4 py-2.5 text-sm text-dark-400 transition-colors hover:bg-error-500/10 hover:text-error-400"
-              >
-                <XCircleIcon className="h-4 w-4" />
-                <span>{t('promo.deactivate.button')}</span>
-              </button>
-            </div>
+          </div>
+          <div className="mt-4 flex flex-col gap-2 sm:flex-row">
+            <Button className="flex-1" onClick={handleUseNow}>
+              {t('promo.useNow')}
+            </Button>
+            <Button tone="ghost" onClick={handleDeactivateClick} className="text-dark-400">
+              <XCircleIcon className="h-4 w-4" />
+              {t('promo.deactivate.button')}
+            </Button>
           </div>
         </div>
       )}
 
-      {/* Success/Error Messages */}
       {successMessage && (
-        <div className="flex items-center gap-3 rounded-xl bg-success-500/10 p-4 text-success-400">
+        <div className="flex items-center gap-3 rounded-2xl bg-success-500/10 p-4 text-[15px] text-success-400">
           <CheckIcon />
           <span>{successMessage}</span>
         </div>
       )}
 
       {errorMessage && (
-        <div className="rounded-xl bg-error-500/10 p-4 text-error-400">{errorMessage}</div>
-      )}
-
-      {/* Available Offers */}
-      {availableOffers.length > 0 && (
-        <div className="space-y-3">
-          {availableOffers.map((offer) => (
-            <div
-              key={offer.id}
-              className="card bg-gradient-to-br from-warning-500/5 to-transparent transition-colors"
-            >
-              <div className="flex items-start gap-4">
-                <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-warning-500/30 to-warning-500/20">
-                  {getOfferIcon(offer.effect_type, offer.discount_percent)}
-                </div>
-                <div className="min-w-0 flex-1">
-                  <div className="mb-1 flex items-center gap-2">
-                    <h3 className="font-semibold text-dark-100">{getOfferTitle(offer, t)}</h3>
-                    {offer.effect_type === 'test_access' && (
-                      <span className="rounded bg-accent-500/20 px-2 py-0.5 text-xs text-accent-400">
-                        {t('promo.offers.test')}
-                      </span>
-                    )}
-                  </div>
-                  <p className="mb-3 text-sm text-dark-400">{getOfferDescription(offer, t)}</p>
-                  <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                    <div className="flex items-center gap-1 text-xs text-dark-500">
-                      <ClockIcon />
-                      <span>
-                        {t('promo.offers.remaining', { time: formatTimeLeft(offer.expires_at, t) })}
-                      </span>
-                    </div>
-                    <button
-                      onClick={() => handleClaim(offer.id)}
-                      disabled={claimingId === offer.id}
-                      className="group relative flex w-full items-center justify-center gap-2 overflow-hidden rounded-lg bg-gradient-to-r from-warning-500 to-warning-500 px-5 py-2.5 text-sm font-semibold text-white transition-all hover:scale-105 active:scale-100 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:scale-100 sm:w-auto"
-                    >
-                      {/* Shimmer effect */}
-                      <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent transition-transform duration-1000 group-hover:translate-x-full" />
-                      {claimingId === offer.id ? (
-                        <>
-                          <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
-                          <span>{t('promo.offers.activating')}</span>
-                        </>
-                      ) : (
-                        <>
-                          <span className="text-lg">🎁</span>
-                          <span>{t('promo.offers.activate')}</span>
-                        </>
-                      )}
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          ))}
+        <div className="rounded-2xl bg-error-500/10 p-4 text-[15px] text-error-400">
+          {errorMessage}
         </div>
       )}
 
-      {/* Loading State */}
+      {availableOffers.map((offer) => (
+        <div key={offer.id} className="rounded-3xl bg-dark-900/70 p-4">
+          <div className="flex items-start gap-3">
+            <RowIcon tone="accent">
+              {getOfferIcon(offer.effect_type, offer.discount_percent)}
+            </RowIcon>
+            <div className="min-w-0 flex-1">
+              <div className="flex flex-wrap items-center gap-2">
+                <h3 className="text-[15px] font-semibold text-dark-100">
+                  {getOfferTitle(offer, t)}
+                </h3>
+                {offer.effect_type === 'test_access' && (
+                  <span className="rounded-full bg-accent-500/10 px-2 py-0.5 text-2xs font-semibold text-accent-300">
+                    {t('promo.offers.test')}
+                  </span>
+                )}
+              </div>
+              <p className="mt-0.5 text-[13px] leading-snug text-dark-400">
+                {getOfferDescription(offer, t)}
+              </p>
+              <div className="mt-1.5 flex items-center gap-1 text-[13px] text-dark-400">
+                <ClockIcon className="h-3.5 w-3.5" />
+                <span>
+                  {t('promo.offers.remaining', { time: formatTimeLeft(offer.expires_at, t) })}
+                </span>
+              </div>
+            </div>
+          </div>
+          <Button
+            className="mt-4 w-full"
+            onClick={() => handleClaim(offer.id)}
+            disabled={claimingId === offer.id}
+            aria-busy={claimingId === offer.id}
+          >
+            {claimingId === offer.id && (
+              <span
+                aria-hidden
+                className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent"
+              />
+            )}
+            {t('promo.offers.activate')}
+          </Button>
+        </div>
+      ))}
+
       {offersLoading && (
-        <div className="card">
-          <SkeletonGroup className="flex items-center gap-4">
-            <Skeleton className="h-12 w-12 shrink-0 rounded-xl" />
+        <div className="rounded-3xl bg-dark-900/70 p-4">
+          <SkeletonGroup className="flex items-center gap-3">
+            <Skeleton className="h-10 w-10 shrink-0 rounded-xl" />
             <div className="flex-1 space-y-2">
               <Skeleton className="h-5 w-32" />
               <Skeleton className="h-4 w-48" />

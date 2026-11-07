@@ -73,7 +73,7 @@ export default function TicketNotificationBell({ isAdmin = false }: TicketNotifi
           navigate(
             isAdmin
               ? `/admin/tickets?ticket=${message.ticket_id}`
-              : `/support?ticket=${message.ticket_id}`,
+              : `/support/${message.ticket_id}`,
           );
         },
         duration: 8000,
@@ -183,7 +183,7 @@ export default function TicketNotificationBell({ isAdmin = false }: TicketNotifi
     navigate(
       isAdmin
         ? `/admin/tickets?ticket=${notification.ticket_id}`
-        : `/support?ticket=${notification.ticket_id}`,
+        : `/support/${notification.ticket_id}`,
     );
   };
 

@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, memo } from 'react';
+import { useTranslation } from 'react-i18next';
 import type { WheelPrize } from '../../api/wheel';
 import { prizeGlyph } from './PrizeGlyph';
 
@@ -66,6 +67,7 @@ const FortuneWheel = memo(function FortuneWheel({
   labels,
   hubLabel,
 }: FortuneWheelProps) {
+  const { t } = useTranslation();
   const wheelRef = useRef<SVGGElement>(null);
   const accumulatedRotation = useRef(0);
   // Угол покоя: пока идёт спин, React рисует прежний угол и в DOM не лезет,
@@ -107,7 +109,7 @@ const FortuneWheel = memo(function FortuneWheel({
   if (prizes.length === 0) {
     return (
       <div className="mx-auto flex aspect-square w-full max-w-md items-center justify-center">
-        <p className="text-dark-400">No prizes configured</p>
+        <p className="text-dark-400">{t('wheel.noPrizes')}</p>
       </div>
     );
   }

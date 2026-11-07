@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import { useCurrency } from '../hooks/useCurrency';
 import { InfoIcon, WalletIcon, PlusIcon } from '@/components/icons';
+import { Button, RowIcon } from '@/components/spofy/ui';
 
 interface InsufficientBalancePromptProps {
   /** Amount missing in kopeks */
@@ -50,76 +51,77 @@ export default function InsufficientBalancePrompt({
     navigate(`/balance/top-up?${params.toString()}`);
   };
 
+  const amountText = (
+    <span className="whitespace-nowrap font-semibold">
+      {displayAmount}
+      {'\u00A0'}
+      {currencySymbol}
+    </span>
+  );
+
   if (compact) {
     return (
       <div
         // В узком листе текст и «Пополнить» рядом не помещались — кнопка
         // вылезала за плашку. Не влезли — кнопка уходит строкой ниже.
-        className={`flex flex-wrap items-center justify-between gap-3 rounded-xl bg-error-500/10 p-3 ${className}`}
+        className={`flex flex-wrap items-center justify-between gap-3 rounded-2xl bg-dark-800/50 p-3 ${className}`}
       >
-        <div className="flex min-w-0 flex-1 basis-40 items-center gap-2 text-sm text-error-400">
-          <InfoIcon className="h-4 w-4 flex-shrink-0" />
+        <div className="flex min-w-0 flex-1 basis-40 items-center gap-2 text-sm text-dark-200">
+          <InfoIcon className="h-4 w-4 flex-shrink-0 text-warning-400" />
           <span>
             {message || t('balance.insufficientFunds')}:{' '}
-            <span className="whitespace-nowrap font-semibold">
-              {displayAmount}
-              {'\u00A0'}
-              {currencySymbol}
-            </span>
+            <span className="text-warning-400">{amountText}</span>
           </span>
         </div>
-        <button
+        <Button
           onClick={handleTopUpClick}
           disabled={isPreparingTopUp}
-          className="btn-primary shrink-0 whitespace-nowrap px-3 py-1.5 text-xs"
+          aria-busy={isPreparingTopUp}
+          className="h-9 shrink-0 whitespace-nowrap rounded-xl px-3 text-[13px]"
         >
-          {isPreparingTopUp ? (
-            <span className="h-3 w-3 animate-spin rounded-full border border-white/30 border-t-white" />
-          ) : (
-            t('balance.topUp')
-          )}
-        </button>
+          {isPreparingTopUp && <Spinner small />}
+          {t('balance.topUp')}
+        </Button>
       </div>
     );
   }
 
   return (
-    <div
-      className={`rounded-xl bg-gradient-to-br from-error-500/10 to-warning-500/5 p-4 ${className}`}
-    >
+    <div className={`rounded-2xl bg-dark-800/50 p-4 ${className}`}>
       <div className="flex items-start gap-3">
-        <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-error-500/20">
-          <WalletIcon className="h-5 w-5 text-error-400" />
-        </div>
+        <RowIcon tone="warning">
+          <WalletIcon />
+        </RowIcon>
         <div className="min-w-0 flex-1">
-          <div className="mb-1 font-medium text-error-400">{t('balance.insufficientFunds')}</div>
-          <div className="text-sm text-dark-300">{message || t('balance.topUpToComplete')}</div>
-          <div className="mt-3 flex items-center gap-3">
-            <div className="text-lg font-bold text-dark-100">
-              {t('balance.missing')}:{' '}
-              <span className="text-error-400">
-                {displayAmount}
-                {'\u00A0'}
-                {currencySymbol}
-              </span>
-            </div>
+          <div className="text-[15px] font-semibold text-dark-100">
+            {t('balance.insufficientFunds')}
+          </div>
+          <div className="mt-0.5 text-[13px] leading-snug text-dark-400">
+            {message || t('balance.topUpToComplete')}
+          </div>
+          <div className="mt-2 text-[15px] text-dark-200">
+            {t('balance.missing')}: <span className="text-warning-400">{amountText}</span>
           </div>
         </div>
       </div>
-      <button
+      <Button
         onClick={handleTopUpClick}
         disabled={isPreparingTopUp}
-        className="btn-primary mt-4 flex w-full items-center justify-center gap-2 py-2.5"
+        aria-busy={isPreparingTopUp}
+        className="mt-4 w-full"
       >
-        {isPreparingTopUp ? (
-          <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
-        ) : (
-          <>
-            <PlusIcon className="h-5 w-5" />
-            {t('balance.topUpBalance')}
-          </>
-        )}
-      </button>
+        {isPreparingTopUp ? <Spinner /> : <PlusIcon className="h-5 w-5" />}
+        {t('balance.topUpBalance')}
+      </Button>
     </div>
+  );
+}
+
+function Spinner({ small = false }: { small?: boolean }) {
+  return (
+    <span
+      aria-hidden
+      className={`${small ? 'h-3 w-3 border' : 'h-4 w-4 border-2'} animate-spin rounded-full border-current border-t-transparent`}
+    />
   );
 }

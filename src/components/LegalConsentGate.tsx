@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import type { LegalConsentGateState } from '../hooks/useLegalConsentGate';
 import LegalConsent from './LegalConsent';
+import { Button } from '@/components/spofy/ui';
 
 // Экран «Ещё один шаг»: бэк ответил 428 на вход нового пользователя, без галочек
 // «ознакомлен» аккаунт не создастся. Состояние и повтор входа — в useLegalConsentGate.
@@ -20,7 +21,11 @@ export default function LegalConsentGate({
   const { t } = useTranslation();
 
   return (
-    <div className={[framed ? 'card' : '', className].filter(Boolean).join(' ')}>
+    <div
+      className={[framed ? 'rounded-3xl bg-dark-900/70 p-5' : '', className]
+        .filter(Boolean)
+        .join(' ')}
+    >
       <h2 className="mb-2 text-lg font-bold text-dark-50">
         {t('auth.legalConsentTitle', 'Ещё один шаг')}
       </h2>
@@ -44,16 +49,20 @@ export default function LegalConsentGate({
         </p>
       )}
 
-      <button
-        type="button"
-        className="btn-primary mt-5 w-full"
+      <Button
+        className="mt-5 w-full"
         disabled={!gate.allAccepted || gate.isSubmitting}
+        aria-busy={gate.isSubmitting}
         onClick={() => void gate.confirm(t('common.error'))}
       >
-        {gate.isSubmitting
-          ? t('common.loading', 'Загрузка...')
-          : t('auth.legalConsentContinue', 'Продолжить')}
-      </button>
+        {gate.isSubmitting && (
+          <span
+            aria-hidden
+            className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent"
+          />
+        )}
+        {t('auth.legalConsentContinue', 'Продолжить')}
+      </Button>
     </div>
   );
 }

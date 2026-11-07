@@ -164,14 +164,12 @@ export function TariffPurchaseForm({
         disabled={sbpPurchaseMutation.isPending || purchaseMutation.isPending}
         className="mt-2 flex h-12 w-full items-center justify-center rounded-2xl bg-dark-800/70 text-[15px] font-semibold text-dark-100 transition-colors hover:bg-dark-700/70 disabled:opacity-50"
       >
-        {sbpPurchaseMutation.isPending ? (
-          <span className="flex items-center justify-center gap-2">
+        <span className="flex items-center justify-center gap-2">
+          {sbpPurchaseMutation.isPending && (
             <span className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
-            {t('common.loading')}
-          </span>
-        ) : (
-          t('subscription.sbpRecurring.purchaseButton')
-        )}
+          )}
+          {t('subscription.sbpRecurring.purchaseButton')}
+        </span>
       </button>
       <div className="mt-1.5 text-center text-[13px] text-dark-500">
         {t('subscription.sbpRecurring.purchaseHint')}
@@ -206,14 +204,12 @@ export function TariffPurchaseForm({
         disabled={lavaPurchaseMutation.isPending || purchaseMutation.isPending}
         className="mt-2 flex h-12 w-full items-center justify-center rounded-2xl bg-dark-800/70 text-[15px] font-semibold text-dark-100 transition-colors hover:bg-dark-700/70 disabled:opacity-50"
       >
-        {lavaPurchaseMutation.isPending ? (
-          <span className="flex items-center justify-center gap-2">
+        <span className="flex items-center justify-center gap-2">
+          {lavaPurchaseMutation.isPending && (
             <span className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
-            {t('common.loading')}
-          </span>
-        ) : (
-          t('subscription.lavaRecurring.purchaseButton')
-        )}
+          )}
+          {t('subscription.lavaRecurring.purchaseButton')}
+        </span>
       </button>
       <div className="mt-1.5 text-center text-[13px] text-dark-500">
         {t('subscription.lavaRecurring.purchaseHint')}
@@ -248,14 +244,12 @@ export function TariffPurchaseForm({
         disabled={casheraPurchaseMutation.isPending || purchaseMutation.isPending}
         className="mt-2 flex h-12 w-full items-center justify-center rounded-2xl bg-dark-800/70 text-[15px] font-semibold text-dark-100 transition-colors hover:bg-dark-700/70 disabled:opacity-50"
       >
-        {casheraPurchaseMutation.isPending ? (
-          <span className="flex items-center justify-center gap-2">
+        <span className="flex items-center justify-center gap-2">
+          {casheraPurchaseMutation.isPending && (
             <span className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
-            {t('common.loading')}
-          </span>
-        ) : (
-          t('subscription.casheraRecurring.purchaseButton')
-        )}
+          )}
+          {t('subscription.casheraRecurring.purchaseButton')}
+        </span>
       </button>
       <div className="mt-1.5 text-center text-[13px] text-dark-500">
         {t('subscription.casheraRecurring.purchaseHint')}
@@ -373,16 +367,12 @@ export function TariffPurchaseForm({
                   onClick={() => purchaseMutation.mutate()}
                   disabled={purchaseMutation.isPending}
                 >
-                  {purchaseMutation.isPending ? (
-                    <>
-                      <span className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
-                      {t('common.loading')}
-                    </>
-                  ) : (
-                    t('subscription.dailyPurchase.activate', {
-                      price: formatPrice(dailyPrice),
-                    })
+                  {purchaseMutation.isPending && (
+                    <span className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
                   )}
+                  {t('subscription.dailyPurchase.activate', {
+                    price: formatPrice(dailyPrice),
+                  })}
                 </Button>
 
                 {sbpPurchaseButton}
@@ -791,14 +781,10 @@ export function TariffPurchaseForm({
                       onClick={() => purchaseMutation.mutate()}
                       disabled={purchaseMutation.isPending}
                     >
-                      {purchaseMutation.isPending ? (
-                        <>
-                          <span className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
-                          {t('common.loading')}
-                        </>
-                      ) : (
-                        t('subscription.purchase')
+                      {purchaseMutation.isPending && (
+                        <span className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
                       )}
+                      {t('subscription.purchase')}
                     </Button>
 
                     {sbpPurchaseButton}

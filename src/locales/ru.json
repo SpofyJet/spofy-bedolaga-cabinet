@@ -63,7 +63,8 @@
     "dayTime": {
       "today": "сегодня, {{time}}",
       "yesterday": "вчера, {{time}}"
-    }
+    },
+    "changeLanguage": "Сменить язык"
   },
   "navShort": {
     "wheel": "Колесо",
@@ -74,7 +75,7 @@
     "dashboard": "Главная",
     "subscription": "Подписка",
     "balance": "Баланс",
-    "referral": "Рефералы",
+    "referral": "Друзья",
     "support": "Поддержка",
     "profile": "Профиль",
     "logout": "Выйти",
@@ -172,10 +173,10 @@
       "warningMessage": "Вы получили предупреждение"
     },
     "referral": {
-      "bonusTitle": "Реферальный бонус",
-      "bonusMessage": "Вы получили реферальный бонус {{amount}} {{currency}}!",
+      "bonusTitle": "Бонус за друга",
+      "bonusMessage": "Вы получили бонус за друга: {{amount}} {{currency}}",
       "bonusWithName": "Вы получили бонус {{amount}} {{currency}} от {{name}}!",
-      "registeredTitle": "Новый реферал",
+      "registeredTitle": "Новый друг",
       "registeredMessage": "Кто-то зарегистрировался по вашей ссылке!",
       "registeredWithName": "{{name}} зарегистрировался по вашей ссылке!"
     },
@@ -256,7 +257,7 @@
     "welcomeBack": "Добро пожаловать!",
     "loginTitle": "Вход в личный кабинет",
     "loginSubtitle": "Войдите через Telegram или используйте email",
-    "referralInvite": "Вы приглашены по реферальной ссылке!",
+    "referralInvite": "Вас пригласил друг",
     "passwordMismatch": "Пароли не совпадают",
     "passwordTooShort": "Пароль должен быть минимум 8 символов",
     "invalidEmail": "Введите корректный email адрес",
@@ -408,7 +409,7 @@
     "stats": {
       "balance": "Баланс",
       "subscription": "Подписка",
-      "referrals": "Рефералы",
+      "referrals": "Друзья",
       "earnings": "Заработок"
     },
     "manageAll": "Управлять всеми",
@@ -1129,7 +1130,7 @@
     "deposit": "Пополнение",
     "withdrawal": "Списание",
     "subscriptionPayment": "Оплата подписки",
-    "referralReward": "Реферальный бонус",
+    "referralReward": "Бонус за друга",
     "refund": "Возврат",
     "failedRefund": "Неудачный возврат",
     "pollReward": "Награда за опрос",
@@ -1258,15 +1259,15 @@
       "perMonth": "{{amount}} {{currency}}/мес",
       "untilShort": "до {{date}}"
     },
-    "referralEarned": "Заработано на рефералах за всё время: {{amount}} {{currency}}. Баланс можно потратить на продление.",
+    "referralEarned": "Заработано на друзьях за всё время: {{amount}} {{currency}}. Баланс можно потратить на продление.",
     "methodFast": "Быстро",
     "noTransactionsHint": "Здесь появятся пополнения и оплаты",
     "afterTopUp": "Станет на балансе",
     "topUpHintShort": "Зачисление обычно за минуту"
   },
   "referral": {
-    "title": "Реферальная программа",
-    "yourLink": "Ваши реферальные ссылки",
+    "title": "Друзья",
+    "yourLink": "Ваши ссылки для приглашения",
     "friendDays": {
       "title": "+{{days}} дня за каждого друга",
       "text": "Пригласите друга по своей ссылке. Когда он впервые подключит VPN, вы оба получите дни к подписке. Сколько друзей, столько и наград.",
@@ -1283,7 +1284,7 @@
     "shareMessage": "Заходи в {{botName}} по моей ссылке и получай до {{percent}}% кешбэка!",
     "shareHint": "Поделитесь ссылкой с друзьями. Когда они зарегистрируются и оплатят, вы получите {{percent}}% комиссии!",
     "stats": {
-      "totalReferrals": "Всего рефералов",
+      "totalReferrals": "Всего друзей",
       "activeReferrals": "Активных",
       "totalEarnings": "Общий заработок",
       "commissionRate": "Комиссия",
@@ -1315,10 +1316,10 @@
       "paysNothing": "вам не начисляется",
       "personalRate": "У вас индивидуальная ставка {{percent}}% — она действует на любом уровне."
     },
-    "yourReferrals": "Ваши рефералы",
-    "noReferrals": "Пока нет рефералов. Поделитесь ссылкой, чтобы пригласить друзей!",
+    "yourReferrals": "Ваши друзья",
+    "noReferrals": "Пока никого. Поделитесь ссылкой, чтобы пригласить друзей",
     "anonymousUser": "Пользователь #{{id}}",
-    "anonymousReferral": "Реферал",
+    "anonymousReferral": "Друг",
     "user": "Пользователь",
     "joined": "Присоединился",
     "hasPaid": "Оплатил",
@@ -1329,18 +1330,18 @@
     "earningsHistory": "История начислений",
     "reason": "Причина",
     "reasons": {
-      "referral_registration_pending": "Регистрация реферала",
-      "referral_registration": "Регистрация реферала",
-      "referral_first_payment": "Первая оплата реферала",
-      "referral_subscription_renewal": "Продление подписки реферала",
-      "referral_bonus": "Бонус за реферала",
+      "referral_registration_pending": "Друг зарегистрировался",
+      "referral_registration": "Друг зарегистрировался",
+      "referral_first_payment": "Первая оплата друга",
+      "referral_subscription_renewal": "Друг продлил подписку",
+      "referral_bonus": "Бонус за друга",
       "referral_first_topup": "Первое пополнение",
       "referral_commission_topup": "Комиссия с пополнения",
       "referral_registration_reward": "Награда за регистрацию",
       "referral_days_reward": "Дни подписки",
       "referral_days_bonus": "Бонусные дни"
     },
-    "disabled": "Реферальная программа временно отключена",
+    "disabled": "Приглашение друзей временно отключено",
     "partner": {
       "becomePartner": "Стать партнером",
       "becomePartnerDesc": "Подайте заявку на партнерскую программу, чтобы получить повышенную комиссию и возможность вывода заработка.",
@@ -1682,7 +1683,8 @@
       "toSubscription": "К подписке",
       "toBalance": "К балансу",
       "spinAgain": "Крутить ещё"
-    }
+    },
+    "noPrizes": "Призы пока не настроены"
   },
   "admin": {
     "backgrounds": {
@@ -8234,8 +8236,8 @@
     "privacy": "Конфиденциальность",
     "offer": "Оферта",
     "loyalty": "Статусы",
-    "noFaq": "Нет вопросов и ответов",
-    "noContent": "Нет контента",
+    "noFaq": "Вопросов пока нет",
+    "noContent": "Раздел пока пуст",
     "documentUnavailable": "Документ пока недоступен.",
     "updatedAt": "Обновлено",
     "noLoyaltyTiers": "Программа лояльности пока недоступна",
@@ -8254,7 +8256,9 @@
     "trafficDiscount": "На трафик",
     "deviceDiscount": "На устройства",
     "periodDiscount": "За {{days}} дн.",
-    "noDiscounts": "Нет скидок"
+    "noDiscounts": "Нет скидок",
+    "emptyHint": "Если нужна помощь — напишите нам, ответим в чате.",
+    "writeSupport": "Написать в поддержку"
   },
   "onboarding": {
     "skip": "Пропустить",

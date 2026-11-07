@@ -12,7 +12,7 @@ import {
 } from '@/api/branding';
 
 const FALLBACK_NAME = import.meta.env.VITE_APP_NAME || 'Cabinet';
-const FALLBACK_LOGO = import.meta.env.VITE_APP_LOGO || 'V';
+const FALLBACK_LOGO = import.meta.env.VITE_APP_LOGO || 'S';
 
 export function useBranding() {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
@@ -34,7 +34,8 @@ export function useBranding() {
   });
 
   const appName = branding ? branding.name : FALLBACK_NAME;
-  const logoLetter = branding?.logo_letter || FALLBACK_LOGO;
+  // Пока брендинг не пришёл, плитка пустая: буква по умолчанию («V») мелькала и сменялась логотипом.
+  const logoLetter = branding ? branding.logo_letter || FALLBACK_LOGO : '';
   const hasCustomLogo = branding?.has_custom_logo || false;
   const logoBlobUrl = useLogoBlobUrl();
   const logoUrl = hasCustomLogo ? logoBlobUrl : null;

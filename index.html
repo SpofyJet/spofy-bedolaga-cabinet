@@ -21,6 +21,19 @@
     <title>__APP_NAME__</title>
     <meta name="application-name" content="__APP_NAME__" />
     <meta name="apple-mobile-web-app-title" content="__APP_NAME__" />
+    <!-- Превью ссылки в Telegram и мессенджерах: без этих тегов карточка была голым текстом. -->
+    <meta name="description" content="Spofy VPN: подписка, устройства, баланс и поддержка в одном месте." />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Spofy VPN" />
+    <meta property="og:title" content="Spofy VPN — личный кабинет" />
+    <meta property="og:description" content="Подписка, устройства, баланс и поддержка в одном месте." />
+    <meta property="og:image" content="https://web.spofyltd.ru/og.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:locale" content="ru_RU" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="https://web.spofyltd.ru/og.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -236,7 +249,7 @@
             var name = brand.name.trim();
             var letter = firstLetter(
               typeof brand.logo_letter === 'string' ? brand.logo_letter : '',
-              firstLetter(name, 'V')
+              firstLetter(name, 'S')
             );
             if (name) applyName(name);
             if (!hint) {

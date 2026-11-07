@@ -12,7 +12,8 @@ export const buttonVariants = cva(
   {
     variants: {
       variant: {
-        primary: ['bg-accent-500 text-on-accent', 'hover:bg-accent-600', 'active:bg-accent-700'],
+        // Тот же цвет, что у главной кнопки Spofy (ui.tsx): на экране одна «главная» заливка.
+        primary: ['bg-cta-500 text-on-cta', 'hover:bg-cta-600', 'active:bg-cta-600'],
         secondary: ['bg-dark-800/80 text-dark-100', 'hover:bg-dark-700/80', 'active:bg-dark-800'],
         ghost: ['text-dark-300', 'hover:text-dark-100 hover:bg-dark-800/50', 'active:bg-dark-800'],
         destructive: [

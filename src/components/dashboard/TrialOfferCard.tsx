@@ -171,11 +171,16 @@ export default function TrialOfferCard({
           <button
             onClick={() => !activateTrialMutation.isPending && activateTrialMutation.mutate()}
             disabled={activateTrialMutation.isPending}
-            className="w-full rounded-[14px] bg-cta-500 py-4 text-base font-bold tracking-tight text-on-cta transition-all duration-300 hover:bg-cta-600 disabled:opacity-50"
+            aria-busy={activateTrialMutation.isPending}
+            className="flex w-full items-center justify-center gap-2 rounded-[14px] bg-cta-500 py-4 text-base font-bold tracking-tight text-on-cta transition-all duration-300 hover:bg-cta-600 disabled:opacity-50"
           >
-            {activateTrialMutation.isPending
-              ? t('common.loading')
-              : t('subscription.trial.payAndActivate')}
+            {activateTrialMutation.isPending && (
+              <span
+                aria-hidden
+                className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent"
+              />
+            )}
+            {t('subscription.trial.payAndActivate')}
           </button>
         ) : (
           <Link
@@ -190,9 +195,16 @@ export default function TrialOfferCard({
           onClick={() => !activateTrialMutation.isPending && activateTrialMutation.mutate()}
           disabled={activateTrialMutation.isPending}
           // Единственная главная кнопка экрана без подписки.
-          className="w-full rounded-[14px] bg-cta-500 py-4 text-base font-bold tracking-tight text-on-cta transition-all duration-300 hover:bg-cta-600 disabled:opacity-50"
+          aria-busy={activateTrialMutation.isPending}
+          className="flex w-full items-center justify-center gap-2 rounded-[14px] bg-cta-500 py-4 text-base font-bold tracking-tight text-on-cta transition-all duration-300 hover:bg-cta-600 disabled:opacity-50"
         >
-          {activateTrialMutation.isPending ? t('common.loading') : t('subscription.trial.activate')}
+          {activateTrialMutation.isPending && (
+            <span
+              aria-hidden
+              className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent"
+            />
+          )}
+          {t('subscription.trial.activate')}
         </button>
       )}
     </div>

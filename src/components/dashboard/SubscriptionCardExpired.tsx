@@ -199,11 +199,7 @@ export default function SubscriptionCardExpired({
             ) : (
               <SubscriptionIcon className="h-4 w-4" />
             )}
-            {isRenewing
-              ? t('common.loading')
-              : isDisabledDaily
-                ? t('dashboard.suspended.resume')
-                : t('dashboard.expired.quickRenew')}
+            {isDisabledDaily ? t('dashboard.suspended.resume') : t('dashboard.expired.quickRenew')}
           </button>
         ) : (
           <button type="button" onClick={handleTopUp} className={primaryCls}>

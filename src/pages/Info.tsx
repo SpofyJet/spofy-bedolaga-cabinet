@@ -12,7 +12,8 @@ import type { FaqItem, ReplacesTab } from '../api/infoPages';
 import { DocumentIcon, QuestionIcon, ShieldIcon, StarIcon } from '@/components/icons';
 import { Skeleton, SkeletonGroup } from '@/components/ui/skeleton';
 import { PageHeader } from '@/components/layout/PageHeader';
-import { Page } from '@/components/spofy/ui';
+import { EmptyState, Page } from '@/components/spofy/ui';
+import { Link } from 'react-router';
 
 const ChevronIcon = ({ expanded }: { expanded: boolean }) => (
   <PiCaretDownBold
@@ -399,30 +400,18 @@ export default function Info() {
     }
 
     if (!infoPage) {
-      return (
-        <div className="rounded-3xl bg-dark-900/70 px-6 py-10 text-center text-[13px] text-dark-400">
-          {t('info.noContent')}
-        </div>
-      );
+      return <InfoEmpty icon={<DocumentIcon />} title={t('info.noContent')} />;
     }
 
     if (infoPage.page_type === 'faq') {
       if (infoPageFaqItems.length === 0) {
-        return (
-          <div className="rounded-3xl bg-dark-900/70 px-6 py-10 text-center text-[13px] text-dark-400">
-            {t('info.noFaq')}
-          </div>
-        );
+        return <InfoEmpty icon={<QuestionIcon />} title={t('info.noFaq')} />;
       }
       return <ReplacementFaqView items={infoPageFaqItems} />;
     }
 
     if (!infoPageHtml) {
-      return (
-        <div className="rounded-3xl bg-dark-900/70 px-6 py-10 text-center text-[13px] text-dark-400">
-          {t('info.noContent')}
-        </div>
-      );
+      return <InfoEmpty icon={<DocumentIcon />} title={t('info.noContent')} />;
     }
 
     return (
@@ -462,11 +451,7 @@ export default function Info() {
       }
 
       if (!faqPages || faqPages.length === 0) {
-        return (
-          <div className="rounded-3xl bg-dark-900/70 px-6 py-10 text-center text-[13px] text-dark-400">
-            {t('info.noFaq')}
-          </div>
-        );
+        return <InfoEmpty icon={<QuestionIcon />} title={t('info.noFaq')} />;
       }
 
       return (
@@ -501,11 +486,7 @@ export default function Info() {
       }
 
       if (!rules?.content) {
-        return (
-          <div className="rounded-3xl bg-dark-900/70 px-6 py-10 text-center text-[13px] text-dark-400">
-            {t('info.noContent')}
-          </div>
-        );
+        return <InfoEmpty icon={<DocumentIcon />} title={t('info.noContent')} />;
       }
 
       return (
@@ -533,11 +514,7 @@ export default function Info() {
       }
 
       if (!privacy?.content) {
-        return (
-          <div className="rounded-3xl bg-dark-900/70 px-6 py-10 text-center text-[13px] text-dark-400">
-            {t('info.noContent')}
-          </div>
-        );
+        return <InfoEmpty icon={<DocumentIcon />} title={t('info.noContent')} />;
       }
 
       return (
@@ -565,11 +542,7 @@ export default function Info() {
       }
 
       if (!offer?.content) {
-        return (
-          <div className="rounded-3xl bg-dark-900/70 px-6 py-10 text-center text-[13px] text-dark-400">
-            {t('info.noContent')}
-          </div>
-        );
+        return <InfoEmpty icon={<DocumentIcon />} title={t('info.noContent')} />;
       }
 
       return (
@@ -809,5 +782,25 @@ export default function Info() {
       {/* Content */}
       {renderContent()}
     </Page>
+  );
+}
+
+/** Пустой раздел: не голая строка, а понятный экран с выходом в поддержку. */
+function InfoEmpty({ icon, title }: { icon: React.ReactNode; title: string }) {
+  const { t } = useTranslation();
+  return (
+    <EmptyState
+      icon={icon}
+      title={title}
+      text={t('info.emptyHint')}
+      action={
+        <Link
+          to="/support"
+          className="inline-flex h-11 items-center justify-center rounded-2xl bg-dark-800/70 px-5 text-[15px] font-semibold text-dark-100 transition-colors hover:bg-dark-700/70"
+        >
+          {t('info.writeSupport')}
+        </Link>
+      }
+    />
   );
 }

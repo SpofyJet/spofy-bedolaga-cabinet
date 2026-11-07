@@ -183,7 +183,8 @@ export default function Login() {
   };
 
   const appName = branding ? branding.name : import.meta.env.VITE_APP_NAME || 'VPN';
-  const appLogo = branding?.logo_letter || import.meta.env.VITE_APP_LOGO || 'V';
+  // Пока брендинг не пришёл, плитка пустая: буква по умолчанию («V») мелькала и сменялась логотипом.
+  const appLogo = branding ? branding.logo_letter || import.meta.env.VITE_APP_LOGO || 'S' : '';
   const [logoUrl, setLogoUrl] = useState<string | null>(() =>
     branding ? brandingApi.getLogoUrl(branding) : null,
   );

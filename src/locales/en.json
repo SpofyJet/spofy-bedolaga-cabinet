@@ -58,7 +58,8 @@
     "dayTime": {
       "today": "today, {{time}}",
       "yesterday": "yesterday, {{time}}"
-    }
+    },
+    "changeLanguage": "Change language"
   },
   "navShort": {
     "wheel": "Wheel",
@@ -1637,7 +1638,8 @@
       "toSubscription": "Go to subscription",
       "toBalance": "Go to balance",
       "spinAgain": "Spin again"
-    }
+    },
+    "noPrizes": "No prizes yet"
   },
   "admin": {
     "backgrounds": {
@@ -7633,7 +7635,9 @@
     "trafficDiscount": "Traffic",
     "deviceDiscount": "Devices",
     "periodDiscount": "{{days}} days",
-    "noDiscounts": "No discounts"
+    "noDiscounts": "No discounts",
+    "emptyHint": "Need help? Message us and we will reply in the chat.",
+    "writeSupport": "Contact support"
   },
   "onboarding": {
     "skip": "Skip",

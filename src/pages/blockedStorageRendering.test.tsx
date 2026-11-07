@@ -8,8 +8,8 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
  * В приватном режиме Safari, при настройке «блокировать данные сайтов» и во
  * встроенных вебвью обращение к localStorage/sessionStorage кидает
  * SecurityError на самом доступе к свойству. Три места читали хранилище в фазе
- * рендера у корня дерева — useTheme (инициализатор useState), useOnboarding (то
- * же) и saveReturnUrl (тело рендера ProtectedRoute перед редиректом). Бросок в
+ * рендера у корня дерева — useTheme (инициализатор useState), раньше ещё useOnboarding
+ * и saveReturnUrl (тело рендера ProtectedRoute перед редиректом). Бросок в
  * любом из них уходил в app-level ErrorBoundary, то есть белый экран на всех
  * маршрутах, включая /login: пользователь не мог даже дойти до входа.
  *
@@ -81,38 +81,6 @@ describe('useTheme при заблокированном localStorage', () => {
     render(<Probe />);
 
     expect(['dark', 'light']).toContain(screen.getByTestId('theme').textContent);
-  });
-});
-
-describe('useOnboarding при заблокированном localStorage', () => {
-  it('рендерится и считает онбординг непройденным', async () => {
-    blockStorage('localStorage');
-    const { useOnboarding } = await import('../components/Onboarding');
-
-    function Probe() {
-      const { isCompleted } = useOnboarding();
-      return <span data-testid="done">{String(isCompleted)}</span>;
-    }
-
-    render(<Probe />);
-
-    expect(screen.getByTestId('done').textContent).toBe('false');
-  });
-
-  it('не бросает при завершении онбординга', async () => {
-    blockStorage('localStorage');
-    const { useOnboarding } = await import('../components/Onboarding');
-
-    let complete: (() => void) | null = null;
-    function Probe() {
-      const hook = useOnboarding();
-      complete = hook.complete;
-      return <span data-testid="done">{String(hook.isCompleted)}</span>;
-    }
-
-    render(<Probe />);
-
-    expect(() => complete?.()).not.toThrow();
   });
 });
 

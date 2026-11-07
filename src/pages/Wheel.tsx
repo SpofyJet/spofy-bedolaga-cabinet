@@ -720,7 +720,7 @@ export default function Wheel() {
                     <span className="shrink-0 text-[13px] text-dark-400">
                       {isLifetimePeriod(sub.days_left)
                         ? t('subscription.lifetime.forever')
-                        : `${sub.days_left} ${t('common.units.days', 'дней')}`}
+                        : t('subscription.days', { count: sub.days_left })}
                     </span>
                   </button>
                 ))}
