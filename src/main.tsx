@@ -25,9 +25,13 @@ import { getTelegramInitData } from './utils/telegramInitData';
 import { useAuthStore } from './store/auth';
 import { AppWithNavigator } from './AppWithNavigator';
 import { ErrorBoundary } from './components/ErrorBoundary';
-import { initLogoPreload } from './api/branding';
+import { brandingApi, initLogoPreload } from './api/branding';
 import { checkBackendOnStartup } from './api/health';
-import { getCachedFullscreenEnabled, isTelegramMobile } from './hooks/useTelegramSDK';
+import {
+  getCachedFullscreenEnabled,
+  isTelegramMobile,
+  setCachedFullscreenEnabled,
+} from './hooks/useTelegramSDK';
 import { applyTelegramLanguage, i18nReady } from './i18n';
 import { themeColorsQueryOptions } from './api/themeColors';
 import { applyThemeColors } from './hooks/useThemeColors';
@@ -108,12 +112,24 @@ if (isTelegramEnv && !alreadyInitialized) {
         bindViewportCssVars();
         expandViewport();
 
-        // Auto-enter fullscreen if enabled in settings (mobile only)
-        if (getCachedFullscreenEnabled() && isTelegramMobile()) {
-          if (!isFullscreen()) {
-            requestFullscreen();
-          }
+        // На весь экран сразу при открытии (только телефон). Кэш в localStorage Telegram
+        // на iPhone часто пуст, поэтому без кэша спрашиваем сервер здесь же: запрос из
+        // useBranding может прийти до того, как окно смонтировано, и тихо пропасть.
+        if (!isTelegramMobile()) return;
+        const enter = () => {
+          if (isFullscreen()) return;
+          try {
+            void Promise.resolve(requestFullscreen()).catch(() => {});
+          } catch {}
+        };
+        if (getCachedFullscreenEnabled()) {
+          enter();
+          return;
         }
+        void brandingApi.getFullscreenEnabled().then(({ enabled }) => {
+          setCachedFullscreenEnabled(enabled);
+          if (enabled) enter();
+        });
       })
       .catch(() => {});
 
