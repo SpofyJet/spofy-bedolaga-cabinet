@@ -4,8 +4,11 @@ import { useNavigate } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from '@tanstack/react-query';
 import {
-  useReactTable,
-  getCoreRowModel,
+  useTable,
+  tableFeatures,
+  rowSelectionFeature,
+  columnSizingFeature,
+  columnVisibilityFeature,
   flexRender,
   type ColumnDef,
   type RowSelectionState,
@@ -126,6 +129,12 @@ function ProgressBar({ loading }: { loading: boolean }) {
 // ============ Helpers ============
 
 // ============ Main Page ============
+
+const tableFeatureSet = tableFeatures({
+  rowSelectionFeature,
+  columnSizingFeature,
+  columnVisibilityFeature,
+});
 
 export default function AdminBulkActions() {
   const { t } = useTranslation();
@@ -552,7 +561,7 @@ export default function AdminBulkActions() {
 
   // ---- TanStack Table ----
 
-  const columns = useMemo<ColumnDef<UserListItem>[]>(
+  const columns = useMemo<ColumnDef<typeof tableFeatureSet, UserListItem>[]>(
     () => [
       {
         id: 'select',
@@ -787,13 +796,14 @@ export default function AdminBulkActions() {
     ],
   );
 
-  const table = useReactTable({
+  const table = useTable({
+    features: tableFeatureSet,
     data: filteredUsers,
     columns,
     state: { rowSelection },
     onRowSelectionChange: setRowSelection,
-    getCoreRowModel: getCoreRowModel(),
     enableRowSelection: true,
+    enableRowRangeSelection: false,
     getRowId: (row) => String(row.id),
   });
 

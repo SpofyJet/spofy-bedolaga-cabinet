@@ -4,8 +4,12 @@ import { backTo } from '@/components/admin';
 import { useTranslation } from 'react-i18next';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import {
-  useReactTable,
-  getCoreRowModel,
+  useTable,
+  tableFeatures,
+  rowSortingFeature,
+  columnSizingFeature,
+  columnResizingFeature,
+  columnVisibilityFeature,
   flexRender,
   type ColumnDef,
   type SortingState,
@@ -116,6 +120,13 @@ function ProgressBar({ loading }: { loading: boolean }) {
 // (RiskBadge moved into ./trafficUsage/RiskBadge.tsx)
 
 // ============ Main Page ============
+
+const tableFeatureSet = tableFeatures({
+  rowSortingFeature,
+  columnSizingFeature,
+  columnResizingFeature,
+  columnVisibilityFeature,
+});
 
 export default function AdminTrafficUsage() {
   const { t } = useTranslation();
@@ -422,8 +433,8 @@ export default function AdminTrafficUsage() {
   const hasNodeThreshold = nodeThresholdNum > 0;
   const hasAnyThreshold = hasTotalThreshold || hasNodeThreshold;
 
-  const columns = useMemo<ColumnDef<UserTrafficItem>[]>(() => {
-    const cols: ColumnDef<UserTrafficItem>[] = [
+  const columns = useMemo<ColumnDef<typeof tableFeatureSet, UserTrafficItem>[]>(() => {
+    const cols: ColumnDef<typeof tableFeatureSet, UserTrafficItem>[] = [
       {
         id: 'user',
         accessorFn: (row) => row.full_name,
@@ -571,7 +582,7 @@ export default function AdminTrafficUsage() {
       },
       // ---- Dynamic node columns ----
       ...displayNodes.map(
-        (node): ColumnDef<UserTrafficItem> => ({
+        (node): ColumnDef<typeof tableFeatureSet, UserTrafficItem> => ({
           id: `node_${node.node_uuid}`,
           accessorFn: (row) => row.node_traffic[node.node_uuid] || 0,
           header: `${getFlagEmoji(node.country_code)} ${node.node_name}`,
@@ -679,13 +690,13 @@ export default function AdminTrafficUsage() {
     enrichmentLoading,
   ]);
 
-  const table = useReactTable({
+  const table = useTable({
+    features: tableFeatureSet,
     data: items,
     columns,
     state: { sorting, columnSizing },
     onSortingChange: handleSortingChange,
     onColumnSizingChange: setColumnSizing,
-    getCoreRowModel: getCoreRowModel(),
     manualSorting: true,
     enableSortingRemoval: false,
     enableColumnResizing: true,

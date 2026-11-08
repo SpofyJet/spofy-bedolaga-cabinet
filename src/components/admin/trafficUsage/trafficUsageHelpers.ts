@@ -1,4 +1,4 @@
-import type { RowData } from '@tanstack/react-table';
+import type { RowData, TableFeatures } from '@tanstack/react-table';
 import { getFlagEmoji as _sharedGetFlagEmoji } from '../../../utils/subscriptionHelpers';
 import type { UserTrafficItem } from '../../../api/adminTraffic';
 
@@ -9,7 +9,7 @@ import type { UserTrafficItem } from '../../../api/adminTraffic';
 
 declare module '@tanstack/react-table' {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  interface ColumnMeta<TData extends RowData, TValue> {
+  interface ColumnMeta<TFeatures extends TableFeatures, TData extends RowData, TValue> {
     sticky?: boolean;
     align?: 'left' | 'center';
     bold?: boolean;
