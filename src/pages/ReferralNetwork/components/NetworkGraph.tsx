@@ -1,11 +1,12 @@
 import { useEffect, useRef, useCallback } from 'react';
 import Graph from 'graphology';
-import Sigma from 'sigma';
+import Sigma, { DEFAULT_STYLES } from 'sigma';
 import FA2LayoutSupervisor from 'graphology-layout-forceatlas2/worker';
 import { inferSettings } from 'graphology-layout-forceatlas2';
 import { useReferralNetworkStore } from '@/store/referralNetwork';
 import type { NetworkGraphData, NetworkFilters } from '@/types/referralNetwork';
-import { createNodeBorderProgram } from '@sigma/node-border';
+import { layerBorder } from '@sigma/node-border';
+import { layerFill } from 'sigma/rendering';
 import {
   getNodeFillColor,
   getNodeBorderColor,
@@ -127,18 +128,18 @@ function computeRadialPositions(
   return positions;
 }
 
-const BorderedNodeProgram = createNodeBorderProgram({
-  borders: [
-    {
-      size: { attribute: 'borderSize', defaultValue: 0 },
-      color: { attribute: 'borderColor' },
-    },
-    {
-      size: { fill: true },
-      color: { attribute: 'color' },
-    },
-  ],
-});
+const nodeLayers = [
+  layerFill(),
+  layerBorder({
+    borders: [
+      {
+        size: { attribute: 'borderSize', default: 0 },
+        color: { attribute: 'borderColor' },
+      },
+      { size: 0, color: { attribute: 'color' }, fill: true },
+    ],
+  }),
+];
 
 function buildFullGraph(graphData: NetworkGraphData): Graph {
   const graph = new Graph();
@@ -334,23 +335,36 @@ export function NetworkGraph({ data, className }: NetworkGraphProps) {
       hiddenNodesRef.current = computeHiddenNodes(graph, initialFilters);
 
       const sigma = new Sigma(graph, container, {
-        renderEdgeLabels: false,
-        labelDensity: 0.12,
-        labelRenderedSizeThreshold: 14,
-        zIndex: true,
-        defaultEdgeColor: '#ffffff06',
-        defaultNodeColor: NODE_COLORS.regular,
-        nodeProgramClasses: { bordered: BorderedNodeProgram },
-        defaultNodeType: 'bordered',
-        labelColor: { attribute: 'labelColor', color: '#e5e7eb' },
-        labelFont: 'Inter, system-ui, sans-serif',
-        labelSize: 11,
-        stagePadding: 40,
-        nodeReducer: (node, attrs) => {
-          const res = { ...attrs };
+        primitives: { nodes: { layers: nodeLayers } },
+        settings: {
+          renderEdgeLabels: false,
+          labelDensity: 0.12,
+          labelRenderedSizeThreshold: 14,
+          stagePadding: 40,
+          itemSizesReference: 'screen',
+        },
+        styles: {
+          nodes: {
+            ...DEFAULT_STYLES.nodes,
+            color: { attribute: 'color', defaultValue: NODE_COLORS.regular },
+            labelColor: { attribute: 'labelColor', defaultValue: '#e5e7eb' },
+            labelFont: 'Inter, system-ui, sans-serif',
+            labelSize: 11,
+          },
+          edges: {
+            ...DEFAULT_STYLES.edges,
+            color: { attribute: 'color', defaultValue: '#ffffff06' },
+          },
+        },
+        nodeReducer: (node, attrs, graphAttrs) => {
+          const res = {
+            ...attrs,
+            borderSize: graphAttrs.borderSize,
+            borderColor: graphAttrs.borderColor,
+          };
 
           if (hiddenNodesRef.current.has(node)) {
-            res.hidden = true;
+            res.visibility = 'hidden';
             return res;
           }
 
@@ -361,6 +375,8 @@ export function NetworkGraph({ data, className }: NetworkGraphProps) {
           if (highlighted.size > 0) {
             if (highlighted.has(node)) {
               res.highlighted = true;
+              res.labelVisibility = 'visible';
+              res.backdropVisibility = 'visible';
               res.labelColor = '#111827';
               res.zIndex = 2;
             } else {
@@ -373,10 +389,14 @@ export function NetworkGraph({ data, className }: NetworkGraphProps) {
           if (hovered) {
             if (node === hovered) {
               res.highlighted = true;
+              res.labelVisibility = 'visible';
+              res.backdropVisibility = 'visible';
               res.labelColor = '#111827';
               res.zIndex = 2;
             } else if (graph.hasNode(hovered) && graph.areNeighbors(node, hovered)) {
               res.highlighted = true;
+              res.labelVisibility = 'visible';
+              res.backdropVisibility = 'visible';
               res.labelColor = '#111827';
               res.zIndex = 1;
             } else if (!highlighted.has(node)) {
@@ -393,7 +413,7 @@ export function NetworkGraph({ data, className }: NetworkGraphProps) {
 
           const [source, target] = graph.extremities(edge);
           if (hiddenNodesRef.current.has(source) || hiddenNodesRef.current.has(target)) {
-            res.hidden = true;
+            res.visibility = 'hidden';
             return res;
           }
 
@@ -403,14 +423,14 @@ export function NetworkGraph({ data, className }: NetworkGraphProps) {
 
           if (hovered && graph.hasNode(hovered)) {
             if (!graph.hasExtremity(edge, hovered)) {
-              res.hidden = true;
+              res.visibility = 'hidden';
             } else {
               res.color = '#ffffff30';
               res.size = 1;
             }
           } else if (highlighted.size > 0) {
             if (!highlighted.has(source) && !highlighted.has(target)) {
-              res.hidden = true;
+              res.visibility = 'hidden';
             }
           }
 
@@ -451,7 +471,7 @@ export function NetworkGraph({ data, className }: NetworkGraphProps) {
 
           if (sigmaRef.current) {
             sigmaRef.current.resize();
-            sigmaRef.current.getCamera().animatedReset({ duration: 400 });
+            void sigmaRef.current.getCamera().reset({ duration: 400 });
           }
         }, FA2_DURATION_MS);
       }
