@@ -391,8 +391,7 @@
       "dismiss": "Dismiss"
     },
     "trialOffer": {
-      "freeTitle": "Free Trial Available",
-      "freeDesc": "Try our VPN for free, no commitment required"
+      "freeTitle": "Try it free"
     },
     "stats": {
       "balance": "Balance",
@@ -1096,7 +1095,7 @@
     "copyLink": "Copy",
     "copied": "Copied!",
     "shareButton": "Share",
-    "shareMessage": "Join me on {{botName}} and earn up to {{percent}}% cashback!",
+    "shareMessage": "Join me on {{botName}} and earn up to {{percent}}% commission!",
     "shareHint": "Share this link with friends. When they sign up and make a purchase, you'll earn {{percent}}% commission!",
     "stats": {
       "totalReferrals": "Total Referrals",
@@ -1338,7 +1337,7 @@
     },
     "chat": {
       "title": "{{name}} Support",
-      "subtitle": "We're always here",
+      "subtitle": "We'll reply in the chat",
       "openTelegram": "Message us on Telegram",
       "disabled": "In-app chat is turned off right now. Message us on Telegram and we will reply there.",
       "write": "Contact support",
@@ -7497,7 +7496,7 @@
   "subscriptions": {
     "buy": "Buy subscription",
     "buyAnother": "Buy another",
-    "browsePlans": "View plans and subscribe",
+    "browsePlans": "Plans and prices",
     "empty": "You have no subscriptions yet",
     "emptyDesc": "Choose a tariff to get started",
     "title": "My subscriptions"

@@ -92,7 +92,7 @@ export default function Subscriptions() {
       {/* Живого доступа нет: покупка или продление остаётся явным следующим шагом. */}
       {!isLoading && subscriptions.length > 0 && !hasActiveAccess && !hasLegacy && (
         <Button className="w-full" onClick={() => navigate('/subscription/purchase')}>
-          {t('subscriptions.browsePlans', 'Посмотреть тарифы и купить подписку')}
+          {t('subscriptions.browsePlans', 'Тарифы и цены')}
         </Button>
       )}
 
@@ -118,7 +118,7 @@ export default function Subscriptions() {
             className="w-full"
             onClick={() => navigate('/subscription/purchase')}
           >
-            {t('subscriptions.browsePlans', 'Посмотреть тарифы и купить подписку')}
+            {t('subscriptions.browsePlans', 'Тарифы и цены')}
           </Button>
         </div>
       )}

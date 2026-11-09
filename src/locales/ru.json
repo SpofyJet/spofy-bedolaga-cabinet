@@ -1,9 +1,9 @@
 {
   "common": {
     "all": "Все",
-    "loading": "Загрузка...",
+    "loading": "Загрузка…",
     "error": "Ошибка",
-    "success": "Успешно",
+    "success": "Готово",
     "save": "Сохранить",
     "cancel": "Отмена",
     "confirm": "Подтвердить",
@@ -25,7 +25,7 @@
     "refresh": "Обновить",
     "copy": "Копировать",
     "retry": "Повторить",
-    "saving": "Сохранение...",
+    "saving": "Сохранение…",
     "understand": "Понятно",
     "units": {
       "tb": "ТБ",
@@ -114,7 +114,7 @@
     "newUserReplyTitle": "Ответ пользователя"
   },
   "campaignBonus": {
-    "title": "Бонус активирован!",
+    "title": "Бонус активирован",
     "balance": "Вам начислено {{amount}} руб. по акции «{{name}}»",
     "subscription": "Вам предоставлена подписка на {{days}} дн. по акции «{{name}}»",
     "tariff": "Вам предоставлен тариф «{{tariff}}» по акции «{{name}}»"
@@ -143,7 +143,7 @@
       "trafficResetMessage": "Ваш лимит трафика был сброшен"
     },
     "autopay": {
-      "successTitle": "Автопродление успешно",
+      "successTitle": "Подписка продлена",
       "successMessage": "Подписка автоматически продлена за {{amount}} {{currency}}",
       "failedTitle": "Ошибка автопродления",
       "failedMessage": "Не удалось автоматически продлить подписку",
@@ -185,16 +185,16 @@
   },
   "successNotification": {
     "balanceTopup": {
-      "title": "Баланс пополнен!"
+      "title": "Баланс пополнен"
     },
     "subscriptionActivated": {
-      "title": "Подписка активирована!"
+      "title": "Подписка активирована"
     },
     "subscriptionRenewed": {
-      "title": "Подписка продлена!"
+      "title": "Подписка продлена"
     },
     "subscriptionPurchased": {
-      "title": "Подписка оплачена!"
+      "title": "Подписка оплачена"
     },
     "amount": "Сумма",
     "price": "Стоимость",
@@ -238,7 +238,7 @@
     "telegramNotConfigured": "Telegram бот не настроен",
     "botOutdated": "Версия бота несовместима с кабинетом. Обновите бота до v3.33.0 или новее.",
     "telegramUnavailable": "Вход через Telegram временно недоступен",
-    "authenticating": "Авторизация...",
+    "authenticating": "Авторизация…",
     "orOpenInApp": "Или откройте бота в приложении",
     "loginFailed": "Ошибка входа",
     "telegramWidgetBlocked": "Виджет входа через Telegram недоступен. Войдите через бота:",
@@ -246,7 +246,7 @@
     "loginWithBot": "Войти через бота",
     "backToWidget": "Назад к входу через виджет",
     "openBotToLogin": "Открыть бота для входа",
-    "waitingForConfirmation": "Ожидание подтверждения...",
+    "waitingForConfirmation": "Ожидание подтверждения…",
     "deepLinkExpired": "Ссылка истекла. Попробуйте снова.",
     "tryAgain": "Попробовать снова",
     "scanQrToLogin": "Отсканируйте QR-код камерой телефона",
@@ -284,7 +284,7 @@
     "useAnotherEmail": "Указать другой email",
     "backToLogin": "Вернуться ко входу",
     "emailNotVerified": "Сначала подтвердите email",
-    "loginSuccess": "Авторизация успешна",
+    "loginSuccess": "Вы вошли",
     "continueWithGoogle": "Продолжить через Google",
     "continueWithYandex": "Продолжить через Яндекс",
     "continueWithDiscord": "Продолжить через Discord",
@@ -294,11 +294,11 @@
   },
   "emailVerification": {
     "title": "Подтверждение email",
-    "verifying": "Проверяем email...",
+    "verifying": "Проверяем email…",
     "pleaseWait": "Пожалуйста, подождите пока мы проверяем ваш email.",
     "success": "Email подтверждён!",
-    "successMessage": "Ваш email успешно подтверждён. Теперь вы можете входить с помощью email и пароля.",
-    "redirecting": "Переходим в личный кабинет...",
+    "successMessage": "Почта подтверждена. Теперь можно входить по почте и паролю.",
+    "redirecting": "Переходим в личный кабинет…",
     "failed": "Ошибка подтверждения",
     "goToLogin": "Перейти к входу"
   },
@@ -306,7 +306,7 @@
     "title": "Новый пароль",
     "enterNewPassword": "Введите новый пароль ниже.",
     "success": "Пароль изменён!",
-    "redirectingToLogin": "Переходим на страницу входа...",
+    "redirectingToLogin": "Переходим на страницу входа…",
     "setPassword": "Установить пароль",
     "invalidToken": "Недействительная ссылка",
     "tokenExpiredOrInvalid": "Ссылка для сброса пароля недействительна или истекла."
@@ -399,8 +399,7 @@
       "dismiss": "Закрыть"
     },
     "trialOffer": {
-      "freeTitle": "Бесплатный пробный период",
-      "freeDesc": "Попробуйте наш VPN бесплатно: без обязательств"
+      "freeTitle": "Попробовать бесплатно"
     },
     "stats": {
       "balance": "Баланс",
@@ -794,7 +793,7 @@
         "trialNotAllowed": "На пробной подписке убрать места нельзя"
       },
       "reduce": "Уменьшить",
-      "reducing": "Уменьшение...",
+      "reducing": "Уменьшение…",
       "newDeviceLimit_one": "Станет: {{count}} устройство",
       "newDeviceLimit_few": "Станет: {{count}} устройства",
       "newDeviceLimit_many": "Станет: {{count}} устройств",
@@ -1017,8 +1016,8 @@
       "title": "Промокод",
       "placeholder": "Введите промокод",
       "activate": "Активировать",
-      "activating": "Активация...",
-      "success": "Промокод успешно активирован!",
+      "activating": "Активация…",
+      "success": "Промокод активирован",
       "balanceAdded": "На баланс начислено: {{amount}} ₽",
       "errors": {
         "not_found": "Промокод не найден",
@@ -1055,7 +1054,7 @@
       "title": "Ожидающие платежи",
       "pay": "Оплатить",
       "checkStatus": "Проверить статус",
-      "checking": "Проверка..."
+      "checking": "Проверка…"
     },
     "paymentReady": "Ссылка на оплату готова",
     "clickToOpenPayment": "Нажмите кнопку ниже, чтобы открыть страницу оплаты в новой вкладке",
@@ -1072,8 +1071,8 @@
       "amountRange": "Сумма: {{min}} – {{max}} ₽"
     },
     "paymentSuccess": {
-      "title": "Оплата прошла успешно",
-      "message": "Ваш баланс успешно пополнен. Средства уже доступны."
+      "title": "Оплата прошла",
+      "message": "Баланс пополнен. Деньги уже доступны."
     },
     "topUpResult": {
       "awaitingPayment": "Ожидание оплаты",
@@ -1132,7 +1131,7 @@
     "copyLink": "Копировать",
     "copied": "Скопировано!",
     "shareButton": "Поделиться",
-    "shareMessage": "Заходи в {{botName}} по моей ссылке и получай до {{percent}}% кешбэка!",
+    "shareMessage": "Заходи в {{botName}} по моей ссылке и получай до {{percent}}% комиссии!",
     "shareHint": "Поделитесь ссылкой с друзьями. Когда они зарегистрируются и оплатят, вы получите {{percent}}% комиссии!",
     "stats": {
       "totalReferrals": "Всего друзей",
@@ -1208,7 +1207,7 @@
       "commissionInfo": "Ваша партнерская комиссия составляет {{percent}}%",
       "rejected": "Заявка отклонена",
       "reapplyButton": "Подать заново",
-      "applying": "Отправка...",
+      "applying": "Отправка…",
       "submitApplication": "Отправить заявку",
       "applyError": "Не удалось отправить заявку. Попробуйте снова.",
       "yourCampaigns": "Ваши кампании",
@@ -1255,7 +1254,7 @@
         "websiteUrl": "Сайт",
         "websiteUrlPlaceholder": "https://example.com",
         "description": "Описание",
-        "descriptionPlaceholder": "Расскажите о вашей аудитории и планах продвижения...",
+        "descriptionPlaceholder": "Расскажите о вашей аудитории и планах продвижения…",
         "expectedReferrals": "Ожидаемое количество рефералов в месяц",
         "expectedReferralsPlaceholder": "Примерное количество в месяц",
         "desiredCommission": "Желаемый процент комиссии",
@@ -1277,7 +1276,7 @@
       "noHistory": "Запросов на вывод пока нет",
       "requestTitle": "Запрос на вывод",
       "requestDesc": "Доступно для вывода: {{available}}",
-      "requesting": "Отправка...",
+      "requesting": "Отправка…",
       "submitRequest": "Отправить запрос",
       "requestError": "Не удалось создать запрос на вывод. Попробуйте снова.",
       "fields": {
@@ -1285,7 +1284,7 @@
         "amountPlaceholder": "Введите сумму в {{currency}}",
         "amountHint": "Минимум: {{min}} {{currency}}",
         "paymentDetails": "Реквизиты для оплаты",
-        "paymentDetailsPlaceholder": "Номер карты, адрес кошелька или другие реквизиты..."
+        "paymentDetailsPlaceholder": "Номер карты, адрес кошелька или другие реквизиты…"
       },
       "status": {
         "pending": "В обработке",
@@ -1332,12 +1331,12 @@
     "subject": "Тема",
     "subjectPlaceholder": "Кратко опишите проблему",
     "message": "Сообщение",
-    "messagePlaceholder": "Подробно опишите вашу проблему...",
+    "messagePlaceholder": "Подробно опишите вашу проблему…",
     "send": "Отправить",
-    "sending": "Отправка...",
-    "creating": "Создание...",
+    "sending": "Отправка…",
+    "creating": "Создание…",
     "reply": "Ответить",
-    "replyPlaceholder": "Введите ваш ответ...",
+    "replyPlaceholder": "Введите ваш ответ…",
     "sendReply": "Отправить ответ",
     "you": "Вы",
     "supportTeam": "Поддержка",
@@ -1374,7 +1373,7 @@
     },
     "chat": {
       "title": "Поддержка {{name}}",
-      "subtitle": "Мы всегда на связи",
+      "subtitle": "Ответим в чате",
       "openTelegram": "Написать в Telegram",
       "disabled": "Чат в кабинете сейчас выключен. Напишите нам в Telegram — ответим там.",
       "write": "Написать в поддержку",
@@ -1428,7 +1427,7 @@
     "day": "День",
     "spinCost": "Стоимость вращения",
     "spin": "Крутить",
-    "spinning": "Крутится...",
+    "spinning": "Крутится…",
     "history": "История",
     "recentSpins": "Последние вращения",
     "congratulations": "Поздравляем!",
@@ -1449,16 +1448,16 @@
     },
     "payWithStars": "Оплатить Stars",
     "payWithDays": "Оплатить днями",
-    "processingPayment": "Обработка...",
+    "processingPayment": "Обработка…",
     "starsPaymentSuccess": "Оплата прошла! Результат спина отправлен в Telegram.",
     "starsPaymentSuccessCheckHistory": "Оплата прошла! Проверьте историю или Telegram для результата.",
-    "starsPaymentFailed": "Ошибка оплаты. Попробуйте еще раз.",
+    "starsPaymentFailed": "Ошибка оплаты. Попробуйте ещё раз.",
     "starsPaymentRedirected": "Откроется Telegram для оплаты. После оплаты обновите страницу.",
     "starsNotAvailable": "Оплата звёздами сейчас недоступна. Обратитесь в поддержку.",
     "confirmStarsPayment": "Вы будете перенаправлены в Telegram для оплаты одного вращения колеса.",
     "payStars": "Оплатить {{count}} ⭐",
     "youWon": "Вы выиграли",
-    "noPrize": "В этот раз не повезло...",
+    "noPrize": "В этот раз не повезло…",
     "noHistory": "История вращений пуста",
     "banner": {
       "title": "Колесо призов",
@@ -7432,8 +7431,8 @@
       "verify": "Подтвердить",
       "resendCode": "Отправить код повторно",
       "resendIn": "Повторить через {{seconds}} сек.",
-      "success": "Email успешно изменён!",
-      "successDescription": "Ваш email был успешно обновлён.",
+      "success": "Почта изменена",
+      "successDescription": "Теперь письма приходят на новый адрес.",
       "emailAlreadyUsed": "Этот email уже используется другим аккаунтом.",
       "sameEmail": "Новый email совпадает с текущим.",
       "invalidCode": "Неверный код подтверждения.",
@@ -7468,14 +7467,14 @@
       "unlinkConfirmBtn": "Точно отвязать?",
       "unlinkForgetsEmail": "Вместе с ним будет забыт email {{email}}: он получен от этого сервиса, а пароль для входа по почте не задан.",
       "cannotUnlinkLast": "Нельзя отвязать последний способ входа",
-      "linkSuccess": "Аккаунт успешно привязан",
-      "unlinkSuccess": "Аккаунт успешно отвязан",
+      "linkSuccess": "Аккаунт привязан",
+      "unlinkSuccess": "Аккаунт отвязан",
       "linkError": "Не удалось привязать аккаунт",
       "telegramLinkUnavailable": "Привязка Telegram временно недоступна. Используйте бота:",
       "unlinkError": "Не удалось отвязать аккаунт",
       "goToAccounts": "Привязанные аккаунты",
-      "linking": "Привязка аккаунта...",
-      "linkingTelegram": "Привязка Telegram...",
+      "linking": "Привязка аккаунта…",
+      "linkingTelegram": "Привязка Telegram…",
       "returnToTelegram": "Вернитесь в Telegram, чтобы продолжить",
       "openTelegram": "Открыть Telegram",
       "continueInBrowser": "Продолжите авторизацию в открывшемся браузере",
@@ -7596,7 +7595,7 @@
     "finish": "Готово",
     "steps": {
       "welcome": {
-        "title": "Добро пожаловать!",
+        "title": "Добро пожаловать",
         "description": "Это ваш личный кабинет. Здесь вы можете управлять подпиской, пополнять баланс и подключать устройства."
       },
       "connectDevices": {
@@ -7647,7 +7646,7 @@
       "expires": "Истекает: {{time}}",
       "remaining": "Осталось: {{time}}",
       "test": "Тест",
-      "activating": "Активация...",
+      "activating": "Активация…",
       "activate": "Активировать"
     },
     "deactivate": {
@@ -7656,18 +7655,18 @@
       "confirmDescription": "Вы уверены, что хотите отменить скидку {{percent}}%? После отмены вы сможете активировать другой промокод.",
       "warning": "Отменённый промокод нельзя будет использовать повторно. Скидка перестанет действовать немедленно.",
       "confirm": "Отменить",
-      "deactivating": "Отмена...",
+      "deactivating": "Отмена…",
       "error": "Не удалось отменить промокод. Попробуйте позже.",
       "success": "Акция отключена"
     }
   },
   "telegramRedirect": {
     "maxRetries": "Превышено количество попыток. Попробуйте позже.",
-    "redirecting": "Перенаправление...",
+    "redirecting": "Перенаправление…",
     "loginAlternative": "Войти другим способом",
     "openInTelegram": "Откройте в Telegram",
     "openInTelegramDesc": "Для автоматического входа откройте это приложение через бота в Telegram",
-    "redirectToLogin": "Перенаправление на страницу входа..."
+    "redirectToLogin": "Перенаправление на страницу входа…"
   },
   "deepLink": {
     "connecting": "Подключение к",
@@ -7685,22 +7684,22 @@
     "howToAdd": "Как добавить вручную:",
     "step1": "Скопируйте ссылку кнопкой выше",
     "step2": "Откройте приложение",
-    "step3": "Найдите \"+\" или \"Добавить подписку\"",
-    "step4": "Выберите \"Из буфера\" или \"Вставить ссылку\""
+    "step3": "Найдите «+» или «Добавить подписку»",
+    "step4": "Выберите «Из буфера» или «Вставить ссылку»"
   },
   "blocking": {
     "maintenance": {
       "title": "Технические работы",
       "defaultMessage": "Сервис временно недоступен. Проводятся технические работы.",
       "reason": "Причина",
-      "waitMessage": "Пожалуйста, подождите..."
+      "waitMessage": "Пожалуйста, подождите…"
     },
     "channel": {
       "title": "Подписка на канал",
       "defaultMessage": "Для продолжения работы подпишитесь на наш канал",
       "openChannel": "Открыть канал",
       "checkSubscription": "Проверить подписку",
-      "checking": "Проверяем...",
+      "checking": "Проверяем…",
       "waitSeconds": "Подождите {{seconds}} сек.",
       "hint": "После подписки нажмите кнопку проверки",
       "notSubscribed": "Вы ещё не подписались на канал",
@@ -7725,7 +7724,7 @@
       "title": "Сервис недоступен",
       "description": "Не удаётся подключиться к сервису. Возможно, идут технические работы или временные неполадки со связью.",
       "retry": "Повторить попытку",
-      "checking": "Проверяем соединение...",
+      "checking": "Проверяем соединение…",
       "hint": "Страница обновится автоматически, как только сервис снова станет доступен.",
       "close": "Закрыть"
     }
@@ -7752,20 +7751,20 @@
     "confirm": "Объединить аккаунты",
     "cancel": "Отмена",
     "expired": "Время на объединение истекло. Попробуйте снова.",
-    "success": "Аккаунты успешно объединены!",
+    "success": "Аккаунты объединены",
     "error": "Ошибка при объединении. Попробуйте позже.",
     "expiresIn": "Действует ещё {{minutes}}",
-    "merging": "Объединение..."
+    "merging": "Объединение…"
   },
   "landing": {
     "giftClaim": {
-      "title": "Вам подарок!",
+      "title": "Вам подарок",
       "error": "Не удалось активировать подарок.",
       "notFoundTitle": "Подарок не найден",
       "notFoundDesc": "Ссылка на подарок недействительна или больше недоступна.",
       "alreadyTitle": "Подарок уже активирован",
       "alreadyDesc": "Этот подарок уже забрали.",
-      "successTitle": "Подарок активирован!",
+      "successTitle": "Подарок активирован",
       "connectDesc": "Используйте эту ссылку для подключения:",
       "copyLink": "Скопировать ссылку",
       "pendingTitle": "Почти готово…",
@@ -7781,7 +7780,7 @@
     "giftLink": {
       "shareText": "Дарю вам подписку! Активируйте здесь:",
       "viaTelegram": "Telegram:",
-      "title": "Подарок готов!",
+      "title": "Подарок готов",
       "subtitle": "Отправьте эту ссылку тому, кому предназначен подарок — он активирует его сам.",
       "linkLabel": "Ссылка на подарок",
       "telegramLabel": "Ссылка для Telegram",
@@ -7790,7 +7789,7 @@
     },
     "awaitingPayment": "Ожидание оплаты",
     "awaitingPaymentDesc": "Завершите оплату в открывшемся окне",
-    "purchaseSuccess": "Оплата прошла успешно!",
+    "purchaseSuccess": "Оплата прошла",
     "keySentTo": "Ключ подписки отправлен на {{contact}}",
     "giftSentTo": "Подарок отправлен на {{contact}}",
     "purchaseFailed": "Ошибка оплаты",
@@ -7804,7 +7803,7 @@
     "pendingActivation": "Подписка готова к активации",
     "pendingActivationDesc": "У вас уже есть активная подписка. Активация новой заменит текущую.",
     "activateNow": "Активировать",
-    "activating": "Активация...",
+    "activating": "Активация…",
     "activationFailed": "Ошибка активации",
     "giftMessage": "Сообщение",
     "cabinetReady": "Ваш аккаунт готов",
@@ -7821,7 +7820,7 @@
     "giftTelegramPendingNotInBot": "Получатель пока не пользуется ботом. Отправьте ему ссылку, чтобы он мог активировать подарок:",
     "openBot": "Ссылка на бота",
     "autoLoginFailed": "Не удалось выполнить автоматический вход",
-    "autoLoginProcessing": "Выполняется вход...",
+    "autoLoginProcessing": "Выполняется вход…",
     "periodLabels": {
       "d1": "1 день",
       "d2": "2 дня",
@@ -7892,12 +7891,12 @@
     "topUpBalance": "Пополнить баланс",
     "total": "Итого",
     "giftButton": "Подарить",
-    "sending": "Отправляем подарок...",
+    "sending": "Отправляем подарок…",
     "gb": "ГБ",
     "devices": "устройств",
     "paymentMethod": "Способ оплаты",
-    "processing": "Обработка...",
-    "successTitle": "Подарок отправлен!",
+    "processing": "Обработка…",
+    "successTitle": "Подарок отправлен",
     "successDesc": "Получатель {{contact}} получит уведомление",
     "pendingTitle": "Ожидание оплаты",
     "pendingDesc": "Завершите оплату в платёжной системе",
@@ -7911,7 +7910,7 @@
     "pollTimeout": "Обработка занимает больше времени, чем обычно",
     "pollTimeoutDesc": "Попробуйте проверить статус позже",
     "pollErrorTitle": "Не удалось проверить статус подарка",
-    "pollErrorDesc": "Ваша покупка прошла успешно. Проверьте статус на главной странице.",
+    "pollErrorDesc": "Покупка прошла. Статус подарка — на главной.",
     "retry": "Проверить снова",
     "notFound": "Конфигурация подарков не найдена",
     "noToken": "Ссылка недействительна",
@@ -7922,9 +7921,9 @@
     "giftMessageLabel": "Сообщение",
     "recipientLabel": "Получатель",
     "featureDisabled": "Функция подарков временно недоступна",
-    "redirecting": "Перенаправляем...",
+    "redirecting": "Перенаправляем…",
     "pending": {
-      "title": "Вам подарили подписку!",
+      "title": "Вам подарили подписку",
       "from": "от {{sender}}",
       "activate": "Активировать"
     },
@@ -7945,7 +7944,7 @@
     "activateDescription": "Введите код подарка, полученный от друга или знакомого",
     "activateCodePlaceholder": "GIFT-XXXXXXXXXXXX",
     "activateButton": "Активировать подарок",
-    "activating": "Активация...",
+    "activating": "Активация…",
     "activateSuccess": "Подарок активирован!",
     "activateSuccessDesc": "{{tariff}}: {{days}} дн. добавлено к вашей подписке",
     "activateError": "Не удалось активировать подарок",
@@ -7967,7 +7966,7 @@
     "codeCopied": "Код скопирован!",
     "shareGift": "Поделиться",
     "shareText": "У меня есть подарок для тебя! Активируй его здесь:",
-    "codeReadyTitle": "Код подарка готов!",
+    "codeReadyTitle": "Код подарка готов",
     "codeLabel": "Код подарка",
     "sharePreview": "Сообщение для отправки",
     "activatedBy": "Активирован пользователем {{username}}",
@@ -8021,12 +8020,12 @@
       "imageLabel": "Изображение",
       "readTimeLabel": "Время чтения (мин)",
       "save": "Сохранить",
-      "saving": "Сохранение...",
+      "saving": "Сохранение…",
       "saveError": "Не удалось сохранить статью. Попробуйте ещё раз.",
       "saved": "Новость сохранена",
       "deleted": "Новость удалена",
       "selectColor": "Выбрать цвет {{color}}",
-      "uploading": "Загрузка...",
+      "uploading": "Загрузка…",
       "dropMedia": "Перетащите изображение или видео сюда",
       "uploadError": "Ошибка загрузки",
       "fileTooLarge": "Файл слишком большой",
@@ -8036,9 +8035,9 @@
         "selectTag": "Выберите тег",
         "create": "Создать",
         "createNew": "Создать новый",
-        "searchOrCreate": "Поиск или создание...",
+        "searchOrCreate": "Поиск или создание…",
         "noItems": "Ничего не найдено",
-        "placeholder": "Выберите...",
+        "placeholder": "Выберите…",
         "clear": "Очистить",
         "delete": "Удалить {{name}}"
       },
@@ -8068,7 +8067,7 @@
   "subscriptions": {
     "buy": "Купить подписку",
     "buyAnother": "Купить ещё",
-    "browsePlans": "Посмотреть тарифы и купить подписку",
+    "browsePlans": "Тарифы и цены",
     "empty": "У вас пока нет подписок",
     "emptyDesc": "Выберите тариф, чтобы начать пользоваться сервисом",
     "title": "Мои подписки"

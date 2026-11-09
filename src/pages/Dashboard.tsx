@@ -451,8 +451,7 @@ export default function Dashboard() {
               to="/subscription/purchase"
               className="flex w-full items-center justify-center gap-2 rounded-2xl bg-cta-500 p-3.5 text-sm font-semibold text-on-cta transition-colors hover:bg-cta-600"
             >
-              <span className="text-base">+</span>{' '}
-              {t('subscriptions.browsePlans', 'Посмотреть тарифы и купить подписку')}
+              {t('subscriptions.browsePlans', 'Тарифы и цены')}
             </Link>
           )}
         </div>
@@ -511,8 +510,7 @@ export default function Dashboard() {
                 : 'flex w-full items-center justify-center gap-2 rounded-2xl bg-cta-500 p-3.5 text-sm font-semibold text-on-cta transition-colors hover:bg-cta-600'
             }
           >
-            <span className="text-base">+</span>{' '}
-            {t('subscriptions.browsePlans', 'Посмотреть тарифы и купить подписку')}
+            {t('subscriptions.browsePlans', 'Тарифы и цены')}
           </Link>
         </div>
       )}

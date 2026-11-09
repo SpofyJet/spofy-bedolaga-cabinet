@@ -879,7 +879,7 @@ export default function Referral() {
           />
           <Stat
             label={t('referral.stats.earned', 'Заработано')}
-            value={plusMoney(info?.total_earnings_rubles || 0)}
+            value={info?.total_earnings_rubles ? plusMoney(info.total_earnings_rubles) : money(0)}
             hint={
               info?.total_earnings_days
                 ? t('referral.stats.earnedDays', { count: info.total_earnings_days })

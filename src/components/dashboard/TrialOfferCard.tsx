@@ -46,10 +46,9 @@ export default function TrialOfferCard({
       </div>
 
       {/* Title */}
-      <h2 className="mb-1.5 text-[22px] font-bold tracking-tight text-dark-50">
+      <h2 className="mb-5 text-[22px] font-bold tracking-tight text-dark-50">
         {t('dashboard.trialOffer.freeTitle')}
       </h2>
-      <p className="mb-5 text-sm text-dark-400">{t('dashboard.trialOffer.freeDesc')}</p>
 
       {/* Trial stats */}
       <div className="mb-7 grid grid-cols-3 gap-2">
