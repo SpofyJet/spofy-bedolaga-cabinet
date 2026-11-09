@@ -49,7 +49,7 @@ export function SettingInput({ setting, onUpdate, disabled }: SettingInputProps)
   useEffect(() => {
     if (textareaRef.current && isEditing) {
       textareaRef.current.style.height = 'auto';
-      textareaRef.current.style.height = Math.min(textareaRef.current.scrollHeight, 300) + 'px';
+      textareaRef.current.style.height = `${Math.min(textareaRef.current.scrollHeight, 300)}px`;
     }
   }, [value, isEditing]);
 
@@ -179,7 +179,7 @@ export function SettingInput({ setting, onUpdate, disabled }: SettingInputProps)
   if (needsTextarea) {
     const displayValue = currentValue || '-';
     const previewValue =
-      displayValue.length > 60 ? displayValue.slice(0, 60) + '...' : displayValue;
+      displayValue.length > 60 ? `${displayValue.slice(0, 60)}...` : displayValue;
 
     return (
       <button

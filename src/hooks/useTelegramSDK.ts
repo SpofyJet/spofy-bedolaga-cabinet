@@ -80,15 +80,6 @@ export function closeTelegramApp(): void {
   } catch {}
 }
 
-export function isTelegramMobile(): boolean {
-  try {
-    const { tgWebAppPlatform } = retrieveLaunchParams();
-    return tgWebAppPlatform === 'ios' || tgWebAppPlatform === 'android';
-  } catch {
-    return false;
-  }
-}
-
 export function getTelegramInitData(): string | null {
   return readTelegramInitData();
 }

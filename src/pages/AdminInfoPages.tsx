@@ -32,7 +32,7 @@ const PageRow = memo(function PageRow({
   onToggleActive: () => void;
 }) {
   const { t } = useTranslation();
-  const resolvedTitle = page.title[locale] || page.title['ru'] || page.title['en'] || '';
+  const resolvedTitle = page.title[locale] || page.title.ru || page.title.en || '';
 
   return (
     <div className="rounded-xl border border-dark-700 bg-dark-800/50 p-4 transition-all hover:border-dark-600">

@@ -23,7 +23,7 @@ export function createNumberInputHandler(
 
     let num = parseFloat(val);
 
-    if (isNaN(num)) return;
+    if (Number.isNaN(num)) return;
 
     if (min !== undefined) num = Math.max(min, num);
     if (max !== undefined) num = Math.min(max, num);

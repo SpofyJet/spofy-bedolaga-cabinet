@@ -44,7 +44,7 @@ export function DailyChart({ data, chartId, title, earningsLabel, countLabel }: 
       data.map((item) => ({
         ...item,
         earnings_display: item.earnings_kopeks / PARTNER_STATS.KOPEKS_DIVISOR,
-        label: new Date(item.date + 'T00:00:00').toLocaleDateString(i18n.language, {
+        label: new Date(`${item.date}T00:00:00`).toLocaleDateString(i18n.language, {
           month: 'short',
           day: 'numeric',
         }),

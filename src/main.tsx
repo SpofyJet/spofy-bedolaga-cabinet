@@ -27,11 +27,8 @@ import { AppWithNavigator } from './AppWithNavigator';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { brandingApi, initLogoPreload } from './api/branding';
 import { checkBackendOnStartup } from './api/health';
-import {
-  getCachedFullscreenEnabled,
-  isTelegramMobile,
-  setCachedFullscreenEnabled,
-} from './hooks/useTelegramSDK';
+import { getCachedFullscreenEnabled, setCachedFullscreenEnabled } from './hooks/useTelegramSDK';
+import { isTelegramMobile } from './utils/qrScanner';
 import { applyTelegramLanguage, i18nReady } from './i18n';
 import { themeColorsQueryOptions } from './api/themeColors';
 import { applyThemeColors } from './hooks/useThemeColors';

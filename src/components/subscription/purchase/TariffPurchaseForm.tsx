@@ -523,7 +523,7 @@ export function TariffPurchaseForm({
                         min={tariff.min_days ?? 1}
                         max={tariff.max_days ?? 365}
                         value={customDays}
-                        onChange={(e) => setCustomDays(parseInt(e.target.value))}
+                        onChange={(e) => setCustomDays(parseInt(e.target.value, 10))}
                         className="min-w-0 flex-1 accent-accent-500"
                       />
                       <input
@@ -537,7 +537,7 @@ export function TariffPurchaseForm({
                               tariff.min_days ?? 1,
                               Math.min(
                                 tariff.max_days ?? 365,
-                                parseInt(e.target.value) || (tariff.min_days ?? 1),
+                                parseInt(e.target.value, 10) || (tariff.min_days ?? 1),
                               ),
                             ),
                           )
@@ -624,7 +624,7 @@ export function TariffPurchaseForm({
                         min={tariff.min_traffic_gb ?? 1}
                         max={tariff.max_traffic_gb ?? 1000}
                         value={customTrafficGb}
-                        onChange={(e) => setCustomTrafficGb(parseInt(e.target.value))}
+                        onChange={(e) => setCustomTrafficGb(parseInt(e.target.value, 10))}
                         className="min-w-0 flex-1 accent-accent-500"
                       />
                       <div className="flex shrink-0 items-center gap-2">
@@ -639,7 +639,7 @@ export function TariffPurchaseForm({
                                 tariff.min_traffic_gb ?? 1,
                                 Math.min(
                                   tariff.max_traffic_gb ?? 1000,
-                                  parseInt(e.target.value) || (tariff.min_traffic_gb ?? 1),
+                                  parseInt(e.target.value, 10) || (tariff.min_traffic_gb ?? 1),
                                 ),
                               ),
                             )

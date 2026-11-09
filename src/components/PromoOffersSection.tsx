@@ -21,7 +21,7 @@ const formatTimeLeft = (
     expires = new Date(expiresAt);
   } else {
     // No timezone - treat as UTC
-    expires = new Date(expiresAt + 'Z');
+    expires = new Date(`${expiresAt}Z`);
   }
   const diffMs = expires.getTime() - now.getTime();
 
@@ -210,18 +210,14 @@ export default function PromoOffersSection({ className = '' }: PromoOffersSectio
   const availableOffers = offers.filter((o) => o.is_active && !o.is_claimed);
 
   // Don't render if no offers and no active discount
-  if (
-    !offersLoading &&
-    availableOffers.length === 0 &&
-    (!activeDiscount || !activeDiscount.is_active)
-  ) {
+  if (!offersLoading && availableOffers.length === 0 && !activeDiscount?.is_active) {
     return null;
   }
 
   return (
     <div className={`space-y-3 ${className}`}>
       {/* Действующая скидка: одна плоская карточка, главная кнопка — «Использовать». */}
-      {activeDiscount && activeDiscount.is_active && activeDiscount.discount_percent > 0 && (
+      {activeDiscount?.is_active && activeDiscount.discount_percent > 0 && (
         <div className="rounded-3xl bg-dark-900/70 p-4">
           <div className="flex items-center gap-3">
             <RowIcon tone="success">

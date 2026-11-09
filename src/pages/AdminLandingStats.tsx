@@ -177,7 +177,7 @@ export default function AdminLandingStats() {
   const { t, i18n } = useTranslation();
   const { id } = useParams<{ id: string }>();
   const numericId = id ? Number(id) : NaN;
-  const isValidId = !isNaN(numericId);
+  const isValidId = !Number.isNaN(numericId);
   const navigate = useNavigate();
   const { formatWithCurrency } = useCurrency();
   const divisor = CHART_COMMON.KOPEKS_DIVISOR;

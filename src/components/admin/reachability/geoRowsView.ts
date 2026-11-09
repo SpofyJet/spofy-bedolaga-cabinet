@@ -1,6 +1,6 @@
 import type { Job } from '@/api/reachability';
 import { regionCodeFor } from './geoRegions';
-import { GEO_VERDICTS, isGeoVerdict } from './geoVerdicts';
+import { GEO_VERDICTS } from './geoVerdicts';
 
 /** Строка города из `Job.result.rows` (форма бота, часть 1). */
 export interface GeoTargetCell {
@@ -135,8 +135,4 @@ function matchesPick(row: GeoRow, pick: MapPick): boolean {
   return pick.kind === 'city'
     ? `${row.region}|${row.city}` === pick.key
     : regionCodeFor(row.region, row.region_ru) === pick.key;
-}
-
-export function verdictOrUnknown(value: string): string {
-  return isGeoVerdict(value) ? value : 'unknown';
 }

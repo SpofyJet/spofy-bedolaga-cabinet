@@ -388,7 +388,7 @@ export default function TopUpAmount() {
       return;
     }
     const amountCurrency = parseFloat(amount);
-    if (isNaN(amountCurrency) || amountCurrency <= 0) {
+    if (Number.isNaN(amountCurrency) || amountCurrency <= 0) {
       setError(t('balance.errors.enterAmount'));
       return;
     }

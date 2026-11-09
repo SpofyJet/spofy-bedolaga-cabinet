@@ -234,23 +234,21 @@ export default function Support() {
       {tab === 'archive' && closed.length > 0 ? (
         <Group>{closed.map((ticket) => ticketRow(ticket, false))}</Group>
       ) : (
-        <>
-          <Group>
-            {open
-              ? ticketRow(open, true)
-              : chatRow({
-                  key: 'new',
-                  to: '/support/new',
-                  title: t('support.chat.newTicket'),
-                  text: t('support.chat.invite'),
-                  trailing: (
-                    <span className="rounded-full bg-cta-500 px-3.5 py-1.5 text-[13px] font-semibold text-on-cta">
-                      {t('support.chat.writeShort')}
-                    </span>
-                  ),
-                })}
-          </Group>
-        </>
+        <Group>
+          {open
+            ? ticketRow(open, true)
+            : chatRow({
+                key: 'new',
+                to: '/support/new',
+                title: t('support.chat.newTicket'),
+                text: t('support.chat.invite'),
+                trailing: (
+                  <span className="rounded-full bg-cta-500 px-3.5 py-1.5 text-[13px] font-semibold text-on-cta">
+                    {t('support.chat.writeShort')}
+                  </span>
+                ),
+              })}
+        </Group>
       )}
 
       {showContactRow && (

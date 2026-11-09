@@ -1,30 +1,17 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
+import { openQrScanner } from '@telegram-apps/sdk-react';
 import {
-  openQrScanner,
-  isQrScannerSupported,
-  retrieveLaunchParams,
-} from '@telegram-apps/sdk-react';
-import { loadHtml5Qrcode, type Html5QrcodeInstance } from '@/utils/qrScanner';
+  canUseTelegramScanner,
+  loadHtml5Qrcode,
+  type Html5QrcodeInstance,
+} from '@/utils/qrScanner';
 import { PiCameraDuotone } from 'react-icons/pi';
-
-const TG_MOBILE_PLATFORMS = new Set(['ios', 'android', 'android_x', 'ios_x']);
-
-function isTelegramMobile(): boolean {
-  try {
-    const platform = retrieveLaunchParams().tgWebAppPlatform;
-    return TG_MOBILE_PLATFORMS.has(platform);
-  } catch {
-    return false;
-  }
-}
 
 const HAPP_TV_API = 'https://check.happ.su/sendtv';
 
 interface Props {
   subscriptionUrl: string;
-  /** Не используется: цвета берутся из токенов темы. Оставлено для совместимости. */
-  isLight?: boolean;
 }
 
 export default function TvQuickConnect({ subscriptionUrl }: Props) {
@@ -38,11 +25,7 @@ export default function TvQuickConnect({ subscriptionUrl }: Props) {
   const scannerRef = useRef<Html5QrcodeInstance | null>(null);
 
   useEffect(() => {
-    try {
-      setTgNative(isTelegramMobile() && isQrScannerSupported() && openQrScanner.isAvailable());
-    } catch {
-      setTgNative(false);
-    }
+    setTgNative(canUseTelegramScanner());
     return () => {
       if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
       if (scannerRef.current) {

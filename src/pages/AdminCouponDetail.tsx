@@ -103,7 +103,7 @@ export default function AdminCouponDetail() {
 
   const handleDownload = () => {
     if (!links) return;
-    const blob = new Blob([links.links.join('\n') + '\n'], { type: 'text/plain;charset=utf-8' });
+    const blob = new Blob([`${links.links.join('\n')}\n`], { type: 'text/plain;charset=utf-8' });
     const url = URL.createObjectURL(blob);
     const anchor = document.createElement('a');
     anchor.href = url;

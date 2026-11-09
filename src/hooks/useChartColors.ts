@@ -30,7 +30,7 @@ function cssVarToHex(varName: string, fallback: string): string {
   if (!raw) return fallback;
 
   const parts = raw.split(',').map((s) => parseInt(s.trim(), 10));
-  if (parts.length !== 3 || parts.some(isNaN)) return fallback;
+  if (parts.length !== 3 || parts.some(Number.isNaN)) return fallback;
 
   return rgbToHex(parts[0], parts[1], parts[2]);
 }

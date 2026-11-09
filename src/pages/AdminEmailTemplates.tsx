@@ -43,8 +43,8 @@ function TemplateCard({
   currentLang: string;
   onClick: () => void;
 }) {
-  const label = template.label[currentLang] || template.label['en'] || template.type;
-  const description = template.description[currentLang] || template.description['en'] || '';
+  const label = template.label[currentLang] || template.label.en || template.type;
+  const description = template.description[currentLang] || template.description.en || '';
   const customCount = Object.values(template.languages).filter((l) => l.has_custom).length;
   const { t } = useTranslation();
   const sendingOff = template.enabled === false;
@@ -279,7 +279,7 @@ function TemplateEditor({
     setActiveTab('editor');
   };
 
-  const label = detail.label[interfaceLang] || detail.label['en'] || detail.notification_type;
+  const label = detail.label[interfaceLang] || detail.label.en || detail.notification_type;
 
   return (
     <div className="space-y-3 sm:space-y-4">
@@ -295,7 +295,7 @@ function TemplateEditor({
           <div className="min-w-0">
             <h2 className="truncate text-base font-semibold text-dark-100 sm:text-lg">{label}</h2>
             <p className="line-clamp-2 text-xs text-dark-400">
-              {detail.description[interfaceLang] || detail.description['en'] || ''}
+              {detail.description[interfaceLang] || detail.description.en || ''}
             </p>
           </div>
         </div>

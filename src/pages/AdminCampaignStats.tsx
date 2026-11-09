@@ -44,7 +44,7 @@ export default function AdminCampaignStats() {
   const { t, i18n } = useTranslation();
   const { id } = useParams<{ id: string }>();
   const numericId = id ? Number(id) : null;
-  const isValidId = numericId !== null && !isNaN(numericId);
+  const isValidId = numericId !== null && !Number.isNaN(numericId);
   const navigate = useNavigate();
   const location = useLocation();
   const haptic = useHaptic();

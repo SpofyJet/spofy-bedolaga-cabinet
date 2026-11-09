@@ -211,8 +211,7 @@ export default function OAuthCallback() {
   // Server-complete result: show success with "Return to Telegram" link
   // (merge redirect is handled by the useEffect above)
   if (
-    serverLinkResult &&
-    serverLinkResult.success &&
+    serverLinkResult?.success &&
     !(serverLinkResult.merge_required && serverLinkResult.merge_token)
   ) {
     const botUsername = import.meta.env.VITE_TELEGRAM_BOT_USERNAME || '';

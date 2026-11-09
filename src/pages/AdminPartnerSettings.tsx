@@ -244,8 +244,9 @@ export default function AdminPartnerSettings() {
                 const val = e.target.value;
                 if (val === '')
                   return setFormData({ ...formData, withdrawal_min_amount_kopeks: '' });
-                const num = parseInt(val);
-                if (!isNaN(num)) setFormData({ ...formData, withdrawal_min_amount_kopeks: num });
+                const num = parseInt(val, 10);
+                if (!Number.isNaN(num))
+                  setFormData({ ...formData, withdrawal_min_amount_kopeks: num });
               }}
               className="input"
               disabled={
@@ -271,8 +272,8 @@ export default function AdminPartnerSettings() {
               onChange={(e) => {
                 const val = e.target.value;
                 if (val === '') return setFormData({ ...formData, withdrawal_cooldown_days: '' });
-                const num = parseInt(val);
-                if (!isNaN(num)) setFormData({ ...formData, withdrawal_cooldown_days: num });
+                const num = parseInt(val, 10);
+                if (!Number.isNaN(num)) setFormData({ ...formData, withdrawal_cooldown_days: num });
               }}
               className="input"
               disabled={!formData.withdrawal_enabled || envLocked.has('withdrawal_cooldown_days')}

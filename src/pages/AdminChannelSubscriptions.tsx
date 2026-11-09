@@ -466,7 +466,7 @@ function EditChannelForm({
       updates.title = newTitle ?? (null as unknown as string);
     if (newLink !== (channel.channel_link ?? undefined))
       updates.channel_link = newLink ?? (null as unknown as string);
-    if (!isNaN(newSort) && newSort !== channel.sort_order) updates.sort_order = newSort;
+    if (!Number.isNaN(newSort) && newSort !== channel.sort_order) updates.sort_order = newSort;
 
     onSubmit(channel.id, updates);
   };

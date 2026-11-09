@@ -56,7 +56,7 @@ export default function AdminPromoGroupCreate() {
       if (data.period_discounts && typeof data.period_discounts === 'object') {
         setPeriodDiscounts(
           Object.entries(data.period_discounts).map(([days, percent]) => ({
-            days: parseInt(days),
+            days: parseInt(days, 10),
             percent: typeof percent === 'number' ? percent : 0,
           })),
         );
@@ -196,7 +196,7 @@ export default function AdminPromoGroupCreate() {
                 if (val === '') {
                   setServerDiscount('');
                 } else {
-                  setServerDiscount(Math.min(100, Math.max(0, parseInt(val) || 0)));
+                  setServerDiscount(Math.min(100, Math.max(0, parseInt(val, 10) || 0)));
                 }
               }}
               className="input w-20"
@@ -217,7 +217,7 @@ export default function AdminPromoGroupCreate() {
                 if (val === '') {
                   setTrafficDiscount('');
                 } else {
-                  setTrafficDiscount(Math.min(100, Math.max(0, parseInt(val) || 0)));
+                  setTrafficDiscount(Math.min(100, Math.max(0, parseInt(val, 10) || 0)));
                 }
               }}
               className="input w-20"
@@ -238,7 +238,7 @@ export default function AdminPromoGroupCreate() {
                 if (val === '') {
                   setDeviceDiscount('');
                 } else {
-                  setDeviceDiscount(Math.min(100, Math.max(0, parseInt(val) || 0)));
+                  setDeviceDiscount(Math.min(100, Math.max(0, parseInt(val, 10) || 0)));
                 }
               }}
               className="input w-20"
@@ -281,8 +281,8 @@ export default function AdminPromoGroupCreate() {
                     onChange={(e) => {
                       const val = e.target.value;
                       if (val === '') return updatePeriodDiscount(index, 'days', '');
-                      const num = parseInt(val);
-                      if (!isNaN(num)) updatePeriodDiscount(index, 'days', num);
+                      const num = parseInt(val, 10);
+                      if (!Number.isNaN(num)) updatePeriodDiscount(index, 'days', num);
                     }}
                     className="input w-20"
                     min={1}
@@ -297,8 +297,8 @@ export default function AdminPromoGroupCreate() {
                     onChange={(e) => {
                       const val = e.target.value;
                       if (val === '') return updatePeriodDiscount(index, 'percent', '');
-                      const num = parseInt(val);
-                      if (!isNaN(num)) updatePeriodDiscount(index, 'percent', num);
+                      const num = parseInt(val, 10);
+                      if (!Number.isNaN(num)) updatePeriodDiscount(index, 'percent', num);
                     }}
                     className="input w-20"
                     min={0}

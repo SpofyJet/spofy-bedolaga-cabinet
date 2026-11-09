@@ -53,7 +53,7 @@ export function MultiSeriesAreaChart({
     const pivoted = sortedDates.map((date) => {
       const row: Record<string, string | number> = {
         date,
-        label: new Date(date + 'T00:00:00').toLocaleDateString(i18n.language, {
+        label: new Date(`${date}T00:00:00`).toLocaleDateString(i18n.language, {
           month: 'short',
           day: 'numeric',
         }),

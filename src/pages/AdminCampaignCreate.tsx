@@ -122,7 +122,7 @@ function TariffSelector({
       <select
         id="campaign-tariff-select"
         value={value || ''}
-        onChange={(e) => onChange(e.target.value ? parseInt(e.target.value) : null)}
+        onChange={(e) => onChange(e.target.value ? parseInt(e.target.value, 10) : null)}
         className="input"
       >
         <option value="">{t('admin.campaigns.form.notSelected')}</option>

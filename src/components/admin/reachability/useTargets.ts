@@ -20,14 +20,6 @@ export function useHosts(includeDisabled = false) {
   });
 }
 
-export function useNodes() {
-  return useQuery({
-    queryKey: REACHABILITY_NODES_KEY,
-    queryFn: () => reachabilityApi.getNodes(),
-    staleTime: 60_000,
-  });
-}
-
 /**
  * Конфиги подписки: пользователя, если задан, иначе подписки по умолчанию (или переданного
  * shortUuid). `enabled: false` — источника нет вовсе (подписка по умолчанию не задана):

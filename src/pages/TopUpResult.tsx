@@ -208,7 +208,7 @@ export default function TopUpResult() {
   // Determine if we can poll by specific payment_id (need method + numeric payment_id)
   const parsedPaymentId = pendingInfo?.payment_id ? parseInt(pendingInfo.payment_id, 10) : NaN;
   const canPollById =
-    !!(pendingInfo?.method_id && !isNaN(parsedPaymentId)) &&
+    !!(pendingInfo?.method_id && !Number.isNaN(parsedPaymentId)) &&
     !isRedirectSuccess &&
     !isRedirectFailed;
 

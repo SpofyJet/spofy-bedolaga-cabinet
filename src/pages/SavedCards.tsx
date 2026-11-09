@@ -21,7 +21,7 @@ import { Skeleton, SkeletonGroup } from '@/components/ui/skeleton';
 function formatCardDate(dateStr: string): string {
   try {
     const date = new Date(dateStr);
-    if (isNaN(date.getTime())) return dateStr;
+    if (Number.isNaN(date.getTime())) return dateStr;
     return date.toLocaleDateString(uiLocale());
   } catch {
     return dateStr;

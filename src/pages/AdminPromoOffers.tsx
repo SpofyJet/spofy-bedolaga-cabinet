@@ -129,160 +129,154 @@ export default function AdminPromoOffers() {
       </div>
 
       {/* Templates Tab */}
-      {activeTab === 'templates' && (
-        <>
-          {templatesLoading ? (
-            <SkeletonGroup className="space-y-3">
-              <Skeleton variant="card" count={3} className="h-16" />
-            </SkeletonGroup>
-          ) : templates.length === 0 ? (
-            <div className="py-12 text-center">
-              <p className="text-dark-400">{t('admin.promoOffers.noData.templates')}</p>
-            </div>
-          ) : (
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-              {templates.map((template) => (
-                <div
-                  key={template.id}
-                  className={`rounded-xl border bg-dark-800 p-4 transition-colors ${
-                    template.is_active ? 'border-dark-700' : 'border-dark-700/50 opacity-60'
-                  }`}
-                >
-                  <div className="mb-3 flex items-start justify-between">
-                    <div className="flex items-center gap-2">
-                      <span className="text-2xl">{getOfferTypeIcon(template.offer_type)}</span>
-                      <div>
-                        <h3 className="font-medium text-dark-100">{template.name}</h3>
-                        <span className="text-xs text-dark-500">
-                          {getOfferTypeLabel(template.offer_type)}
-                        </span>
-                      </div>
+      {activeTab === 'templates' &&
+        (templatesLoading ? (
+          <SkeletonGroup className="space-y-3">
+            <Skeleton variant="card" count={3} className="h-16" />
+          </SkeletonGroup>
+        ) : templates.length === 0 ? (
+          <div className="py-12 text-center">
+            <p className="text-dark-400">{t('admin.promoOffers.noData.templates')}</p>
+          </div>
+        ) : (
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {templates.map((template) => (
+              <div
+                key={template.id}
+                className={`rounded-xl border bg-dark-800 p-4 transition-colors ${
+                  template.is_active ? 'border-dark-700' : 'border-dark-700/50 opacity-60'
+                }`}
+              >
+                <div className="mb-3 flex items-start justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="text-2xl">{getOfferTypeIcon(template.offer_type)}</span>
+                    <div>
+                      <h3 className="font-medium text-dark-100">{template.name}</h3>
+                      <span className="text-xs text-dark-500">
+                        {getOfferTypeLabel(template.offer_type)}
+                      </span>
                     </div>
-                    <button
-                      onClick={() => navigate(`/admin/promo-offers/templates/${template.id}/edit`)}
-                      className="rounded-lg bg-dark-700 p-2 text-dark-300 transition-colors hover:bg-dark-600 hover:text-dark-100"
-                    >
-                      <EditIcon />
-                    </button>
                   </div>
+                  <button
+                    onClick={() => navigate(`/admin/promo-offers/templates/${template.id}/edit`)}
+                    className="rounded-lg bg-dark-700 p-2 text-dark-300 transition-colors hover:bg-dark-600 hover:text-dark-100"
+                  >
+                    <EditIcon />
+                  </button>
+                </div>
 
-                  <div className="space-y-2 text-sm">
-                    {template.discount_percent > 0 && (
-                      <div className="flex justify-between">
-                        <span className="text-dark-400">
-                          {t('admin.promoOffers.table.discount')}:
-                        </span>
-                        <span className="font-medium text-accent-400">
-                          {template.discount_percent}%
-                        </span>
-                      </div>
-                    )}
+                <div className="space-y-2 text-sm">
+                  {template.discount_percent > 0 && (
                     <div className="flex justify-between">
                       <span className="text-dark-400">
-                        {t('admin.promoOffers.table.offerDuration')}:
+                        {t('admin.promoOffers.table.discount')}:
+                      </span>
+                      <span className="font-medium text-accent-400">
+                        {template.discount_percent}%
+                      </span>
+                    </div>
+                  )}
+                  <div className="flex justify-between">
+                    <span className="text-dark-400">
+                      {t('admin.promoOffers.table.offerDuration')}:
+                    </span>
+                    <span className="text-dark-200">
+                      {t('admin.promoOffers.table.hoursShort', { hours: template.valid_hours })}
+                    </span>
+                  </div>
+                  {template.active_discount_hours && (
+                    <div className="flex justify-between">
+                      <span className="text-dark-400">
+                        {t('admin.promoOffers.table.discountDuration')}:
                       </span>
                       <span className="text-dark-200">
-                        {t('admin.promoOffers.table.hoursShort', { hours: template.valid_hours })}
+                        {t('admin.promoOffers.table.hoursShort', {
+                          hours: template.active_discount_hours,
+                        })}
                       </span>
                     </div>
-                    {template.active_discount_hours && (
-                      <div className="flex justify-between">
-                        <span className="text-dark-400">
-                          {t('admin.promoOffers.table.discountDuration')}:
-                        </span>
-                        <span className="text-dark-200">
-                          {t('admin.promoOffers.table.hoursShort', {
-                            hours: template.active_discount_hours,
-                          })}
-                        </span>
-                      </div>
-                    )}
-                    {template.test_duration_hours && (
-                      <div className="flex justify-between">
-                        <span className="text-dark-400">
-                          {t('admin.promoOffers.table.testAccess')}:
-                        </span>
-                        <span className="text-dark-200">
-                          {t('admin.promoOffers.table.hoursShort', {
-                            hours: template.test_duration_hours,
-                          })}
-                        </span>
-                      </div>
-                    )}
-                  </div>
-
-                  <div className="mt-3 border-t border-dark-700 pt-3">
-                    <div className="flex items-center gap-2">
-                      {template.is_active ? (
-                        <span className="rounded bg-success-500/20 px-2 py-0.5 text-xs text-success-400">
-                          {t('admin.promoOffers.status.active')}
-                        </span>
-                      ) : (
-                        <span className="rounded bg-dark-600 px-2 py-0.5 text-xs text-dark-400">
-                          {t('admin.promoOffers.status.inactive')}
-                        </span>
-                      )}
+                  )}
+                  {template.test_duration_hours && (
+                    <div className="flex justify-between">
+                      <span className="text-dark-400">
+                        {t('admin.promoOffers.table.testAccess')}:
+                      </span>
+                      <span className="text-dark-200">
+                        {t('admin.promoOffers.table.hoursShort', {
+                          hours: template.test_duration_hours,
+                        })}
+                      </span>
                     </div>
+                  )}
+                </div>
+
+                <div className="mt-3 border-t border-dark-700 pt-3">
+                  <div className="flex items-center gap-2">
+                    {template.is_active ? (
+                      <span className="rounded bg-success-500/20 px-2 py-0.5 text-xs text-success-400">
+                        {t('admin.promoOffers.status.active')}
+                      </span>
+                    ) : (
+                      <span className="rounded bg-dark-600 px-2 py-0.5 text-xs text-dark-400">
+                        {t('admin.promoOffers.status.inactive')}
+                      </span>
+                    )}
                   </div>
                 </div>
-              ))}
-            </div>
-          )}
-        </>
-      )}
+              </div>
+            ))}
+          </div>
+        ))}
 
       {/* Logs Tab */}
-      {activeTab === 'logs' && (
-        <>
-          {logsLoading ? (
-            <SkeletonGroup className="space-y-3">
-              <Skeleton variant="card" count={3} className="h-16" />
-            </SkeletonGroup>
-          ) : logs.length === 0 ? (
-            <div className="py-12 text-center">
-              <p className="text-dark-400">{t('admin.promoOffers.noData.logs')}</p>
-            </div>
-          ) : (
-            <div className="space-y-3">
-              {logs.map((log: PromoOfferLog) => (
-                <div key={log.id} className="rounded-xl border border-dark-700 bg-dark-800 p-4">
-                  <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
-                    <div className="flex items-center gap-3">
-                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-dark-700">
-                        <UserIcon className="h-4 w-4" />
-                      </div>
-                      <div className="min-w-0">
-                        <div className="mb-1 flex flex-wrap items-center gap-2">
-                          <span className="font-medium text-dark-100">
-                            {log.user?.full_name ||
-                              log.user?.username ||
-                              (log.user_id ? `#${log.user_id}` : '—')}
-                          </span>
-                          <span
-                            className={`rounded px-2 py-0.5 text-xs ${getActionColor(log.action)}`}
-                          >
-                            {getActionLabel(log.action)}
-                          </span>
-                        </div>
-                        <div className="text-sm text-dark-400">
-                          {log.source && <span>{getOfferTypeLabel(log.source)}</span>}
-                          {log.percent != null && log.percent > 0 && (
-                            <span className="ml-2 text-accent-400">{log.percent}%</span>
-                          )}
-                        </div>
-                      </div>
+      {activeTab === 'logs' &&
+        (logsLoading ? (
+          <SkeletonGroup className="space-y-3">
+            <Skeleton variant="card" count={3} className="h-16" />
+          </SkeletonGroup>
+        ) : logs.length === 0 ? (
+          <div className="py-12 text-center">
+            <p className="text-dark-400">{t('admin.promoOffers.noData.logs')}</p>
+          </div>
+        ) : (
+          <div className="space-y-3">
+            {logs.map((log: PromoOfferLog) => (
+              <div key={log.id} className="rounded-xl border border-dark-700 bg-dark-800 p-4">
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
+                  <div className="flex items-center gap-3">
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-dark-700">
+                      <UserIcon className="h-4 w-4" />
                     </div>
-                    <div className="flex items-center gap-1 pl-[3.25rem] text-xs text-dark-500 sm:pl-0">
-                      <ClockIcon className="h-4 w-4" />
-                      {formatDateTime(log.created_at)}
+                    <div className="min-w-0">
+                      <div className="mb-1 flex flex-wrap items-center gap-2">
+                        <span className="font-medium text-dark-100">
+                          {log.user?.full_name ||
+                            log.user?.username ||
+                            (log.user_id ? `#${log.user_id}` : '—')}
+                        </span>
+                        <span
+                          className={`rounded px-2 py-0.5 text-xs ${getActionColor(log.action)}`}
+                        >
+                          {getActionLabel(log.action)}
+                        </span>
+                      </div>
+                      <div className="text-sm text-dark-400">
+                        {log.source && <span>{getOfferTypeLabel(log.source)}</span>}
+                        {log.percent != null && log.percent > 0 && (
+                          <span className="ml-2 text-accent-400">{log.percent}%</span>
+                        )}
+                      </div>
                     </div>
                   </div>
+                  <div className="flex items-center gap-1 pl-[3.25rem] text-xs text-dark-500 sm:pl-0">
+                    <ClockIcon className="h-4 w-4" />
+                    {formatDateTime(log.created_at)}
+                  </div>
                 </div>
-              ))}
-            </div>
-          )}
-        </>
-      )}
+              </div>
+            ))}
+          </div>
+        ))}
     </div>
   );
 }

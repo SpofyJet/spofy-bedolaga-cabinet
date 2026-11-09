@@ -6,9 +6,6 @@ import {
   PiUserMinus,
   PiArrowsLeftRight,
   PiPaperclip,
-  PiMonitor,
-  PiCamera,
-  PiQrCode,
   PiArrowsInSimple,
   PiReceipt,
   PiSortAscending,
@@ -24,7 +21,6 @@ import {
   PiHeadset,
   PiLifebuoy,
   PiArrowDown,
-  PiArrowRight,
   PiArrowUp,
   PiProhibit,
   PiMoney,
@@ -32,7 +28,6 @@ import {
   PiLightning,
   PiRobot,
   PiBroadcast,
-  PiCellSignalFull,
   PiAppWindow,
   PiCalendarDots,
   PiCreditCard,
@@ -42,7 +37,6 @@ import {
   PiCaretDown,
   PiCaretLeft,
   PiCaretUp,
-  PiCurrencyBtc,
   PiDevices,
   PiFileText,
   PiCircleFill,
@@ -53,7 +47,6 @@ import {
   PiFunnel,
   PiDotsSix,
   PiDotsThree,
-  PiSquaresFour,
   PiDotsSixVertical,
   PiHeartbeat,
   PiClockCounterClockwise,
@@ -145,10 +138,6 @@ export const AgentIcon = ({ className }: IconProps) => (
 
 export const ArrowDownIcon = ({ className }: IconProps) => (
   <PiArrowDown className={cn('h-5 w-5', className)} />
-);
-
-export const ArrowIcon = ({ className }: IconProps) => (
-  <PiArrowRight className={cn('h-5 w-5', className)} />
 );
 
 export const ArrowUpIcon = ({ className }: IconProps) => (
@@ -263,10 +252,6 @@ export const ChevronUpIcon = ({ className }: IconProps) => (
   <PiCaretUp className={cn('h-5 w-5', className)} />
 );
 
-export const CryptoIcon = ({ className }: IconProps) => (
-  <PiCurrencyBtc className={cn('h-5 w-5', className)} />
-);
-
 export const DevicesIcon = ({ className }: IconProps) => (
   <PiDevices className={cn('h-5 w-5', className)} />
 );
@@ -328,10 +313,6 @@ export const MoreIcon = ({ className }: IconProps) => (
 );
 
 /** Сетка разделов — кнопка «Ещё» нижней панели: читается как «apps/more», не как загрузка. */
-export const GridIcon = ({ className }: IconProps) => (
-  <PiSquaresFour className={cn('h-5 w-5', className)} />
-);
-
 export const GripIcon = ({ className }: IconProps) => (
   <PiDotsSix className={cn('h-5 w-5', className)} />
 );
@@ -543,10 +524,6 @@ export const XCloseIcon = ({ className }: IconProps) => (
 
 export const XMarkIcon = ({ className }: IconProps) => <PiX className={cn('h-5 w-5', className)} />;
 
-export const CellSignalIcon = ({ className }: IconProps) => (
-  <PiCellSignalFull className={cn('h-5 w-5', className)} />
-);
-
 /** Раздел DPI//CHECKER: стена (ТСПУ, фильтрация). */
 export const WallIcon = ({ className }: IconProps) => (
   <PiWall className={cn('h-5 w-5', className)} />
@@ -619,16 +596,5 @@ export const PaperclipIcon = ({ className }: IconProps) => (
 );
 
 /** Экран — подключение устройства. */
-export const MonitorIcon = ({ className }: IconProps) => (
-  <PiMonitor className={cn('h-5 w-5', className)} />
-);
-
 /** Камера — сканирование QR. */
-export const CameraIcon = ({ className }: IconProps) => (
-  <PiCamera className={cn('h-5 w-5', className)} />
-);
-
 /** QR-код. */
-export const QrCodeIcon = ({ className }: IconProps) => (
-  <PiQrCode className={cn('h-5 w-5', className)} />
-);

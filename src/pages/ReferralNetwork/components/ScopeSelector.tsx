@@ -176,9 +176,7 @@ export function ScopeSelector({
     const q = searchInput.toLowerCase().trim();
     if (!q) return scopeOptions.partners;
     return scopeOptions.partners.filter(
-      (p) =>
-        p.display_name.toLowerCase().includes(q) ||
-        (p.username && p.username.toLowerCase().includes(q)),
+      (p) => p.display_name.toLowerCase().includes(q) || p.username?.toLowerCase().includes(q),
     );
   }, [scopeOptions, searchInput]);
 

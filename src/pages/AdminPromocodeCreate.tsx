@@ -430,7 +430,7 @@ export default function AdminPromocodeCreate() {
             <select
               id="pc-tariff"
               value={tariffId || ''}
-              onChange={(e) => setTariffId(e.target.value ? parseInt(e.target.value) : null)}
+              onChange={(e) => setTariffId(e.target.value ? parseInt(e.target.value, 10) : null)}
               className="input"
             >
               <option value="">
@@ -469,7 +469,9 @@ export default function AdminPromocodeCreate() {
             <select
               id="pc-promo-group"
               value={promoGroupId || ''}
-              onChange={(e) => setPromoGroupId(e.target.value ? parseInt(e.target.value) : null)}
+              onChange={(e) =>
+                setPromoGroupId(e.target.value ? parseInt(e.target.value, 10) : null)
+              }
               className="input"
             >
               <option value="">{t('admin.promocodes.form.selectGroup')}</option>
@@ -534,7 +536,7 @@ export default function AdminPromocodeCreate() {
                     if (val === '') {
                       setSubscriptionDays('');
                     } else {
-                      setSubscriptionDays(Math.max(0, parseInt(val) || 0));
+                      setSubscriptionDays(Math.max(0, parseInt(val, 10) || 0));
                     }
                   }}
                   className="input w-32"

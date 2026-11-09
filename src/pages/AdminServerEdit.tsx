@@ -16,7 +16,7 @@ export default function AdminServerEdit() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
-  const serverId = parseInt(id || '0');
+  const serverId = parseInt(id || '0', 10);
 
   const {
     data: server,
@@ -239,7 +239,7 @@ export default function AdminServerEdit() {
                 type="number"
                 value={maxUsers || ''}
                 onChange={(e) =>
-                  setMaxUsers(e.target.value ? Math.max(0, parseInt(e.target.value)) : null)
+                  setMaxUsers(e.target.value ? Math.max(0, parseInt(e.target.value, 10)) : null)
                 }
                 className="input w-32"
                 min={0}

@@ -12,7 +12,7 @@ export interface RGBColor {
 
 export function hexToRgb(hex: string): RGBColor {
   if (hex.length === 4) {
-    hex = '#' + hex[1] + hex[1] + hex[2] + hex[2] + hex[3] + hex[3];
+    hex = `#${hex[1]}${hex[1]}${hex[2]}${hex[2]}${hex[3]}${hex[3]}`;
   }
   const r = parseInt(hex.slice(1, 3), 16);
   const g = parseInt(hex.slice(3, 5), 16);
@@ -26,7 +26,7 @@ export function rgbToHex(r: number, g: number, b: number): string {
     [r, g, b]
       .map((x) => {
         const hex = Math.round(Math.max(0, Math.min(255, x))).toString(16);
-        return hex.length === 1 ? '0' + hex : hex;
+        return hex.length === 1 ? `0${hex}` : hex;
       })
       .join('')
   );

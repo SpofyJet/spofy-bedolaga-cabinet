@@ -1,4 +1,3 @@
-import type { CSSProperties } from 'react';
 import {
   PiArrowLeft,
   PiArrowRight,
@@ -27,7 +26,6 @@ import {
   PiMegaphone,
   PiMoon,
   PiPalette,
-  PiPauseCircle,
   PiPencil,
   PiPencilSimple,
   PiPlay,
@@ -288,10 +286,6 @@ export const StopIcon = ({ className }: IconProps) => (
 
 export const ArrowPathIcon = ({ className }: IconProps) => (
   <PiArrowsClockwise className={cn('h-4 w-4', className)} />
-);
-
-export const PauseIcon = ({ className, style }: IconProps & { style?: CSSProperties }) => (
-  <PiPauseCircle className={cn('h-5 w-5', className)} style={style} />
 );
 
 export const CreditCardIcon = ({ className }: IconProps) => (

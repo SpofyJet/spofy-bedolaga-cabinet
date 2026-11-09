@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { brandingApi } from '../api/branding';
+import { tokenStorage } from '../utils/token';
 import { setYandexCid } from '../utils/yandexCid';
 
 const YM_SCRIPT_ID = 'ym-counter-script';
@@ -127,13 +128,7 @@ function syncYandexCid(counterId: string) {
         // Only POST when the user is authenticated. Guest sessions cache the
         // CID locally; it gets synced after login by the next mount of this
         // hook on the cabinet shell.
-        let token: string | null = null;
-        try {
-          token = localStorage.getItem('access_token');
-        } catch {
-          /* ignore */
-        }
-        if (!token) return;
+        if (!tokenStorage.getAccessToken()) return;
         // Route through brandingApi (apiClient) so baseURL, auth refresh, and
         // error handling all flow through the same interceptors as every other
         // cabinet API call. brandingApi уже импортирован статически — динамический

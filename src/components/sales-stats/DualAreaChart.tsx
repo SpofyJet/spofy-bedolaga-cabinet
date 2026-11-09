@@ -46,7 +46,7 @@ export function DualAreaChart({
     () =>
       data.map((item) => ({
         ...item,
-        label: new Date(item.date + 'T00:00:00').toLocaleDateString(i18n.language, {
+        label: new Date(`${item.date}T00:00:00`).toLocaleDateString(i18n.language, {
           month: 'short',
           day: 'numeric',
         }),

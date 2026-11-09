@@ -847,7 +847,7 @@ export default function AdminInfoPageEditor() {
   // Set editor content once when editor is ready
   useEffect(() => {
     if (!pageData || !editor || editorPopulated.current) return;
-    const initialContent = pageData.content[activeLocale] ?? pageData.content['ru'] ?? '';
+    const initialContent = pageData.content[activeLocale] ?? pageData.content.ru ?? '';
     editor.commands.setContent(initialContent);
     editorPopulated.current = true;
     // activeLocale intentionally omitted — initial content is locked at editor
@@ -857,8 +857,8 @@ export default function AdminInfoPageEditor() {
 
   // Auto-generate slug from Russian title
   useEffect(() => {
-    if (!slugManuallyEdited && titles['ru']) {
-      setSlug(generateSlug(titles['ru']));
+    if (!slugManuallyEdited && titles.ru) {
+      setSlug(generateSlug(titles.ru));
     }
   }, [titles, slugManuallyEdited]);
 

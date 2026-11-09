@@ -340,7 +340,7 @@ export default function AdminPaymentMethodEdit() {
     setQuickAmountsError(null);
     const parsed = parseFloat(quickAmountInput.replace(',', '.'));
     const value = Math.round(parsed);
-    if (isNaN(value) || value <= 0) {
+    if (Number.isNaN(value) || value <= 0) {
       setQuickAmountsError(t('admin.paymentMethods.quickAmountsInvalid'));
       return;
     }

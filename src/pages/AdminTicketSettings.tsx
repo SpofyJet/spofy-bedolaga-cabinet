@@ -249,8 +249,8 @@ export default function AdminTicketSettings() {
               onChange={(e) => {
                 const val = e.target.value;
                 if (val === '') return setFormData({ ...formData, sla_minutes: '' });
-                const num = parseInt(val);
-                if (!isNaN(num)) setFormData({ ...formData, sla_minutes: num });
+                const num = parseInt(val, 10);
+                if (!Number.isNaN(num)) setFormData({ ...formData, sla_minutes: num });
               }}
               className={`input ${formData.sla_enabled && !isSlaMinutesValid && formData.sla_minutes !== '' ? 'border-error-500/50' : ''}`}
               disabled={!formData.sla_enabled || envLocked.has('sla_minutes')}
@@ -277,8 +277,9 @@ export default function AdminTicketSettings() {
               onChange={(e) => {
                 const val = e.target.value;
                 if (val === '') return setFormData({ ...formData, sla_check_interval_seconds: '' });
-                const num = parseInt(val);
-                if (!isNaN(num)) setFormData({ ...formData, sla_check_interval_seconds: num });
+                const num = parseInt(val, 10);
+                if (!Number.isNaN(num))
+                  setFormData({ ...formData, sla_check_interval_seconds: num });
               }}
               className={`input ${formData.sla_enabled && !isCheckIntervalValid && formData.sla_check_interval_seconds !== '' ? 'border-error-500/50' : ''}`}
               disabled={!formData.sla_enabled || envLocked.has('sla_check_interval_seconds')}
@@ -308,8 +309,9 @@ export default function AdminTicketSettings() {
                 const val = e.target.value;
                 if (val === '')
                   return setFormData({ ...formData, sla_reminder_cooldown_minutes: '' });
-                const num = parseInt(val);
-                if (!isNaN(num)) setFormData({ ...formData, sla_reminder_cooldown_minutes: num });
+                const num = parseInt(val, 10);
+                if (!Number.isNaN(num))
+                  setFormData({ ...formData, sla_reminder_cooldown_minutes: num });
               }}
               className={`input ${formData.sla_enabled && !isReminderCooldownValid && formData.sla_reminder_cooldown_minutes !== '' ? 'border-error-500/50' : ''}`}
               disabled={!formData.sla_enabled || envLocked.has('sla_reminder_cooldown_minutes')}

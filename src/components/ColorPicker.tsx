@@ -23,7 +23,7 @@ const hexToRgb = (hex: string): { r: number; g: number; b: number } => {
 
 // Convert RGB to hex
 const rgbToHex = (r: number, g: number, b: number): string => {
-  return '#' + [r, g, b].map((x) => x.toString(16).padStart(2, '0')).join('');
+  return `#${[r, g, b].map((x) => x.toString(16).padStart(2, '0')).join('')}`;
 };
 
 // Convert RGB to HSL
@@ -201,7 +201,7 @@ export function ColorPicker({ value, onChange, label, description, disabled }: C
   // Handle hue change
   const handleHueChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
-      updateColorFromHsl({ ...hsl, h: parseInt(e.target.value) });
+      updateColorFromHsl({ ...hsl, h: parseInt(e.target.value, 10) });
     },
     [hsl, updateColorFromHsl],
   );
@@ -209,7 +209,7 @@ export function ColorPicker({ value, onChange, label, description, disabled }: C
   // Handle saturation change
   const handleSaturationChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
-      updateColorFromHsl({ ...hsl, s: parseInt(e.target.value) });
+      updateColorFromHsl({ ...hsl, s: parseInt(e.target.value, 10) });
     },
     [hsl, updateColorFromHsl],
   );
@@ -217,7 +217,7 @@ export function ColorPicker({ value, onChange, label, description, disabled }: C
   // Handle lightness change
   const handleLightnessChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
-      updateColorFromHsl({ ...hsl, l: parseInt(e.target.value) });
+      updateColorFromHsl({ ...hsl, l: parseInt(e.target.value, 10) });
     },
     [hsl, updateColorFromHsl],
   );
@@ -227,7 +227,7 @@ export function ColorPicker({ value, onChange, label, description, disabled }: C
     (e: React.ChangeEvent<HTMLInputElement>) => {
       let newValue = e.target.value;
       if (newValue && !newValue.startsWith('#')) {
-        newValue = '#' + newValue;
+        newValue = `#${newValue}`;
       }
       if (newValue === '' || newValue.match(/^#[0-9A-Fa-f]{0,6}$/)) {
         setLocalValue(newValue);

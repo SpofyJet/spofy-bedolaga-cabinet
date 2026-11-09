@@ -11,7 +11,7 @@ import { getApiErrorMessage } from '../utils/api-error';
 import { BackIcon, CheckIcon, CopyIcon, DownloadIcon } from '@/components/icons';
 
 const downloadLinksFile = (batch: CouponBatchCreated | { id: number; links: string[] }) => {
-  const blob = new Blob([batch.links.join('\n') + '\n'], { type: 'text/plain;charset=utf-8' });
+  const blob = new Blob([`${batch.links.join('\n')}\n`], { type: 'text/plain;charset=utf-8' });
   const url = URL.createObjectURL(blob);
   const anchor = document.createElement('a');
   anchor.href = url;

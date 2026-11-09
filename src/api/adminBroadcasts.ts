@@ -62,8 +62,6 @@ export interface EmailFiltersResponse {
 }
 
 /** Email target for exactly one user (sent from the admin user card). */
-export const emailUserTarget = (userId: number) => `user_${userId}`;
-
 export interface TariffForBroadcast {
   id: number;
   name: string;
