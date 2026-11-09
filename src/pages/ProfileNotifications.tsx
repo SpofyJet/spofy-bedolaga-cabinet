@@ -34,7 +34,7 @@ function Segments({
           className={cn(
             'h-11 min-w-0 flex-1 rounded-xl text-[14px] font-semibold tabular-nums transition-colors',
             option === value
-              ? 'bg-accent-500/15 text-accent-400'
+              ? 'bg-accent-500/25 text-dark-50'
               : 'bg-dark-800/60 text-dark-300 hover:bg-dark-700/60',
           )}
         >
@@ -84,7 +84,7 @@ export default function ProfileNotifications() {
           <div className="space-y-6">
             {/* Окончание подписки */}
             <div className="space-y-3">
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between gap-3">
                 <div>
                   <p className="font-medium text-dark-100">
                     {t('profile.notifications.subscriptionExpiry')}
@@ -115,7 +115,7 @@ export default function ProfileNotifications() {
 
             {/* Трафик */}
             <div className="space-y-3 border-t border-dark-800/50 pt-6">
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between gap-3">
                 <div>
                   <p className="font-medium text-dark-100">
                     {t('profile.notifications.trafficWarning')}
@@ -147,7 +147,7 @@ export default function ProfileNotifications() {
 
             {/* Баланс */}
             <div className="space-y-3 border-t border-dark-800/50 pt-6">
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between gap-3">
                 <div>
                   <p className="font-medium text-dark-100">
                     {t('profile.notifications.balanceLow')}
@@ -178,7 +178,7 @@ export default function ProfileNotifications() {
             </div>
 
             {/* Новости */}
-            <div className="flex items-center justify-between border-t border-dark-800/50 pt-6">
+            <div className="flex items-center justify-between gap-3 border-t border-dark-800/50 pt-6">
               <div>
                 <p className="font-medium text-dark-100">{t('profile.notifications.news')}</p>
                 <p className="text-sm text-dark-400">{t('profile.notifications.newsDesc')}</p>
@@ -190,7 +190,7 @@ export default function ProfileNotifications() {
             </div>
 
             {/* Промо */}
-            <div className="flex items-center justify-between border-t border-dark-800/50 pt-6">
+            <div className="flex items-center justify-between gap-3 border-t border-dark-800/50 pt-6">
               <div>
                 <p className="font-medium text-dark-100">
                   {t('profile.notifications.promoOffers')}
