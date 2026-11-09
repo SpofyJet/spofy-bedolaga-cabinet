@@ -83,10 +83,8 @@ export default function TopUpAmount() {
     ? parseFloat(searchParams.get('amount') ?? '')
     : undefined;
 
-  // Fetch payment methods with a real query (dedupes with the method-selection page and
-  // Balance via the shared ['payment-methods'] key). A non-reactive getQueryData read used
-  // to dead-end on an infinite spinner whenever the cache was cold — reload, browser-back
-  // from the provider page, or a deep link straight to this route.
+  // Fetch payment methods with a real query (dedupes with the method-selection page and Balance via the
+  // shared ['payment-methods'] key).
   const { data: methods, isLoading: isMethodsLoading } = useQuery({
     queryKey: ['payment-methods'],
     queryFn: balanceApi.getPaymentMethods,

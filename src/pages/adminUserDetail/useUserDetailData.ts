@@ -16,9 +16,8 @@ const PANEL_REFRESH_MS = 60_000;
 const FRESH = { refetchOnWindowFocus: true } as const;
 
 /**
- * Все запросы карточки пользователя. Данные берутся прямо из кэша React Query —
- * без копий в useState, которые раньше отставали от ответа на один рендер.
- * Выбранная подписка (мультитариф) вычисляется: выбор админа или первая живая.
+ * Все запросы карточки пользователя. Выбранная подписка (мультитариф) вычисляется: выбор админа или
+ * первая живая.
  */
 export function useUserDetailData(userId: number | null, activeTab: DetailTab) {
   const hasPermission = usePermissionStore((s) => s.hasPermission);

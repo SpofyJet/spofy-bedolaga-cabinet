@@ -6,9 +6,8 @@ import { MemoryRouter } from 'react-router';
 import { describe, expect, it, vi } from 'vitest';
 
 /**
- * Привязка Telegram в «Способах входа», когда telegram.org не грузится (в РФ без
- * VPN — обычное дело): вместо виджета должна остаться подсказка и ссылка на бота.
- * Раньше карточка оставалась пустой — подсказка появлялась и тут же пропадала.
+ * Привязка Telegram в «Способах входа», когда telegram.org не грузится (в РФ без VPN — обычное
+ * дело): вместо виджета должна остаться подсказка и ссылка на бота.
  */
 const translation = vi.hoisted(() => ({
   t: (key: string, fallback?: unknown) => (typeof fallback === 'string' ? fallback : key),

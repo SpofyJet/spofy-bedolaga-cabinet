@@ -26,17 +26,15 @@ function isAllowedScheme(url: string): boolean {
 /**
  * Резолвит контакт поддержки из конфига.
  *
- * SUPPORT_USERNAME на бэке принимает и `@username`, и произвольный URL, поэтому
- * бэк отдаёт уже разрезолвленные `support_url` + `contact_is_telegram`. Клиент
- * раньше склеивал `https://t.me/${support_username}` — на внешнем хелпдеске это
- * давало `https://t.me/https://help.example.com`, и ссылка не открывалась.
+ * SUPPORT_USERNAME на бэке принимает и `@username`, и произвольный URL, поэтому бэк отдаёт уже
+ * разрезолвленные `support_url` + `contact_is_telegram`.
  *
- * Старый бэк не отдаёт `support_url`; для него сохранено прежнее поведение,
- * иначе новый фронт сломался бы на неподнятом бэкенде.
+ * Старый бэк не отдаёт `support_url`; для него сохранено прежнее поведение, иначе новый фронт
+ * сломался бы на неподнятом бэкенде.
  *
- * Возвращает `null`, когда открывать нечего (пустой/битый конфиг, чужая схема,
- * URL-образный legacy username) — вызывающий в этом случае не рендерит кнопку,
- * а не уводит пользователя по мусорной ссылке.
+ * Возвращает `null`, когда открывать нечего (пустой/битый конфиг, чужая схема, URL-образный legacy
+ * username) — вызывающий в этом случае не рендерит кнопку, а не уводит пользователя по мусорной
+ * ссылке.
  */
 export function resolveSupportContact(config: SupportConfig): SupportContactTarget | null {
   const serverUrl = config.support_url?.trim();

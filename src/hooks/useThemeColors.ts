@@ -67,10 +67,7 @@ const CURATED_PALETTES: Record<string, ColorPalette> = {
   },
 };
 
-// Generate color palette from base color (returns RGB strings).
-// Шейд 500 — сам выбранный цвет. Раньше он принудительно получал L = 50 %:
-// оператор выбирал один цвет, а кнопки красились другим (пастель становилась
-// насыщенной, дефолтный #3b82f6 уезжал в 11,100,244 против статики globals.css).
+// Generate color palette from base color (returns RGB strings). Шейд 500 — сам выбранный цвет.
 function generatePalette(baseHex: string): ColorPalette {
   const curated = CURATED_PALETTES[baseHex.toLowerCase()];
   if (curated) return curated;
@@ -263,8 +260,7 @@ function withReadableTextShades(
  * отрисовки, которую инлайн-скрипт index.html применит до загрузки приложения.
  */
 export function computeThemeCssVars(themeColors: ThemeColors): Record<string, string> {
-  // Частичный/битый ответ /branding/colors раньше ронял ВСЁ приложение в
-  // ErrorBoundary (hexToRgb(undefined)). Недостающие поля добиваем дефолтами.
+  // Недостающие поля добиваем дефолтами.
   const colors: ThemeColors = { ...DEFAULT_THEME_COLORS, ...themeColors };
 
   // Generate palettes from status colors

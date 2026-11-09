@@ -13,11 +13,9 @@ import { cn } from '@/lib/utils';
 import BlockingShell from './BlockingShell';
 
 /**
- * Full-screen state shown when the backend is unreachable (transport-level
- * failure), replacing the blank loader the app used to get stuck on. Polls the
- * liveness endpoint and, once the backend answers again, reloads to re-bootstrap
- * cleanly from whatever state the failed boot left behind. A manual retry button
- * lets the user force an immediate check.
+ * Polls the liveness endpoint and, once the backend answers again, reloads to re-bootstrap cleanly
+ * from whatever state the failed boot left behind. A manual retry button lets the user force an
+ * immediate check.
  */
 export default function ServiceUnavailableScreen() {
   const { t } = useTranslation();

@@ -5,12 +5,6 @@ import { MemoryRouter, Route, Routes } from 'react-router';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { PlatformProvider } from '@/platform/PlatformProvider';
 
-/**
- * Email-рассылка по промогруппе и одному человеку (issue бота #3271): раньше были
- * только фильтры по регистрации, подписке и активности, а письмо одному клиенту
- * приходилось слать руками через API почтового провайдера.
- */
-
 vi.mock('react-i18next', () => ({
   useTranslation: () => ({
     t: (key: string, opts?: unknown) =>

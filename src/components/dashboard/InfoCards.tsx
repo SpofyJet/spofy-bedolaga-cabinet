@@ -59,9 +59,7 @@ export default function InfoCards({
   const { t, i18n } = useTranslation();
 
   const endingSoon = status === 'active' && !isLifetime && daysLeft != null && daysLeft <= 3;
-  // Закончилась / нет подписки: чипа нет. Раньше тут стояли «Продлить» и
-  // «Выберите тариф» — то же действие, что главная плитка и кнопка покупки
-  // рядом; «Закончилась» / «Нет подписки» крупно и так говорят о состоянии.
+  // Закончилась / нет подписки: чипа нет.
   const subChip =
     status === 'expired' || status === 'none'
       ? null

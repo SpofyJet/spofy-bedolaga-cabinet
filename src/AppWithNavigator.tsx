@@ -29,9 +29,7 @@ const TWEMOJI_OPTIONS = { className: 'twemoji', folder: 'svg', ext: '.svg' } as 
  * Shows back button on non-root routes, hides on root.
  */
 /** Pages reachable from bottom nav — treat as top-level (no back button). */
-// Ровно вкладки нижней панели (mobileNavRoutes.ts). Баланс и список подписок в
-// панели больше нет — раньше они числились верхним уровнем, и в Telegram с них
-// не было ни нативной «Назад», ни панели: человек застревал.
+// Ровно вкладки нижней панели (mobileNavRoutes.ts). Баланс и список подписок в панели больше нет.
 const BOTTOM_NAV_PATHS = ['/', '/referral', '/support', '/profile', '/wheel'];
 
 /** Matches /subscriptions/:numericId. When the user has a single tariff and at

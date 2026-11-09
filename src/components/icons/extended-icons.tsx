@@ -114,10 +114,9 @@ interface IconProps {
 }
 
 /**
- * Extended cabinet icon set — Phosphor (react-icons/pi), the panel's
- * icon family. These cover the icons that used to be hand-written inline across
- * feature pages and components. Names match the historical local definitions so
- * every page can import from the central barrel instead of redefining SVGs.
+ * Extended cabinet icon set — Phosphor (react-icons/pi), the panel's icon family. Names match the
+ * historical local definitions so every page can import from the central barrel instead of
+ * redefining SVGs.
  */
 
 export const AdjustmentsIcon = ({ className }: IconProps) => (

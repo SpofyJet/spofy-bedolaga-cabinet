@@ -40,9 +40,7 @@ export const API = {
 
 // Backend liveness probe (ServiceUnavailableScreen detection/recovery).
 export const HEALTH = {
-  // Tolerant of cold mobile connections (radio wake + DNS + TLS + first byte). A hardcoded
-  // 5s here used to falsely flag slow devices as "service unavailable" while the real 30s
-  // API requests would have succeeded.
+  // Tolerant of cold mobile connections (radio wake + DNS + TLS + first byte).
   PROBE_TIMEOUT_MS: 12000,
   // Re-probe before declaring the backend down so a single cold-connection blip can't blank
   // the app. Total worst case to show the screen on a genuine outage stays under the API timeout.

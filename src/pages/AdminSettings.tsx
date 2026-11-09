@@ -88,9 +88,8 @@ export default function AdminSettings() {
     if (!activeTreeInfo || !allSettings || !Array.isArray(allSettings)) return [];
 
     const categoryKeys = activeTreeInfo.child.categories;
-    // Пункт-сборник показывает всё, чему не нашлось места в дереве: категории на
-    // бэкенде выводятся из имени ключа, поэтому новая настройка легко создаёт
-    // категорию, которой здесь нет — раньше такие настройки просто исчезали.
+    // Пункт-сборник показывает всё, чему не нашлось места в дереве: категории на бэкенде выводятся из имени
+    // ключа, поэтому новая настройка легко создаёт категорию, которой здесь нет.
     const isOtherSection = categoryKeys.includes(OTHER_CATEGORIES);
     const mappedCategories = isOtherSection ? getMappedCategoryKeys() : null;
     const categoryMap = new Map<string, SettingDefinition[]>();

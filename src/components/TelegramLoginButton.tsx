@@ -220,8 +220,7 @@ export default function TelegramLoginButton({ referralCode }: TelegramLoginButto
         await loginWithTelegramWidget(widgetData);
         navigate('/');
       } catch (err: unknown) {
-        // 428 «нужно согласие»: повторяем тот же payload с галочками. Остальные
-        // ошибки раньше глотались молча — стор их не показывает, показываем здесь.
+        // 428 «нужно согласие»: повторяем тот же payload с галочками.
         const needsConsent = consent.capture(err, async (accepted) => {
           await loginWithTelegramWidget(widgetData, accepted);
           navigate('/');

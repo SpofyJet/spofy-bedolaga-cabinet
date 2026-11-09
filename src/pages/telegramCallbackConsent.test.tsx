@@ -5,11 +5,9 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { CONSENT_DOCUMENTS, consentRequiredError } from '../test/consentRequiredError';
 
 /**
- * Вход через Telegram Login Widget (редирект на /auth/telegram/callback) для
- * НОВОГО пользователя: бэк отвечает 428 с объектом в detail. Раньше объект
- * попадал прямо в текст ошибки и ронял всё дерево («Something went wrong»,
- * React #31) — новый пользователь не мог войти через Telegram из веба вообще.
- * Ожидание: чекбоксы согласия, затем повтор того же входа с галочками.
+ * Вход через Telegram Login Widget (редирект на /auth/telegram/callback) для НОВОГО пользователя:
+ * бэк отвечает 428 с объектом в detail. Ожидание: чекбоксы согласия, затем повтор того же входа с
+ * галочками.
  */
 
 // `t` обязана быть стабильной между рендерами, как у настоящего i18next: она в

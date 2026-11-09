@@ -222,8 +222,6 @@ describe('DashboardLite', () => {
   });
 
   it('свежий триал зовёт подключить устройство, а тарифы — строкой', async () => {
-    // Триал на день-три раньше попадал в «заканчивается» и вёл в «Продлить» —
-    // на экран «Нет вариантов продления».
     getSubscription.mockResolvedValue({
       has_subscription: true,
       subscription: { ...baseSubscription, is_trial: true, days_left: 1 },

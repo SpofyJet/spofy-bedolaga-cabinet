@@ -9,7 +9,6 @@ const SPIN_DURATION_MS = 5000;
 /** Пять полных оборотов до целевого сектора. */
 const SPIN_EXTRA_TURNS_DEG = 1800;
 
-// Та же кривая, что раньше стояла в CSS-переходе: cubic-bezier(0.15, 0.6, 0.1, 1).
 const [EASE_X1, EASE_Y1, EASE_X2, EASE_Y2] = [0.15, 0.6, 0.1, 1];
 
 function bezierAxis(a1: number, a2: number, t: number): number {
