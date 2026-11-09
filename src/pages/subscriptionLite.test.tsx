@@ -175,7 +175,7 @@ describe('SubscriptionLite', () => {
     (await screen.findByRole('button', { name: /Докупить трафик/ })).click();
     expect(await screen.findByTestId('traffic-panel')).toBeTruthy();
 
-    (await screen.findByRole('button', { name: /Докупить устройства/ })).click();
+    (await screen.findByRole('button', { name: /Добавить устройство/ })).click();
 
     expect(await screen.findByTestId('devices-panel')).toBeTruthy();
     expect(screen.queryByTestId('traffic-panel')).toBeNull();

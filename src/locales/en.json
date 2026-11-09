@@ -447,11 +447,11 @@
       "bypassTraffic": "bypass traffic",
       "bypassOff": "bypass is off",
       "bypassOffHint": "Regular servers still work. Buy more gigabytes to turn bypass back on.",
-      "addSlot": "Add a slot",
+      "addSlot": "Add a device",
       "buyTraffic": "Buy GB",
       "manage": "My devices",
       "noLimit": "No limit",
-      "addSlotShort": "Add slot"
+      "addSlotShort": "Add"
     }
   },
   "subscription": {
@@ -497,7 +497,7 @@
     "extend": "Extend Subscription",
     "bestValue": "Best value",
     "buyTraffic": "Buy Traffic",
-    "buyDevices": "Buy Devices",
+    "buyDevices": "Add a device",
     "renewalOptions": "Renewal Options",
     "days": "days",
     "daysShort": "d.",
@@ -736,15 +736,15 @@
     "trafficResetAt": "Reset",
     "additionalOptions": {
       "title": "Additional options",
-      "buyDevices": "Buy more devices",
-      "currentDeviceLimit_one": "Current limit: {{count}} device",
-      "currentDeviceLimit_other": "Current limit: {{count}} devices",
+      "buyDevices": "Add a device",
+      "currentDeviceLimit_one": "Now: {{count}} device",
+      "currentDeviceLimit_other": "Now: {{count}} devices",
       "maxDevices": "max {{count}}",
       "devicesUnavailable": "Device purchase is not available",
       "devicesUnit": "devices",
       "buy": "Buy",
-      "reduceDevices": "Reduce devices",
-      "reduceDevicesTitle": "Reduce device limit",
+      "reduceDevices": "Remove spare slots",
+      "reduceDevicesTitle": "Remove spare slots",
       "reduceDevicesDescription": "You can reduce the number of devices to the tariff minimum",
       "minDeviceLimit_one": "Tariff minimum: {{count}} device",
       "minDeviceLimit_other": "Tariff minimum: {{count}} devices",
@@ -764,8 +764,8 @@
       },
       "reduce": "Reduce",
       "reducing": "Reducing...",
-      "newDeviceLimit_one": "New limit: {{count}} device",
-      "newDeviceLimit_other": "New limit: {{count}} devices",
+      "newDeviceLimit_one": "After: {{count}} device",
+      "newDeviceLimit_other": "After: {{count}} devices",
       "buyTraffic": "Buy more traffic",
       "currentTrafficLimit": "Current limit: {{limit}} GB (used {{used}} GB)",
       "buyTrafficTitle": "Buy more traffic",
@@ -7539,7 +7539,7 @@
       "manage": "Manage subscription",
       "buyAnother": "Buy another plan",
       "buyTraffic": "Buy more traffic",
-      "buyDevices": "Buy more devices",
+      "buyDevices": "Add a device",
       "reduceDevices": "Reduce device count",
       "myDevices": "My devices",
       "allSettings": "All subscription settings",
@@ -7669,7 +7669,7 @@
         ]
       },
       "add-device": {
-        "coverTitle": "Another device",
+        "coverTitle": "Add a device",
         "slides": [
           {
             "title": "Connect one more",

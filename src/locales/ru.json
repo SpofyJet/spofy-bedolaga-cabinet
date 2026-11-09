@@ -457,11 +457,11 @@
       "bypassTraffic": "трафик обходов",
       "bypassOff": "обходы выключены",
       "bypassOffHint": "Обычные серверы работают. Чтобы вернуть обходы, докупите гигабайты.",
-      "addSlot": "Добавить место",
+      "addSlot": "Добавить устройство",
       "buyTraffic": "Докупить ГБ",
       "manage": "Мои устройства",
       "noLimit": "Без лимита",
-      "addSlotShort": "Ещё место"
+      "addSlotShort": "Добавить"
     }
   },
   "subscription": {
@@ -511,7 +511,7 @@
     "extend": "Продлить подписку",
     "bestValue": "Выгодно",
     "buyTraffic": "Докупить трафик",
-    "buyDevices": "Докупить устройства",
+    "buyDevices": "Добавить устройство",
     "renewalOptions": "Варианты продления",
     "days": "дней",
     "daysShort": "дн.",
@@ -762,16 +762,16 @@
     "trafficResetAt": "Сброс",
     "additionalOptions": {
       "title": "Дополнительные опции",
-      "buyDevices": "Докупить устройства",
-      "currentDeviceLimit_one": "Текущий лимит: {{count}} устройство",
-      "currentDeviceLimit_few": "Текущий лимит: {{count}} устройства",
-      "currentDeviceLimit_many": "Текущий лимит: {{count}} устройств",
+      "buyDevices": "Добавить устройство",
+      "currentDeviceLimit_one": "Сейчас: {{count}} устройство",
+      "currentDeviceLimit_few": "Сейчас: {{count}} устройства",
+      "currentDeviceLimit_many": "Сейчас: {{count}} устройств",
       "maxDevices": "максимум {{count}}",
       "devicesUnavailable": "Докупка устройств недоступна",
       "devicesUnit": "устройств",
       "buy": "Купить",
-      "reduceDevices": "Уменьшить устройства",
-      "reduceDevicesTitle": "Уменьшить лимит устройств",
+      "reduceDevices": "Убрать лишние места",
+      "reduceDevicesTitle": "Убрать лишние места",
       "reduceDevicesDescription": "Вы можете уменьшить количество устройств до минимального на тарифе",
       "minDeviceLimit_one": "Минимум на тарифе: {{count}} устройство",
       "minDeviceLimit_few": "Минимум на тарифе: {{count}} устройства",
@@ -779,11 +779,11 @@
       "connectedDevices_one": "Подключено устройств: {{count}}",
       "connectedDevices_few": "Подключено устройств: {{count}}",
       "connectedDevices_many": "Подключено устройств: {{count}}",
-      "disconnectDevicesFirst_one": "Сначала отключите устройства, чтобы уменьшить лимит ниже {{count}} устройства",
-      "disconnectDevicesFirst_few": "Сначала отключите устройства, чтобы уменьшить лимит ниже {{count}} устройств",
-      "disconnectDevicesFirst_many": "Сначала отключите устройства, чтобы уменьшить лимит ниже {{count}} устройств",
+      "disconnectDevicesFirst_one": "Подключено {{count}} устройство. Чтобы убрать больше мест, сначала отключите лишние",
+      "disconnectDevicesFirst_few": "Подключено {{count}} устройства. Чтобы убрать больше мест, сначала отключите лишние",
+      "disconnectDevicesFirst_many": "Подключено {{count}} устройств. Чтобы убрать больше мест, сначала отключите лишние",
       "reduceUnavailable": "Уменьшение устройств недоступно",
-      "alreadyAtMinDeviceLimit": "Уже достигнут минимальный лимит устройств для вашего тарифа",
+      "alreadyAtMinDeviceLimit": "Меньше устройств на вашем тарифе не бывает",
       "reasons": {
         "noSubscription": "Подписка не найдена",
         "noActiveSubscription": "Нет активной подписки",
@@ -791,13 +791,13 @@
         "canAddLimited_one": "Можно добавить максимум {{count}} устройство",
         "canAddLimited_few": "Можно добавить максимум {{count}} устройства",
         "canAddLimited_many": "Можно добавить максимум {{count}} устройств",
-        "trialNotAllowed": "Для пробной подписки уменьшение лимита недоступно"
+        "trialNotAllowed": "На пробной подписке убрать места нельзя"
       },
       "reduce": "Уменьшить",
       "reducing": "Уменьшение...",
-      "newDeviceLimit_one": "Новый лимит: {{count}} устройство",
-      "newDeviceLimit_few": "Новый лимит: {{count}} устройства",
-      "newDeviceLimit_many": "Новый лимит: {{count}} устройств",
+      "newDeviceLimit_one": "Станет: {{count}} устройство",
+      "newDeviceLimit_few": "Станет: {{count}} устройства",
+      "newDeviceLimit_many": "Станет: {{count}} устройств",
       "buyTraffic": "Докупить трафик",
       "currentTrafficLimit": "Текущий лимит: {{limit}} ГБ (использовано {{used}} ГБ)",
       "buyTrafficTitle": "Докупить трафик",
@@ -809,12 +809,12 @@
       "manageServers": "Управление локациями",
       "manageServersTitle": "Управление локациями",
       "connectedDevices": "Подключённые устройства",
-      "currentDeviceLimit": "Текущий лимит устройств",
+      "currentDeviceLimit": "Сейчас устройств",
       "decrementDevices": "Уменьшить кол-во устройств",
       "disconnectDevicesFirst": "Сначала отключите лишние устройства",
       "incrementDevices": "Увеличить кол-во устройств",
-      "minDeviceLimit": "Минимальный лимит устройств",
-      "newDeviceLimit": "Новый лимит устройств"
+      "minDeviceLimit": "Минимум устройств",
+      "newDeviceLimit": "Станет устройств"
     },
     "serverManagement": {
       "statusLegend": "✅ — подключено • ➕ — будет добавлено (платно) • ➖ — будет отключено",
@@ -8110,7 +8110,7 @@
       "manage": "Управление подпиской",
       "buyAnother": "Купить ещё тариф",
       "buyTraffic": "Докупить трафик",
-      "buyDevices": "Докупить устройства",
+      "buyDevices": "Добавить устройство",
       "reduceDevices": "Уменьшить число устройств",
       "myDevices": "Мои устройства",
       "allSettings": "Все настройки подписки",
@@ -8240,7 +8240,7 @@
         ]
       },
       "add-device": {
-        "coverTitle": "Ещё устройство",
+        "coverTitle": "Добавить устройство",
         "slides": [
           {
             "title": "Подключите ещё одно",

@@ -270,7 +270,7 @@ export default function SubscriptionLite() {
           ) : (
             showsAddons && (
               <LiteRow
-                label={t('lite.rows.buyDevices', 'Докупить устройства')}
+                label={t('lite.rows.buyDevices', 'Добавить устройство')}
                 value={
                   subscription.device_limit > 0
                     ? t('lite.rows.devicesValue', '{{used}} из {{total}}', {
