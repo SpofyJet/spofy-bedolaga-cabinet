@@ -1,5 +1,5 @@
 import { isLifetimePeriod } from '@/utils/lifetime';
-import { uiLocale } from '@/utils/uiLocale';
+import { formatSmartDate } from '@/utils/liteDate';
 import { useState, useMemo, useEffect, useCallback, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { useNavigate, useSearchParams, Link } from 'react-router';
@@ -73,13 +73,7 @@ function isGiftActivated(gift: SentGift): boolean {
 }
 
 function formatGiftDate(dateStr: string | null): string {
-  if (!dateStr) return '';
-  const date = new Date(dateStr);
-  return date.toLocaleDateString(uiLocale(), {
-    day: '2-digit',
-    month: '2-digit',
-    year: 'numeric',
-  });
+  return formatSmartDate(dateStr, '2-digit');
 }
 
 type TabId = 'buy' | 'activate' | 'myGifts';

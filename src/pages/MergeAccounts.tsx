@@ -1,4 +1,5 @@
 import { isLifetimeEndDate } from '@/utils/lifetime';
+import { formatSmartDate } from '@/utils/liteDate';
 import { uiLocale } from '@/utils/uiLocale';
 import { useState, useEffect, type ReactNode } from 'react';
 import { useParams, useNavigate, Link } from 'react-router';
@@ -46,15 +47,7 @@ function formatCountdown(seconds: number): string {
 
 function formatDate(dateStr: string | null): string {
   if (!dateStr) return '-';
-  try {
-    return new Date(dateStr).toLocaleDateString(uiLocale(), {
-      day: 'numeric',
-      month: 'long',
-      year: 'numeric',
-    });
-  } catch {
-    return dateStr;
-  }
+  return formatSmartDate(dateStr) || dateStr;
 }
 
 function formatBalance(kopeks: number): string {

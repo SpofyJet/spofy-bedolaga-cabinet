@@ -1,4 +1,6 @@
 import { useTranslation } from 'react-i18next';
+import { formatGbShort } from '@/utils/formatNumber';
+import { formatSmartDate } from '@/utils/liteDate';
 import { Link } from 'react-router';
 import type { ReactNode } from 'react';
 import { useHaptic } from '../../platform';
@@ -19,17 +21,8 @@ import { connectFooterState } from './connectFooterState';
 import { SubscriptionConnectFooter } from './SubscriptionConnectFooter';
 import { plainTariffName } from '@/utils/plainTariffName';
 
-function formatDate(iso: string | null, locale?: string): string {
-  if (!iso) return '—';
-  try {
-    return new Date(iso).toLocaleDateString(locale ?? undefined, {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-    });
-  } catch {
-    return '—';
-  }
+function formatDate(iso: string | null): string {
+  return formatSmartDate(iso, '2-digit') || '—';
 }
 
 export default function SubscriptionListCard({
@@ -50,7 +43,7 @@ export default function SubscriptionListCard({
     onManage: () => void;
   };
 }) {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const { impact } = useHaptic();
 
   const handleClick = () => {
@@ -118,7 +111,7 @@ export default function SubscriptionListCard({
     ) : (
       <span key="term" className="flex items-center gap-1">
         <PiCalendarDuotone className="h-4 w-4 text-dark-500" />
-        {formatDate(subscription.end_date, i18n.language)}
+        {formatDate(subscription.end_date)}
       </span>
     ),
   );
@@ -168,7 +161,10 @@ export default function SubscriptionListCard({
               <span className="tabular-nums text-dark-300">
                 {isUnlimited
                   ? '∞'
-                  : `${trafficUsed.toFixed(1)} / ${trafficLimit} ${t('common.units.gb', 'ГБ')}`}
+                  : t('subscription.trafficUsedOf', {
+                      used: formatGbShort(trafficUsed),
+                      limit: formatGbShort(trafficLimit),
+                    })}
               </span>
             </div>
             {!isUnlimited && (

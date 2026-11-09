@@ -767,7 +767,7 @@
       "newDeviceLimit_one": "After: {{count}} device",
       "newDeviceLimit_other": "After: {{count}} devices",
       "buyTraffic": "Buy more traffic",
-      "currentTrafficLimit": "Current limit: {{limit}} GB (used {{used}} GB)",
+      "currentTrafficLimit": "{{used}} of {{limit}} GB used",
       "buyTrafficTitle": "Buy more traffic",
       "trafficWarning": "Purchased traffic is added to your current limit and is valid for 30 days from purchase",
       "trafficUnavailable": "Traffic purchase is not available for your tariff",
@@ -930,7 +930,8 @@
       "toSubscription": "To subscription"
     },
     "noRenewalChooseTariff": "Choose a plan to keep your access.",
-    "chooseTariff": "Choose a plan"
+    "chooseTariff": "Choose a plan",
+    "trafficUsedOf": "{{used}} of {{limit}} GB"
   },
   "balance": {
     "paymentRange": "From {{min}} to {{max}}",

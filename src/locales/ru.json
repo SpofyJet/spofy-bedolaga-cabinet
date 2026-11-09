@@ -799,7 +799,7 @@
       "newDeviceLimit_few": "Станет: {{count}} устройства",
       "newDeviceLimit_many": "Станет: {{count}} устройств",
       "buyTraffic": "Докупить трафик",
-      "currentTrafficLimit": "Текущий лимит: {{limit}} ГБ (использовано {{used}} ГБ)",
+      "currentTrafficLimit": "Израсходовано {{used}} из {{limit}} ГБ",
       "buyTrafficTitle": "Докупить трафик",
       "trafficWarning": "Докупленный трафик добавляется к текущему лимиту и действует 30 дней с момента покупки",
       "trafficUnavailable": "Докупка трафика недоступна для вашего тарифа",
@@ -964,7 +964,8 @@
       "toSubscription": "К подписке"
     },
     "noRenewalChooseTariff": "Выберите тариф — доступ продолжится.",
-    "chooseTariff": "Выбрать тариф"
+    "chooseTariff": "Выбрать тариф",
+    "trafficUsedOf": "{{used}} из {{limit}} ГБ"
   },
   "balance": {
     "paymentRange": "От {{min}} до {{max}}",

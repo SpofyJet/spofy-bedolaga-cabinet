@@ -1,3 +1,4 @@
+import { formatSmartDate } from '@/utils/liteDate';
 import { uiLocale } from '@/utils/uiLocale';
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -54,8 +55,7 @@ import {
 import { cn } from '@/lib/utils';
 import { safeLocal } from '../utils/safeStorage';
 
-const formatDate = (iso: string) =>
-  new Date(iso).toLocaleDateString(uiLocale(), { day: 'numeric', month: 'long', year: 'numeric' });
+const formatDate = (iso: string) => formatSmartDate(iso);
 
 /**
  * Группа строк, которая прячется целиком, если ни одна строка не отрисовалась

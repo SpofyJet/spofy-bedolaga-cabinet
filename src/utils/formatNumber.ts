@@ -28,6 +28,17 @@ export function formatGb(value: number, locale: string = uiLocale()): string {
   return new Intl.NumberFormat(locale, { maximumFractionDigits: 1 }).format(shown);
 }
 
+/**
+ * Гигабайты для человека: от 10 — целым числом («38»), меньше — до одного знака
+ * без «,0» («2,5», «3»). Разделитель по языку. Единицу добавляет вызывающий.
+ */
+export function formatGbShort(value: number, locale: string = uiLocale()): string {
+  const safe = Number.isFinite(value) ? Math.max(0, value) : 0;
+  return new Intl.NumberFormat(locale, {
+    maximumFractionDigits: safe >= 10 ? 0 : 1,
+  }).format(safe);
+}
+
 /** «870 / 1 500 ГБ»: лимиты в админке задаются в гигабайтах, единица одна на пару. */
 export function formatGbPair(
   usedGb: number,

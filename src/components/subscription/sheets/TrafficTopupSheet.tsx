@@ -1,5 +1,6 @@
 import { isUncertainPurchaseOutcome } from '@/utils/api-error';
 import { useTranslation } from 'react-i18next';
+import { formatGbShort } from '@/utils/formatNumber';
 import { useCurrency } from '../../../hooks/useCurrency';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { subscriptionApi } from '../../../api/subscription';
@@ -89,8 +90,8 @@ export function TrafficTopupSheet({
         icon={<PiChartPieSliceDuotone />}
         label={t('subscription.additionalOptions.buyTraffic')}
         description={t('subscription.additionalOptions.currentTrafficLimit', {
-          limit: subscription.traffic_limit_gb,
-          used: (subscription.traffic_used_gb ?? 0).toFixed(1),
+          limit: formatGbShort(subscription.traffic_limit_gb ?? 0),
+          used: formatGbShort(subscription.traffic_used_gb ?? 0),
         })}
         onClick={onOpen}
       />

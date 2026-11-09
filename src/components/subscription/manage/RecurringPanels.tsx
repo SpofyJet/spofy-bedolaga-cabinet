@@ -10,7 +10,7 @@ import { useCurrency } from '@/hooks/useCurrency';
 import { PiCreditCardDuotone } from 'react-icons/pi';
 import { RowIcon } from '@/components/spofy/ui';
 import { openPaymentUrl } from '@/utils/openPaymentUrl';
-import { uiLocale } from '@/utils/uiLocale';
+import { formatSmartDate } from '@/utils/liteDate';
 import { isRecurringFeatureOff } from '@/utils/recurringFeature';
 import { isLifetimeSubscription } from '@/utils/lifetime';
 import {
@@ -140,12 +140,7 @@ export function RecurringPanels({ subscription, subscriptionId }: RecurringPanel
     cancelSbpMutation.mutate();
   };
 
-  const formatChargeDate = (iso: string) =>
-    new Date(iso).toLocaleDateString(uiLocale(), {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-    });
+  const formatChargeDate = (iso: string) => formatSmartDate(iso, '2-digit');
 
   // Блоки ниже — сиблинги тоггла «Автопродление» с баланса и показываются
   // только по is_trial + своему состоянию: суточным тарифам они тоже нужны
