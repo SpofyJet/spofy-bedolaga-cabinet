@@ -1,6 +1,7 @@
 import { Fragment, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
+import { Button } from '@/components/spofy/ui';
 import { Navigate, useNavigate, useParams } from 'react-router';
 import {
   PiArrowUpBold,
@@ -475,14 +476,10 @@ export default function SupportChat() {
 
       {ticket && !ticketIsOpen ? (
         <div className="support-composer">
-          <button
-            type="button"
-            onClick={() => navigate('/support/new')}
-            className="support-new-btn"
-          >
+          <Button className="w-full" onClick={() => navigate('/support/new')}>
             <PiPlusBold className="h-4 w-4" aria-hidden />
             {t('support.chat.newTicket')}
-          </button>
+          </Button>
         </div>
       ) : replyBlocked ? (
         <div className="support-composer">

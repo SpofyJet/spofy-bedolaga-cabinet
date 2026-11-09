@@ -266,7 +266,7 @@ export function TelegramLinkWidget() {
   if (isOIDC) {
     return (
       <Button
-        variant="primary"
+        variant="secondary"
         size="sm"
         disabled={oidcLoading || !scriptLoaded}
         loading={oidcLoading}
@@ -597,7 +597,7 @@ export default function ConnectedAccounts() {
       if (!isEmailAuthEnabled) return null;
       return (
         <Button
-          variant="primary"
+          variant="secondary"
           size="sm"
           onClick={() => {
             setEmailFormOpen((prev) => !prev);
@@ -615,7 +615,7 @@ export default function ConnectedAccounts() {
         // Mini App: one-click button
         return (
           <Button
-            variant="primary"
+            variant="secondary"
             size="sm"
             disabled={linkingProvider !== null || waitingExternalLink}
             loading={linkingProvider === 'telegram'}
@@ -632,7 +632,7 @@ export default function ConnectedAccounts() {
     if (isOAuthProvider(provider.provider)) {
       return (
         <Button
-          variant="primary"
+          variant="secondary"
           size="sm"
           disabled={linkingProvider !== null || waitingExternalLink}
           loading={linkingProvider === provider.provider}

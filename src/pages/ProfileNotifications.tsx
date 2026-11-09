@@ -6,6 +6,45 @@ import { Card } from '@/components/data-display/Card';
 import { Switch } from '@/components/primitives/Switch';
 import { Skeleton, SkeletonGroup } from '@/components/ui/skeleton';
 import { ProfileSubHeader } from '@/components/profile/ProfileSubHeader';
+import { cn } from '@/lib/utils';
+
+/** Выбор одного значения из нескольких: выбранное показано заливкой. */
+function Segments({
+  label,
+  options,
+  value,
+  onChange,
+  suffix = '',
+}: {
+  label: string;
+  options: number[];
+  value: number;
+  onChange: (value: number) => void;
+  suffix?: string;
+}) {
+  return (
+    <div role="radiogroup" aria-label={label} className="flex gap-1.5">
+      {options.map((option) => (
+        <button
+          key={option}
+          type="button"
+          role="radio"
+          aria-checked={option === value}
+          onClick={() => onChange(option)}
+          className={cn(
+            'h-11 min-w-0 flex-1 rounded-xl text-[14px] font-semibold tabular-nums transition-colors',
+            option === value
+              ? 'bg-accent-500/15 text-accent-400'
+              : 'bg-dark-800/60 text-dark-300 hover:bg-dark-700/60',
+          )}
+        >
+          {option}
+          {suffix}
+        </button>
+      ))}
+    </div>
+  );
+}
 
 /** Уведомления — отдельная страница профиля. */
 export default function ProfileNotifications() {
@@ -60,21 +99,16 @@ export default function ProfileNotifications() {
                 />
               </div>
               {notificationSettings.subscription_expiry_enabled && (
-                <div className="flex items-center gap-3 pl-4">
-                  <span className="text-sm text-dark-400">
+                <div className="space-y-2">
+                  <span className="block text-sm text-dark-400">
                     {t('profile.notifications.daysBeforeExpiry')}
                   </span>
-                  <select
+                  <Segments
+                    label={t('profile.notifications.daysBeforeExpiry')}
+                    options={[1, 2, 3, 5, 7, 14]}
                     value={notificationSettings.subscription_expiry_days}
-                    onChange={(e) => setValue('subscription_expiry_days', Number(e.target.value))}
-                    className="input w-20 py-1"
-                  >
-                    {[1, 2, 3, 5, 7, 14].map((d) => (
-                      <option key={d} value={d}>
-                        {d}
-                      </option>
-                    ))}
-                  </select>
+                    onChange={(d) => setValue('subscription_expiry_days', d)}
+                  />
                 </div>
               )}
             </div>
@@ -96,21 +130,17 @@ export default function ProfileNotifications() {
                 />
               </div>
               {notificationSettings.traffic_warning_enabled && (
-                <div className="flex items-center gap-3 pl-4">
-                  <span className="text-sm text-dark-400">
+                <div className="space-y-2">
+                  <span className="block text-sm text-dark-400">
                     {t('profile.notifications.atPercent')}
                   </span>
-                  <select
+                  <Segments
+                    label={t('profile.notifications.atPercent')}
+                    options={[50, 70, 80, 90, 95]}
                     value={notificationSettings.traffic_warning_percent}
-                    onChange={(e) => setValue('traffic_warning_percent', Number(e.target.value))}
-                    className="input w-20 py-1"
-                  >
-                    {[50, 70, 80, 90, 95].map((p) => (
-                      <option key={p} value={p}>
-                        {p}%
-                      </option>
-                    ))}
-                  </select>
+                    onChange={(p) => setValue('traffic_warning_percent', p)}
+                    suffix="%"
+                  />
                 </div>
               )}
             </div>
@@ -132,8 +162,8 @@ export default function ProfileNotifications() {
                 />
               </div>
               {notificationSettings.balance_low_enabled && (
-                <div className="flex items-center gap-3 pl-4">
-                  <span className="text-sm text-dark-400">
+                <div className="space-y-2">
+                  <span className="block text-sm text-dark-400">
                     {t('profile.notifications.threshold')}
                   </span>
                   <input

@@ -449,29 +449,6 @@
   transform: scale(0.95);
 }
 
-.support-new-btn {
-  display: flex;
-  height: 48px;
-  width: 100%;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  border-radius: 16px;
-  font-size: 15px;
-  font-weight: 600;
-  color: rgb(var(--color-on-accent, 255, 255, 255));
-  background: rgb(var(--color-accent-500));
-  transition: background 0.15s ease;
-}
-
-.support-new-btn:hover {
-  background: rgb(var(--color-accent-600));
-}
-
-.support-new-btn:active {
-  transform: scale(0.98);
-}
-
 /* строка чата: аватар поддержки */
 .support-row-avatar .support-head-avatar {
   height: 48px;
