@@ -20,7 +20,7 @@ import { cn } from '@/lib/utils';
  */
 type MethodGroup = 'card' | 'crypto' | 'telegram' | 'other';
 const METHOD_GROUP_ORDER: MethodGroup[] = ['card', 'crypto', 'telegram', 'other'];
-const CRYPTO_METHODS = new Set(['cryptobot', 'heleket', 'xrocket']);
+const CRYPTO_METHODS = new Set(['cryptobot', 'pay2328', 'xrocket']);
 const TELEGRAM_METHODS = new Set(['telegram_stars']);
 const CARD_METHODS = new Set(['wata']);
 

@@ -30,7 +30,7 @@ export default function PaymentMethodIcon({
         </svg>
       );
 
-    case 'heleket':
+    case 'pay2328':
       return (
         <svg className={className} viewBox="0 0 40 40">
           <circle cx="20" cy="20" r="20" fill="#1A1A2E" />
@@ -115,7 +115,7 @@ export default function PaymentMethodIcon({
         </svg>
       );
 
-    case 'spofy_crypto_heleket':
+    case 'spofy_crypto_pay2328':
       return (
         <svg className={className} viewBox="0 0 40 40" aria-hidden="true">
           <rect width="40" height="40" rx="11" fill="#12A37E" />
@@ -247,7 +247,7 @@ export default function PaymentMethodIcon({
 
 const SPOFY_CRYPTO_ICONS: Record<string, string> = {
   cryptobot: 'spofy_crypto_cryptobot',
-  heleket: 'spofy_crypto_heleket',
+  pay2328: 'spofy_crypto_pay2328',
   xrocket: 'spofy_crypto_xrocket',
 };
 const SPOFY_CARD_METHODS = new Set(['wata']);

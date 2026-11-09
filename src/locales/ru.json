@@ -985,8 +985,8 @@
       "telegram_stars": {
         "description": "Оплата через Telegram Stars"
       },
-      "heleket": {
-        "description": "Оплата криптовалютой через Heleket"
+      "pay2328": {
+        "description": "Оплата криптовалютой через 2328.io"
       },
       "platega": {
         "description": "Оплата через Platega"
@@ -3424,7 +3424,7 @@
         "payments_stars": "Telegram Stars",
         "payments_cryptobot": "CryptoBot",
         "payments_platega": "Platega",
-        "payments_heleket": "Heleket",
+        "payments_pay2328": "2328.io",
         "payments_wata": "Wata",
         "subs_core": "Основные",
         "subs_trial": "Пробный период",
@@ -3580,20 +3580,20 @@
         "Cryptobot Webhook Path": "Путь вебхука",
         "Cryptobot Webhook Port": "Порт вебхука",
         "Cryptobot Webhook Secret": "Секрет вебхука",
-        "Heleket Api Key": "API ключ",
-        "Heleket Base Url": "Базовый URL",
-        "Heleket Callback Url": "URL callback",
-        "Heleket Default Currency": "Валюта по умолчанию",
-        "Heleket Default Network": "Сеть по умолчанию",
-        "Heleket Enabled": "Heleket включен",
-        "Heleket Invoice Lifetime": "Срок счёта (сек)",
-        "Heleket Markup Percent": "Наценка (%)",
-        "Heleket Merchant Id": "ID мерчанта",
-        "Heleket Return Url": "URL возврата",
-        "Heleket Success Url": "URL при успехе",
-        "Heleket Webhook Host": "Хост вебхука",
-        "Heleket Webhook Path": "Путь вебхука",
-        "Heleket Webhook Port": "Порт вебхука",
+        "Pay2328 Api Key": "API ключ",
+        "Pay2328 Base Url": "Базовый URL",
+        "Pay2328 Callback Url": "URL callback",
+        "Pay2328 Default Currency": "Валюта по умолчанию",
+        "Pay2328 Default Network": "Сеть по умолчанию",
+        "Pay2328 Enabled": "Pay2328 включен",
+        "Pay2328 Invoice Lifetime": "Срок счёта (сек)",
+        "Pay2328 Markup Percent": "Наценка (%)",
+        "Pay2328 Merchant Id": "ID мерчанта",
+        "Pay2328 Return Url": "URL возврата",
+        "Pay2328 Success Url": "URL при успехе",
+        "Pay2328 Webhook Host": "Хост вебхука",
+        "Pay2328 Webhook Path": "Путь вебхука",
+        "Pay2328 Webhook Port": "Порт вебхука",
         "Subscription Trial Enabled": "Триал включен",
         "Subscription Trial Days": "Дней триала",
         "Subscription Trial Traffic": "Трафик триала (ГБ)",
@@ -3879,7 +3879,7 @@
         "PAYMENT": "Платежи",
         "PAYMENT_VERIFICATION": "Верификация платежей",
         "CRYPTOBOT": "CryptoBot",
-        "HELEKET": "Heleket",
+        "PAY2328": "2328.io",
         "PLATEGA": "Platega",
         "WATA": "Wata",
         "TELEGRAM": "Telegram",

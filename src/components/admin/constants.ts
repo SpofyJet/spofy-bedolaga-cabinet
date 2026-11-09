@@ -54,7 +54,7 @@ export const SETTINGS_TREE: SettingsTreeConfig = {
         { id: 'payments_stars', categories: ['TELEGRAM'] },
         { id: 'payments_cryptobot', categories: ['CRYPTOBOT'] },
         { id: 'payments_platega', categories: ['PLATEGA'] },
-        { id: 'payments_heleket', categories: ['HELEKET'] },
+        { id: 'payments_pay2328', categories: ['PAY2328'] },
         { id: 'payments_wata', categories: ['WATA'] },
       ],
     },

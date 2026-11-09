@@ -951,8 +951,8 @@
       "telegram_stars": {
         "description": "Pay with Telegram Stars"
       },
-      "heleket": {
-        "description": "Pay with cryptocurrency via Heleket"
+      "pay2328": {
+        "description": "Pay with cryptocurrency via 2328.io"
       },
       "platega": {
         "description": "Pay via Platega"
@@ -3362,7 +3362,7 @@
         "payments_stars": "Telegram Stars",
         "payments_cryptobot": "CryptoBot",
         "payments_platega": "Platega",
-        "payments_heleket": "Heleket",
+        "payments_pay2328": "2328.io",
         "payments_wata": "Wata",
         "subs_core": "Core",
         "subs_trial": "Trial",
