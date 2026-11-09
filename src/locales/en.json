@@ -291,8 +291,11 @@
     "success": "Email Verified!",
     "successMessage": "Your email has been successfully verified. You can now log in with your email and password.",
     "redirecting": "Redirecting to dashboard...",
-    "failed": "Verification Failed",
-    "goToLogin": "Go to Login"
+    "failed": "The link from the email didn't work",
+    "goToLogin": "Go to Login",
+    "resend": "Send the email again",
+    "resent": "Email sent. Open the link in it",
+    "toCabinet": "To the cabinet"
   },
   "resetPassword": {
     "title": "Set new password",
@@ -451,7 +454,8 @@
       "manage": "My devices",
       "noLimit": "No limit",
       "addSlotShort": "Add"
-    }
+    },
+    "loadFailed": "Couldn't load"
   },
   "subscription": {
     "dailyRenewalExplanation": "This plan renews one day at a time from your balance. Resuming after the paid period ends charges one day.",
@@ -6954,7 +6958,7 @@
       "email": "Email",
       "emailNotLinked": "Not linked",
       "about": "About the service",
-      "aboutHint": "Rules, offer, policy",
+      "aboutHint": "Terms and offer",
       "gift": "Gift subscription",
       "signInWith": "signed in with {{method}}",
       "language": "Language",

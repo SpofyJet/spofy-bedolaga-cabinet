@@ -18,6 +18,7 @@ import TrialOfferCard from '../components/dashboard/TrialOfferCard';
 import ReminderCards from '../components/dashboard/ReminderCards';
 import { giftApi } from '../api/gift';
 import PendingGiftCard from '../components/dashboard/PendingGiftCard';
+import { Button, Surface } from '@/components/spofy/ui';
 import SubscriptionListCard from '../components/subscription/SubscriptionListCard';
 import { DeviceLimitSheet } from '../components/subscription/DeviceLimitSheet';
 import QuickActions from '../components/dashboard/QuickActions';
@@ -377,6 +378,25 @@ export default function Dashboard() {
       <section aria-label={t('dashboard.storiesTitle')} className="-mt-1">
         <StoryRail />
       </section>
+
+      {/* Запросы подписки упали: вместо вечных заглушек — что случилось и «Повторить». */}
+      {statusUnknown && (
+        <Surface className="flex items-center justify-between gap-3">
+          <span className="min-w-0 text-[15px] font-semibold text-dark-100">
+            {t('dashboard.loadFailed', 'Не удалось загрузить')}
+          </span>
+          <Button
+            tone="secondary"
+            className="h-11 shrink-0"
+            onClick={() => {
+              void refetchMultiSub();
+              void refetchSub();
+            }}
+          >
+            {t('common.retry')}
+          </Button>
+        </Surface>
+      )}
 
       {/* Главное действие для состояния + три спокойных */}
       <QuickActions

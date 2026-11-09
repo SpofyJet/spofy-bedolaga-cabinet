@@ -22,7 +22,21 @@ export default function VerifyEmail() {
       checkAdminStatus: state.checkAdminStatus,
     })),
   );
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  const [resendState, setResendState] = useState<'idle' | 'sending' | 'sent'>('idle');
   const hasVerified = useRef(false);
+
+  // Повторное письмо можно запросить только вошедшему: ручке нужен токен.
+  const handleResend = async () => {
+    setResendState('sending');
+    try {
+      await authApi.resendVerification();
+      setResendState('sent');
+    } catch (err: unknown) {
+      setError(getApiErrorMessage(err, t('emailVerification.failed')));
+      setResendState('idle');
+    }
+  };
 
   useEffect(() => {
     if (hasVerified.current) return;
@@ -31,7 +45,7 @@ export default function VerifyEmail() {
 
     if (!token) {
       setStatus('error');
-      setError(t('common.error'));
+      setError(t('emailVerification.failed'));
       return;
     }
 
@@ -103,17 +117,30 @@ export default function VerifyEmail() {
         {status === 'error' && (
           <div>
             <div className="mb-4 text-5xl text-error-500 sm:text-6xl">✗</div>
+            {/* Одна фраза: причина от сервера, а без неё — общий текст. */}
             <h2 className="text-lg font-semibold text-dark-50 sm:text-xl">
-              {t('emailVerification.failed')}
+              {resendState === 'sent' ? t('emailVerification.resent') : error}
             </h2>
-            <p className="mt-2 text-sm text-dark-400 sm:text-base">{error}</p>
             <div className="mt-6">
-              <Link
-                to="/login"
-                className="inline-flex h-12 items-center justify-center gap-2 rounded-2xl bg-dark-800/70 px-5 text-[15px] font-semibold text-dark-100 transition-colors hover:bg-dark-700/70 disabled:cursor-not-allowed disabled:opacity-50"
-              >
-                {t('emailVerification.goToLogin')}
-              </Link>
+              {isAuthenticated && resendState !== 'sent' ? (
+                <button
+                  type="button"
+                  onClick={handleResend}
+                  disabled={resendState === 'sending'}
+                  className="inline-flex h-12 items-center justify-center gap-2 rounded-2xl bg-cta-500 px-5 text-[15px] font-semibold text-on-cta transition-colors hover:bg-cta-600 disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  {t('emailVerification.resend')}
+                </button>
+              ) : (
+                <Link
+                  to={isAuthenticated ? '/' : '/login'}
+                  className="inline-flex h-12 items-center justify-center gap-2 rounded-2xl bg-dark-800/70 px-5 text-[15px] font-semibold text-dark-100 transition-colors hover:bg-dark-700/70"
+                >
+                  {isAuthenticated
+                    ? t('emailVerification.toCabinet')
+                    : t('emailVerification.goToLogin')}
+                </Link>
+              )}
             </div>
           </div>
         )}
