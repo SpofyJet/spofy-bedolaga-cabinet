@@ -222,7 +222,7 @@ function TicketChat({
               'rounded-xl p-3',
               msg.is_from_admin
                 ? 'ml-6 border border-accent-500/20 bg-accent-500/10'
-                : 'mr-6 border border-dark-700/30 bg-dark-800/50',
+                : 'mr-6 bg-dark-800/50',
             )}
           >
             <div className="mb-1 flex items-center justify-between gap-2">

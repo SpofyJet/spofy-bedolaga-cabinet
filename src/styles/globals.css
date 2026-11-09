@@ -531,9 +531,6 @@ img.twemoji {
     background: rgb(var(--color-dark-900) / 0.72);
     border-radius: var(--bento-radius);
     padding: var(--bento-padding);
-    /* Stagger animation support */
-    animation: bentoFadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
-    animation-delay: calc(var(--stagger, 0) * 50ms);
     position: relative;
     overflow: hidden;
   }
@@ -575,13 +572,6 @@ img.twemoji {
       background:
         linear-gradient(180deg, rgba(255, 255, 255, 0.022), rgba(255, 255, 255, 0) 42%),
         rgb(var(--color-dark-900) / 0.62);
-    }
-  }
-
-  /* Disable animation if user prefers reduced motion */
-  @media (prefers-reduced-motion: reduce) {
-    .bento-card {
-      animation: none;
     }
   }
 
@@ -1238,17 +1228,6 @@ img.twemoji {
 }
 
 /* Animations */
-@keyframes bentoFadeIn {
-  0% {
-    opacity: 0;
-    transform: translateY(16px);
-  }
-  100% {
-    opacity: 1;
-    transform: none;
-  }
-}
-
 @keyframes shimmer {
   0% {
     background-position: -200% 0;

@@ -125,7 +125,7 @@ export default function AdminCampaigns() {
           {!capabilities.hasBackButton && (
             <button
               onClick={() => navigate('/admin')}
-              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-dark-700 bg-dark-800 transition-colors hover:border-dark-600"
+              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-dark-800 transition-colors"
             >
               <BackIcon />
             </button>
@@ -292,7 +292,7 @@ export default function AdminCampaigns() {
             <button
               onClick={() => fetchNextPage()}
               disabled={isFetchingNextPage}
-              className="flex w-full items-center justify-center gap-2 rounded-xl border border-dark-700 bg-dark-800 py-3 text-sm font-medium text-dark-300 transition-colors hover:border-dark-600 hover:text-dark-100 disabled:opacity-50"
+              className="flex w-full items-center justify-center gap-2 rounded-xl bg-dark-800 py-3 text-sm font-medium text-dark-300 transition-colors hover:text-dark-100 disabled:opacity-50"
             >
               {isFetchingNextPage ? (
                 <div className="h-4 w-4 animate-spin rounded-full border-2 border-dark-500 border-t-accent-500" />

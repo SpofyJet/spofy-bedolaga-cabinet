@@ -114,7 +114,7 @@ export default function AdminWithdrawalDetail() {
 
       <div className="space-y-6">
         {/* User Info Section */}
-        <div className="rounded-xl border border-dark-700 bg-dark-800 p-4">
+        <div className="rounded-xl bg-dark-800 p-4">
           <h3 className="mb-4 font-medium text-dark-200">
             {t('admin.withdrawals.detail.userInfo')}
           </h3>
@@ -177,7 +177,7 @@ export default function AdminWithdrawalDetail() {
         </div>
 
         {/* Payment Details Section */}
-        <div className="rounded-xl border border-dark-700 bg-dark-800 p-4">
+        <div className="rounded-xl bg-dark-800 p-4">
           <h3 className="mb-3 font-medium text-dark-200">
             {t('admin.withdrawals.detail.paymentDetails')}
           </h3>
@@ -189,7 +189,7 @@ export default function AdminWithdrawalDetail() {
         </div>
 
         {/* Risk Analysis Section */}
-        <div className="rounded-xl border border-dark-700 bg-dark-800 p-4">
+        <div className="rounded-xl bg-dark-800 p-4">
           <h3 className="mb-4 font-medium text-dark-200">
             {t('admin.withdrawals.detail.riskAnalysis')}
           </h3>
@@ -281,7 +281,7 @@ export default function AdminWithdrawalDetail() {
 
         {/* Admin Comment Section */}
         {detail.admin_comment && (
-          <div className="rounded-xl border border-dark-700 bg-dark-800 p-4">
+          <div className="rounded-xl bg-dark-800 p-4">
             <h3 className="mb-3 font-medium text-dark-200">
               {t('admin.withdrawals.detail.adminComment')}
             </h3>
@@ -293,7 +293,7 @@ export default function AdminWithdrawalDetail() {
 
         {/* Processed At */}
         {detail.processed_at && (
-          <div className="rounded-xl border border-dark-700 bg-dark-800 p-4">
+          <div className="rounded-xl bg-dark-800 p-4">
             <div className="flex items-center justify-between">
               <span className="text-sm text-dark-400">
                 {t('admin.withdrawals.detail.processedAt')}

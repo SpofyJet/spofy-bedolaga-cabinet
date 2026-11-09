@@ -169,7 +169,7 @@ function ProjectSection({
   const { t } = useTranslation();
 
   return (
-    <div className="overflow-hidden rounded-xl border border-dark-700/50 bg-dark-800/40">
+    <div className="overflow-hidden rounded-xl bg-dark-800/40">
       {/* Header */}
       <div className="flex flex-wrap items-center gap-3 border-b border-dark-700/50 px-4 py-3">
         <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-dark-700/50 text-dark-300">
@@ -242,7 +242,7 @@ export default function AdminUpdates() {
       <div className="flex items-center gap-3">
         <button
           onClick={() => navigate('/admin')}
-          className="flex h-9 w-9 items-center justify-center rounded-lg border border-dark-700/50 bg-dark-800/40 transition-colors hover:border-dark-600 hover:bg-dark-800"
+          className="flex h-9 w-9 items-center justify-center rounded-lg bg-dark-800/40 transition-colors hover:bg-dark-800"
         >
           <BackIcon />
         </button>
@@ -253,7 +253,7 @@ export default function AdminUpdates() {
         <button
           onClick={() => refetch()}
           disabled={isFetching}
-          className="flex items-center gap-1.5 rounded-lg border border-dark-700/50 bg-dark-800/40 px-3 py-2 text-xs text-dark-300 transition-colors hover:border-dark-600 hover:bg-dark-800 disabled:opacity-50"
+          className="flex items-center gap-1.5 rounded-lg bg-dark-800/40 px-3 py-2 text-xs text-dark-300 transition-colors hover:bg-dark-800 disabled:opacity-50"
         >
           <span className={isFetching ? 'animate-spin' : ''}>
             <RefreshIcon />

@@ -64,7 +64,7 @@ export function NodeFilter({
       </button>
 
       {open && (
-        <div className="absolute inset-x-0 top-full z-30 mt-1 rounded-xl border border-dark-700 bg-dark-800 py-1 shadow-xl sm:inset-x-auto sm:left-0 sm:w-64">
+        <div className="absolute inset-x-0 top-full z-30 mt-1 rounded-xl bg-dark-800 py-1 shadow-xl sm:inset-x-auto sm:left-0 sm:w-64">
           <button
             onClick={selectAll}
             className={`flex w-full items-center gap-2 px-3 py-2 text-left text-xs transition-colors hover:bg-dark-700 ${

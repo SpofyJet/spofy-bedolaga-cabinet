@@ -1,3 +1,4 @@
+import { ListSkeleton } from '@/components/ui/skeleton';
 import { useState, useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -404,7 +405,7 @@ export default function AdminWheel() {
           {!capabilities.hasBackButton && (
             <button
               onClick={() => navigate('/admin')}
-              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-dark-700 bg-dark-800 transition-colors hover:border-dark-600"
+              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-dark-800 transition-colors"
             >
               <BackIcon />
             </button>
@@ -960,7 +961,7 @@ export default function AdminWheel() {
       {/* Statistics Tab */}
       {activeTab === 'statistics' && statsLoading && (
         <div className="flex justify-center py-12">
-          <div className="h-8 w-8 animate-spin rounded-full border-2 border-accent-500 border-t-transparent" />
+          <ListSkeleton />
         </div>
       )}
 

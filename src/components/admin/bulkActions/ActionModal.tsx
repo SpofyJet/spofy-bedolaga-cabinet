@@ -92,7 +92,7 @@ function ProgressView({ progress }: { progress: ProgressState }) {
       </div>
 
       {progress.log.length > 0 && (
-        <div className="max-h-48 overflow-y-auto rounded-xl border border-dark-700 bg-dark-800/50 p-3">
+        <div className="max-h-48 overflow-y-auto rounded-xl bg-dark-800/50 p-3">
           <div className="space-y-1">
             {progress.log.slice(-10).map((entry, idx) => (
               <div key={idx} className="flex items-start gap-2 text-xs">
@@ -546,7 +546,7 @@ export function ActionModal({
         aria-modal="true"
         aria-labelledby="bulk-action-modal-title"
         tabIndex={-1}
-        className="relative max-h-[calc(100dvh-2rem)] w-full max-w-md overflow-y-auto rounded-2xl border border-dark-700 bg-dark-900 p-6 shadow-2xl"
+        className="relative max-h-[calc(100dvh-2rem)] w-full max-w-md overflow-y-auto rounded-2xl bg-dark-900 p-6 shadow-2xl"
       >
         <div className="mb-5 flex items-center justify-between">
           <h3 id="bulk-action-modal-title" className="text-lg font-bold text-dark-100">
@@ -572,7 +572,7 @@ export function ActionModal({
           </div>
         ) : modal.result ? (
           <div className="space-y-4">
-            <div className="rounded-xl border border-dark-700 bg-dark-800/50 p-4">
+            <div className="rounded-xl bg-dark-800/50 p-4">
               <div className="mb-3 text-center text-sm font-semibold text-dark-100">
                 {t('admin.bulkActions.complete')}
               </div>
@@ -640,7 +640,7 @@ export function ActionModal({
               <button
                 onClick={onClose}
                 disabled={modal.loading}
-                className="min-h-[44px] flex-1 rounded-xl border border-dark-700 bg-dark-800 px-4 py-2.5 text-sm font-medium text-dark-300 transition-colors hover:bg-dark-700 disabled:opacity-50"
+                className="min-h-[44px] flex-1 rounded-xl bg-dark-800 px-4 py-2.5 text-sm font-medium text-dark-300 transition-colors hover:bg-dark-700 disabled:opacity-50"
               >
                 {t('admin.bulkActions.cancel')}
               </button>

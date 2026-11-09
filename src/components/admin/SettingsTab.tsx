@@ -47,7 +47,7 @@ export function SettingsTab({
   if (searchQuery.trim()) {
     if (filteredSettings.length === 0) {
       return (
-        <div className="rounded-xl border border-dark-700/30 bg-dark-800/30 p-12 text-center">
+        <div className="rounded-xl bg-dark-800/30 p-12 text-center">
           <p className="text-dark-400">{t('admin.settings.noSettings')}</p>
         </div>
       );
@@ -76,7 +76,7 @@ export function SettingsTab({
 
   if (allCategorySettings.length === 0) {
     return (
-      <div className="rounded-xl border border-dark-700/30 bg-dark-800/30 p-12 text-center">
+      <div className="rounded-xl bg-dark-800/30 p-12 text-center">
         <p className="text-dark-400">{t('admin.settings.noSettings')}</p>
       </div>
     );

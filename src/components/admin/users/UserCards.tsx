@@ -33,7 +33,7 @@ export function UserCards({ users, className }: UserCardsProps) {
             key={user.id}
             to={`/admin/users/${user.id}`}
             state={backTo(location).state}
-            className="flex flex-col gap-2.5 rounded-2xl border border-dark-700/60 bg-dark-900/40 p-3.5 transition-colors active:bg-dark-800/60"
+            className="flex flex-col gap-2.5 rounded-2xl bg-dark-900/40 p-3.5 transition-colors active:bg-dark-800/60"
           >
             <div className="flex items-center gap-3">
               <UserAvatar

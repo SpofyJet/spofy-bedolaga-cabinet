@@ -129,7 +129,7 @@ export default function AdminServerEdit() {
             <label className="mb-2 block text-sm font-medium text-dark-300">
               {t('admin.servers.originalName')}
             </label>
-            <div className="rounded-lg border border-dark-600 bg-dark-700/50 px-3 py-2 text-dark-400">
+            <div className="rounded-lg bg-dark-700/50 px-3 py-2 text-dark-400">
               {server.original_name || server.squad_uuid}
             </div>
           </div>

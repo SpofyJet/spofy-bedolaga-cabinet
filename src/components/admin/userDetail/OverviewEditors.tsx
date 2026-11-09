@@ -79,7 +79,7 @@ export function RestrictionsEditor({ user, busy, onSave, onClose }: Restrictions
   const ns = 'admin.users.detail.overview';
 
   return (
-    <div className="flex flex-col gap-3 rounded-xl border border-dark-700 bg-dark-800/60 p-3 text-sm">
+    <div className="flex flex-col gap-3 rounded-xl bg-dark-800/60 p-3 text-sm">
       <div className="flex items-center justify-between gap-3">
         <span className="text-dark-200">{t(`${ns}.restrictTopupFull`)}</span>
         <Toggle

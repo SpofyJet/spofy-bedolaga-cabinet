@@ -132,7 +132,7 @@ export function GeoCheckImageViewer({ src, alt, fullscreen }: GeoCheckImageViewe
               </TransformComponent>
 
               {loaded && (
-                <div className="absolute bottom-3 right-3 z-10 flex items-center gap-0.5 rounded-xl border border-dark-100/10 bg-dark-950/70 p-1 shadow-lg backdrop-blur-md">
+                <div className="absolute bottom-3 right-3 z-10 flex items-center gap-0.5 rounded-xl bg-dark-950/70 p-1 shadow-lg backdrop-blur-md">
                   <button
                     type="button"
                     onClick={() => zoomOut()}

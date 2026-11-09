@@ -1,3 +1,4 @@
+import { ListSkeleton } from '@/components/ui/skeleton';
 import { useEffect, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
@@ -189,7 +190,7 @@ export default function AdminSystemErrors() {
 
       {/* List */}
       {isLoading ? (
-        <p className="py-8 text-center text-sm text-dark-400">{t('common.loading')}</p>
+        <ListSkeleton />
       ) : items.length === 0 ? (
         <p className="py-8 text-center text-sm text-dark-400">{t('admin.systemErrors.empty')}</p>
       ) : (

@@ -216,7 +216,7 @@ export default function AdminPolicies() {
           {!capabilities.hasBackButton && (
             <button
               onClick={() => navigate('/admin')}
-              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-dark-700 bg-dark-800 transition-colors hover:border-dark-600"
+              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-dark-800 transition-colors"
             >
               <BackIcon />
             </button>
@@ -390,7 +390,7 @@ export default function AdminPolicies() {
             aria-modal="true"
             aria-labelledby="policy-delete-title"
             tabIndex={-1}
-            className="relative w-full max-w-sm rounded-xl border border-dark-700 bg-dark-800 p-6"
+            className="relative w-full max-w-sm rounded-xl bg-dark-800 p-6"
           >
             <h3 id="policy-delete-title" className="mb-2 text-lg font-semibold text-dark-100">
               {t('admin.policies.confirm.title')}

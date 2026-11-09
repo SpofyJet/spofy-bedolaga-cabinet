@@ -302,7 +302,7 @@ export default function AdminPromoOfferSend() {
       ) : (
         <div className="mx-auto max-w-2xl space-y-6">
           {/* Template Selection */}
-          <div className="rounded-xl border border-dark-700 bg-dark-800 p-6">
+          <div className="rounded-xl bg-dark-800 p-6">
             <label id="po-template-label" className="mb-2 block text-sm font-medium text-dark-300">
               {t('admin.promoOffers.send.offerTemplate')}
               <span className="text-error-400">*</span>
@@ -350,7 +350,7 @@ export default function AdminPromoOfferSend() {
           </div>
 
           {/* Send Mode */}
-          <div className="rounded-xl border border-dark-700 bg-dark-800 p-6">
+          <div className="rounded-xl bg-dark-800 p-6">
             <label id="po-sendmode-label" className="mb-2 block text-sm font-medium text-dark-300">
               {t('admin.promoOffers.send.sendTo')}
               <span className="text-error-400">*</span>
@@ -466,7 +466,7 @@ export default function AdminPromoOfferSend() {
 
                     {/* Dropdown results */}
                     {showDropdown && searchQuery.length >= 2 && (
-                      <div className="absolute left-0 right-0 top-full z-50 mt-1 max-h-64 overflow-y-auto rounded-lg border border-dark-600 bg-dark-800 shadow-xl">
+                      <div className="absolute left-0 right-0 top-full z-50 mt-1 max-h-64 overflow-y-auto rounded-lg bg-dark-800 shadow-xl">
                         {filteredUsers.length > 0 ? (
                           filteredUsers.map((user) => (
                             <button
@@ -508,7 +508,7 @@ export default function AdminPromoOfferSend() {
 
           {/* Preview */}
           {selectedTemplate && (
-            <div className="rounded-xl border border-dark-700 bg-dark-800 p-6">
+            <div className="rounded-xl bg-dark-800 p-6">
               <h4 className="mb-2 text-sm font-medium text-dark-300">
                 {t('admin.promoOffers.send.preview')}
               </h4>

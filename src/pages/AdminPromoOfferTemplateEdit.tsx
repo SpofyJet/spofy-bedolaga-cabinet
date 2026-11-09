@@ -141,7 +141,7 @@ export default function AdminPromoOfferTemplateEdit() {
 
       {/* Form */}
       <div className="mx-auto max-w-2xl space-y-6">
-        <div className="rounded-xl border border-dark-700 bg-dark-800 p-6">
+        <div className="rounded-xl bg-dark-800 p-6">
           <div className="space-y-4">
             <div>
               <label

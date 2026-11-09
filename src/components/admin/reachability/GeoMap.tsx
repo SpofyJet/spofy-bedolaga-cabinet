@@ -378,7 +378,7 @@ function GeoMapBody({
         event.stopPropagation();
         onPress();
       }}
-      className="flex h-10 w-10 items-center justify-center rounded-lg border border-dark-700/60 bg-dark-900/80 text-dark-100 backdrop-blur disabled:opacity-40"
+      className="flex h-10 w-10 items-center justify-center rounded-lg bg-dark-900/80 text-dark-100 backdrop-blur disabled:opacity-40"
     >
       <Icon className="h-4 w-4" />
     </button>
@@ -387,7 +387,7 @@ function GeoMapBody({
     <div
       ref={host}
       data-zoom={zoomOf(view, W).toFixed(2)}
-      className="relative overflow-hidden rounded-2xl border border-dark-700/60 bg-dark-900/40"
+      className="relative overflow-hidden rounded-2xl bg-dark-900/40"
       // Приближено — карта ловит палец сама (сдвиг, щипок); иначе страница листается как обычно.
       style={{ touchAction: zoomed ? 'none' : 'pan-y' }}
       onPointerDown={onPointerDown}

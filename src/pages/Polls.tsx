@@ -1,3 +1,4 @@
+import { ListSkeleton } from '@/components/ui/skeleton';
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
@@ -147,7 +148,7 @@ export default function Polls() {
 
             {startPollMutation.isPending && (
               <div className="flex justify-center py-8">
-                <div className="h-8 w-8 animate-spin rounded-full border-2 border-accent-500 border-t-transparent" />
+                <ListSkeleton />
               </div>
             )}
 

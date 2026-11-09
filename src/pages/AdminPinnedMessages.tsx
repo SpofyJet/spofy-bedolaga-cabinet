@@ -1,3 +1,4 @@
+import { ListSkeleton } from '@/components/ui/skeleton';
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -280,12 +281,9 @@ export default function AdminPinnedMessages() {
 
       {/* Messages list */}
       {isLoading ? (
-        <div className="rounded-xl border border-dark-700 bg-dark-800/50 p-8 text-center text-dark-400">
-          <RefreshIcon />
-          <p className="mt-2">{t('common.loading')}</p>
-        </div>
+        <ListSkeleton />
       ) : messages.length === 0 ? (
-        <div className="rounded-xl border border-dark-700 bg-dark-800/50 p-8 text-center text-dark-400">
+        <div className="rounded-xl bg-dark-800/50 p-8 text-center text-dark-400">
           <div className="mx-auto mb-2 w-fit">
             <PinIcon className="h-6 w-6" />
           </div>
@@ -310,7 +308,7 @@ export default function AdminPinnedMessages() {
 
       {/* Pagination */}
       {totalPages > 1 && (
-        <div className="flex items-center justify-center gap-2 rounded-xl border border-dark-700 bg-dark-800/50 p-4">
+        <div className="flex items-center justify-center gap-2 rounded-xl bg-dark-800/50 p-4">
           <button
             onClick={() => setPage((p) => Math.max(0, p - 1))}
             disabled={page === 0}

@@ -214,9 +214,7 @@ export function SortableSelectedMethodCard({
                         aria-hidden="true"
                         className={cn(
                           'flex h-3.5 w-3.5 items-center justify-center rounded',
-                          enabled
-                            ? 'bg-accent-500 text-on-accent'
-                            : 'border border-dark-600 bg-dark-700',
+                          enabled ? 'bg-accent-500 text-on-accent' : 'bg-dark-700',
                         )}
                       >
                         {enabled && <CheckIcon className="h-2.5 w-2.5" />}

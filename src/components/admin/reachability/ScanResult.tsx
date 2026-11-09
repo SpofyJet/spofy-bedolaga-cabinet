@@ -110,7 +110,7 @@ export function ScanResult({ job }: { job: Job }) {
               {t(`${base}.perUnit`)}
             </label>
           )}
-          <div className="max-h-96 overflow-auto rounded-xl border border-dark-700/50 bg-dark-900/60 p-3">
+          <div className="max-h-96 overflow-auto rounded-xl bg-dark-900/60 p-3">
             <ul className="space-y-1.5 text-xs">
               {summary.ips.map((item) => (
                 <li key={item.ip} className="flex flex-wrap items-baseline gap-x-3 gap-y-0.5">

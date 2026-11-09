@@ -212,7 +212,7 @@ export default function AdminUsers() {
           aria-label={t('common.refresh')}
           title={t('common.refresh')}
           disabled={refreshing}
-          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-dark-700 bg-dark-800 text-dark-300 transition-colors hover:border-dark-600 hover:text-dark-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-500/40 disabled:cursor-wait"
+          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-dark-800 text-dark-300 transition-colors hover:text-dark-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-500/40 disabled:cursor-wait"
         >
           <RefreshIcon className={cn('h-5 w-5', refreshing && 'animate-spin')} />
         </button>
@@ -248,7 +248,7 @@ export default function AdminUsers() {
           </button>
         </div>
       ) : users.length === 0 ? (
-        <div className="rounded-2xl border border-dark-700/60 bg-dark-900/40 px-6 py-12 text-center">
+        <div className="rounded-2xl bg-dark-900/40 px-6 py-12 text-center">
           <p className="text-dark-400">{t('admin.users.noneFound')}</p>
           {hasActiveFilters(state) && (
             <button

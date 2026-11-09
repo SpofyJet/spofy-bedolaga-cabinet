@@ -1173,7 +1173,7 @@ export default function AdminGraceAccess() {
       <SessionsSection />
 
       <div className="sticky bottom-4 z-10">
-        <div className="rounded-2xl border border-dark-700/50 bg-dark-900/90 p-3 backdrop-blur">
+        <div className="rounded-2xl bg-dark-900/90 p-3 backdrop-blur">
           {(modeBlockers.length > 0 || emptyNumbers.length > 0 || externalIncomplete) && (
             <ul className="mb-2 space-y-1 text-xs text-error-400">
               {modeBlockers.map((issue) => (

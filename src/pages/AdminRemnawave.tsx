@@ -519,7 +519,7 @@ function SquadCard({ squad, onClick }: SquadCardProps) {
   return (
     <div
       onClick={onClick}
-      className="cursor-pointer rounded-xl border border-dark-700 bg-dark-800/50 p-4 transition-colors hover:border-dark-600"
+      className="cursor-pointer rounded-xl bg-dark-800/50 p-4 transition-colors"
     >
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0 flex-1">
@@ -587,7 +587,7 @@ function SyncCard({ title, description, onAction, isLoading, lastResult }: SyncC
   const { t } = useTranslation();
 
   return (
-    <div className="rounded-xl border border-dark-700 bg-dark-800/50 p-4">
+    <div className="rounded-xl bg-dark-800/50 p-4">
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0 flex-1">
           <h3 className="font-medium text-dark-100">{title}</h3>
@@ -635,7 +635,7 @@ function BreakdownCard({
 }) {
   const max = Math.max(1, ...items.map((i) => i.count));
   return (
-    <div className="rounded-xl border border-dark-700 bg-dark-800/50 p-4">
+    <div className="rounded-xl bg-dark-800/50 p-4">
       <h4 className="mb-3 text-sm font-medium text-dark-200">{title}</h4>
       <div className={wide ? 'grid grid-cols-1 gap-x-6 gap-y-2 sm:grid-cols-2' : 'space-y-2'}>
         {items.slice(0, wide ? 16 : 8).map((it) => (
@@ -943,7 +943,7 @@ function OverviewTab({
             {topConsumers.period_days}
             {t('admin.remnawave.overview.daysShort', 'д')}
           </h3>
-          <div className="divide-y divide-dark-700 rounded-xl border border-dark-700 bg-dark-800/50">
+          <div className="divide-y divide-dark-700 rounded-xl bg-dark-800/50">
             {topConsumers.users.map((u, i) => (
               <div
                 key={u.username}
@@ -1315,7 +1315,7 @@ function SyncTab({
     <div className="space-y-6">
       {/* Auto Sync Status */}
       {autoSyncStatus && (
-        <div className="rounded-xl border border-dark-700 bg-dark-800/50 p-4">
+        <div className="rounded-xl bg-dark-800/50 p-4">
           <div className="mb-3 flex items-center justify-between">
             <h3 className="flex items-center gap-2 font-medium text-dark-100">
               <SyncIcon />
@@ -1635,7 +1635,7 @@ export default function AdminRemnawave() {
           {!capabilities.hasBackButton && (
             <button
               onClick={() => navigate('/admin')}
-              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-dark-700 bg-dark-800 transition-colors hover:border-dark-600"
+              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-dark-800 transition-colors"
             >
               <BackIcon className="text-dark-400" />
             </button>

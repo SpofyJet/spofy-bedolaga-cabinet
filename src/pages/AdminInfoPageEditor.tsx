@@ -261,7 +261,7 @@ function FaqAnswerEditor({ value, onChange }: { value: string; onChange: (html: 
   if (!editor) return null;
 
   return (
-    <div className="overflow-hidden rounded-xl border border-dark-700 bg-dark-800/50">
+    <div className="overflow-hidden rounded-xl bg-dark-800/50">
       {/* Upload overlay */}
       {isUploading && (
         <div className="flex items-center justify-center gap-2 bg-dark-900/60 px-3 py-2">
@@ -505,7 +505,7 @@ function FaqBuilder({ items, onChange, locale, localeLabel }: FaqBuilderProps) {
       </div>
 
       {items.length === 0 && (
-        <div className="rounded-xl border border-dashed border-dark-700 bg-dark-800/30 p-6 text-center text-sm text-dark-500">
+        <div className="rounded-xl border-dashed bg-dark-800/30 p-6 text-center text-sm text-dark-500">
           {t('admin.infoPages.faq.noQuestions')}
         </div>
       )}
@@ -513,7 +513,7 @@ function FaqBuilder({ items, onChange, locale, localeLabel }: FaqBuilderProps) {
       {items.map((item, index) => (
         <div
           key={itemKeys[index] ?? index}
-          className="rounded-xl border border-dark-700 bg-dark-800/50 p-4 transition-all hover:border-dark-600"
+          className="rounded-xl bg-dark-800/50 p-4 transition-all"
         >
           <div className="mb-3 flex items-center justify-between">
             <span className="text-xs font-medium text-dark-400">
@@ -578,7 +578,7 @@ function FaqBuilder({ items, onChange, locale, localeLabel }: FaqBuilderProps) {
       <button
         type="button"
         onClick={handleAdd}
-        className="flex min-h-[44px] w-full items-center justify-center gap-2 rounded-xl border border-dashed border-dark-600 bg-dark-800/30 py-3 text-sm font-medium text-dark-300 transition-colors hover:border-dark-500 hover:bg-dark-800/50 hover:text-dark-100"
+        className="flex min-h-[44px] w-full items-center justify-center gap-2 rounded-xl border-dashed bg-dark-800/30 py-3 text-sm font-medium text-dark-300 transition-colors hover:bg-dark-800/50 hover:text-dark-100"
       >
         <PlusSmallIcon className="h-5 w-5" />
         {t('admin.infoPages.faq.addQuestion')}
@@ -1195,7 +1195,7 @@ export default function AdminInfoPageEditor() {
               {t('admin.infoPages.fields.content')} ({t(`admin.infoPages.locales.${activeLocale}`)})
             </label>
             <div
-              className="relative overflow-hidden rounded-xl border border-dark-700 bg-dark-800/50"
+              className="relative overflow-hidden rounded-xl bg-dark-800/50"
               onDragOver={handleEditorDragOver}
               onDragLeave={handleEditorDragLeave}
               onDrop={handleEditorDrop}

@@ -1,3 +1,4 @@
+import { ListSkeleton } from '@/components/ui/skeleton';
 import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { useNavigate } from 'react-router';
@@ -732,7 +733,7 @@ export default function AdminBulkActions() {
               {uniqueNames.map((name) => (
                 <span
                   key={name}
-                  className="inline-flex rounded-md border border-dark-600/40 bg-dark-700/40 px-1.5 py-0.5 text-[10px] font-medium text-dark-200"
+                  className="inline-flex rounded-md bg-dark-700/40 px-1.5 py-0.5 text-[10px] font-medium text-dark-200"
                 >
                   {name}
                 </span>
@@ -852,7 +853,7 @@ export default function AdminBulkActions() {
           {!capabilities.hasBackButton && (
             <button
               onClick={() => navigate('/admin')}
-              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-dark-700 bg-dark-800 transition-colors hover:border-dark-600"
+              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-dark-800 transition-colors"
               aria-label={t('common.back')}
             >
               <BackIcon />
@@ -861,7 +862,7 @@ export default function AdminBulkActions() {
           <div>
             <div className="flex items-center gap-2.5">
               <h1 className="text-xl font-bold text-dark-100">{t('admin.bulkActions.title')}</h1>
-              <span className="rounded-lg border border-dark-700 bg-dark-800 px-2 py-0.5 text-xs font-medium tabular-nums text-dark-400">
+              <span className="rounded-lg bg-dark-800 px-2 py-0.5 text-xs font-medium tabular-nums text-dark-400">
                 {total.toLocaleString()}
               </span>
             </div>
@@ -958,11 +959,11 @@ export default function AdminBulkActions() {
       {/* Table */}
       {loading && users.length === 0 ? (
         <div className="flex justify-center py-16">
-          <div className="h-8 w-8 animate-spin rounded-full border-2 border-accent-500 border-t-transparent" />
+          <ListSkeleton />
         </div>
       ) : users.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-16">
-          <div className="mb-3 flex h-14 w-14 items-center justify-center rounded-2xl border border-dark-700/50 bg-dark-800/40 text-dark-500">
+          <div className="mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-dark-800/40 text-dark-500">
             <SearchIcon />
           </div>
           <p className="text-sm font-medium text-dark-300">{t('admin.bulkActions.noResults')}</p>
@@ -1075,7 +1076,7 @@ export default function AdminBulkActions() {
                 setOffset(Math.max(0, offset - limit));
               }}
               disabled={offset === 0}
-              className="rounded-lg border border-dark-700 bg-dark-800 p-2 transition-colors hover:bg-dark-700 disabled:opacity-50"
+              className="rounded-lg bg-dark-800 p-2 transition-colors hover:bg-dark-700 disabled:opacity-50"
               aria-label={t('common.back')}
             >
               <ChevronLeftIcon />
@@ -1088,7 +1089,7 @@ export default function AdminBulkActions() {
                 setOffset(offset + limit);
               }}
               disabled={offset + limit >= total}
-              className="rounded-lg border border-dark-700 bg-dark-800 p-2 transition-colors hover:bg-dark-700 disabled:opacity-50"
+              className="rounded-lg bg-dark-800 p-2 transition-colors hover:bg-dark-700 disabled:opacity-50"
               aria-label={t('common.next')}
             >
               <ChevronRightIcon />

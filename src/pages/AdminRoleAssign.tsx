@@ -1,3 +1,4 @@
+import { ListSkeleton } from '@/components/ui/skeleton';
 import { useState, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -59,7 +60,7 @@ function UserSearchDropdown({
 
   if (selectedUser) {
     return (
-      <div className="flex items-center gap-2 rounded-lg border border-dark-600 bg-dark-900 px-3 py-2">
+      <div className="flex items-center gap-2 rounded-lg bg-dark-900 px-3 py-2">
         <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-accent-500 to-accent-700 text-xs font-medium text-white">
           {selectedUser.first_name?.[0] || selectedUser.username?.[0] || '?'}
         </div>
@@ -106,7 +107,7 @@ function UserSearchDropdown({
         <>
           {/* Backdrop to close dropdown */}
           <div className="fixed inset-0 z-10" onClick={() => setIsOpen(false)} aria-hidden="true" />
-          <div className="absolute left-0 right-0 top-full z-20 mt-1 max-h-60 overflow-y-auto rounded-lg border border-dark-600 bg-dark-800 shadow-xl">
+          <div className="absolute left-0 right-0 top-full z-20 mt-1 max-h-60 overflow-y-auto rounded-lg bg-dark-800 shadow-xl">
             {searching ? (
               <div className="flex items-center justify-center py-4">
                 <div className="h-5 w-5 animate-spin rounded-full border-2 border-accent-500 border-t-transparent" />
@@ -342,7 +343,7 @@ export default function AdminRoleAssign() {
         {!capabilities.hasBackButton && (
           <button
             onClick={() => navigate('/admin')}
-            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-dark-700 bg-dark-800 transition-colors hover:border-dark-600"
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-dark-800 transition-colors"
           >
             <BackIcon />
           </button>
@@ -355,7 +356,7 @@ export default function AdminRoleAssign() {
 
       {/* Assign Section */}
       <PermissionGate permission="roles:assign">
-        <div className="mb-6 rounded-xl border border-dark-700 bg-dark-800 p-4 sm:p-5">
+        <div className="mb-6 rounded-xl bg-dark-800 p-4 sm:p-5">
           <h2 className="mb-4 flex items-center gap-2 text-base font-semibold text-dark-100">
             <UserPlusIcon />
             {t('admin.roleAssign.assignSection')}
@@ -446,7 +447,7 @@ export default function AdminRoleAssign() {
       </PermissionGate>
 
       {/* Current Assignments Table */}
-      <div className="rounded-xl border border-dark-700 bg-dark-800">
+      <div className="rounded-xl bg-dark-800">
         <div className="border-b border-dark-700 px-4 py-3 sm:px-5">
           <h2 className="text-base font-semibold text-dark-100">
             {t('admin.roleAssign.currentAssignments')}
@@ -460,7 +461,7 @@ export default function AdminRoleAssign() {
 
         {rolesLoading || assignmentsLoading ? (
           <div className="flex items-center justify-center py-12">
-            <div className="h-8 w-8 animate-spin rounded-full border-2 border-accent-500 border-t-transparent" />
+            <ListSkeleton />
           </div>
         ) : sortedAssignments.length === 0 ? (
           <div className="py-12 text-center">
@@ -614,7 +615,7 @@ export default function AdminRoleAssign() {
                   <button
                     onClick={() => setPage((p) => Math.max(0, p - 1))}
                     disabled={page === 0}
-                    className="rounded-lg border border-dark-700 bg-dark-800 p-2 transition-colors hover:bg-dark-700 disabled:opacity-50"
+                    className="rounded-lg bg-dark-800 p-2 transition-colors hover:bg-dark-700 disabled:opacity-50"
                     aria-label={t('admin.roleAssign.pagination.prev')}
                   >
                     <ChevronLeftIcon />
@@ -625,7 +626,7 @@ export default function AdminRoleAssign() {
                   <button
                     onClick={() => setPage((p) => Math.min(totalPages - 1, p + 1))}
                     disabled={page >= totalPages - 1}
-                    className="rounded-lg border border-dark-700 bg-dark-800 p-2 transition-colors hover:bg-dark-700 disabled:opacity-50"
+                    className="rounded-lg bg-dark-800 p-2 transition-colors hover:bg-dark-700 disabled:opacity-50"
                     aria-label={t('admin.roleAssign.pagination.next')}
                   >
                     <ChevronRightIcon />

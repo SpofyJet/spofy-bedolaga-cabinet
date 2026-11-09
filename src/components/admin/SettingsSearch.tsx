@@ -127,7 +127,7 @@ export function SettingsSearch({
 
       {/* Autocomplete dropdown */}
       {isOpen && suggestions.length > 0 && (
-        <div className="absolute right-0 top-full z-50 mt-1 max-h-80 w-80 overflow-y-auto rounded-xl border border-dark-700 bg-dark-800 py-1 shadow-xl">
+        <div className="absolute right-0 top-full z-50 mt-1 max-h-80 w-80 overflow-y-auto rounded-xl bg-dark-800 py-1 shadow-xl">
           {suggestions.map((setting, index) => (
             <button
               key={setting.key}
@@ -237,7 +237,7 @@ export function SettingsSearchMobile({
 
       {/* Autocomplete dropdown */}
       {isOpen && suggestions.length > 0 && (
-        <div className="absolute left-0 right-0 top-full z-50 mt-1 max-h-64 overflow-y-auto rounded-xl border border-dark-700 bg-dark-800 py-1 shadow-xl">
+        <div className="absolute left-0 right-0 top-full z-50 mt-1 max-h-64 overflow-y-auto rounded-xl bg-dark-800 py-1 shadow-xl">
           {suggestions.map((setting, index) => (
             <button
               key={setting.key}

@@ -157,7 +157,7 @@ export function BrandingTab({ accentColor = '#3b82f6' }: BrandingTabProps) {
   return (
     <div className="space-y-6">
       {/* Logo & Name */}
-      <div className="rounded-2xl border border-dark-700/50 bg-dark-800/50 p-6">
+      <div className="rounded-2xl bg-dark-800/50 p-6">
         <h3 className="mb-4 text-lg font-semibold text-dark-100">
           {t('admin.settings.logoAndName')}
         </h3>
@@ -260,7 +260,7 @@ export function BrandingTab({ accentColor = '#3b82f6' }: BrandingTabProps) {
       </div>
 
       {/* Видео стартового меню бота */}
-      <div className="rounded-2xl border border-dark-700/50 bg-dark-800/50 p-6">
+      <div className="rounded-2xl bg-dark-800/50 p-6">
         <h3 className="mb-1 text-lg font-semibold text-dark-100">
           {t('admin.settings.botStartVideo')}
         </h3>
@@ -311,12 +311,12 @@ export function BrandingTab({ accentColor = '#3b82f6' }: BrandingTabProps) {
       </div>
 
       {/* Animated Background Editor */}
-      <div className="rounded-2xl border border-dark-700/50 bg-dark-800/50 p-6">
+      <div className="rounded-2xl bg-dark-800/50 p-6">
         <BackgroundEditor />
       </div>
 
       {/* Fullscreen & Email toggles */}
-      <div className="rounded-2xl border border-dark-700/50 bg-dark-800/50 p-6">
+      <div className="rounded-2xl bg-dark-800/50 p-6">
         <h3 className="mb-4 text-lg font-semibold text-dark-100">
           {t('admin.settings.interfaceOptions')}
         </h3>

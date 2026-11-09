@@ -103,7 +103,7 @@ function PurchaseCard({ item, formatPrice, lang, t }: PurchaseCardProps) {
     : null;
 
   return (
-    <div className="rounded-xl border border-dark-700/50 bg-dark-800/40 p-3 transition-colors hover:border-dark-600 sm:p-4">
+    <div className="rounded-xl bg-dark-800/40 p-3 transition-colors sm:p-4">
       {/* Mobile: stacked | Desktop: horizontal */}
       <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-4">
         {/* Status badge */}
@@ -595,7 +595,7 @@ export default function AdminLandingStats() {
                         setPurchaseOffset((prev) => Math.max(0, prev - PURCHASES_PAGE_SIZE))
                       }
                       disabled={purchaseOffset === 0}
-                      className="flex items-center gap-1 rounded-lg border border-dark-700 bg-dark-800 px-3 py-1.5 text-sm text-dark-300 transition-colors hover:border-dark-600 hover:text-dark-100 disabled:cursor-not-allowed disabled:opacity-40"
+                      className="flex items-center gap-1 rounded-lg bg-dark-800 px-3 py-1.5 text-sm text-dark-300 transition-colors hover:text-dark-100 disabled:cursor-not-allowed disabled:opacity-40"
                       aria-label={t('admin.landings.purchases.prev')}
                     >
                       <ChevronLeftSmall />
@@ -612,7 +612,7 @@ export default function AdminLandingStats() {
                     <button
                       onClick={() => setPurchaseOffset((prev) => prev + PURCHASES_PAGE_SIZE)}
                       disabled={purchaseOffset + PURCHASES_PAGE_SIZE >= purchaseTotal}
-                      className="flex items-center gap-1 rounded-lg border border-dark-700 bg-dark-800 px-3 py-1.5 text-sm text-dark-300 transition-colors hover:border-dark-600 hover:text-dark-100 disabled:cursor-not-allowed disabled:opacity-40"
+                      className="flex items-center gap-1 rounded-lg bg-dark-800 px-3 py-1.5 text-sm text-dark-300 transition-colors hover:text-dark-100 disabled:cursor-not-allowed disabled:opacity-40"
                       aria-label={t('admin.landings.purchases.next')}
                     >
                       <span className="hidden sm:inline">{t('admin.landings.purchases.next')}</span>

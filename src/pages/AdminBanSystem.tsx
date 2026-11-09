@@ -379,14 +379,14 @@ export default function AdminBanSystem() {
       <div className="flex min-h-[60vh] animate-fade-in items-center justify-center">
         <div className="mx-4 w-full max-w-md">
           {/* Card */}
-          <div className="rounded-2xl border border-dark-700 bg-dark-800/50 p-8 text-center shadow-2xl backdrop-blur-xl">
+          <div className="rounded-2xl bg-dark-800/50 p-8 text-center shadow-2xl backdrop-blur-xl">
             {/* Icon */}
             <div className="mb-6 flex justify-center">
               <div className="relative">
                 <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br from-error-500/20 to-warning-500/20">
                   <ExclamationIcon className="h-10 w-10 text-error-400" />
                 </div>
-                <div className="absolute -bottom-1 -right-1 flex h-6 w-6 items-center justify-center rounded-full border border-dark-600 bg-dark-800">
+                <div className="absolute -bottom-1 -right-1 flex h-6 w-6 items-center justify-center rounded-full bg-dark-800">
                   <SettingsIcon className="h-3.5 w-3.5 text-dark-400" />
                 </div>
               </div>
@@ -419,7 +419,7 @@ export default function AdminBanSystem() {
               {/* Back Button */}
               <button
                 onClick={() => window.history.back()}
-                className="flex w-full items-center justify-center gap-2 rounded-lg border border-dark-600 bg-dark-700 px-4 py-2 text-sm font-medium text-dark-200 transition-all duration-200 hover:border-dark-500 hover:bg-dark-600 hover:text-dark-100"
+                className="flex w-full items-center justify-center gap-2 rounded-lg bg-dark-700 px-4 py-2 text-sm font-medium text-dark-200 transition-all duration-200 hover:bg-dark-600 hover:text-dark-100"
               >
                 <BackIcon className="h-5 w-5" />
                 {t('common.back')}
@@ -576,7 +576,7 @@ export default function AdminBanSystem() {
               </div>
 
               {/* Users Table */}
-              <div className="overflow-x-auto rounded-xl border border-dark-700 bg-dark-800/50">
+              <div className="overflow-x-auto rounded-xl bg-dark-800/50">
                 <table className="w-full min-w-[36rem]">
                   <thead>
                     <tr className="border-b border-dark-700">
@@ -649,7 +649,7 @@ export default function AdminBanSystem() {
 
           {/* Punishments Tab */}
           {activeTab === 'punishments' && (
-            <div className="overflow-x-auto rounded-xl border border-dark-700 bg-dark-800/50">
+            <div className="overflow-x-auto rounded-xl bg-dark-800/50">
               <table className="w-full min-w-[36rem]">
                 <thead>
                   <tr className="border-b border-dark-700">
@@ -796,7 +796,7 @@ export default function AdminBanSystem() {
               )}
 
               {/* Agents List */}
-              <div className="overflow-x-auto rounded-xl border border-dark-700 bg-dark-800/50">
+              <div className="overflow-x-auto rounded-xl bg-dark-800/50">
                 <table className="w-full min-w-[36rem]">
                   <thead>
                     <tr className="border-b border-dark-700">
@@ -879,7 +879,7 @@ export default function AdminBanSystem() {
 
           {/* Violations Tab */}
           {activeTab === 'violations' && (
-            <div className="overflow-x-auto rounded-xl border border-dark-700 bg-dark-800/50">
+            <div className="overflow-x-auto rounded-xl bg-dark-800/50">
               <table className="w-full min-w-[36rem]">
                 <thead>
                   <tr className="border-b border-dark-700">
@@ -952,7 +952,7 @@ export default function AdminBanSystem() {
 
               {/* Top Users by Traffic */}
               {traffic.top_users && traffic.top_users.length > 0 && (
-                <div className="overflow-x-auto rounded-xl border border-dark-700 bg-dark-800/50">
+                <div className="overflow-x-auto rounded-xl bg-dark-800/50">
                   <div className="border-b border-dark-700 p-4">
                     <h3 className="text-sm font-medium text-dark-200">
                       {t('banSystem.traffic.topUsers')}
@@ -1007,7 +1007,7 @@ export default function AdminBanSystem() {
 
               {/* Recent Violations */}
               {traffic.recent_violations && traffic.recent_violations.length > 0 && (
-                <div className="overflow-x-auto rounded-xl border border-dark-700 bg-dark-800/50">
+                <div className="overflow-x-auto rounded-xl bg-dark-800/50">
                   <div className="border-b border-dark-700 p-4">
                     <h3 className="text-sm font-medium text-dark-200">
                       {t('banSystem.traffic.recentViolations')}
@@ -1092,7 +1092,7 @@ export default function AdminBanSystem() {
 
                   {/* Top Violators */}
                   {report.top_violators && report.top_violators.length > 0 && (
-                    <div className="overflow-x-auto rounded-xl border border-dark-700 bg-dark-800/50">
+                    <div className="overflow-x-auto rounded-xl bg-dark-800/50">
                       <div className="border-b border-dark-700 p-4">
                         <h3 className="text-sm font-medium text-dark-200">
                           {t('banSystem.reports.topViolators')}
@@ -1174,10 +1174,7 @@ export default function AdminBanSystem() {
                 });
 
                 return sortedCategories.map((category) => (
-                  <div
-                    key={category}
-                    className="overflow-hidden rounded-xl border border-dark-700 bg-dark-800/50"
-                  >
+                  <div key={category} className="overflow-hidden rounded-xl bg-dark-800/50">
                     <div className="border-b border-dark-700 p-4">
                       <h3 className="text-sm font-medium text-dark-200">
                         {formatCategory(category)}
@@ -1291,7 +1288,7 @@ export default function AdminBanSystem() {
           {activeTab === 'health' && health && (
             <div className="space-y-4">
               {/* Overall Status */}
-              <div className="rounded-xl border border-dark-700 bg-dark-800/50 p-4">
+              <div className="rounded-xl bg-dark-800/50 p-4">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div
@@ -1390,7 +1387,7 @@ export default function AdminBanSystem() {
             aria-modal="true"
             aria-labelledby="ban-user-detail-title"
             tabIndex={-1}
-            className="max-h-[80vh] w-full max-w-2xl overflow-y-auto rounded-xl border border-dark-700 bg-dark-800"
+            className="max-h-[80vh] w-full max-w-2xl overflow-y-auto rounded-xl bg-dark-800"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between border-b border-dark-700 p-4">

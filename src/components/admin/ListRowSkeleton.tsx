@@ -28,7 +28,7 @@ export function ListRowSkeleton({ count = 3, actions = DEFAULT_ACTIONS }: ListRo
   return (
     <SkeletonGroup className="space-y-3">
       {Array.from({ length: count }).map((_, i) => (
-        <div key={i} className="rounded-xl border border-dark-700 bg-dark-800/50 p-4">
+        <div key={i} className="rounded-xl bg-dark-800/50 p-4">
           <div className="flex items-start gap-4">
             <div className="min-w-0 flex-1 space-y-2">
               <div className="flex gap-2">

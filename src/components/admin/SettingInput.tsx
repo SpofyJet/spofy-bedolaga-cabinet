@@ -185,7 +185,7 @@ export function SettingInput({ setting, onUpdate, disabled }: SettingInputProps)
       <button
         onClick={handleStart}
         disabled={disabled}
-        className="group w-full rounded-xl border border-dark-600 bg-dark-700/50 px-4 py-3 text-left font-mono text-sm text-dark-200 transition-colors hover:border-dark-500 hover:bg-dark-700 disabled:opacity-50"
+        className="group w-full rounded-xl bg-dark-700/50 px-4 py-3 text-left font-mono text-sm text-dark-200 transition-colors hover:bg-dark-700 disabled:opacity-50"
       >
         <div className="flex items-start justify-between gap-2">
           <span className="line-clamp-2 flex-1 break-all">{previewValue}</span>
@@ -202,7 +202,7 @@ export function SettingInput({ setting, onUpdate, disabled }: SettingInputProps)
     <button
       onClick={handleStart}
       disabled={disabled}
-      className="group flex min-w-[100px] max-w-[200px] items-center gap-2 truncate rounded-lg border border-dark-600 bg-dark-700 px-3 py-2.5 text-left font-mono text-sm text-dark-200 transition-colors hover:border-dark-500 hover:bg-dark-600 disabled:opacity-50"
+      className="group flex min-w-[100px] max-w-[200px] items-center gap-2 truncate rounded-lg bg-dark-700 px-3 py-2.5 text-left font-mono text-sm text-dark-200 transition-colors hover:bg-dark-600 disabled:opacity-50"
     >
       <span className="flex-1 truncate">{currentValue || '-'}</span>
       <span className="text-dark-500 opacity-0 transition-colors group-focus-within:text-accent-400 group-focus-within:opacity-100 group-hover:text-accent-400 group-hover:opacity-100 [@media(hover:none)]:opacity-100">

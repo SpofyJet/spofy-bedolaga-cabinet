@@ -1,3 +1,4 @@
+import { ListSkeleton } from '@/components/ui/skeleton';
 import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router';
 import { backTo } from '@/components/admin';
@@ -192,7 +193,7 @@ export default function AdminPayments() {
           {!capabilities.hasBackButton && (
             <button
               onClick={() => navigate('/admin')}
-              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-dark-700 bg-dark-800 transition-colors hover:border-dark-600"
+              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-dark-800 transition-colors"
             >
               <BackIcon />
             </button>
@@ -409,7 +410,7 @@ export default function AdminPayments() {
           </div>
         ) : isLoading ? (
           <div className="flex items-center justify-center py-12">
-            <div className="h-8 w-8 animate-spin rounded-full border-2 border-accent-500 border-t-transparent" />
+            <ListSkeleton />
           </div>
         ) : payments?.items && payments.items.length > 0 ? (
           <div className="space-y-3">
@@ -419,10 +420,7 @@ export default function AdminPayments() {
               const isCancelled = payment.status.toLowerCase().includes('cancel');
 
               return (
-                <div
-                  key={paymentKey}
-                  className="rounded-xl border border-dark-700/30 bg-dark-800/30 p-4"
-                >
+                <div key={paymentKey} className="rounded-xl bg-dark-800/30 p-4">
                   <div className="flex flex-wrap items-start justify-between gap-4">
                     <div className="min-w-0 flex-1 basis-60">
                       {/* Status badge + method */}

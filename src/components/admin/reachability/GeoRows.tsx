@@ -191,7 +191,7 @@ export function GeoRows({ rows, job = null, recheck = null }: GeoRowsProps) {
       </div>
       <ul className="space-y-2 md:hidden">
         {rows.map((row) => (
-          <li key={rowKey(row)} className="rounded-xl border border-dark-700/60 bg-dark-900/30 p-3">
+          <li key={rowKey(row)} className="rounded-xl bg-dark-900/30 p-3">
             <div className="flex items-start justify-between gap-3">
               <span className="min-w-0">
                 <span className="block text-sm font-medium text-dark-100">

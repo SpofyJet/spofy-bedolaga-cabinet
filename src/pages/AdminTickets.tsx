@@ -1,3 +1,4 @@
+import { ListSkeleton } from '@/components/ui/skeleton';
 import { useState, useRef, useEffect } from 'react';
 import logger from '../utils/logger';
 import { linkifyText } from '../utils/linkify';
@@ -290,7 +291,7 @@ export default function AdminTickets() {
           {!capabilities.hasBackButton && (
             <button
               onClick={() => navigate('/admin')}
-              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-dark-700 bg-dark-800 transition-colors hover:border-dark-600"
+              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-dark-800 transition-colors"
             >
               <BackIcon />
             </button>
@@ -465,7 +466,7 @@ export default function AdminTickets() {
             </div>
           ) : ticketLoading ? (
             <div className="flex justify-center py-12">
-              <div className="h-8 w-8 animate-spin rounded-full border-2 border-accent-500 border-t-transparent" />
+              <ListSkeleton />
             </div>
           ) : selectedTicket ? (
             <div className="flex h-full flex-col">
@@ -544,7 +545,7 @@ export default function AdminTickets() {
                     className={`rounded-xl p-4 ${
                       msg.is_from_admin
                         ? 'ml-4 border border-accent-500/20 bg-accent-500/10'
-                        : 'mr-4 border border-dark-700/30 bg-dark-800/50'
+                        : 'mr-4 bg-dark-800/50'
                     }`}
                   >
                     <div className="mb-2 flex items-center justify-between">

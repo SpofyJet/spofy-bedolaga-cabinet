@@ -95,7 +95,7 @@ export default function AdminPartners() {
       )}
 
       {/* Tabs */}
-      <div className="mb-4 flex gap-1 rounded-lg border border-dark-700 bg-dark-800/40 p-1">
+      <div className="mb-4 flex gap-1 rounded-lg bg-dark-800/40 p-1">
         <button
           onClick={() => setActiveTab('partners')}
           className={`flex-1 rounded-md px-4 py-2 text-sm font-medium transition-colors ${
@@ -139,7 +139,7 @@ export default function AdminPartners() {
               <button
                 key={partner.user_id}
                 onClick={() => navigate(`/admin/partners/${partner.user_id}`)}
-                className="w-full rounded-xl border border-dark-700 bg-dark-800 p-4 text-left transition-colors hover:border-dark-600"
+                className="w-full rounded-xl bg-dark-800 p-4 text-left transition-colors"
               >
                 <div className="flex items-start justify-between gap-4">
                   <div className="min-w-0 flex-1">
@@ -187,7 +187,7 @@ export default function AdminPartners() {
         ) : (
           <div className="space-y-3">
             {applications.map((app: AdminPartnerApplicationItem) => (
-              <div key={app.id} className="rounded-xl border border-dark-700 bg-dark-800 p-4">
+              <div key={app.id} className="rounded-xl bg-dark-800 p-4">
                 <div className="mb-3 flex items-start justify-between gap-4">
                   <div className="min-w-0 flex-1">
                     <div className="mb-1 flex min-w-0 flex-wrap items-baseline gap-x-2">

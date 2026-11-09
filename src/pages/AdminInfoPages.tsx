@@ -35,7 +35,7 @@ const PageRow = memo(function PageRow({
   const resolvedTitle = page.title[locale] || page.title.ru || page.title.en || '';
 
   return (
-    <div className="rounded-xl border border-dark-700 bg-dark-800/50 p-4 transition-all hover:border-dark-600">
+    <div className="rounded-xl bg-dark-800/50 p-4 transition-all">
       {/* На телефоне кнопки — отдельной строкой: рядом с ними заголовку оставалось 72 px. */}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:gap-4">
         <div className="min-w-0 flex-1">
@@ -309,7 +309,7 @@ export default function AdminInfoPages() {
       ) : items.length === 0 &&
         legacyPages.length === 0 &&
         (activeFilter === 'page' || (!legacy.isLoading && !legacy.isError)) ? (
-        <div className="flex flex-col items-center rounded-xl border border-dark-700 bg-dark-800/50 p-8 text-center text-dark-400">
+        <div className="flex flex-col items-center rounded-xl bg-dark-800/50 p-8 text-center text-dark-400">
           <FileTextIcon className="h-6 w-6" />
           <p className="mt-2">{t('admin.infoPages.noPages')}</p>
         </div>

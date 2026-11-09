@@ -96,7 +96,7 @@ function GlobalSettingsSection() {
   }
 
   return (
-    <div className="rounded-xl border border-dark-700 bg-dark-800/50 p-4">
+    <div className="rounded-xl bg-dark-800/50 p-4">
       <div className="mb-4 flex items-center gap-2.5">
         <div className="text-dark-300">
           <SettingsIcon />
@@ -674,7 +674,7 @@ export default function AdminChannelSubscriptions() {
           <Skeleton variant="card" count={3} className="h-16" />
         </SkeletonGroup>
       ) : channels.length === 0 ? (
-        <div className="rounded-xl border border-dark-700 bg-dark-800/50 p-8 text-center text-dark-400">
+        <div className="rounded-xl bg-dark-800/50 p-8 text-center text-dark-400">
           <div className="mx-auto mb-2 w-fit">
             <ChannelIcon className="h-6 w-6" />
           </div>

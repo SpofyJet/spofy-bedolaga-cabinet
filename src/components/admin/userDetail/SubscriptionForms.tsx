@@ -19,10 +19,7 @@ interface FormBaseProps<T> {
 
 function InlineForm({ id, hint, children }: { id?: string; hint?: string; children: ReactNode }) {
   return (
-    <div
-      id={id}
-      className="flex scroll-mt-24 flex-col gap-2 rounded-xl border border-dark-700 bg-dark-800/60 p-3"
-    >
+    <div id={id} className="flex scroll-mt-24 flex-col gap-2 rounded-xl bg-dark-800/60 p-3">
       <div className="flex flex-wrap items-end gap-2">{children}</div>
       {hint && <p className="text-xs text-dark-500">{hint}</p>}
     </div>

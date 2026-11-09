@@ -23,7 +23,7 @@ export function LegacyFaqList({ pages }: { pages: LegacyFaqPage[] }) {
     <section className="space-y-3" aria-label={t('admin.infoPages.botFaq')}>
       <h2 className="text-lg font-semibold text-dark-100">{t('admin.infoPages.botFaq')}</h2>
       {pages.map((page) => (
-        <div key={page.id} className="rounded-xl border border-dark-700 bg-dark-800/50 p-4">
+        <div key={page.id} className="rounded-xl bg-dark-800/50 p-4">
           {draft?.id === page.id ? (
             <form
               className="space-y-4"

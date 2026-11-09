@@ -103,7 +103,7 @@ export function GeoCheckModal({ node, onClose }: GeoCheckModalProps) {
         aria-labelledby="geocheck-modal-title"
         tabIndex={-1}
         className={cn(
-          'relative flex w-full flex-col border border-dark-700 bg-dark-900 shadow-2xl',
+          'relative flex w-full flex-col bg-dark-900 shadow-2xl',
           // max-h-full, а не 100dvh: отступы safe-зон уже урезали контейнер,
           // и абсолютная высота вылезала бы за них.
           fullscreen

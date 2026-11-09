@@ -234,7 +234,7 @@ function DiscountCard({
 
       {canSend &&
         (formOpen ? (
-          <div className="flex flex-col gap-3 rounded-xl border border-dark-700 bg-dark-800/60 p-3">
+          <div className="flex flex-col gap-3 rounded-xl bg-dark-800/60 p-3">
             <div className="grid grid-cols-2 gap-3">
               <label htmlFor={percentId} className="flex flex-col gap-1 text-xs text-dark-500">
                 {t(`${ns}.discountPercent`)}

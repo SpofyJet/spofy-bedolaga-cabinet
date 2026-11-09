@@ -90,7 +90,7 @@ export function PeriodSelector({
       </div>
       <button
         onClick={onToggleDateMode}
-        className="rounded-lg border border-dark-700 bg-dark-800 p-1.5 text-dark-400 transition-colors hover:border-dark-600 hover:bg-dark-700 hover:text-dark-200"
+        className="rounded-lg bg-dark-800 p-1.5 text-dark-400 transition-colors hover:bg-dark-700 hover:text-dark-200"
         title={t('admin.trafficUsage.customDates')}
       >
         <CalendarIcon className="h-4 w-4" />

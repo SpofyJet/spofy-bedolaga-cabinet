@@ -145,7 +145,7 @@ export default function AdminCouponDetail() {
         {!capabilities.hasBackButton && (
           <button
             onClick={() => navigate('/admin/coupons')}
-            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-dark-700 bg-dark-800 transition-colors hover:border-dark-600"
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-dark-800 transition-colors"
           >
             <BackIcon />
           </button>
@@ -188,7 +188,7 @@ export default function AdminCouponDetail() {
       </div>
 
       {/* Info card */}
-      <div className="mb-6 space-y-2 rounded-xl border border-dark-700 bg-dark-800 p-4 text-sm">
+      <div className="mb-6 space-y-2 rounded-xl bg-dark-800 p-4 text-sm">
         <div className="flex justify-between gap-4">
           <span className="text-dark-400">{t('admin.coupons.detail.total')}</span>
           <span className="text-dark-100">{batch.coupons_total}</span>
@@ -225,7 +225,7 @@ export default function AdminCouponDetail() {
 
       {/* Links */}
       {hasActive && links && (
-        <div className="mb-6 rounded-xl border border-dark-700 bg-dark-800 p-4">
+        <div className="mb-6 rounded-xl bg-dark-800 p-4">
           <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
             <span className="text-sm font-medium text-dark-200">
               {t('admin.coupons.detail.linksTitle', { count: links.count })}

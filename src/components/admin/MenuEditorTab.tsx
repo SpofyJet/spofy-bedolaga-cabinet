@@ -425,7 +425,7 @@ function InlineAddPanel({ rowId, usedBuiltinIds, onAddBuiltin, onAddCustom }: In
   }
 
   return (
-    <div className="space-y-1 rounded-xl border border-dark-700/50 bg-dark-900/30 p-2">
+    <div className="space-y-1 rounded-xl bg-dark-900/30 p-2">
       {availableBuiltins.length > 0 && (
         <>
           <p className="px-2 pb-0.5 text-xs font-medium text-dark-500">

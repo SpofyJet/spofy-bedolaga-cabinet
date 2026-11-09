@@ -185,7 +185,7 @@ function DistrictRow({ district, selected, onToggleDistrict, onToggleUnit }: Dis
   const alive = district.units.filter((unit) => unit.probeable);
   const chosen = alive.filter((unit) => selected.includes(unit.op_key)).length;
   return (
-    <li className="rounded-xl border border-dark-700/40 bg-dark-900/30 p-1.5 sm:flex sm:items-start sm:gap-2">
+    <li className="rounded-xl bg-dark-900/30 p-1.5 sm:flex sm:items-start sm:gap-2">
       <button
         type="button"
         aria-pressed={state === 'all'}

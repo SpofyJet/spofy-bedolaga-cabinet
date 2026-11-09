@@ -165,7 +165,7 @@ export default function AdminPromocodeStats() {
         </div>
 
         {/* Details */}
-        <div className="rounded-xl border border-dark-700 bg-dark-800/50 p-4">
+        <div className="rounded-xl bg-dark-800/50 p-4">
           <h4 className="mb-4 font-medium text-dark-200">{t('admin.promocodes.stats.details')}</h4>
           <div className="grid grid-cols-1 gap-3 text-sm sm:grid-cols-2">
             <div className="flex justify-between rounded-lg bg-dark-700/50 p-3">
@@ -243,7 +243,7 @@ export default function AdminPromocodeStats() {
         </div>
 
         {/* Usage History */}
-        <div className="rounded-xl border border-dark-700 bg-dark-800/50 p-4">
+        <div className="rounded-xl bg-dark-800/50 p-4">
           <h4 className="mb-4 flex items-center gap-2 font-medium text-dark-200">
             <ClockIcon className="h-4 w-4" />
             {t('admin.promocodes.stats.usageHistory')}

@@ -416,7 +416,7 @@ export default function AdminReferralLevels() {
                 onClick={() =>
                   save(level.level, { reward_mode: cycle(REWARD_MODES, level.reward_mode) })
                 }
-                className="rounded-xl border border-dark-700/30 bg-dark-800/30 p-3 text-left"
+                className="rounded-xl bg-dark-800/30 p-3 text-left"
               >
                 <div className="text-xs text-dark-500">
                   {t('admin.referralLevels.activeBonuses')}
@@ -429,7 +429,7 @@ export default function AdminReferralLevels() {
               <button
                 type="button"
                 onClick={() => save(level.level, { trigger: cycle(TRIGGERS, level.trigger) })}
-                className="rounded-xl border border-dark-700/30 bg-dark-800/30 p-3 text-left"
+                className="rounded-xl bg-dark-800/30 p-3 text-left"
               >
                 <div className="text-xs text-dark-500">{t('admin.referralLevels.trigger')}</div>
                 <div className="font-medium text-dark-100">
@@ -656,7 +656,7 @@ function NumberField({
           }
           onCommit(stored || null);
         }}
-        className="w-full rounded-lg border border-dark-700 bg-dark-800 px-3 py-2 text-dark-100 disabled:opacity-40"
+        className="w-full rounded-lg bg-dark-800 px-3 py-2 text-dark-100 disabled:opacity-40"
       />
     </label>
   );
@@ -684,7 +684,7 @@ function TariffSelect({
         value={value ?? ''}
         disabled={disabled}
         onChange={(e) => onChange(e.target.value === '' ? null : Number(e.target.value))}
-        className="w-full rounded-lg border border-dark-700 bg-dark-800 px-3 py-2 text-dark-100 disabled:opacity-40"
+        className="w-full rounded-lg bg-dark-800 px-3 py-2 text-dark-100 disabled:opacity-40"
       >
         <option value="">{noneLabel}</option>
         {options.map((tariff) => (

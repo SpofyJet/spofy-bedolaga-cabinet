@@ -144,7 +144,7 @@ function IpTagInput({ values, onChange }: IpTagInputProps) {
   );
 
   return (
-    <div className="flex flex-wrap items-center gap-1.5 rounded-lg border border-dark-600 bg-dark-900 px-3 py-2">
+    <div className="flex flex-wrap items-center gap-1.5 rounded-lg bg-dark-900 px-3 py-2">
       {values.map((ip) => (
         <span
           key={ip}
@@ -182,7 +182,7 @@ interface ConditionToggleProps {
 
 function ConditionToggle({ label, enabled, onToggle, children }: ConditionToggleProps) {
   return (
-    <div className="rounded-lg border border-dark-700/50 bg-dark-800/30">
+    <div className="rounded-lg bg-dark-800/30">
       <button
         type="button"
         onClick={onToggle}
@@ -396,7 +396,7 @@ export default function AdminPolicyEdit() {
       {/* Form */}
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Basic info */}
-        <div className="rounded-xl border border-dark-700 bg-dark-800 p-4 sm:p-6">
+        <div className="rounded-xl bg-dark-800 p-4 sm:p-6">
           <div className="space-y-4">
             {/* Name */}
             <div>
@@ -466,7 +466,7 @@ export default function AdminPolicyEdit() {
         </div>
 
         {/* Resource & Actions */}
-        <div className="rounded-xl border border-dark-700 bg-dark-800 p-4 sm:p-6">
+        <div className="rounded-xl bg-dark-800 p-4 sm:p-6">
           <div className="space-y-4">
             {/* Resource dropdown */}
             <div>
@@ -497,7 +497,7 @@ export default function AdminPolicyEdit() {
                 <label className="mb-1 block text-sm font-medium text-dark-200">
                   {t('admin.policies.form.actions')}
                 </label>
-                <div className="flex flex-wrap gap-2 rounded-lg border border-dark-600 bg-dark-900/50 p-3">
+                <div className="flex flex-wrap gap-2 rounded-lg bg-dark-900/50 p-3">
                   {selectedResourceActions.map((action) => {
                     const selected = formData.actions.includes(action);
                     return (
@@ -574,7 +574,7 @@ export default function AdminPolicyEdit() {
         </div>
 
         {/* Conditions */}
-        <div className="rounded-xl border border-dark-700 bg-dark-800 p-4 sm:p-6">
+        <div className="rounded-xl bg-dark-800 p-4 sm:p-6">
           <label className="mb-3 block text-sm font-medium text-dark-200">
             {t('admin.policies.form.conditions')}
           </label>
@@ -750,7 +750,7 @@ export default function AdminPolicyEdit() {
         </div>
 
         {/* Error & Submit */}
-        <div className="rounded-xl border border-dark-700 bg-dark-800 p-4 sm:p-6">
+        <div className="rounded-xl bg-dark-800 p-4 sm:p-6">
           {formError && <p className="mb-4 text-sm text-error-400">{formError}</p>}
           <div className="flex justify-end gap-3">
             <button

@@ -93,7 +93,7 @@ function Tooltip({
   return (
     <div
       role="tooltip"
-      className="pointer-events-none absolute z-10 min-w-[180px] rounded-xl border border-dark-700/60 bg-dark-900/95 px-3 py-2.5 text-sm shadow-linear backdrop-blur"
+      className="pointer-events-none absolute z-10 min-w-[180px] rounded-xl bg-dark-900/95 px-3 py-2.5 text-sm shadow-linear backdrop-blur"
       style={{ left, top, maxWidth }}
     >
       <p className="font-semibold text-dark-50">{name}</p>
@@ -185,7 +185,7 @@ function MapBody({ map, states }: { map: RussiaMap; states: ReadonlyMap<string, 
     <div className="space-y-2">
       <div
         ref={host}
-        className="relative overflow-hidden rounded-2xl border border-dark-700/60 bg-dark-900/40 p-2"
+        className="relative overflow-hidden rounded-2xl bg-dark-900/40 p-2"
         onPointerDown={(event) => {
           touching.current = event.pointerType !== 'mouse';
         }}

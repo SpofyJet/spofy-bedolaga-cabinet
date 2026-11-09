@@ -1,3 +1,4 @@
+import { ListSkeleton } from '@/components/ui/skeleton';
 import { useState, useCallback, useRef, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
@@ -392,15 +393,15 @@ function TemplateEditor({
       {activeTab === 'preview' ? (
         <div className="space-y-2">
           {previewSubject && (
-            <div className="rounded-lg border border-dark-700 bg-dark-900/60 px-3 py-2">
+            <div className="rounded-lg bg-dark-900/60 px-3 py-2">
               <span className="text-xs text-dark-400">{t('admin.emailTemplates.subject')}: </span>
               <span className="text-sm text-dark-100">{previewSubject}</span>
             </div>
           )}
-          <div className="overflow-hidden rounded-xl border border-dark-700 bg-white">
+          <div className="overflow-hidden rounded-xl bg-white">
             {previewMutation.isPending ? (
               <div className="flex h-[420px] items-center justify-center bg-dark-800">
-                <div className="h-8 w-8 animate-spin rounded-full border-2 border-accent-500 border-t-transparent" />
+                <ListSkeleton />
               </div>
             ) : (
               <iframe
@@ -436,7 +437,7 @@ function TemplateEditor({
 
           {/* Context variables hint: type-specific + common (available in all templates) */}
           {(detail.context_vars.length > 0 || (detail.common_context_vars?.length ?? 0) > 0) && (
-            <div className="space-y-2.5 rounded-lg border border-dark-700 bg-dark-900/60 p-2.5 sm:p-3">
+            <div className="space-y-2.5 rounded-lg bg-dark-900/60 p-2.5 sm:p-3">
               {detail.context_vars.length > 0 && (
                 <div>
                   <p className="mb-1.5 text-xs font-medium text-dark-300">
@@ -538,7 +539,7 @@ function TemplateEditor({
       </div>
 
       {/* Test email */}
-      <div className="rounded-lg border border-dark-700 bg-dark-900/60 p-2.5 sm:p-3">
+      <div className="rounded-lg bg-dark-900/60 p-2.5 sm:p-3">
         <p className="mb-2 text-xs font-medium text-dark-300">
           {t('admin.emailTemplates.sendTest')}
         </p>
@@ -589,7 +590,7 @@ export default function AdminEmailTemplates() {
     <div className="mx-auto max-w-4xl space-y-4 px-3 py-4 sm:space-y-6 sm:px-4 sm:py-6">
       {/* Page Header */}
       <div className="flex items-center gap-2 sm:gap-3">
-        <AdminBackButton className="flex-shrink-0 rounded-xl border border-dark-700 bg-dark-800 p-1.5 transition-colors hover:bg-dark-700 sm:p-2" />
+        <AdminBackButton className="flex-shrink-0 rounded-xl bg-dark-800 p-1.5 transition-colors hover:bg-dark-700 sm:p-2" />
         <div className="flex min-w-0 items-center gap-2 sm:gap-2.5">
           <div className="flex-shrink-0 rounded-xl bg-gradient-to-br from-accent-500/20 to-accent-600/10 p-1.5 text-accent-400 sm:p-2">
             <MailIcon className="h-6 w-6" />
@@ -640,7 +641,7 @@ export default function AdminEmailTemplates() {
       {/* Detail loading overlay */}
       {selectedType && detailLoading && (
         <div className="flex items-center justify-center py-16">
-          <div className="h-8 w-8 animate-spin rounded-full border-2 border-accent-500 border-t-transparent" />
+          <ListSkeleton />
         </div>
       )}
     </div>

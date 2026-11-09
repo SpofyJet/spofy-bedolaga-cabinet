@@ -175,7 +175,7 @@ export default function AdminPaymentMethodEdit() {
           {!capabilities.hasBackButton && (
             <button
               onClick={() => navigate('/admin/payment-methods')}
-              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-dark-700 bg-dark-800 transition-colors hover:border-dark-600"
+              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-dark-800 transition-colors"
             >
               <BackIcon />
             </button>
@@ -198,7 +198,7 @@ export default function AdminPaymentMethodEdit() {
         {!capabilities.hasBackButton && (
           <button
             onClick={() => navigate('/admin/payment-methods')}
-            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-dark-700 bg-dark-800 transition-colors hover:border-dark-600"
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-dark-800 transition-colors"
           >
             <BackIcon />
           </button>
@@ -327,9 +327,7 @@ export default function AdminPaymentMethodEdit() {
                     <span className="text-sm">{opt.name}</span>
                     <div
                       className={`flex h-5 w-5 shrink-0 items-center justify-center rounded ${
-                        enabled
-                          ? 'bg-accent-500 text-on-accent'
-                          : 'border border-dark-600 bg-dark-700'
+                        enabled ? 'bg-accent-500 text-on-accent' : 'bg-dark-700'
                       }`}
                     >
                       {enabled && <CheckIcon />}
@@ -440,7 +438,7 @@ export default function AdminPaymentMethodEdit() {
                   className={`flex-1 rounded-xl px-3 py-2 text-sm font-medium transition-all ${
                     userTypeFilter === val
                       ? 'border border-accent-500/40 bg-accent-500/20 text-accent-300'
-                      : 'border border-dark-700 bg-dark-900/50 text-dark-400 hover:border-dark-600'
+                      : 'bg-dark-900/50 text-dark-400'
                   }`}
                 >
                   {val === 'all'
@@ -466,7 +464,7 @@ export default function AdminPaymentMethodEdit() {
                   className={`flex-1 rounded-xl px-3 py-2 text-sm font-medium transition-all ${
                     firstTopupFilter === val
                       ? 'border border-accent-500/40 bg-accent-500/20 text-accent-300'
-                      : 'border border-dark-700 bg-dark-900/50 text-dark-400 hover:border-dark-600'
+                      : 'bg-dark-900/50 text-dark-400'
                   }`}
                 >
                   {val === 'any'
@@ -492,7 +490,7 @@ export default function AdminPaymentMethodEdit() {
                   className={`flex-1 rounded-xl px-3 py-2 text-sm font-medium transition-all ${
                     promoGroupFilterMode === val
                       ? 'border border-accent-500/40 bg-accent-500/20 text-accent-300'
-                      : 'border border-dark-700 bg-dark-900/50 text-dark-400 hover:border-dark-600'
+                      : 'bg-dark-900/50 text-dark-400'
                   }`}
                 >
                   {val === 'all'
@@ -503,7 +501,7 @@ export default function AdminPaymentMethodEdit() {
             </div>
 
             {promoGroupFilterMode === 'selected' && (
-              <div className="max-h-48 space-y-1.5 overflow-y-auto rounded-xl border border-dark-700/50 bg-dark-900/30 p-3">
+              <div className="max-h-48 space-y-1.5 overflow-y-auto rounded-xl bg-dark-900/30 p-3">
                 {promoGroups.length === 0 ? (
                   <p className="py-2 text-center text-sm text-dark-500">
                     {t('admin.paymentMethods.noPromoGroups')}

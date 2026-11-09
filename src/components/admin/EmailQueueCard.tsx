@@ -91,7 +91,7 @@ export function EmailQueueCard() {
   // её ищут глазами в разделе писем, и «ничего нет» неотличимо от «раздела нет».
   if (isLoading) {
     return (
-      <div className="rounded-xl border border-dark-700 bg-dark-800 p-3 sm:p-4">
+      <div className="rounded-xl bg-dark-800 p-3 sm:p-4">
         <Skeleton className="h-5 w-40" />
       </div>
     );
@@ -99,7 +99,7 @@ export function EmailQueueCard() {
 
   if (isError || !data) {
     return (
-      <div className="rounded-xl border border-dark-700 bg-dark-800 p-3 text-xs text-dark-400 sm:p-4">
+      <div className="rounded-xl bg-dark-800 p-3 text-xs text-dark-400 sm:p-4">
         {t(
           'admin.emailQueue.unavailable',
           'Состояние очереди писем недоступно. Возможно, бот ещё не обновлён.',
@@ -122,7 +122,7 @@ export function EmailQueueCard() {
   const visible = data.items.slice(0, MAX_VISIBLE_ITEMS);
 
   return (
-    <div className="rounded-xl border border-dark-700 bg-dark-800 p-3 sm:p-4">
+    <div className="rounded-xl bg-dark-800 p-3 sm:p-4">
       <div className="flex items-center gap-2">
         <ClockIcon className="h-5 w-5 flex-shrink-0 text-dark-400" />
         <h2 className="text-sm font-semibold text-dark-100">

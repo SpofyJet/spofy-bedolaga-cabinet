@@ -233,7 +233,7 @@ export function ColoredItemCombobox({
       {isOpen && (
         <div
           className={cn(
-            'absolute left-0 right-0 z-50 mt-2 overflow-hidden rounded-xl border border-dark-700 bg-dark-900/95 shadow-xl shadow-black/30 backdrop-blur-lg',
+            'absolute left-0 right-0 z-50 mt-2 overflow-hidden rounded-xl bg-dark-900/95 shadow-xl shadow-black/30 backdrop-blur-lg',
           )}
           role="listbox"
           onKeyDown={handleKeyDown}

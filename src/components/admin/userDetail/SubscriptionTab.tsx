@@ -248,7 +248,7 @@ function SubscriptionList({
           key={sub.id}
           type="button"
           onClick={() => onOpen(sub.id)}
-          className="flex w-full items-center gap-3 rounded-2xl border border-dark-700/60 bg-dark-900/40 p-4 text-left transition-colors hover:bg-dark-800/60"
+          className="flex w-full items-center gap-3 rounded-2xl bg-dark-900/40 p-4 text-left transition-colors hover:bg-dark-800/60"
         >
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap items-center gap-2">

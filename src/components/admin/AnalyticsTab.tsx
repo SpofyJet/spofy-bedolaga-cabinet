@@ -71,7 +71,7 @@ export function AnalyticsTab() {
       )}
 
       {/* Yandex Metrika */}
-      <div className="rounded-2xl border border-dark-700/50 bg-dark-800/50 p-6">
+      <div className="rounded-2xl bg-dark-800/50 p-6">
         <div className="mb-1 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-warning-500/20 to-error-500/20">
@@ -187,7 +187,7 @@ export function AnalyticsTab() {
                 {analytics.offline_conv_goals.map((goal) => (
                   <div
                     key={goal.event_id}
-                    className="flex items-center justify-between rounded-xl border border-dark-700/30 bg-dark-900/40 px-4 py-2.5"
+                    className="flex items-center justify-between rounded-xl bg-dark-900/40 px-4 py-2.5"
                   >
                     <div className="flex items-center gap-3">
                       <span className="inline-flex h-2 w-2 rounded-full bg-success-400" />
@@ -208,7 +208,7 @@ export function AnalyticsTab() {
       </div>
 
       {/* Google Ads */}
-      <div className="rounded-2xl border border-dark-700/50 bg-dark-800/50 p-6">
+      <div className="rounded-2xl bg-dark-800/50 p-6">
         <div className="mb-1 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-accent-500/20 to-success-500/20">
@@ -341,7 +341,7 @@ export function AnalyticsTab() {
       </div>
 
       {/* Info block */}
-      <div className="rounded-2xl border border-dark-700/30 bg-dark-800/30 p-4">
+      <div className="rounded-2xl bg-dark-800/30 p-4">
         <p className="text-sm leading-relaxed text-dark-500">{t('admin.settings.analyticsHint')}</p>
       </div>
     </div>

@@ -108,7 +108,7 @@ export function SubscriptionSourcePicker({
             className="input min-h-[36px] w-full py-1.5 text-sm"
           />
           {query.length >= 2 && (users.data?.users.length ?? 0) > 0 && (
-            <ul className="absolute z-20 mt-1 w-full overflow-hidden rounded-xl border border-dark-700/60 bg-dark-900 shadow-linear">
+            <ul className="absolute z-20 mt-1 w-full overflow-hidden rounded-xl bg-dark-900 shadow-linear">
               {users.data?.users.map((user) => (
                 <li key={user.id}>
                   <button

@@ -67,7 +67,7 @@ interface SectionProps {
 
 function Section({ title, open, onToggle, children }: SectionProps) {
   return (
-    <div className="overflow-hidden rounded-xl border border-dark-700 bg-dark-900/50">
+    <div className="overflow-hidden rounded-xl bg-dark-900/50">
       <button
         onClick={onToggle}
         className="flex w-full items-center justify-between px-4 py-3 text-start text-sm font-medium text-dark-100 hover:bg-dark-800/50"
@@ -569,7 +569,7 @@ export default function AdminLandingEditor() {
           {!capabilities.hasBackButton && (
             <button
               onClick={() => navigate('/admin/landings')}
-              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-dark-700 bg-dark-800 transition-colors hover:border-dark-600"
+              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-dark-800 transition-colors"
             >
               <BackIcon />
             </button>
@@ -581,7 +581,7 @@ export default function AdminLandingEditor() {
         <div className="flex items-center gap-2">
           <button
             onClick={() => navigate('/admin/landings')}
-            className="rounded-lg border border-dark-700 bg-dark-800 px-4 py-2 text-sm text-dark-300 transition-colors hover:border-dark-600"
+            className="rounded-lg bg-dark-800 px-4 py-2 text-sm text-dark-300 transition-colors"
           >
             {t('admin.landings.back')}
           </button>
@@ -741,7 +741,7 @@ export default function AdminLandingEditor() {
           <div className="space-y-3">
             <p className="text-sm text-dark-500">{t('admin.landings.selectTariffs')}</p>
             {allTariffs.map((tariff: TariffListItem) => (
-              <div key={tariff.id} className="rounded-lg border border-dark-700 bg-dark-800/50 p-3">
+              <div key={tariff.id} className="rounded-lg bg-dark-800/50 p-3">
                 <label className="flex items-center gap-3">
                   <input
                     type="checkbox"
@@ -845,7 +845,7 @@ export default function AdminLandingEditor() {
                       onChange={(e) => setDiscountPercent(Number(e.target.value))}
                       className="h-2 min-w-0 flex-1 cursor-pointer appearance-none rounded-lg bg-dark-700 accent-accent-500"
                     />
-                    <div className="flex w-20 items-center rounded-lg border border-dark-700 bg-dark-800">
+                    <div className="flex w-20 items-center rounded-lg bg-dark-800">
                       <input
                         type="number"
                         min={1}
@@ -922,7 +922,7 @@ export default function AdminLandingEditor() {
                         return (
                           <div
                             key={tariffId}
-                            className="flex items-center gap-3 rounded-lg border border-dark-700 bg-dark-800/50 px-3 py-2"
+                            className="flex items-center gap-3 rounded-lg bg-dark-800/50 px-3 py-2"
                           >
                             <span className="min-w-0 flex-1 truncate text-sm text-dark-200">
                               {tariff.name}
@@ -960,7 +960,7 @@ export default function AdminLandingEditor() {
 
                 {/* Preview */}
                 {selectedTariffIds.length > 0 && (
-                  <div className="rounded-lg border border-dark-600 bg-dark-800/30 p-3">
+                  <div className="rounded-lg bg-dark-800/30 p-3">
                     <p className="mb-2 text-xs font-medium uppercase tracking-wider text-dark-500">
                       {t('admin.landings.discountPreview', 'Preview')}
                     </p>

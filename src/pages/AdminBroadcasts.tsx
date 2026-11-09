@@ -1,3 +1,4 @@
+import { ListSkeleton } from '@/components/ui/skeleton';
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { useQuery } from '@tanstack/react-query';
@@ -124,7 +125,7 @@ export default function AdminBroadcasts() {
           {!capabilities.hasBackButton && (
             <button
               onClick={() => navigate('/admin')}
-              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-dark-700 bg-dark-800 transition-colors hover:border-dark-600"
+              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-dark-800 transition-colors"
             >
               <BackIcon />
             </button>
@@ -153,12 +154,9 @@ export default function AdminBroadcasts() {
 
       {/* Broadcasts list */}
       {isLoading ? (
-        <div className="rounded-xl border border-dark-700 bg-dark-800/50 p-8 text-center text-dark-400">
-          <RefreshIcon />
-          <p className="mt-2">{t('common.loading')}</p>
-        </div>
+        <ListSkeleton />
       ) : broadcasts.length === 0 ? (
-        <div className="rounded-xl border border-dark-700 bg-dark-800/50 p-8 text-center text-dark-400">
+        <div className="rounded-xl bg-dark-800/50 p-8 text-center text-dark-400">
           <BroadcastIcon className="h-6 w-6" />
           <p className="mt-2">{t('admin.broadcasts.empty')}</p>
         </div>
@@ -168,7 +166,7 @@ export default function AdminBroadcasts() {
             <button
               key={broadcast.id}
               onClick={() => navigate(`/admin/broadcasts/${broadcast.id}`)}
-              className="w-full rounded-xl border border-dark-700 bg-dark-800/50 p-4 text-left transition-all hover:border-dark-600 hover:bg-dark-800"
+              className="w-full rounded-xl bg-dark-800/50 p-4 text-left transition-all hover:bg-dark-800"
             >
               <div className="flex items-start justify-between gap-4">
                 <div className="min-w-0 flex-1">
@@ -228,7 +226,7 @@ export default function AdminBroadcasts() {
 
       {/* Pagination */}
       {totalPages > 1 && (
-        <div className="flex items-center justify-center gap-2 rounded-xl border border-dark-700 bg-dark-800/50 p-4">
+        <div className="flex items-center justify-center gap-2 rounded-xl bg-dark-800/50 p-4">
           <button
             onClick={() => setPage((p) => Math.max(0, p - 1))}
             disabled={page === 0}

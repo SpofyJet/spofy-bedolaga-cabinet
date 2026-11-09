@@ -617,7 +617,7 @@ export default function AdminTariffCreate() {
           <p className="text-sm text-dark-400">{t('admin.tariffs.periodsTabHint')}</p>
 
           {/* Add new period */}
-          <div className="rounded-lg border border-dashed border-dark-600 bg-dark-800/50 p-4">
+          <div className="rounded-lg border-dashed bg-dark-800/50 p-4">
             <h4 className="mb-3 text-sm font-medium text-dark-300">
               {t('admin.tariffs.addPeriodTitle')}
             </h4>
@@ -955,7 +955,7 @@ export default function AdminTariffCreate() {
                   <span className="text-dark-400">{t('admin.tariffs.gbUnit')}</span>
                 </div>
                 {/* Add new package */}
-                <div className="rounded-lg border border-dashed border-dark-600 bg-dark-800/50 p-3">
+                <div className="rounded-lg border-dashed bg-dark-800/50 p-3">
                   <h5 className="mb-2 text-xs font-medium text-dark-400">
                     {t('admin.tariffs.addPackageTitle')}
                   </h5>

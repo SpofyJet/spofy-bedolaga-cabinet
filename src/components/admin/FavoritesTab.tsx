@@ -31,7 +31,7 @@ export function FavoritesTab({ settings, isFavorite, toggleFavorite }: Favorites
 
   if (settings.length === 0) {
     return (
-      <div className="rounded-2xl border border-dark-700/30 bg-dark-800/30 p-12 text-center">
+      <div className="rounded-2xl bg-dark-800/30 p-12 text-center">
         <div className="mb-4 flex justify-center text-dark-500">
           <StarIcon filled={false} />
         </div>

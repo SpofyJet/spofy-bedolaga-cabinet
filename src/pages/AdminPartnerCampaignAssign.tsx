@@ -64,7 +64,7 @@ export default function AdminPartnerCampaignAssign() {
           <Skeleton variant="card" count={3} className="h-16" />
         </SkeletonGroup>
       ) : available.length === 0 ? (
-        <div className="rounded-xl border border-dark-700 bg-dark-800 p-6">
+        <div className="rounded-xl bg-dark-800 p-6">
           <div className="py-4 text-center text-sm text-dark-500">
             {t('admin.partnerDetail.campaigns.noAvailable')}
           </div>
@@ -80,7 +80,7 @@ export default function AdminPartnerCampaignAssign() {
       ) : (
         <div className="space-y-3">
           {available.map((campaign) => (
-            <div key={campaign.id} className="rounded-xl border border-dark-700 bg-dark-800 p-4">
+            <div key={campaign.id} className="rounded-xl bg-dark-800 p-4">
               <div className="flex items-center justify-between gap-4">
                 <div className="min-w-0 flex-1">
                   <div className="flex flex-wrap items-center gap-2">
@@ -116,10 +116,7 @@ export default function AdminPartnerCampaignAssign() {
 
           {/* Show campaigns assigned to other partners as greyed out */}
           {takenByOthers.map((campaign) => (
-            <div
-              key={campaign.id}
-              className="rounded-xl border border-dark-700/50 bg-dark-800 p-4 opacity-50"
-            >
+            <div key={campaign.id} className="rounded-xl bg-dark-800 p-4 opacity-50">
               <div className="flex items-center justify-between gap-4">
                 <div className="min-w-0 flex-1">
                   <div className="flex flex-wrap items-center gap-2">

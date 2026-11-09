@@ -110,7 +110,7 @@ export default function AdminWithdrawals() {
               <button
                 key={item.id}
                 onClick={() => navigate(`/admin/withdrawals/${item.id}`)}
-                className="w-full rounded-xl border border-dark-700/50 bg-dark-800/40 p-4 text-left transition-colors hover:border-dark-600 hover:bg-dark-800/60"
+                className="w-full rounded-xl bg-dark-800/40 p-4 text-left transition-colors hover:bg-dark-800/60"
               >
                 <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0 flex-1">

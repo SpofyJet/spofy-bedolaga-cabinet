@@ -1,3 +1,4 @@
+import { ListSkeleton } from '@/components/ui/skeleton';
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -164,11 +165,7 @@ export default function AdminPinnedMessageCreate() {
   const isPending = createMutation.isPending || updateMutation.isPending;
 
   if (isEditing && isLoadingMessage) {
-    return (
-      <div className="rounded-xl border border-dark-700 bg-dark-800/50 p-8 text-center text-dark-400">
-        <p>{t('common.loading')}</p>
-      </div>
-    );
+    return <ListSkeleton />;
   }
 
   return (
@@ -214,7 +211,7 @@ export default function AdminPinnedMessageCreate() {
             {t('admin.pinnedMessages.media')}
           </label>
           {mediaFile || existingMediaType ? (
-            <div className="rounded-lg border border-dark-700 bg-dark-800 p-4">
+            <div className="rounded-lg bg-dark-800 p-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   {(mediaType === 'photo' || existingMediaType === 'photo') && <PhotoIcon />}
@@ -265,7 +262,7 @@ export default function AdminPinnedMessageCreate() {
               />
               <button
                 onClick={() => fileInputRef.current?.click()}
-                className="flex w-full items-center justify-center gap-2 rounded-lg border border-dashed border-dark-600 bg-dark-800/50 p-6 text-dark-400 transition-colors hover:border-dark-500 hover:bg-dark-800 hover:text-dark-300"
+                className="flex w-full items-center justify-center gap-2 rounded-lg border-dashed bg-dark-800/50 p-6 text-dark-400 transition-colors hover:bg-dark-800 hover:text-dark-300"
               >
                 <PhotoIcon />
                 <span>{t('admin.pinnedMessages.addMedia')}</span>

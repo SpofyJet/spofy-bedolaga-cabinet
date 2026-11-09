@@ -98,7 +98,7 @@ export function MultiSelectDropdown({
       </button>
 
       {open && (
-        <div className="absolute left-0 right-0 top-full z-50 mt-1 max-h-64 overflow-y-auto rounded-xl border border-dark-700 bg-dark-800 py-1 shadow-2xl">
+        <div className="absolute left-0 right-0 top-full z-50 mt-1 max-h-64 overflow-y-auto rounded-xl bg-dark-800 py-1 shadow-2xl">
           <div className="flex items-center gap-1 border-b border-dark-700/50 px-3 py-1.5">
             <button
               type="button"

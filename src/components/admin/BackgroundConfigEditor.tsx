@@ -54,7 +54,7 @@ function SettingField({
             type="color"
             value={hexForInput}
             onChange={(e) => onChange(e.target.value)}
-            className="h-7 w-10 cursor-pointer rounded border border-dark-600 bg-transparent"
+            className="h-7 w-10 cursor-pointer rounded bg-transparent"
           />
           <span className="w-16 text-right text-xs text-dark-400">{colorVal}</span>
         </div>
@@ -222,7 +222,7 @@ export function BackgroundConfigEditor({ value: config, onChange }: BackgroundCo
 
           {/* Per-type settings */}
           {currentDef && currentDef.settings.length > 0 && (
-            <div className="rounded-xl border border-dark-700/50 bg-dark-800/30 p-4">
+            <div className="rounded-xl bg-dark-800/30 p-4">
               <h4 className="mb-3 text-sm font-medium text-dark-200">
                 {t('admin.backgrounds.settings')}
               </h4>
@@ -241,7 +241,7 @@ export function BackgroundConfigEditor({ value: config, onChange }: BackgroundCo
           )}
 
           {/* Global settings */}
-          <div className="rounded-xl border border-dark-700/50 bg-dark-800/30 p-4">
+          <div className="rounded-xl bg-dark-800/30 p-4">
             <div className="space-y-3">
               <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
                 <label className="min-w-0 text-sm text-dark-300">

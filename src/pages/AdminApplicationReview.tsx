@@ -1,3 +1,4 @@
+import { ListSkeleton } from '@/components/ui/skeleton';
 import { useState } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -58,7 +59,7 @@ export default function AdminApplicationReview() {
           </h1>
         </div>
         <div className="flex items-center justify-center py-12">
-          <div className="h-8 w-8 animate-spin rounded-full border-2 border-accent-500 border-t-transparent" />
+          <ListSkeleton />
         </div>
       </div>
     );
@@ -81,7 +82,7 @@ export default function AdminApplicationReview() {
 
       <div className="space-y-6">
         {/* Application Details */}
-        <div className="rounded-xl border border-dark-700 bg-dark-800 p-4">
+        <div className="rounded-xl bg-dark-800 p-4">
           <h3 className="mb-4 font-medium text-dark-200">
             {t('admin.partners.tabs.applications')}
           </h3>

@@ -43,7 +43,7 @@ const ArticleRow = memo(function ArticleRow({
   const color = safeColor(article.category_color);
 
   return (
-    <div className="rounded-xl border border-dark-700 bg-dark-800/50 p-4 transition-all hover:border-dark-600">
+    <div className="rounded-xl bg-dark-800/50 p-4 transition-all">
       {/* На телефоне кнопки — отдельной строкой: рядом с ними заголовку оставалось 72 px. */}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:gap-4">
         <div className="min-w-0 flex-1">
@@ -290,7 +290,7 @@ export default function AdminNews() {
           actions={[{ width: 'w-8' }, { width: 'w-14', pill: true }, { width: 'w-8' }]}
         />
       ) : articles.length === 0 ? (
-        <div className="flex flex-col items-center rounded-xl border border-dark-700 bg-dark-800/50 p-8 text-center text-dark-400">
+        <div className="flex flex-col items-center rounded-xl bg-dark-800/50 p-8 text-center text-dark-400">
           <NewsIcon className="h-6 w-6" />
           <p className="mt-2">{t('news.noNews')}</p>
         </div>
@@ -311,7 +311,7 @@ export default function AdminNews() {
 
       {/* Pagination */}
       {totalPages > 1 && (
-        <div className="flex items-center justify-center gap-2 rounded-xl border border-dark-700 bg-dark-800/50 p-4">
+        <div className="flex items-center justify-center gap-2 rounded-xl bg-dark-800/50 p-4">
           <button
             onClick={() => setPage((p) => Math.max(0, p - 1))}
             disabled={page === 0}

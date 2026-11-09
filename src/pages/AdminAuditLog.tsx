@@ -174,7 +174,7 @@ function LogEntryCard({ entry, isExpanded, onToggle }: LogEntryCardProps) {
   const userName = entry.user_first_name || entry.user_email || t('admin.auditLog.unknownUser');
 
   return (
-    <div className="rounded-xl border border-dark-700 bg-dark-800 transition-colors hover:border-dark-600">
+    <div className="rounded-xl bg-dark-800 transition-colors">
       {/* Main row */}
       <button
         type="button"
@@ -500,7 +500,7 @@ export default function AdminAuditLog() {
           {!capabilities.hasBackButton && (
             <button
               onClick={() => navigate('/admin')}
-              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-dark-700 bg-dark-800 transition-colors hover:border-dark-600"
+              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-dark-800 transition-colors"
               aria-label={t('admin.auditLog.back')}
             >
               <BackIcon />
@@ -532,7 +532,7 @@ export default function AdminAuditLog() {
           <button
             onClick={() => refetch()}
             disabled={isFetching}
-            className="flex h-10 w-10 items-center justify-center rounded-lg border border-dark-700 bg-dark-800 text-dark-400 transition-colors hover:border-dark-600 hover:text-dark-300 disabled:opacity-50"
+            className="flex h-10 w-10 items-center justify-center rounded-lg bg-dark-800 text-dark-400 transition-colors hover:text-dark-300 disabled:opacity-50"
             title={t('admin.auditLog.refresh')}
           >
             <RefreshIcon className={`h-4 w-4 ${isFetching ? 'animate-spin' : ''}`} />
@@ -561,7 +561,7 @@ export default function AdminAuditLog() {
       </div>
 
       {/* Filters bar */}
-      <div className="mb-4 rounded-xl border border-dark-700 bg-dark-800">
+      <div className="mb-4 rounded-xl bg-dark-800">
         <button
           type="button"
           onClick={() => setFiltersOpen((prev) => !prev)}
@@ -816,7 +816,7 @@ export default function AdminAuditLog() {
           <button
             onClick={() => setPage(0)}
             disabled={page === 0}
-            className="rounded-lg border border-dark-700 bg-dark-800 px-3 py-2 text-sm text-dark-300 transition-colors hover:border-dark-600 hover:text-dark-100 disabled:cursor-not-allowed disabled:opacity-40"
+            className="rounded-lg bg-dark-800 px-3 py-2 text-sm text-dark-300 transition-colors hover:text-dark-100 disabled:cursor-not-allowed disabled:opacity-40"
             aria-label={t('admin.auditLog.pagination.first')}
           >
             &laquo;
@@ -824,7 +824,7 @@ export default function AdminAuditLog() {
           <button
             onClick={() => setPage((p) => Math.max(0, p - 1))}
             disabled={page === 0}
-            className="rounded-lg border border-dark-700 bg-dark-800 px-3 py-2 text-sm text-dark-300 transition-colors hover:border-dark-600 hover:text-dark-100 disabled:cursor-not-allowed disabled:opacity-40"
+            className="rounded-lg bg-dark-800 px-3 py-2 text-sm text-dark-300 transition-colors hover:text-dark-100 disabled:cursor-not-allowed disabled:opacity-40"
             aria-label={t('admin.auditLog.pagination.previous')}
           >
             &lsaquo;
@@ -840,7 +840,7 @@ export default function AdminAuditLog() {
           <button
             onClick={() => setPage((p) => Math.min(totalPages - 1, p + 1))}
             disabled={page >= totalPages - 1}
-            className="rounded-lg border border-dark-700 bg-dark-800 px-3 py-2 text-sm text-dark-300 transition-colors hover:border-dark-600 hover:text-dark-100 disabled:cursor-not-allowed disabled:opacity-40"
+            className="rounded-lg bg-dark-800 px-3 py-2 text-sm text-dark-300 transition-colors hover:text-dark-100 disabled:cursor-not-allowed disabled:opacity-40"
             aria-label={t('admin.auditLog.pagination.next')}
           >
             &rsaquo;
@@ -848,7 +848,7 @@ export default function AdminAuditLog() {
           <button
             onClick={() => setPage(totalPages - 1)}
             disabled={page >= totalPages - 1}
-            className="rounded-lg border border-dark-700 bg-dark-800 px-3 py-2 text-sm text-dark-300 transition-colors hover:border-dark-600 hover:text-dark-100 disabled:cursor-not-allowed disabled:opacity-40"
+            className="rounded-lg bg-dark-800 px-3 py-2 text-sm text-dark-300 transition-colors hover:text-dark-100 disabled:cursor-not-allowed disabled:opacity-40"
             aria-label={t('admin.auditLog.pagination.last')}
           >
             &raquo;

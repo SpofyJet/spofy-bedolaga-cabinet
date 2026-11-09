@@ -49,7 +49,7 @@ export function UsersTable({ users, className }: UsersTableProps) {
   const now = useNow(ONLINE_TICK_MS);
 
   return (
-    <div className={cn('rounded-2xl border border-dark-700/60 bg-dark-900/40', className)}>
+    <div className={cn('rounded-2xl bg-dark-900/40', className)}>
       {/* Шапка прилипает под шапкой кабинета; скругления свои — у контейнера нет overflow. */}
       <div
         className={cn(

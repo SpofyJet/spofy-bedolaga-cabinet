@@ -71,7 +71,7 @@ export default function AdminReminders() {
         {data.map((r) => (
           <div
             key={r.id}
-            className={`rounded-xl border p-4 ${r.is_active ? 'border-success-500/50 bg-success-500/5' : 'border-dark-700 bg-dark-800/50'}`}
+            className={`rounded-xl p-4 ${r.is_active ? 'border-success-500/50 bg-success-500/5' : 'border-dark-700 bg-dark-800/50'}`}
           >
             <div className="flex items-start justify-between gap-3">
               <div className="min-w-0 flex-1">

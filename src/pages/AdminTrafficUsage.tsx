@@ -1,3 +1,4 @@
+import { ListSkeleton } from '@/components/ui/skeleton';
 import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router';
 import { backTo } from '@/components/admin';
@@ -730,7 +731,7 @@ export default function AdminTrafficUsage() {
           {!capabilities.hasBackButton && (
             <button
               onClick={() => navigate('/admin')}
-              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-dark-700 bg-dark-800 transition-colors hover:border-dark-600"
+              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-dark-800 transition-colors"
             >
               <ChevronLeftIcon />
             </button>
@@ -783,7 +784,7 @@ export default function AdminTrafficUsage() {
           />
 
           {/* Threshold inputs */}
-          <div className="flex items-center gap-1.5 rounded-lg border border-dark-700 bg-dark-800 px-2 py-1">
+          <div className="flex items-center gap-1.5 rounded-lg bg-dark-800 px-2 py-1">
             <ShieldIcon className="h-3.5 w-3.5" />
             <input
               type="number"
@@ -804,7 +805,7 @@ export default function AdminTrafficUsage() {
               </button>
             )}
           </div>
-          <div className="flex items-center gap-1.5 rounded-lg border border-dark-700 bg-dark-800 px-2 py-1">
+          <div className="flex items-center gap-1.5 rounded-lg bg-dark-800 px-2 py-1">
             <ServerSmallIcon className="h-3.5 w-3.5" />
             <input
               type="number"
@@ -829,7 +830,7 @@ export default function AdminTrafficUsage() {
           <button
             onClick={handleExport}
             disabled={exporting}
-            className="flex items-center gap-1.5 rounded-lg border border-dark-700 bg-dark-800 px-3 py-1.5 text-xs font-medium text-dark-200 transition-colors hover:border-dark-600 hover:bg-dark-700 disabled:opacity-50"
+            className="flex items-center gap-1.5 rounded-lg bg-dark-800 px-3 py-1.5 text-xs font-medium text-dark-200 transition-colors hover:bg-dark-700 disabled:opacity-50"
           >
             <DownloadIcon />
             {t('admin.trafficUsage.exportCsv')}
@@ -843,7 +844,7 @@ export default function AdminTrafficUsage() {
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
               placeholder={t('admin.trafficUsage.search')}
-              className="w-full rounded-xl border border-dark-700 bg-dark-800 py-2 pl-10 pr-4 text-dark-100 placeholder-dark-500 focus:border-dark-600 focus:outline-none"
+              className="w-full rounded-xl bg-dark-800 py-2 pl-10 pr-4 text-dark-100 placeholder-dark-500 focus:outline-none"
             />
             <div className="absolute left-3 top-1/2 -translate-y-1/2 text-dark-500">
               <SearchIcon />
@@ -855,7 +856,7 @@ export default function AdminTrafficUsage() {
       {/* Table */}
       {initialLoading && !hasData ? (
         <div className="flex justify-center py-12">
-          <div className="h-8 w-8 animate-spin rounded-full border-2 border-accent-500 border-t-transparent" />
+          <ListSkeleton />
         </div>
       ) : !hasData && !loading ? (
         <div className="py-12 text-center text-dark-400">{t('admin.trafficUsage.noData')}</div>
@@ -972,7 +973,7 @@ export default function AdminTrafficUsage() {
             <button
               onClick={() => setOffset(Math.max(0, offset - limit))}
               disabled={offset === 0}
-              className="rounded-lg border border-dark-700 bg-dark-800 p-2 transition-colors hover:bg-dark-700 disabled:opacity-50"
+              className="rounded-lg bg-dark-800 p-2 transition-colors hover:bg-dark-700 disabled:opacity-50"
             >
               <ChevronLeftIcon />
             </button>
@@ -982,7 +983,7 @@ export default function AdminTrafficUsage() {
             <button
               onClick={() => setOffset(offset + limit)}
               disabled={offset + limit >= total}
-              className="rounded-lg border border-dark-700 bg-dark-800 p-2 transition-colors hover:bg-dark-700 disabled:opacity-50"
+              className="rounded-lg bg-dark-800 p-2 transition-colors hover:bg-dark-700 disabled:opacity-50"
             >
               <ChevronRightIcon />
             </button>

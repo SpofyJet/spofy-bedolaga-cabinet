@@ -158,7 +158,7 @@ export default function AdminPartnerDetail() {
         </div>
 
         {/* Earnings */}
-        <div className="rounded-xl border border-dark-700 bg-dark-800 p-4">
+        <div className="rounded-xl bg-dark-800 p-4">
           <h3 className="mb-4 font-medium text-dark-200">
             {t('admin.partnerDetail.earnings.title')}
           </h3>
@@ -191,7 +191,7 @@ export default function AdminPartnerDetail() {
         </div>
 
         {/* Commission */}
-        <div className="rounded-xl border border-dark-700 bg-dark-800 p-4">
+        <div className="rounded-xl bg-dark-800 p-4">
           <div className="flex items-center justify-between">
             <div>
               <h3 className="font-medium text-dark-200">
@@ -215,7 +215,7 @@ export default function AdminPartnerDetail() {
         </div>
 
         {/* Campaigns */}
-        <div className="rounded-xl border border-dark-700 bg-dark-800 p-4">
+        <div className="rounded-xl bg-dark-800 p-4">
           <div className="mb-4 flex items-center justify-between">
             <h3 className="font-medium text-dark-200">
               {t('admin.partnerDetail.campaigns.title')}
@@ -314,7 +314,7 @@ export default function AdminPartnerDetail() {
         </div>
 
         {/* Actions */}
-        <div className="rounded-xl border border-dark-700 bg-dark-800 p-4">
+        <div className="rounded-xl bg-dark-800 p-4">
           <h3 className="mb-4 font-medium text-dark-200">
             {t('admin.partnerDetail.dangerZone.title')}
           </h3>

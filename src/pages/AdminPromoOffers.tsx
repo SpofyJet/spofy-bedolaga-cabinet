@@ -87,7 +87,7 @@ export default function AdminPromoOffers() {
           {!capabilities.hasBackButton && (
             <button
               onClick={() => navigate('/admin')}
-              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-dark-700 bg-dark-800 transition-colors hover:border-dark-600"
+              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-dark-800 transition-colors"
             >
               <BackIcon />
             </button>
@@ -241,7 +241,7 @@ export default function AdminPromoOffers() {
         ) : (
           <div className="space-y-3">
             {logs.map((log: PromoOfferLog) => (
-              <div key={log.id} className="rounded-xl border border-dark-700 bg-dark-800 p-4">
+              <div key={log.id} className="rounded-xl bg-dark-800 p-4">
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
                   <div className="flex items-center gap-3">
                     <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-dark-700">

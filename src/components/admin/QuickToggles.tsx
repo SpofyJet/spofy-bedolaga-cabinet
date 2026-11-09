@@ -22,9 +22,7 @@ export function QuickToggles({ settings, onUpdate, disabled, className }: QuickT
   }
 
   return (
-    <div
-      className={cn('rounded-xl border border-dark-700/40 bg-dark-800/30 px-3 py-2.5', className)}
-    >
+    <div className={cn('rounded-xl bg-dark-800/30 px-3 py-2.5', className)}>
       <span className="mb-2 block text-[10px] font-semibold uppercase tracking-wider text-dark-500">
         {t('admin.settings.quickToggles')}
       </span>

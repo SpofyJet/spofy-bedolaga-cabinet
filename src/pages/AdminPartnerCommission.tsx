@@ -51,7 +51,7 @@ export default function AdminPartnerCommission() {
         </h1>
       </div>
 
-      <div className="rounded-xl border border-dark-700 bg-dark-800 p-6">
+      <div className="rounded-xl bg-dark-800 p-6">
         <p className="mb-4 text-sm text-dark-400">
           {t('admin.partnerDetail.commissionDialog.description')}
         </p>

@@ -170,7 +170,7 @@ export function SettingsTreeSidebar({
 
         {/* Autocomplete dropdown */}
         {isSearchOpen && suggestions.length > 0 && (
-          <div className="absolute left-3 right-3 top-full z-50 mt-1 max-h-72 overflow-y-auto rounded-lg border border-dark-700 bg-dark-800 py-1 shadow-xl">
+          <div className="absolute left-3 right-3 top-full z-50 mt-1 max-h-72 overflow-y-auto rounded-lg bg-dark-800 py-1 shadow-xl">
             {suggestions.map((setting, index) => (
               <button
                 key={setting.key}

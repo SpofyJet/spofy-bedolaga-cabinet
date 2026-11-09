@@ -199,7 +199,7 @@ export default function AdminCampaignStats() {
         {(stats.deep_link || stats.web_link) && (
           <div className="space-y-3">
             {stats.deep_link && (
-              <div className="rounded-xl border border-dark-700 bg-dark-800 p-4">
+              <div className="rounded-xl bg-dark-800 p-4">
                 <div className="mb-1 text-xs font-medium text-dark-500">
                   {t('admin.campaigns.stats.botLink')}
                 </div>
@@ -223,7 +223,7 @@ export default function AdminCampaignStats() {
               </div>
             )}
             {stats.web_link && (
-              <div className="rounded-xl border border-dark-700 bg-dark-800 p-4">
+              <div className="rounded-xl bg-dark-800 p-4">
                 <div className="mb-1 text-xs font-medium text-dark-500">
                   {t('admin.campaigns.stats.webLink')}
                 </div>
@@ -251,24 +251,24 @@ export default function AdminCampaignStats() {
 
         {/* Main Stats */}
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-          <div className="rounded-xl border border-dark-700 bg-dark-800 p-4 text-center">
+          <div className="rounded-xl bg-dark-800 p-4 text-center">
             <div className="text-xl font-bold text-dark-100 sm:text-2xl">{stats.registrations}</div>
             <div className="text-xs text-dark-500">{t('admin.campaigns.stats.registrations')}</div>
           </div>
-          <div className="rounded-xl border border-dark-700 bg-dark-800 p-4 text-center">
+          <div className="rounded-xl bg-dark-800 p-4 text-center">
             {/* Без truncate: многоточие съедало цифры суммы. */}
             <div className="text-lg font-bold text-success-400 [overflow-wrap:anywhere] sm:text-2xl">
               {formatWithCurrency(stats.total_revenue_kopeks / PARTNER_STATS.KOPEKS_DIVISOR)}
             </div>
             <div className="text-xs text-dark-500">{t('admin.campaigns.stats.revenue')}</div>
           </div>
-          <div className="rounded-xl border border-dark-700 bg-dark-800 p-4 text-center">
+          <div className="rounded-xl bg-dark-800 p-4 text-center">
             <div className="text-xl font-bold text-accent-400 sm:text-2xl">
               {stats.paid_users_count}
             </div>
             <div className="text-xs text-dark-500">{t('admin.campaigns.stats.paidUsers')}</div>
           </div>
-          <div className="rounded-xl border border-dark-700 bg-dark-800 p-4 text-center">
+          <div className="rounded-xl bg-dark-800 p-4 text-center">
             <div className="text-xl font-bold text-accent-400 sm:text-2xl">
               {stats.conversion_rate}%
             </div>
@@ -277,7 +277,7 @@ export default function AdminCampaignStats() {
         </div>
 
         {/* Detailed Stats */}
-        <div className="rounded-xl border border-dark-700 bg-dark-800 p-4">
+        <div className="rounded-xl bg-dark-800 p-4">
           <h3 className="mb-4 font-medium text-dark-200">
             {t('admin.campaigns.stats.detailedStats')}
           </h3>
@@ -409,7 +409,7 @@ export default function AdminCampaignStats() {
                         key={reg.id}
                         to={`/admin/users/${reg.id}`}
                         {...backTo(location)}
-                        className="flex items-center justify-between gap-3 rounded-xl border border-dark-700/30 bg-dark-800/30 p-3 transition-colors hover:bg-dark-700/50"
+                        className="flex items-center justify-between gap-3 rounded-xl bg-dark-800/30 p-3 transition-colors hover:bg-dark-700/50"
                       >
                         <div className="min-w-0 flex-1">
                           <div className="flex min-w-0 items-center gap-2">
@@ -444,7 +444,7 @@ export default function AdminCampaignStats() {
         </div>
 
         {/* Users Section */}
-        <div className="rounded-xl border border-dark-700 bg-dark-800">
+        <div className="rounded-xl bg-dark-800">
           <button
             onClick={() => setShowUsers(!showUsers)}
             className="flex w-full items-center justify-between p-4"

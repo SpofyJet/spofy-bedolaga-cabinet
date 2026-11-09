@@ -213,7 +213,7 @@ export function ThemeTab() {
   return (
     <div className="space-y-6">
       {/* Theme toggles */}
-      <div className="rounded-2xl border border-dark-700/50 bg-dark-800/50 p-6">
+      <div className="rounded-2xl bg-dark-800/50 p-6">
         <h3 className="mb-4 text-lg font-semibold text-dark-100">
           {t('admin.settings.availableThemes')}
         </h3>
@@ -256,7 +256,7 @@ export function ThemeTab() {
       </div>
 
       {/* Quick Presets */}
-      <div className="rounded-2xl border border-dark-700/50 bg-dark-800/50 p-6">
+      <div className="rounded-2xl bg-dark-800/50 p-6">
         <button
           onClick={() => toggleSection('presets')}
           className="flex w-full items-center justify-between"
@@ -310,7 +310,7 @@ export function ThemeTab() {
       </div>
 
       {/* Custom Colors */}
-      <div className="rounded-2xl border border-dark-700/50 bg-dark-800/50 p-6">
+      <div className="rounded-2xl bg-dark-800/50 p-6">
         <button
           onClick={() => toggleSection('colors')}
           className="flex w-full items-center justify-between"

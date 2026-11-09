@@ -52,7 +52,7 @@ export function SettingRow({
   })();
 
   return (
-    <div className="group rounded-2xl border border-dark-700/40 bg-dark-800/40 p-4 transition-all hover:border-dark-600/60 hover:bg-dark-800/60 sm:p-5">
+    <div className="group rounded-2xl bg-dark-800/40 p-4 transition-all hover:bg-dark-800/60 sm:p-5">
       {/* Header row - name, badges, favorite */}
       <div className="mb-3 flex items-start justify-between gap-3">
         <div className="min-w-0 flex-1">

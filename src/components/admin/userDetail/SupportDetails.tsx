@@ -84,7 +84,7 @@ export function SupportDetails({
     <details
       open={open}
       onToggle={(event) => setOpen((event.currentTarget as HTMLDetailsElement).open)}
-      className="group rounded-2xl border border-dark-700/40 bg-dark-900/40"
+      className="group rounded-2xl bg-dark-900/40"
     >
       <summary className="flex cursor-pointer list-none items-center gap-2.5 px-4 py-3.5 text-dark-300 [&::-webkit-details-marker]:hidden">
         <ChevronDownIcon className="h-4 w-4 shrink-0 text-dark-500 transition-transform group-open:rotate-180" />

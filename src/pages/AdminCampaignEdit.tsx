@@ -66,7 +66,7 @@ function ServerSelector({
       <label className="mb-2 block text-sm font-medium text-dark-300">
         {t('admin.campaigns.form.servers')}
       </label>
-      <div className="max-h-48 space-y-2 overflow-y-auto rounded-lg border border-dark-700 bg-dark-800 p-3">
+      <div className="max-h-48 space-y-2 overflow-y-auto rounded-lg bg-dark-800 p-3">
         {servers.map((server) => (
           <button
             key={server.id}
@@ -402,7 +402,7 @@ export default function AdminCampaignEdit() {
         </div>
 
         {/* Active toggle */}
-        <div className="flex items-center justify-between rounded-lg border border-dark-700 bg-dark-800 p-4">
+        <div className="flex items-center justify-between rounded-lg bg-dark-800 p-4">
           <span className="text-sm font-medium text-dark-300">
             {t('admin.campaigns.form.active')}
           </span>

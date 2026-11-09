@@ -62,7 +62,7 @@ export function SendMessageDialog({ userId, open, onClose }: SendMessageDialogPr
         role="dialog"
         aria-modal="true"
         aria-labelledby="send-message-title"
-        className="relative w-full max-w-md rounded-2xl border border-dark-700 bg-dark-800 p-5"
+        className="relative w-full max-w-md rounded-2xl bg-dark-800 p-5"
       >
         <h2 id="send-message-title" className="mb-3 text-lg font-semibold text-dark-100">
           {t('admin.users.sendMessage.title')}

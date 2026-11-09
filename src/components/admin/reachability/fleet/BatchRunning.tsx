@@ -105,7 +105,7 @@ export function BatchAside({ batch, rows }: { batch: Batch; rows: FleetRow[] }) 
   };
 
   return (
-    <section className="space-y-3 rounded-2xl border border-dark-700/40 bg-dark-900/60 p-5">
+    <section className="space-y-3 rounded-2xl bg-dark-900/60 p-5">
       <h3 className="text-[13px] font-semibold text-dark-400">{t(`${base}.batch.aside`)}</h3>
       <ul className="divide-y divide-dark-700/30">
         {items.map(([key, progress]) => {

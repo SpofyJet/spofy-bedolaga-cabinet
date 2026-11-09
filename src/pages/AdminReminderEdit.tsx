@@ -16,8 +16,7 @@ import {
 
 const LANGS = ['ru', 'en', 'ua', 'zh', 'fa'] as const;
 const CABINET_PRESETS = ['/profile/accounts', '/subscriptions', '/balance'];
-const inputClass =
-  'w-full rounded-xl border border-dark-700 bg-dark-800 px-3 py-2 text-sm text-dark-50';
+const inputClass = 'w-full rounded-xl bg-dark-800 px-3 py-2 text-sm text-dark-50';
 
 function toInt(value: string): number | null {
   const n = Number.parseInt(value, 10);

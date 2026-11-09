@@ -62,7 +62,7 @@ export default function AdminPromoGroups() {
           {!capabilities.hasBackButton && (
             <button
               onClick={() => navigate('/admin')}
-              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-dark-700 bg-dark-800 transition-colors hover:border-dark-600"
+              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-dark-800 transition-colors"
             >
               <BackIcon />
             </button>
@@ -100,7 +100,7 @@ export default function AdminPromoGroups() {
       {recalculation.isRunning && (
         <div
           role="status"
-          className="mb-6 flex items-center gap-2 rounded-xl border border-dark-700 bg-dark-800 px-4 py-3 text-sm text-dark-300"
+          className="mb-6 flex items-center gap-2 rounded-xl bg-dark-800 px-4 py-3 text-sm text-dark-300"
         >
           <Spinner className="h-4 w-4 shrink-0" />
           {t('admin.promoGroups.recalculating')}
@@ -143,7 +143,7 @@ export default function AdminPromoGroups() {
       ) : (
         <div className="space-y-3">
           {groups.map((group: PromoGroup) => (
-            <div key={group.id} className="rounded-xl border border-dark-700 bg-dark-800 p-4">
+            <div key={group.id} className="rounded-xl bg-dark-800 p-4">
               <div className="flex items-start justify-between gap-4">
                 <div className="min-w-0 flex-1">
                   <div className="mb-1 flex flex-wrap items-center gap-2">

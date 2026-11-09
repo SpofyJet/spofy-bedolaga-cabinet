@@ -103,7 +103,7 @@ function SortablePaymentCard({ config, onClick }: SortableCardProps) {
               {t('admin.paymentMethods.enabled')}
             </span>
           ) : (
-            <span className="flex-shrink-0 rounded-full border border-dark-700/30 bg-dark-700/50 px-2 py-0.5 text-xs text-dark-500">
+            <span className="flex-shrink-0 rounded-full bg-dark-700/50 px-2 py-0.5 text-xs text-dark-500">
               {t('admin.paymentMethods.disabled')}
             </span>
           )}
@@ -213,7 +213,7 @@ export default function AdminPaymentMethods() {
           {!capabilities.hasBackButton && (
             <button
               onClick={() => navigate('/admin')}
-              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-dark-700 bg-dark-800 transition-colors hover:border-dark-600"
+              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-dark-800 transition-colors"
             >
               <BackIcon />
             </button>

@@ -467,7 +467,7 @@ function FaqQuestionRow({
   });
 
   return (
-    <div className="space-y-3 rounded-xl border border-dark-700 bg-dark-800/50 p-4">
+    <div className="space-y-3 rounded-xl bg-dark-800/50 p-4">
       <div className="flex flex-wrap items-center gap-2">
         <input
           value={title}
@@ -705,7 +705,7 @@ function FaqEditor({ onDirtyChange }: { onDirtyChange: (dirty: boolean) => void 
           </button>
         </div>
         {pages.length === 0 ? (
-          <p className="rounded-xl border border-dark-700 bg-dark-800/50 p-6 text-center text-sm text-dark-400">
+          <p className="rounded-xl bg-dark-800/50 p-6 text-center text-sm text-dark-400">
             {t('admin.legalPages.noQuestions')}
           </p>
         ) : (

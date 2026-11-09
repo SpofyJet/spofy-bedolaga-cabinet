@@ -101,7 +101,7 @@ export default function AdminCouponCreate() {
           </p>
         </div>
 
-        <div className="mb-4 rounded-xl border border-dark-700 bg-dark-800 p-4">
+        <div className="mb-4 rounded-xl bg-dark-800 p-4">
           <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
             <span className="text-sm font-medium text-dark-200">
               {t('admin.coupons.created.linksLabel', { count: created.links.length })}
@@ -153,7 +153,7 @@ export default function AdminCouponCreate() {
         {!capabilities.hasBackButton && (
           <button
             onClick={() => navigate('/admin/coupons')}
-            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-dark-700 bg-dark-800 transition-colors hover:border-dark-600"
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-dark-800 transition-colors"
           >
             <BackIcon />
           </button>
@@ -180,7 +180,7 @@ export default function AdminCouponCreate() {
         </div>
       )}
 
-      <div className="space-y-4 rounded-xl border border-dark-700 bg-dark-800 p-4 sm:p-6">
+      <div className="space-y-4 rounded-xl bg-dark-800 p-4 sm:p-6">
         {/* Name */}
         <div>
           <label className="mb-1.5 block text-sm font-medium text-dark-300">

@@ -693,7 +693,7 @@ export default function AdminNewsCreate() {
         <div>
           <label className="label">{t('news.admin.contentLabel')}</label>
           <div
-            className="relative overflow-hidden rounded-xl border border-dark-700 bg-dark-800/50"
+            className="relative overflow-hidden rounded-xl bg-dark-800/50"
             onDragOver={handleEditorDragOver}
             onDragLeave={handleEditorDragLeave}
             onDrop={handleEditorDrop}

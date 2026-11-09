@@ -169,7 +169,7 @@ export default function AdminBroadcastDetail() {
       />
 
       {/* Target */}
-      <div className="rounded-xl border border-dark-700 bg-dark-800/50 p-4">
+      <div className="rounded-xl bg-dark-800/50 p-4">
         <p className="mb-1 text-sm text-dark-400">{t('admin.broadcasts.filter')}</p>
         {broadcast.audience ? (
           <div className="space-y-2 text-sm text-dark-100">
@@ -296,7 +296,7 @@ export default function AdminBroadcastDetail() {
 
       {/* Telegram Message */}
       {broadcast.message_text && (
-        <div className="rounded-xl border border-dark-700 bg-dark-800/50 p-4">
+        <div className="rounded-xl bg-dark-800/50 p-4">
           <p className="mb-2 flex items-center gap-2 text-sm text-dark-400">
             <TelegramIcon />
             {t('admin.broadcasts.message')}
@@ -309,7 +309,7 @@ export default function AdminBroadcastDetail() {
 
       {/* Email Subject */}
       {broadcast.email_subject && (
-        <div className="rounded-xl border border-dark-700 bg-dark-800/50 p-4">
+        <div className="rounded-xl bg-dark-800/50 p-4">
           <p className="mb-2 flex items-center gap-2 text-sm text-dark-400">
             <EmailIcon />
             {t('admin.broadcasts.emailSubject')}
@@ -322,7 +322,7 @@ export default function AdminBroadcastDetail() {
 
       {/* Email Content */}
       {broadcast.email_html_content && (
-        <div className="rounded-xl border border-dark-700 bg-dark-800/50 p-4">
+        <div className="rounded-xl bg-dark-800/50 p-4">
           <p className="mb-2 text-sm text-dark-400">{t('admin.broadcasts.emailContent')}</p>
           <div className="max-h-60 overflow-y-auto whitespace-pre-wrap rounded-lg bg-dark-700/50 p-4 font-mono text-xs text-dark-100">
             {broadcast.email_html_content}
@@ -332,7 +332,7 @@ export default function AdminBroadcastDetail() {
 
       {/* Media */}
       {broadcast.has_media && (
-        <div className="rounded-xl border border-dark-700 bg-dark-800/50 p-4">
+        <div className="rounded-xl bg-dark-800/50 p-4">
           <p className="mb-2 text-sm text-dark-400">{t('admin.broadcasts.media')}</p>
           <div className="flex items-center gap-3 text-dark-100">
             {broadcast.media_type === 'photo' && <PhotoIcon />}
@@ -344,7 +344,7 @@ export default function AdminBroadcastDetail() {
       )}
 
       {/* Admin info */}
-      <div className="flex flex-wrap justify-between gap-x-4 gap-y-1 rounded-xl border border-dark-700 bg-dark-800/50 p-4 text-sm">
+      <div className="flex flex-wrap justify-between gap-x-4 gap-y-1 rounded-xl bg-dark-800/50 p-4 text-sm">
         <span className="min-w-0 text-dark-400 [overflow-wrap:anywhere]">
           {t('admin.broadcasts.createdBy')}:{' '}
           <span className="text-dark-100">

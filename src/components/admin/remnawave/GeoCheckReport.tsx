@@ -213,7 +213,7 @@ export function GeoCheckReport({
           а модалка растягивалась бы под натуральный размер отчёта. */}
       <div
         className={cn(
-          'relative mt-3 overflow-hidden rounded-2xl border border-dark-700 bg-dark-950 [contain:paint]',
+          'relative mt-3 overflow-hidden rounded-2xl bg-dark-950 [contain:paint]',
           fullscreen ? 'min-h-0 flex-1' : 'h-[62dvh] min-h-[16rem]',
         )}
       >

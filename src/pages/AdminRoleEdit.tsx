@@ -119,17 +119,14 @@ function PermissionMatrix({
       <label className="text-sm font-medium text-dark-200">
         {t('admin.roles.form.permissions')}
       </label>
-      <div className="space-y-1 rounded-lg border border-dark-600 bg-dark-900/50 p-2">
+      <div className="space-y-1 rounded-lg bg-dark-900/50 p-2">
         {registry.map((section) => {
           const isExpanded = expanded[section.section] ?? false;
           const allSelected = isSectionFullySelected(section.section, section.actions);
           const partialSelected = isSectionPartiallySelected(section.section, section.actions);
 
           return (
-            <div
-              key={section.section}
-              className="rounded-lg border border-dark-700/50 bg-dark-800/30"
-            >
+            <div key={section.section} className="rounded-lg bg-dark-800/30">
               <div className="flex items-center gap-2 px-3 py-2">
                 <button
                   type="button"
@@ -367,7 +364,7 @@ export default function AdminRoleEdit() {
 
       {/* Form */}
       <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="rounded-xl border border-dark-700 bg-dark-800 p-4 sm:p-6">
+        <div className="rounded-xl bg-dark-800 p-4 sm:p-6">
           <div className="space-y-4">
             {/* Name */}
             <div>
@@ -484,7 +481,7 @@ export default function AdminRoleEdit() {
 
         {/* Permission Matrix */}
         {permissionRegistry && permissionRegistry.length > 0 && (
-          <div className="rounded-xl border border-dark-700 bg-dark-800 p-4 sm:p-6">
+          <div className="rounded-xl bg-dark-800 p-4 sm:p-6">
             <PermissionMatrix
               registry={permissionRegistry}
               selectedPermissions={formData.permissions}
@@ -498,7 +495,7 @@ export default function AdminRoleEdit() {
         )}
 
         {/* Error & Submit */}
-        <div className="rounded-xl border border-dark-700 bg-dark-800 p-4 sm:p-6">
+        <div className="rounded-xl bg-dark-800 p-4 sm:p-6">
           {formError && <p className="mb-4 text-sm text-error-400">{formError}</p>}
           <div className="flex justify-end gap-3">
             <button

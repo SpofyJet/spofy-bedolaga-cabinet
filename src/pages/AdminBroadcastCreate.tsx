@@ -462,7 +462,7 @@ export default function AdminBroadcastCreate() {
               type="button"
               onClick={() => setShowTelegramPreview(true)}
               disabled={messageText.trim().length === 0}
-              className="rounded-lg border border-dark-700 bg-dark-800 px-3 py-1.5 text-sm text-dark-300 transition-colors hover:border-dark-600 hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
+              className="rounded-lg bg-dark-800 px-3 py-1.5 text-sm text-dark-300 transition-colors hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
             >
               {t('admin.broadcasts.preview', 'Предпросмотр')}
             </button>
@@ -508,7 +508,7 @@ export default function AdminBroadcastCreate() {
               {t('admin.broadcasts.media')}
             </label>
             {mediaFile ? (
-              <div className="rounded-lg border border-dark-700 bg-dark-800 p-4">
+              <div className="rounded-lg bg-dark-800 p-4">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     {mediaType === 'photo' && <PhotoIcon />}
@@ -554,7 +554,7 @@ export default function AdminBroadcastCreate() {
                 />
                 <button
                   onClick={() => fileInputRef.current?.click()}
-                  className="flex w-full items-center justify-center gap-2 rounded-lg border border-dashed border-dark-600 bg-dark-800/50 p-6 text-dark-400 transition-colors hover:border-dark-500 hover:bg-dark-800 hover:text-dark-300"
+                  className="flex w-full items-center justify-center gap-2 rounded-lg border-dashed bg-dark-800/50 p-6 text-dark-400 transition-colors hover:bg-dark-800 hover:text-dark-300"
                 >
                   <PhotoIcon />
                   <span>{t('admin.broadcasts.addMedia')}</span>
@@ -576,7 +576,7 @@ export default function AdminBroadcastCreate() {
                   className={`rounded-lg px-3 py-2 text-sm transition-colors ${
                     selectedButtons.includes(button.key)
                       ? 'bg-accent-500 text-on-accent'
-                      : 'border border-dark-700 bg-dark-800 text-dark-300 hover:bg-dark-700'
+                      : 'bg-dark-800 text-dark-300 hover:bg-dark-700'
                   }`}
                 >
                   {button.label}
@@ -597,7 +597,7 @@ export default function AdminBroadcastCreate() {
                 {customButtons.map((btn, index) => (
                   <div
                     key={index}
-                    className="flex items-center justify-between rounded-lg border border-dark-700 bg-dark-800 px-3 py-2"
+                    className="flex items-center justify-between rounded-lg bg-dark-800 px-3 py-2"
                   >
                     <div className="flex items-center gap-2 overflow-hidden">
                       <span className="shrink-0 rounded bg-dark-700 px-1.5 py-0.5 text-xs text-dark-400">
@@ -626,7 +626,7 @@ export default function AdminBroadcastCreate() {
                   e.preventDefault();
                   addCustomButton();
                 }}
-                className="space-y-3 rounded-lg border border-dark-600 bg-dark-800/50 p-3"
+                className="space-y-3 rounded-lg bg-dark-800/50 p-3"
               >
                 <input
                   type="text"
@@ -644,7 +644,7 @@ export default function AdminBroadcastCreate() {
                     className={`flex-1 rounded-lg px-3 py-2 text-sm transition-colors ${
                       newButtonActionType === 'callback'
                         ? 'bg-accent-500 text-on-accent'
-                        : 'border border-dark-700 bg-dark-800 text-dark-300 hover:bg-dark-700'
+                        : 'bg-dark-800 text-dark-300 hover:bg-dark-700'
                     }`}
                   >
                     {t('admin.broadcasts.customButtonTypeCallback')}
@@ -655,7 +655,7 @@ export default function AdminBroadcastCreate() {
                     className={`flex-1 rounded-lg px-3 py-2 text-sm transition-colors ${
                       newButtonActionType === 'url'
                         ? 'bg-accent-500 text-on-accent'
-                        : 'border border-dark-700 bg-dark-800 text-dark-300 hover:bg-dark-700'
+                        : 'bg-dark-800 text-dark-300 hover:bg-dark-700'
                     }`}
                   >
                     {t('admin.broadcasts.customButtonTypeUrl')}
@@ -704,7 +704,7 @@ export default function AdminBroadcastCreate() {
               <button
                 onClick={() => setIsAddingCustomButton(true)}
                 disabled={customButtons.length >= 10}
-                className="flex w-full items-center justify-center gap-2 rounded-lg border border-dashed border-dark-600 bg-dark-800/50 px-4 py-3 text-sm text-dark-400 transition-colors hover:border-dark-500 hover:bg-dark-800 hover:text-dark-300"
+                className="flex w-full items-center justify-center gap-2 rounded-lg border-dashed bg-dark-800/50 px-4 py-3 text-sm text-dark-400 transition-colors hover:bg-dark-800 hover:text-dark-300"
               >
                 <span>+</span>
                 <span>{t('admin.broadcasts.addCustomButton')}</span>
@@ -725,7 +725,7 @@ export default function AdminBroadcastCreate() {
               type="button"
               onClick={() => setShowEmailPreview(true)}
               disabled={emailContent.trim().length === 0}
-              className="rounded-lg border border-dark-700 bg-dark-800 px-3 py-1.5 text-sm text-dark-300 transition-colors hover:border-dark-600 hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
+              className="rounded-lg bg-dark-800 px-3 py-1.5 text-sm text-dark-300 transition-colors hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
             >
               {t('admin.broadcasts.preview', 'Предпросмотр')}
             </button>
@@ -781,7 +781,7 @@ export default function AdminBroadcastCreate() {
           </div>
 
           {/* Email variables hint */}
-          <div className="rounded-lg border border-dark-700 bg-dark-800/50 p-4">
+          <div className="rounded-lg bg-dark-800/50 p-4">
             <p className="mb-2 text-sm font-medium text-dark-300">
               {t('admin.broadcasts.emailVariables')}
             </p>

@@ -1,3 +1,4 @@
+import { ListSkeleton } from '@/components/ui/skeleton';
 import { isLifetimePeriod } from '@/utils/lifetime';
 import { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import { createPortal } from 'react-dom';
@@ -74,7 +75,7 @@ function formatPeriodLabel(
 function LoadingSkeleton() {
   return (
     <div className="flex min-h-dvh items-center justify-center bg-dark-950">
-      <span className="h-8 w-8 animate-spin rounded-full border-2 border-dark-600 border-t-accent-500" />
+      <ListSkeleton />
     </div>
   );
 }
