@@ -28,8 +28,8 @@ import { getAppLogo, isAllowedApp, isDefaultApp } from './appLogos';
 import TvQuickConnect from './TvQuickConnect';
 
 /**
- * «Как подключиться» — как на sub.spofyltd.ru: устройство и приложение выбираются
- * плитками (определённое устройство и рекомендуемое приложение уже выбраны), все
+ * «Как подключиться» — как на sub.spofyltd.ru: устройство — одной строкой («Другое»
+ * раскрывает плитки), приложение выбирается плитками (рекомендуемое уже выбрано), все
  * шаги открыты и пронумерованы, кнопки — внутри шагов, после действия у шага
  * появляется галочка. Только Happ и INCY.
  */
@@ -45,6 +45,9 @@ const FALLBACK_NAMES: Record<string, string> = {
   androidTV: 'Android TV',
   appleTV: 'Apple TV',
 };
+
+/** Подпись кнопки скачивания, которая лишь повторяет название системы («Linux»). */
+const PLATFORM_LABELS = new Set(Object.values(FALLBACK_NAMES).map((name) => name.toLowerCase()));
 
 // eslint-disable-next-line no-script-url
 const DANGEROUS_SCHEMES = ['javascript:', 'data:', 'vbscript:', 'file:'];
@@ -155,6 +158,8 @@ export default function ConnectGuide({
   const [pickedApp, setPickedApp] = useState<Record<string, string>>({});
   // Выполненные шаги: ключ «платформа:приложение» → номера шагов.
   const [doneSteps, setDoneSteps] = useState<Record<string, number[]>>({});
+  // Сетка всех устройств раскрывается по «Другое».
+  const [pickingDevice, setPickingDevice] = useState(false);
 
   const current = platform && available.includes(platform) ? platform : available[0];
   if (!current) return null;
@@ -193,29 +198,63 @@ export default function ConnectGuide({
     <>
       {available.length > 1 && (
         <section>
-          <SectionTitle>{t('subscription.connection.yourDevice')}</SectionTitle>
-          <ChoiceGroup
-            label={t('subscription.connection.yourDevice')}
-            variant="tile"
-            value={current}
-            onSelect={setPlatform}
-            items={available.map((key) => ({
-              key,
-              label: platformName(key),
-              icon: (
-                <span
-                  aria-hidden
-                  className="h-6 w-6 text-current [&>svg]:h-full [&>svg]:w-full"
-                  // biome-ignore lint/security/noDangerouslySetInnerHtml: HTML проходит через DOMPurify
-                  dangerouslySetInnerHTML={{
-                    __html: svgHtml(
-                      (appConfig.platforms[key] as RemnawavePlatformData | undefined)?.svgIconKey,
-                    ),
-                  }}
-                />
-              ),
-            }))}
-          />
+          {/* Одна строка вместо сетки плиток: главная кнопка шага остаётся на первом экране. */}
+          <div className="flex min-h-[48px] items-center gap-3 rounded-2xl bg-dark-900/70 py-1.5 pl-4 pr-1.5">
+            <span
+              aria-hidden
+              className="h-5 w-5 shrink-0 text-accent-400 [&>svg]:h-full [&>svg]:w-full"
+              // biome-ignore lint/security/noDangerouslySetInnerHtml: HTML проходит через DOMPurify
+              dangerouslySetInnerHTML={{
+                __html: svgHtml(
+                  (appConfig.platforms[current] as RemnawavePlatformData | undefined)?.svgIconKey,
+                ),
+              }}
+            />
+            <p className="min-w-0 flex-1 truncate text-[15px] text-dark-300">
+              {t('subscription.connection.yourDevice')}:{' '}
+              <span className="font-semibold text-dark-50">{platformName(current)}</span>
+            </p>
+            <button
+              type="button"
+              aria-expanded={pickingDevice}
+              onClick={() => setPickingDevice((open) => !open)}
+              className="inline-flex h-11 shrink-0 items-center rounded-xl px-3 text-sm font-semibold text-accent-400 transition-colors hover:bg-dark-800/60 active:scale-[0.98]"
+            >
+              {pickingDevice
+                ? t('common.close')
+                : t('subscription.connection.v10.otherDevice', 'Другое')}
+            </button>
+          </div>
+          {pickingDevice && (
+            <div className="mt-2">
+              <ChoiceGroup
+                label={t('subscription.connection.yourDevice')}
+                variant="tile"
+                value={current}
+                onSelect={(key) => {
+                  setPlatform(key);
+                  setPickingDevice(false);
+                }}
+                items={available.map((key) => ({
+                  key,
+                  label: platformName(key),
+                  icon: (
+                    <span
+                      aria-hidden
+                      className="h-6 w-6 text-current [&>svg]:h-full [&>svg]:w-full"
+                      // biome-ignore lint/security/noDangerouslySetInnerHtml: HTML проходит через DOMPurify
+                      dangerouslySetInnerHTML={{
+                        __html: svgHtml(
+                          (appConfig.platforms[key] as RemnawavePlatformData | undefined)
+                            ?.svgIconKey,
+                        ),
+                      }}
+                    />
+                  ),
+                }))}
+              />
+            </div>
+          )}
         </section>
       )}
 
@@ -393,7 +432,7 @@ function ChoiceGroup({
                 ? 'flex min-h-[76px] flex-col items-center justify-center gap-1.5 px-2 py-3 text-center'
                 : 'flex min-h-[64px] items-center gap-3 px-3 py-2.5 text-left',
               checked
-                ? 'bg-accent-500/10 text-dark-50'
+                ? 'bg-accent-500/25 text-dark-50'
                 : 'bg-dark-900/70 text-dark-300 hover:bg-dark-800/60',
             )}
           >
@@ -620,7 +659,11 @@ function Steps({
               ) : (
                 <PiDownloadSimpleBold className="h-4 w-4 shrink-0" />
               )}
-              <span className="truncate">{text}</span>
+              <span className="truncate">
+                {text && !PLATFORM_LABELS.has(text.trim().toLowerCase())
+                  ? text
+                  : t('subscription.connection.v10.download', 'Скачать')}
+              </span>
               <PiArrowSquareOutBold className="h-3.5 w-3.5 shrink-0 text-dark-400" />
             </a>
           );

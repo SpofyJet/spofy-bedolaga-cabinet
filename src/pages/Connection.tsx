@@ -180,10 +180,8 @@ export default function Connection() {
       <Page>
         <PageHeader title={title} backTo={backTo} />
         <SkeletonGroup className="space-y-6">
-          {/* Повторяет раскладку: плитки устройств, приложения, шаги. */}
-          <div className="grid grid-cols-3 gap-2">
-            <Skeleton count={6} className="h-[76px] rounded-2xl" />
-          </div>
+          {/* Повторяет раскладку: строка устройства, приложения, шаги. */}
+          <Skeleton className="h-12 rounded-2xl" />
           <div className="grid grid-cols-2 gap-2">
             <Skeleton count={2} className="h-16 rounded-2xl" />
           </div>

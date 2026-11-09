@@ -642,7 +642,9 @@
         "stepDone": "done",
         "notOpened": "The app did not open?",
         "notOpenedText": "Make sure it is installed (step 1). Or copy the link and paste it in the app via «+».",
-        "copyManual": "Your phone did not allow copying. Press and hold the link, then choose «Copy»."
+        "copyManual": "Your phone did not allow copying. Press and hold the link, then choose «Copy».",
+        "otherDevice": "Other",
+        "download": "Download"
       }
     },
     "myDevices": "My Devices",
