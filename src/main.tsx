@@ -36,6 +36,7 @@ import { applyThemeColors } from './hooks/useThemeColors';
 import { readThemeColorsHint } from './utils/themeColorsHint';
 import { UI } from './config/constants';
 import './styles/globals.css';
+import { required } from '@/utils/required';
 
 // Harden the global encoders against lone UTF-16 surrogates (truncated emoji in
 // backend names/remarks) BEFORE anything renders or fetches — otherwise such a
@@ -53,8 +54,7 @@ installEncodingSurrogateGuard();
 // вызов самого полифила — бесконечная рекурсия и падение tsc на target ниже es2022.
 const objectHasOwnProperty = Object.prototype.hasOwnProperty;
 if (typeof (Object as { hasOwn?: unknown }).hasOwn !== 'function') {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  (Object as any).hasOwn = (obj: object, prop: PropertyKey): boolean =>
+  (Object as { hasOwn?: unknown }).hasOwn = (obj: object, prop: PropertyKey): boolean =>
     objectHasOwnProperty.call(obj, prop);
 }
 
@@ -206,7 +206,7 @@ const telegramLanguageCapped = Promise.race([
 ]);
 
 void Promise.all([i18nReady, telegramLanguageCapped, themeColorsReady]).then(() => {
-  ReactDOM.createRoot(document.getElementById('root')!).render(
+  ReactDOM.createRoot(required(document.getElementById('root'))).render(
     <React.StrictMode>
       <ErrorBoundary level="app">
         <QueryClientProvider client={queryClient}>

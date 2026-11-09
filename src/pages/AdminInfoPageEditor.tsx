@@ -416,9 +416,10 @@ function FaqBuilder({ items, onChange, locale, localeLabel }: FaqBuilderProps) {
   const [itemKeys, setItemKeys] = useState<number[]>(() => items.map(() => keyCounter.current++));
 
   // Regenerate all keys on locale switch (items are semantically different)
+  // biome-ignore lint/correctness/useExhaustiveDependencies: ключи пересчитываются только при смене языка
   useEffect(() => {
     setItemKeys(items.map(() => keyCounter.current++));
-  }, [locale]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [locale]);
 
   // Sync key count when items added/removed within the same locale
   useEffect(() => {
@@ -629,6 +630,7 @@ export default function AdminInfoPageEditor() {
   const handleMediaUploadRef = useRef<(file: File) => void>(() => {});
 
   // TipTap editor
+  // biome-ignore lint/correctness/useExhaustiveDependencies: расширения создаются один раз вместе с редактором
   const extensions = useMemo(
     () => [
       StarterKit.configure({
@@ -653,7 +655,6 @@ export default function AdminInfoPageEditor() {
       HighlightExtension,
       VideoExtension,
     ],
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     [],
   );
 
@@ -847,6 +848,7 @@ export default function AdminInfoPageEditor() {
   }, [pageData]);
 
   // Set editor content once when editor is ready
+  // biome-ignore lint/correctness/useExhaustiveDependencies: содержимое задаётся один раз при монтировании редактора
   useEffect(() => {
     if (!pageData || !editor || editorPopulated.current) return;
     const initialContent = pageData.content[activeLocale] ?? pageData.content.ru ?? '';
@@ -854,7 +856,6 @@ export default function AdminInfoPageEditor() {
     editorPopulated.current = true;
     // activeLocale intentionally omitted — initial content is locked at editor
     // mount; subsequent locale changes are routed through switchLocale().
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pageData, editor]);
 
   // Auto-generate slug from Russian title

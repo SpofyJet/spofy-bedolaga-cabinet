@@ -81,7 +81,7 @@ export function useAnimationLoop(
         tg.offEvent?.('deactivated', onTgDeactivated);
       }
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // biome-ignore lint/correctness/useExhaustiveDependencies: список зависимостей задаёт вызывающий код
   }, deps);
 }
 

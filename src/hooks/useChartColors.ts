@@ -66,6 +66,7 @@ export function useChartColors(): ChartColors {
     return () => observer.disconnect();
   }, []);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: themeKey — намеренный повод перезапуска
   const colors = useMemo<ChartColors>(
     () => ({
       earnings: cssVarToHex(CSS_VARS.earnings, FALLBACK.earnings),
@@ -76,7 +77,6 @@ export function useChartColors(): ChartColors {
       tick: cssVarToHex(CSS_VARS.tick, FALLBACK.tick),
       label: cssVarToHex(CSS_VARS.label, FALLBACK.label),
     }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     [themeKey],
   );
 

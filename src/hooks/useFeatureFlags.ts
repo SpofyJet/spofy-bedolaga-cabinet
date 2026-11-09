@@ -81,6 +81,7 @@ export function useFeatureFlags() {
     giftEnabled: giftConfig ? giftConfig.enabled : cached.giftEnabled,
   };
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: объект flags новый на каждый рендер, зависимости это его значения
   useEffect(() => {
     if (!referralTerms && !wheelConfig && !contestsCount && !pollsCount && !giftConfig) return;
     try {
@@ -88,7 +89,6 @@ export function useFeatureFlags() {
     } catch {
       // квоты/приватный режим — некритично
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     flags.referralEnabled,
     flags.wheelEnabled,

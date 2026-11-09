@@ -74,6 +74,7 @@ export default function AdminPayments() {
   }, [searchInput]);
 
   // Reset page on filter changes
+  // biome-ignore lint/correctness/useExhaustiveDependencies: statusFilter, periodFilter, methodFilter, dateFrom, dateTo — намеренный повод перезапуска
   useEffect(() => {
     setPage(1);
   }, [statusFilter, periodFilter, methodFilter, dateFrom, dateTo]);

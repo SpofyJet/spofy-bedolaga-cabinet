@@ -43,7 +43,7 @@ function FitVisual({ children }: { children: React.ReactNode }) {
     const outer = outerRef.current;
     const inner = innerRef.current;
     if (!outer || !inner) return;
-    const fit = () => {
+    const fitScale = () => {
       const cs = getComputedStyle(outer);
       const avail = outer.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom);
       // offsetHeight не учитывает transform — это естественная высота.
@@ -51,8 +51,8 @@ function FitVisual({ children }: { children: React.ReactNode }) {
       const next = need > avail && avail > 0 ? Math.max(VISUAL_MIN_SCALE, avail / need) : 1;
       setScale((prev) => (Math.abs(prev - next) < 0.01 ? prev : next));
     };
-    fit();
-    const ro = new ResizeObserver(fit);
+    fitScale();
+    const ro = new ResizeObserver(fitScale);
     ro.observe(outer);
     ro.observe(inner);
     return () => ro.disconnect();

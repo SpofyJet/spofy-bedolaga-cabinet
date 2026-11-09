@@ -235,13 +235,9 @@ export default function AdminBulkActions() {
     setLoading(usersQuery.isFetching);
   }, [usersQuery.isFetching]);
 
-  const loadUsers = useCallback(
-    async () => {
-      await usersQuery.refetch();
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [usersQuery.refetch],
-  );
+  const loadUsers = useCallback(async () => {
+    await usersQuery.refetch();
+  }, [usersQuery.refetch]);
 
   // Static lookup tables — long staleTime since these change rarely.
   const tariffsLookupQuery = useQuery({

@@ -179,7 +179,7 @@ export default function AdminPolicies() {
 
       if (parsed.weekdays && parsed.weekdays.length > 0 && parsed.weekdays.length < 7) {
         const dayOrder = [1, 2, 3, 4, 5, 6, 0];
-        const sorted = dayOrder.filter((d) => parsed.weekdays!.includes(d));
+        const sorted = dayOrder.filter((d) => parsed.weekdays?.includes(d));
         const dayNames = sorted.map((d) => t(`admin.policies.conditions.day${d}`));
         icons.push(
           <span

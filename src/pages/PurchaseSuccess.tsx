@@ -22,6 +22,7 @@ import { AnimatedCheckmark } from '@/components/ui/AnimatedCheckmark';
 import { AnimatedCrossmark } from '@/components/ui/AnimatedCrossmark';
 import { cn } from '../lib/utils';
 import { plainTariffName } from '@/utils/plainTariffName';
+import { required } from '@/utils/required';
 
 const MAX_POLL_MS = 10 * 60 * 1000; // 10 minutes
 
@@ -757,7 +758,7 @@ export default function PurchaseSuccess() {
     refetch,
   } = useQuery({
     queryKey: ['purchase-status', token],
-    queryFn: () => landingApi.getPurchaseStatus(token!),
+    queryFn: () => landingApi.getPurchaseStatus(required(token)),
     enabled: !!token && !pollTimedOut,
     refetchInterval: (query) => {
       const data = query.state.data;
@@ -868,7 +869,7 @@ export default function PurchaseSuccess() {
               />
             ) : isEmailSelfPurchase ? (
               <CabinetCredentialsState
-                cabinetEmail={purchaseStatus.cabinet_email!}
+                cabinetEmail={purchaseStatus.cabinet_email ?? ''}
                 cabinetPassword={purchaseStatus.cabinet_password}
                 autoLoginToken={purchaseStatus.auto_login_token}
                 tariffName={plainTariffName(purchaseStatus.tariff_name)}

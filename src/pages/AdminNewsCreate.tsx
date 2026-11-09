@@ -134,6 +134,7 @@ export default function AdminNewsCreate() {
   // placeholder reads the translation at mount time only, which is acceptable
   // since locale changes at runtime are rare and the editor retains content.
   // Using [t] as the dependency would destroy the editor on every locale change.
+  // biome-ignore lint/correctness/useExhaustiveDependencies: расширения создаются один раз вместе с редактором
   const extensions = useMemo(
     () => [
       StarterKit.configure({
@@ -158,7 +159,6 @@ export default function AdminNewsCreate() {
       HighlightExtension,
       VideoExtension,
     ],
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     [],
   );
 

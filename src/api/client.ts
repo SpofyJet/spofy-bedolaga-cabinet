@@ -1,4 +1,4 @@
-import axios, { type AxiosError, type InternalAxiosRequestConfig } from 'axios';
+import axios, { type AxiosError, type AxiosResponse, type InternalAxiosRequestConfig } from 'axios';
 import { getTelegramInitData as readTelegramInitData } from '../utils/telegramInitData';
 import {
   tokenStorage,
@@ -29,10 +29,16 @@ function generateCsrfToken(): string {
   return Array.from(array, (byte) => byte.toString(16).padStart(2, '0')).join('');
 }
 
+/** Вызывать только после проверки вида isMaintenanceError: она гарантирует наличие ответа. */
+function errorDetail<T>(error: AxiosError): T {
+  return (error.response as AxiosResponse<{ detail: T }>).data.detail;
+}
+
 function ensureCsrfToken(): string {
   let token = getCsrfToken();
   if (!token) {
     token = generateCsrfToken();
+    // biome-ignore lint/suspicious/noDocumentCookie: Cookie Store API нет в WebView Telegram
     document.cookie = `${CSRF_COOKIE_NAME}=${token}; path=/; SameSite=Strict; Secure`;
   }
   return token;
@@ -222,7 +228,7 @@ apiClient.interceptors.response.use(
     }
 
     if (isMaintenanceError(error)) {
-      const detail = (error.response?.data as { detail: MaintenanceError }).detail;
+      const detail = errorDetail<MaintenanceError>(error);
       useBlockingStore.getState().setMaintenance({
         message: detail.message,
         reason: detail.reason,
@@ -236,7 +242,7 @@ apiClient.interceptors.response.use(
     }
 
     if (isChannelSubscriptionError(error)) {
-      const detail = (error.response?.data as { detail: ChannelSubscriptionError }).detail;
+      const detail = errorDetail<ChannelSubscriptionError>(error);
       useBlockingStore.getState().setChannelSubscription({
         message: detail.message,
         channel_link: detail.channel_link,
@@ -246,7 +252,7 @@ apiClient.interceptors.response.use(
     }
 
     if (isBlacklistedError(error)) {
-      const detail = (error.response?.data as { detail: BlacklistedError }).detail;
+      const detail = errorDetail<BlacklistedError>(error);
       useBlockingStore.getState().setBlacklisted({
         message: detail.message,
       });
@@ -254,7 +260,7 @@ apiClient.interceptors.response.use(
     }
 
     if (isAccountDeletedError(error)) {
-      const detail = (error.response?.data as { detail: AccountDeletedError }).detail;
+      const detail = errorDetail<AccountDeletedError>(error);
       // Surface the deleted-account screen. The auth flow (initData login)
       // is allowed to auto-revive; this branch is for token-bearing
       // sessions where the user is already in the cabinet but their row

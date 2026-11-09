@@ -14,6 +14,7 @@ import { Button, Page, Surface } from '@/components/spofy/ui';
 import { cn } from '@/lib/utils';
 import { loadTopUpPendingInfo, clearTopUpPendingInfo } from '../utils/topUpStorage';
 import { isPaidStatus, isFailedStatus } from '../utils/paymentStatus';
+import { required } from '@/utils/required';
 
 // ── Constants ────────────────────────────────────────────────
 const MAX_POLL_MS = 10 * 60 * 1000; // 10 minutes
@@ -219,7 +220,7 @@ export default function TopUpResult() {
   // Poll payment status by specific ID (primary path — sessionStorage available)
   const { data: paymentStatus, refetch } = useQuery({
     queryKey: ['topup-status', pendingInfo?.method_id, parsedPaymentId],
-    queryFn: () => balanceApi.getPendingPayment(pendingInfo!.method_id, parsedPaymentId),
+    queryFn: () => balanceApi.getPendingPayment(required(pendingInfo).method_id, parsedPaymentId),
     enabled: canPollById && !pollTimedOut,
     refetchInterval: (query) => {
       const payment = query.state.data;
@@ -243,7 +244,7 @@ export default function TopUpResult() {
   // Poll payment status by method latest (fallback — external browser, no sessionStorage)
   const { data: latestPayment, refetch: refetchLatest } = useQuery({
     queryKey: ['topup-status-latest', methodFromUrl],
-    queryFn: () => balanceApi.getLatestPayment(methodFromUrl!),
+    queryFn: () => balanceApi.getLatestPayment(required(methodFromUrl)),
     enabled: canPollByMethod && !pollTimedOut,
     refetchInterval: (query) => {
       const payment = query.state.data;
@@ -267,6 +268,7 @@ export default function TopUpResult() {
   // Merge both polling sources
   const effectivePayment = paymentStatus ?? latestPayment;
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: setPollTimedOut — намеренный повод перезапуска
   const handleRetryPoll = useCallback(() => {
     pollStart.current = Date.now();
     setPollTimedOut(false);

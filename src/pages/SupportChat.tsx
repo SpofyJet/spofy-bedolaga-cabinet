@@ -85,7 +85,9 @@ export default function SupportChat() {
 
   useEffect(() => {
     const urls = blobUrls.current;
-    return () => urls.forEach((u) => URL.revokeObjectURL(u));
+    return () => {
+      for (const u of urls) URL.revokeObjectURL(u);
+    };
   }, []);
 
   const { data: supportConfig, isLoading: configLoading } = useQuery({
@@ -215,7 +217,9 @@ export default function SupportChat() {
       }
     },
     onSuccess: (id) => {
-      attachments.forEach((a) => a.preview && URL.revokeObjectURL(a.preview));
+      for (const a of attachments) {
+        if (a.preview) URL.revokeObjectURL(a.preview);
+      }
       setAttachments([]);
       // первое сообщение нового обращения: чат переезжает на адрес тикета
       if (id !== ticket?.id) navigate(`/support/${id}`, { replace: true });
@@ -285,6 +289,7 @@ export default function SupportChat() {
 
   // ---------- Автовысота поля и прокрутка ----------
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: draft — намеренный повод перезапуска
   useLayoutEffect(() => {
     const el = inputRef.current;
     if (!el) return;
@@ -303,6 +308,7 @@ export default function SupportChat() {
     feed.scrollTo?.({ top: feed.scrollHeight, behavior: smooth ? 'smooth' : 'auto' });
   }, []);
   const firstScroll = useRef(true);
+  // biome-ignore lint/correctness/useExhaustiveDependencies: lastId, pendingText — намеренный повод перезапуска
   useEffect(() => {
     if (configLoading || detailLoading) return;
     scrollToEnd(!firstScroll.current);
@@ -416,6 +422,7 @@ export default function SupportChat() {
             {msg.message_text && (
               <span
                 className="support-bubble-text whitespace-pre-wrap break-words"
+                // biome-ignore lint/security/noDangerouslySetInnerHtml: HTML проходит через DOMPurify
                 dangerouslySetInnerHTML={{ __html: linkifyText(msg.message_text) }}
               />
             )}

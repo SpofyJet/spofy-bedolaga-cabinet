@@ -10,6 +10,7 @@ import {
 } from '../api/adminPinnedMessages';
 import { AdminBackButton, Toggle } from '../components/admin';
 import { PinIcon, XIcon, RefreshIcon, PhotoIcon, VideoIcon, SaveIcon } from '@/components/icons';
+import { required } from '@/utils/required';
 
 export default function AdminPinnedMessageCreate() {
   const { t } = useTranslation();
@@ -46,7 +47,7 @@ export default function AdminPinnedMessageCreate() {
   // Load existing message for editing
   const { data: existingMessage, isLoading: isLoadingMessage } = useQuery({
     queryKey: ['admin', 'pinned-messages', 'detail', messageId],
-    queryFn: () => adminPinnedMessagesApi.get(messageId!),
+    queryFn: () => adminPinnedMessagesApi.get(required(messageId)),
     enabled: isEditing && messageId !== null,
   });
 
@@ -76,7 +77,7 @@ export default function AdminPinnedMessageCreate() {
   // Update mutation
   const updateMutation = useMutation({
     mutationFn: (data: PinnedMessageUpdateRequest) =>
-      adminPinnedMessagesApi.update(messageId!, data),
+      adminPinnedMessagesApi.update(required(messageId), data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin', 'pinned-messages'] });
       navigate('/admin/pinned-messages');

@@ -25,7 +25,7 @@ const RENDERERS = [
 
 // className="..." непосредственно перед выводом тела сообщения
 const MESSAGE_BODY_RE =
-  /className="([^"]*)"\s*\n\s*dangerouslySetInnerHTML=\{\{\s*__html:\s*linkifyText\(msg\.message_text\)/g;
+  /className="([^"]*)"\s*\n(?:\s*\/\/[^\n]*\n)?\s*dangerouslySetInnerHTML=\{\{\s*__html:\s*linkifyText\(msg\.message_text\)/g;
 
 function messageBodyClasses(file: string): string[] {
   const source = readFileSync(new URL(`../../${file}`, import.meta.url), 'utf8');

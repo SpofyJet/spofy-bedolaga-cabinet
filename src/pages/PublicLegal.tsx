@@ -73,7 +73,10 @@ export default function PublicLegal({ doc }: PublicLegalProps) {
           </div>
         ) : (
           <div className="prose prose-invert max-w-none rounded-3xl bg-dark-900/70 p-5">
-            <div dangerouslySetInnerHTML={{ __html: formatContent(data.content) }} />
+            <div
+              // biome-ignore lint/security/noDangerouslySetInnerHtml: HTML проходит через DOMPurify
+              dangerouslySetInnerHTML={{ __html: formatContent(data.content) }}
+            />
             {data.updated_at && (
               <p className="mt-4 text-xs text-dark-500">
                 {t('info.updatedAt', 'Обновлено')}:{' '}

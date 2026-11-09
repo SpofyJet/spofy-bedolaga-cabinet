@@ -24,6 +24,7 @@ import { SettingsTreeSidebar } from '../components/admin/SettingsTreeSidebar';
 import { SettingsMobileTabs } from '../components/admin/SettingsMobileTabs';
 import { SettingsSearchMobile, SettingsSearchResults } from '../components/admin/SettingsSearch';
 import { BackIcon, ChevronRightIcon } from '@/components/icons';
+import { required } from '@/utils/required';
 
 // Settings that require SALES_MODE=tariffs to be visible
 const TARIFF_MODE_SETTINGS = ['MULTI_TARIFF_ENABLED', 'MAX_ACTIVE_SUBSCRIPTIONS'];
@@ -44,6 +45,7 @@ export default function AdminSettings() {
   const { favorites, toggleFavorite, isFavorite } = useFavoriteSettings();
 
   // Scroll to top on section change
+  // biome-ignore lint/correctness/useExhaustiveDependencies: activeSection — намеренный повод перезапуска
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'instant' });
   }, [activeSection]);
@@ -81,6 +83,7 @@ export default function AdminSettings() {
   }, [allSettings]);
 
   // Get categories for current sub-item
+  // biome-ignore lint/correctness/useExhaustiveDependencies: activeTreeInfo вычисляется из activeSection при каждом рендере
   const currentCategories = useMemo(() => {
     if (!activeTreeInfo || !allSettings || !Array.isArray(allSettings)) return [];
 
@@ -103,7 +106,7 @@ export default function AdminSettings() {
         if (!categoryMap.has(setting.category.key)) {
           categoryMap.set(setting.category.key, []);
         }
-        categoryMap.get(setting.category.key)!.push(setting);
+        required(categoryMap.get(setting.category.key)).push(setting);
       }
     }
 
@@ -112,7 +115,6 @@ export default function AdminSettings() {
       label: t(`admin.settings.categories.${key}`, key),
       settings,
     }));
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- activeTreeInfo derived from activeSection
   }, [activeSection, allSettings, isTariffsMode, t]);
 
   // Filter settings for search - GLOBAL search across all settings
@@ -157,6 +159,7 @@ export default function AdminSettings() {
   }, [allSettings]);
 
   // Handle setting selection from autocomplete
+  // biome-ignore lint/correctness/useExhaustiveDependencies: setActiveSection, setSearchQuery — намеренный повод перезапуска
   const handleSelectSetting = useCallback(
     (setting: SettingDefinition) => {
       const location = findTreeLocation(setting.category.key);
@@ -169,6 +172,7 @@ export default function AdminSettings() {
   );
 
   // Get the display title for the current section
+  // biome-ignore lint/correctness/useExhaustiveDependencies: activeTreeInfo вычисляется из activeSection при каждом рендере
   const sectionTitle = useMemo(() => {
     // Special items
     const specialItem = SETTINGS_TREE.specialItems.find((item) => item.id === activeSection);
@@ -178,7 +182,6 @@ export default function AdminSettings() {
     if (activeTreeInfo) return t(`admin.settings.tree.${activeTreeInfo.child.id}`);
 
     return t('admin.settings.title');
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- activeTreeInfo derived from activeSection
   }, [activeSection, t]);
 
   // Render content based on active section

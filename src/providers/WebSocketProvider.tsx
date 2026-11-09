@@ -64,6 +64,7 @@ export function WebSocketProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: maxReconnectAttempts — намеренный повод перезапуска
   const connect = useCallback(() => {
     if (!accessToken || !isAuthenticated) {
       return;

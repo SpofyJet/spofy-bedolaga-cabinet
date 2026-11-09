@@ -12,6 +12,7 @@ import { TicketIcon } from '@/components/icons';
 import { Skeleton, SkeletonGroup } from '@/components/ui/skeleton';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { Button } from '@/components/spofy/ui';
+import { required } from '@/utils/required';
 
 function Shell({ children }: { children: React.ReactNode }) {
   const { t } = useTranslation();
@@ -52,7 +53,7 @@ export default function CouponStatus() {
     error,
   } = useQuery({
     queryKey: ['coupon-status', token],
-    queryFn: () => couponsApi.getCouponStatus(token!),
+    queryFn: () => couponsApi.getCouponStatus(required(token)),
     enabled: !!token,
     // 404 is the expected answer for an invalid/consumed/expired token — the
     // common case for a shared link — so retrying only wastes a request against
@@ -61,7 +62,7 @@ export default function CouponStatus() {
   });
 
   const redeemMutation = useMutation({
-    mutationFn: () => couponsApi.redeemCoupon(token!),
+    mutationFn: () => couponsApi.redeemCoupon(required(token)),
     onSuccess: (result) => {
       setRedeemError(null);
       setRedeemed(result);

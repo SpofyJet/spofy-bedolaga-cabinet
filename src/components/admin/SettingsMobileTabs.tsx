@@ -20,6 +20,7 @@ export function SettingsMobileTabs({
   const [expandedGroup, setExpandedGroup] = useState<string | null>(null);
 
   // Scroll active tab into view
+  // biome-ignore lint/correctness/useExhaustiveDependencies: activeSection — намеренный повод перезапуска
   useEffect(() => {
     if (activeRef.current && scrollRef.current) {
       const container = scrollRef.current;

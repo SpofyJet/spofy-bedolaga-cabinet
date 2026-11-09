@@ -197,7 +197,7 @@ function ChannelCard({
             <div className="mt-1.5 flex items-center gap-1 text-[13px] text-accent-400">
               <LinkIcon className="h-4 w-4" />
               <a
-                href={channel.channel_link!}
+                href={channel.channel_link ?? undefined}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="truncate hover:underline"

@@ -366,7 +366,7 @@ function PaymentMethodCard({
       {isSelected && hasSubOptions && (
         <div className="border-t border-dark-800/30 px-4 pb-4 pt-3">
           <div className="flex flex-wrap gap-2">
-            {method.sub_options!.map((opt) => (
+            {method.sub_options?.map((opt) => (
               <button
                 key={opt.id}
                 type="button"
@@ -1232,7 +1232,7 @@ function MyGiftsTabContent() {
             {t('gift.receivedGiftsTitle')}
           </h2>
           <div className="space-y-3">
-            {receivedGifts!.map((gift) => (
+            {receivedGifts?.map((gift) => (
               <ReceivedGiftCard key={gift.token} gift={gift} />
             ))}
           </div>

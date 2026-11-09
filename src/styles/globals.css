@@ -1449,6 +1449,7 @@ input[type="checkbox"]:hover:not(:checked) {
   color: rgb(var(--color-accent-400));
   font-weight: 700;
 }
+/* biome-ignore lint/style/noDescendingSpecificity: порядок задан темой календаря */
 .rdp-dark .rdp-selected .rdp-day_button {
   background-color: rgb(var(--color-accent-500));
   color: #fff;

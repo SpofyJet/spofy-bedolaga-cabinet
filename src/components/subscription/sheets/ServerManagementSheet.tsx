@@ -57,6 +57,7 @@ export function ServerManagementSheet({
   });
 
   // Seed selected = currently connected once the data loads.
+  // biome-ignore lint/correctness/useExhaustiveDependencies: сеттер родителя стабилен, повторно заполнять список нельзя
   useEffect(() => {
     if (countriesData && open) {
       const connected = countriesData.countries.filter((c) => c.is_connected).map((c) => c.uuid);
@@ -64,7 +65,6 @@ export function ServerManagementSheet({
     }
     // Intentionally narrow — the setter is stable and we don't want to
     // re-seed every time the user toggles a server.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [countriesData, open]);
 
   const updateMutation = useMutation({

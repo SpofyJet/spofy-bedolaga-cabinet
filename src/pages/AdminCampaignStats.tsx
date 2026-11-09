@@ -12,6 +12,7 @@ import { copyToClipboard } from '../utils/clipboard';
 import { useHaptic } from '../platform';
 import { ChartIcon, ChevronDownIcon, CopyIcon, LinkIcon, UsersIcon } from '@/components/icons';
 import { PageSkeleton, Skeleton, SkeletonGroup } from '@/components/ui/skeleton';
+import { required } from '@/utils/required';
 
 // Bonus type config
 const bonusTypeConfig: Record<
@@ -69,7 +70,7 @@ export default function AdminCampaignStats() {
     error,
   } = useQuery({
     queryKey: ['campaign-stats', id],
-    queryFn: () => campaignsApi.getCampaignStats(numericId!),
+    queryFn: () => campaignsApi.getCampaignStats(required(numericId)),
     enabled: isValidId,
     staleTime: PARTNER_STATS.STATS_STALE_TIME,
   });
@@ -77,14 +78,14 @@ export default function AdminCampaignStats() {
   // Fetch registrations when users section is open
   const { data: registrationsData, isLoading: usersLoading } = useQuery({
     queryKey: ['campaign-registrations', id],
-    queryFn: () => campaignsApi.getCampaignRegistrations(numericId!, 1, 50),
+    queryFn: () => campaignsApi.getCampaignRegistrations(required(numericId), 1, 50),
     enabled: isValidId && showUsers,
   });
 
   // Fetch chart data
   const { data: chartData, isLoading: chartLoading } = useQuery<AdminCampaignChartData>({
     queryKey: ['campaign-chart-data', id],
-    queryFn: () => campaignsApi.getChartData(numericId!),
+    queryFn: () => campaignsApi.getChartData(required(numericId)),
     enabled: isValidId,
     staleTime: PARTNER_STATS.STATS_STALE_TIME,
   });
@@ -211,7 +212,7 @@ export default function AdminCampaignStats() {
                     <span className="truncate text-sm text-dark-300">{stats.deep_link}</span>
                   </div>
                   <button
-                    onClick={() => handleCopy(stats.deep_link!, 'bot')}
+                    onClick={() => handleCopy(stats.deep_link ?? '', 'bot')}
                     className="flex shrink-0 items-center gap-1 rounded-lg bg-dark-700 px-3 py-2 text-dark-300 transition-colors hover:bg-dark-600"
                   >
                     <CopyIcon />
@@ -235,7 +236,7 @@ export default function AdminCampaignStats() {
                     <span className="truncate text-sm text-dark-300">{stats.web_link}</span>
                   </div>
                   <button
-                    onClick={() => handleCopy(stats.web_link!, 'web')}
+                    onClick={() => handleCopy(stats.web_link ?? '', 'web')}
                     className="flex shrink-0 items-center gap-1 rounded-lg bg-dark-700 px-3 py-2 text-dark-300 transition-colors hover:bg-dark-600"
                   >
                     <CopyIcon />

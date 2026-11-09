@@ -18,6 +18,7 @@ import InsufficientBalancePrompt from '../../InsufficientBalancePrompt';
 import type { Subscription, Tariff } from '../../../types';
 import { Skeleton, SkeletonGroup } from '../../ui/skeleton';
 import { plainTariffName } from '@/utils/plainTariffName';
+import { required } from '@/utils/required';
 
 // ──────────────────────────────────────────────────────────────────
 // SwitchTariffSheet
@@ -98,7 +99,7 @@ export function SwitchTariffSheet({
     refetch,
   } = useQuery({
     queryKey: ['tariff-switch-preview', tariffId, subscriptionId],
-    queryFn: () => subscriptionApi.previewTariffSwitch(tariffId!, subscriptionId),
+    queryFn: () => subscriptionApi.previewTariffSwitch(required(tariffId), subscriptionId),
     enabled: !!tariffId,
     retry: false,
   });

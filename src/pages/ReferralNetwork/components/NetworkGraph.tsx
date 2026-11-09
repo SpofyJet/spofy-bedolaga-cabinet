@@ -15,6 +15,7 @@ import {
   NODE_COLORS,
 } from '../utils';
 import { setSigmaInstance } from '../sigmaGlobals';
+import { required } from '@/utils/required';
 
 interface NetworkGraphProps {
   data: NetworkGraphData;
@@ -92,7 +93,7 @@ function computeRadialPositions(
 
   // BFS: place children at increasing radius
   while (queue.length > 0) {
-    const { userId, depth, parentAngle } = queue.shift()!;
+    const { userId, depth, parentAngle } = required(queue.shift());
     const children = childrenOf.get(userId) ?? [];
     const childCount = children.length;
     if (childCount === 0) continue;
@@ -547,6 +548,7 @@ export function NetworkGraph({ data, className }: NetworkGraphProps) {
     sigmaRef.current.refresh();
   }, [filters]);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: hoveredNodeId, highlightedNodes — намеренный повод перезапуска
   useEffect(() => {
     if (sigmaRef.current) {
       sigmaRef.current.refresh();

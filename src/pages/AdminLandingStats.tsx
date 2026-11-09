@@ -246,12 +246,14 @@ export default function AdminLandingStats() {
   }, [stats, t]);
 
   // Daily revenue — for SimpleAreaChart
+  // biome-ignore lint/correctness/useExhaustiveDependencies: divisor — намеренный повод перезапуска
   const dailyRevenue = useMemo(() => {
     if (!stats) return [];
     return stats.daily_stats.map((d) => ({ date: d.date, value: d.revenue_kopeks / divisor }));
   }, [stats, divisor]);
 
   // Tariff breakdown (by revenue)
+  // biome-ignore lint/correctness/useExhaustiveDependencies: divisor — намеренный повод перезапуска
   const tariffItems = useMemo(
     () =>
       (stats?.tariff_stats ?? []).map((t2) => ({

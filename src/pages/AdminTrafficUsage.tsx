@@ -270,6 +270,7 @@ export default function AdminTrafficUsage() {
 
   // Prefetch adjacent periods in background via queryClient — populates the
   // cache so switching period feels instant.
+  // biome-ignore lint/correctness/useExhaustiveDependencies: limit — намеренный повод перезапуска
   useEffect(() => {
     if (dateMode) return;
     const prefetchPeriods = PERIODS.filter((p) => p !== period);

@@ -59,7 +59,9 @@ const hslToRgb = (h: number, s: number, l: number): { r: number; g: number; b: n
   h /= 360;
   s /= 100;
   l /= 100;
-  let r, g, b;
+  let r: number;
+  let g: number;
+  let b: number;
   if (s === 0) {
     r = g = b = l;
   } else {

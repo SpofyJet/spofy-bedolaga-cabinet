@@ -15,6 +15,7 @@ import { CheckCircleIcon, CheckIcon, CopyIcon } from '@/components/icons';
 import { Skeleton, SkeletonGroup } from '@/components/ui/skeleton';
 import { PiGiftDuotone } from 'react-icons/pi';
 import { plainTariffName } from '@/utils/plainTariffName';
+import { required } from '@/utils/required';
 
 const MAX_POLL_MS = 10 * 60 * 1000; // poll an unsettled payment for up to 10 min
 
@@ -52,7 +53,7 @@ export default function GiftClaim() {
     error,
   } = useQuery({
     queryKey: ['gift-claim', token],
-    queryFn: () => landingApi.getGiftClaim(token!),
+    queryFn: () => landingApi.getGiftClaim(required(token)),
     enabled: !!token,
     retry: 1,
     // Poll only while the payment is still settling (not yet claimable / terminal).
@@ -66,7 +67,7 @@ export default function GiftClaim() {
   });
 
   const claimMutation = useMutation({
-    mutationFn: () => landingApi.claimGift(token!, email.trim()),
+    mutationFn: () => landingApi.claimGift(required(token), email.trim()),
     onSuccess: (res) => {
       // One-click cabinet login for a fresh email account; otherwise show the link.
       if (res.auto_login_token) {

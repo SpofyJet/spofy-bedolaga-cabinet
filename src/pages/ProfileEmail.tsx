@@ -113,6 +113,7 @@ export default function ProfileEmail() {
     return () => clearTimeout(timer);
   }, [changeEmailStep, platform]);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: resetChangeEmail новая на каждый рендер, важна только смена шага
   useEffect(() => {
     if (changeEmailStep !== 'success') return;
     const timer = setTimeout(() => resetChangeEmail(), 3000);

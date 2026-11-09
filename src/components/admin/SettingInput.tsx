@@ -46,6 +46,7 @@ export function SettingInput({ setting, onUpdate, disabled }: SettingInputProps)
     !setting.is_secret && (isLongValue(currentValue) || isListOrJsonKey(setting.key));
 
   // Auto-resize textarea
+  // biome-ignore lint/correctness/useExhaustiveDependencies: value — намеренный повод перезапуска
   useEffect(() => {
     if (textareaRef.current && isEditing) {
       textareaRef.current.style.height = 'auto';

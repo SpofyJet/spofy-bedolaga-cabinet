@@ -24,6 +24,7 @@ import {
 } from '@/components/icons';
 import { StatCard } from '@/components/stats';
 import { Skeleton, SkeletonGroup } from '@/components/ui/skeleton';
+import { required } from '@/utils/required';
 
 interface MediaAttachment {
   id: string;
@@ -98,7 +99,7 @@ export default function AdminTickets() {
     const urls = blobUrlsRef;
     return () => {
       uploadRef.current++;
-      urls.current.forEach((u) => URL.revokeObjectURL(u));
+      for (const u of urls.current) URL.revokeObjectURL(u);
     };
   }, []);
 
@@ -119,7 +120,7 @@ export default function AdminTickets() {
 
   const { data: selectedTicket, isLoading: ticketLoading } = useQuery({
     queryKey: ['admin-ticket', selectedTicketId],
-    queryFn: () => adminApi.getTicket(selectedTicketId!),
+    queryFn: () => adminApi.getTicket(required(selectedTicketId)),
     enabled: !!selectedTicketId,
   });
 
@@ -406,12 +407,12 @@ export default function AdminTickets() {
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
-                          copyToClipboard(String(ticket.user!.telegram_id));
+                          copyToClipboard(String(ticket.user?.telegram_id));
                         }}
                         className="ml-1 text-dark-600 transition-colors hover:text-accent-400"
                         title={t('admin.tickets.copyTelegramId')}
                       >
-                        (TG: {ticket.user!.telegram_id})
+                        (TG: {ticket.user?.telegram_id})
                       </button>
                     )}{' '}
                     | {new Date(ticket.updated_at).toLocaleDateString()}
@@ -508,11 +509,11 @@ export default function AdminTickets() {
                     )}
                     {selectedTicket.user?.telegram_id && (
                       <button
-                        onClick={() => copyToClipboard(String(selectedTicket.user!.telegram_id))}
+                        onClick={() => copyToClipboard(String(selectedTicket.user?.telegram_id))}
                         className="ml-1 rounded bg-dark-700 px-2 py-0.5 text-xs transition-colors hover:bg-dark-600"
                         title={t('admin.tickets.copyTelegramId')}
                       >
-                        TG: {selectedTicket.user!.telegram_id}
+                        TG: {selectedTicket.user?.telegram_id}
                       </button>
                     )}{' '}
                     | {t('admin.tickets.created')}:{' '}
@@ -565,6 +566,7 @@ export default function AdminTickets() {
                     {msg.message_text && (
                       <p
                         className="whitespace-pre-wrap break-words text-dark-200 [&_a]:text-accent-400 [&_a]:underline"
+                        // biome-ignore lint/security/noDangerouslySetInnerHtml: HTML проходит через DOMPurify
                         dangerouslySetInnerHTML={{ __html: linkifyText(msg.message_text) }}
                       />
                     )}

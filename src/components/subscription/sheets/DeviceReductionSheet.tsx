@@ -54,6 +54,7 @@ export function DeviceReductionSheet({
   });
 
   // Seed the target limit once the info comes back.
+  // biome-ignore lint/correctness/useExhaustiveDependencies: сеттер родителя стабилен, повторно заполнять значение нельзя
   useEffect(() => {
     if (deviceReductionInfo && open) {
       onTargetDeviceLimitChange(
@@ -65,7 +66,6 @@ export function DeviceReductionSheet({
     }
     // onTargetDeviceLimitChange is a setter from the parent and stable
     // enough; intentionally narrow deps to avoid clobbering user input.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [deviceReductionInfo, open]);
 
   const reduceMutation = useMutation({

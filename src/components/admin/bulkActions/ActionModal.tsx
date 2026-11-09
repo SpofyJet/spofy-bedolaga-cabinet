@@ -54,6 +54,7 @@ function ProgressView({ progress }: { progress: ProgressState }) {
   const logEndRef = useRef<HTMLDivElement>(null);
   const percentage = progress.total > 0 ? Math.round((progress.current / progress.total) * 100) : 0;
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: progress.log.length — намеренный повод перезапуска
   useEffect(() => {
     logEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [progress.log.length]);

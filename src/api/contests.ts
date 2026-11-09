@@ -10,12 +10,20 @@ export interface ContestInfo {
   already_played: boolean;
 }
 
+export interface ContestGameFields {
+  total?: number;
+  grid_size?: number;
+  flags?: string[];
+  button_text?: string;
+  question?: string;
+  letters?: string;
+}
+
 export interface ContestGameData {
   round_id: number;
   game_type: string;
-  // Dynamic game data from backend - shape depends on game_type
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  game_data: Record<string, any>;
+  /** Набор полей зависит от game_type. */
+  game_data: ContestGameFields;
   instructions: string;
 }
 

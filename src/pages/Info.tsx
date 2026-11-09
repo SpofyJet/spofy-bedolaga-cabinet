@@ -202,6 +202,7 @@ function ReplacementFaqItem({
         <div ref={contentRef} className="px-4 pb-4 pt-0">
           <div
             className="prose prose-sm max-w-none text-dark-300"
+            // biome-ignore lint/security/noDangerouslySetInnerHtml: HTML проходит через DOMPurify
             dangerouslySetInnerHTML={{ __html: sanitizedAnswer }}
           />
         </div>
@@ -414,7 +415,11 @@ export default function Info() {
 
     return (
       <div className="rounded-3xl bg-dark-900/70 p-4 sm:p-5 prose prose-invert max-w-none">
-        <div className="overflow-x-auto" dangerouslySetInnerHTML={{ __html: infoPageHtml }} />
+        <div
+          className="overflow-x-auto"
+          // biome-ignore lint/security/noDangerouslySetInnerHtml: HTML проходит через DOMPurify
+          dangerouslySetInnerHTML={{ __html: infoPageHtml }}
+        />
       </div>
     );
   };
@@ -465,7 +470,10 @@ export default function Info() {
               </button>
               {expandedFaq === faq.id && (
                 <div className="prose prose-invert max-w-none px-4 pb-4 text-dark-300">
-                  <div dangerouslySetInnerHTML={{ __html: formatContent(faq.content) }} />
+                  <div
+                    // biome-ignore lint/security/noDangerouslySetInnerHtml: HTML проходит через DOMPurify
+                    dangerouslySetInnerHTML={{ __html: formatContent(faq.content) }}
+                  />
                 </div>
               )}
             </div>
@@ -491,6 +499,7 @@ export default function Info() {
         <div className="rounded-3xl bg-dark-900/70 p-4 sm:p-5 prose prose-invert max-w-none">
           <div
             className="overflow-x-auto"
+            // biome-ignore lint/security/noDangerouslySetInnerHtml: HTML проходит через DOMPurify
             dangerouslySetInnerHTML={{ __html: formatContent(rules.content) }}
           />
           {rules.updated_at && (
@@ -519,6 +528,7 @@ export default function Info() {
         <div className="rounded-3xl bg-dark-900/70 p-4 sm:p-5 prose prose-invert max-w-none">
           <div
             className="overflow-x-auto"
+            // biome-ignore lint/security/noDangerouslySetInnerHtml: HTML проходит через DOMPurify
             dangerouslySetInnerHTML={{ __html: formatContent(privacy.content) }}
           />
           {privacy.updated_at && (
@@ -547,6 +557,7 @@ export default function Info() {
         <div className="rounded-3xl bg-dark-900/70 p-4 sm:p-5 prose prose-invert max-w-none">
           <div
             className="overflow-x-auto"
+            // biome-ignore lint/security/noDangerouslySetInnerHtml: HTML проходит через DOMPurify
             dangerouslySetInnerHTML={{ __html: formatContent(offer.content) }}
           />
           {offer.updated_at && (

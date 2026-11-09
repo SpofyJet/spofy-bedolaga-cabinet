@@ -80,7 +80,7 @@ export default function TopUpAmount() {
 
   const returnTo = searchParams.get('returnTo');
   const initialAmountRubles = searchParams.get('amount')
-    ? parseFloat(searchParams.get('amount')!)
+    ? parseFloat(searchParams.get('amount') ?? '')
     : undefined;
 
   // Fetch payment methods with a real query (dedupes with the method-selection page and
@@ -173,6 +173,7 @@ export default function TopUpAmount() {
     }
   }, [methods, method, navigate, searchParams]);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: method?.id — намеренный повод перезапуска
   useEffect(() => {
     if (!method?.options || method.options.length === 0) {
       if (selectedOption !== null) {

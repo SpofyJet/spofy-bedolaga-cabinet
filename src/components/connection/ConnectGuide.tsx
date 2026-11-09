@@ -206,6 +206,7 @@ export default function ConnectGuide({
                 <span
                   aria-hidden
                   className="h-6 w-6 text-current [&>svg]:h-full [&>svg]:w-full"
+                  // biome-ignore lint/security/noDangerouslySetInnerHtml: HTML проходит через DOMPurify
                   dangerouslySetInnerHTML={{
                     __html: svgHtml(
                       (appConfig.platforms[key] as RemnawavePlatformData | undefined)?.svgIconKey,
@@ -320,6 +321,7 @@ function AppIcon({ app, svg }: { app: RemnawaveAppClient; svg: string }) {
         !logo?.tile && 'bg-dark-800 text-dark-200',
       )}
       style={logo?.tile ? { background: logo.tile } : undefined}
+      // biome-ignore lint/security/noDangerouslySetInnerHtml: HTML проходит через DOMPurify
       dangerouslySetInnerHTML={{ __html: svg }}
     />
   );
@@ -612,6 +614,7 @@ function Steps({
                 <span
                   aria-hidden
                   className="h-4 w-4 shrink-0 [&>svg]:h-full [&>svg]:w-full"
+                  // biome-ignore lint/security/noDangerouslySetInnerHtml: HTML проходит через DOMPurify
                   dangerouslySetInnerHTML={{ __html: icon }}
                 />
               ) : (

@@ -75,6 +75,7 @@ export function SettingsTreeSidebar({
   }, []);
 
   // Reset highlighted index when suggestions change
+  // biome-ignore lint/correctness/useExhaustiveDependencies: suggestions.length, searchQuery — намеренный повод перезапуска
   useEffect(() => {
     setHighlightedIndex(0);
   }, [suggestions.length, searchQuery]);

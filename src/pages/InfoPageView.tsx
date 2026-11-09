@@ -217,6 +217,7 @@ function FaqAccordionItem({
         <div ref={contentRef} className="px-4 pb-4 pt-0">
           <div
             className="prose prose-sm max-w-none text-dark-300"
+            // biome-ignore lint/security/noDangerouslySetInnerHtml: HTML проходит через DOMPurify
             dangerouslySetInnerHTML={{ __html: sanitizedAnswer }}
           />
         </div>
@@ -381,6 +382,7 @@ export default function InfoPageView() {
         /* Regular page content - sanitized with DOMPurify (strict allowlist) */
         <div
           className="prose max-w-none overflow-x-auto rounded-3xl bg-dark-900/70 p-4 sm:p-5"
+          // biome-ignore lint/security/noDangerouslySetInnerHtml: HTML проходит через DOMPurify
           dangerouslySetInnerHTML={{ __html: sanitizedContent }}
         />
       )}

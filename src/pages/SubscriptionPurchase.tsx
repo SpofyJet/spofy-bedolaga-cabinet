@@ -26,7 +26,7 @@ export default function SubscriptionPurchase() {
   const { t } = useTranslation();
   const [searchParams] = useSearchParams();
   const subscriptionId = searchParams.get('subscriptionId')
-    ? parseInt(searchParams.get('subscriptionId')!, 10)
+    ? parseInt(searchParams.get('subscriptionId') ?? '', 10)
     : undefined;
   // Витрина тарифов в двух видах. Обработчики и данные общие, различается
   // только подача; что делает нажатие — решает tariffAction() внутри обеих.

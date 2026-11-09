@@ -354,6 +354,7 @@ export default function NewsArticlePage() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.2 }}
         className="prose max-w-none rounded-3xl bg-dark-900/70 p-4 sm:p-5"
+        // biome-ignore lint/security/noDangerouslySetInnerHtml: HTML проходит через DOMPurify
         dangerouslySetInnerHTML={{ __html: sanitizedContent }}
       />
     </Page>

@@ -9,6 +9,7 @@ import { usePlatform } from '../platform/hooks/usePlatform';
 import { copyToClipboard } from '../utils/clipboard';
 import { getApiErrorMessage } from '../utils/api-error';
 import { BackIcon, CheckIcon, CopyIcon, DownloadIcon } from '@/components/icons';
+import { required } from '@/utils/required';
 
 const downloadLinksFile = (batch: CouponBatchCreated | { id: number; links: string[] }) => {
   const blob = new Blob([`${batch.links.join('\n')}\n`], { type: 'text/plain;charset=utf-8' });
@@ -73,7 +74,7 @@ export default function AdminCouponCreate() {
     if (!validate()) return;
     createMutation.mutate({
       name: name.trim(),
-      tariff_id: tariffId!,
+      tariff_id: required(tariffId),
       period_days: Number(periodDays),
       coupons_count: Number(couponsCount),
       wholesale_price_kopeks: priceRubles === '' ? 0 : Math.round(Number(priceRubles) * 100),

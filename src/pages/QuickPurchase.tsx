@@ -40,6 +40,7 @@ import { formatPrice } from '../utils/format';
 import { useCurrency } from '../hooks/useCurrency';
 import { safeSession } from '../utils/safeStorage';
 import { plainTariffName } from '@/utils/plainTariffName';
+import { required } from '@/utils/required';
 
 function detectContactType(value: string): 'email' | 'telegram' {
   return value.startsWith('@') ? 'telegram' : 'email';
@@ -398,7 +399,7 @@ function PaymentMethodCard({
             method.icon_url && 'pl-[68px]',
           )}
         >
-          {method.sub_options!.map((opt) => (
+          {method.sub_options?.map((opt) => (
             <button
               key={opt.id}
               type="button"
@@ -436,7 +437,11 @@ function SanitizedHtml({ html, className }: { html: string; className?: string }
   }, [html]);
 
   return (
-    <div className={cn('break-words', className)} dangerouslySetInnerHTML={{ __html: sanitized }} />
+    <div
+      className={cn('break-words', className)}
+      // biome-ignore lint/security/noDangerouslySetInnerHtml: HTML проходит через DOMPurify
+      dangerouslySetInnerHTML={{ __html: sanitized }}
+    />
   );
 }
 
@@ -775,7 +780,7 @@ export default function QuickPurchase() {
     error,
   } = useQuery({
     queryKey: ['landing-config', slug, i18n.language],
-    queryFn: () => landingApi.getConfig(slug!, i18n.language),
+    queryFn: () => landingApi.getConfig(required(slug), i18n.language),
     enabled: !!slug,
     staleTime: 60_000,
     retry: 1,
@@ -944,7 +949,7 @@ export default function QuickPurchase() {
     const prev = meta.content;
     meta.content = config.meta_description;
     return () => {
-      meta!.content = prev;
+      if (meta) meta.content = prev;
     };
   }, [config?.meta_description]);
 
@@ -1002,7 +1007,7 @@ export default function QuickPurchase() {
 
   // Purchase mutation
   const purchaseMutation = useMutation({
-    mutationFn: (data: PurchaseRequest) => landingApi.createPurchase(slug!, data),
+    mutationFn: (data: PurchaseRequest) => landingApi.createPurchase(required(slug), data),
     onSuccess: (result) => {
       window.location.href = result.payment_url;
       // If redirect blocked (popup blocker etc.), reset after 5s
@@ -1029,14 +1034,14 @@ export default function QuickPurchase() {
 
     // Build the payment_method string: append sub-option suffix if selected
     // e.g. "platega" + "2" → "platega_2"
-    let paymentMethod = selectedMethod!;
+    let paymentMethod = required(selectedMethod);
     if (selectedSubOption) {
       paymentMethod = `${paymentMethod}_${selectedSubOption}`;
     }
 
     const data: PurchaseRequest = {
-      tariff_id: selectedTariffId!,
-      period_days: selectedPeriodDays!,
+      tariff_id: required(selectedTariffId),
+      period_days: required(selectedPeriodDays),
       contact_type: detectContactType(contactValue),
       contact_value: contactValue.trim(),
       payment_method: paymentMethod,

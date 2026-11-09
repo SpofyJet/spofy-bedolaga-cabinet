@@ -9,6 +9,7 @@ import { usePlatform } from '../platform/hooks/usePlatform';
 import { createNumberInputHandler, toNumber } from '../utils/inputHelpers';
 import { BackIcon, CheckIcon, SaveIcon } from '@/components/icons';
 import { PageSkeleton, Skeleton } from '@/components/ui/skeleton';
+import { required } from '@/utils/required';
 
 export default function AdminPaymentMethodEdit() {
   const { t } = useTranslation();
@@ -68,7 +69,8 @@ export default function AdminPaymentMethodEdit() {
 
   // Update method mutation
   const updateMethodMutation = useMutation({
-    mutationFn: (data: Record<string, unknown>) => adminPaymentMethodsApi.update(methodId!, data),
+    mutationFn: (data: Record<string, unknown>) =>
+      adminPaymentMethodsApi.update(required(methodId), data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin-payment-methods'] });
       navigate('/admin/payment-methods');

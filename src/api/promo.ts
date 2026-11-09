@@ -10,8 +10,7 @@ export interface PromoOffer {
   is_claimed: boolean;
   claimed_at: string | null;
   // Dynamic extra data from backend
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  extra_data: Record<string, any> | null;
+  extra_data: { test_squad_uuids?: string[]; [key: string]: unknown } | null;
 }
 
 export interface ActiveDiscount {

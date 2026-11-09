@@ -286,6 +286,7 @@ export default function Dashboard() {
     ((multiSubError && !multiSubData) || (!isMultiTariff && subError && !subscriptionResponse));
   const statusReady = !multiSubPending && (isMultiTariff || !subLoading) && !statusUnknown;
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: multiSubErrorAt, subErrorAt — намеренный повод перезапуска
   useEffect(() => {
     if (!statusUnknown) return;
     const timer = setTimeout(

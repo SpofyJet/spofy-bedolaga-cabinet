@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 import { adminBroadcastsApi } from '../../api/adminBroadcasts';
 import { useFocusTrap } from '../../hooks/useFocusTrap';
+import { required } from '@/utils/required';
 
 interface PreviewButton {
   text: string;
@@ -153,7 +154,7 @@ function tokensToReact(tokens: Token[]): ReactNode {
     } else if (tok.kind === 'br') {
       top.children.push(<br key={`br-${elKey++}`} />);
     } else if (tok.kind === 'open') {
-      stack.push({ tag: tok.tag!, href: tok.href, children: [] });
+      stack.push({ tag: required(tok.tag), href: tok.href, children: [] });
     } else if (tok.kind === 'close') {
       let foundIdx = -1;
       for (let i = stack.length - 1; i >= 1; i--) {
@@ -164,14 +165,14 @@ function tokensToReact(tokens: Token[]): ReactNode {
       }
       if (foundIdx === -1) continue;
       while (stack.length > foundIdx) {
-        const closed = stack.pop()!;
+        const closed = required(stack.pop());
         const parent = stack[stack.length - 1] || root;
         parent.children.push(wrap(closed, elKey++));
       }
     }
   }
   while (stack.length > 1) {
-    const closed = stack.pop()!;
+    const closed = required(stack.pop());
     const parent = stack[stack.length - 1];
     parent.children.push(wrap(closed, elKey++));
   }

@@ -16,6 +16,7 @@ import { useNotify } from '@/platform';
 import { getApiErrorMessage } from '@/utils/api-error';
 import { MailIcon, SaveIcon, EyeIcon, SendIcon, ResetIcon, EditIcon } from '@/components/icons';
 import { Skeleton, SkeletonGroup } from '@/components/ui/skeleton';
+import { required } from '@/utils/required';
 
 const LANG_LABELS: Record<string, string> = {
   ru: 'RU',
@@ -146,6 +147,7 @@ function TemplateEditor({
   const isLayout = detail.notification_type === EMAIL_LAYOUT_TYPE;
 
   // Load data for current language (defaults arrive with {placeholders} intact)
+  // biome-ignore lint/correctness/useExhaustiveDependencies: activeLang — намеренный повод перезапуска
   useEffect(() => {
     if (langData) {
       setEditSubject(langData.subject);
@@ -465,7 +467,7 @@ function TemplateEditor({
                     {t('admin.emailTemplates.variablesCommon')}
                   </p>
                   <div className="flex flex-wrap gap-1 sm:gap-1.5">
-                    {detail.common_context_vars!.map((v) => (
+                    {detail.common_context_vars?.map((v) => (
                       <code
                         key={v}
                         className="cursor-pointer rounded bg-dark-800 px-2 py-0.5 font-mono text-xs text-dark-300 ring-1 ring-dark-600 transition-colors hover:bg-dark-700 hover:text-accent-400"
@@ -584,7 +586,7 @@ export default function AdminEmailTemplates() {
   // Fetch detail for selected type
   const { data: detailData, isLoading: detailLoading } = useQuery({
     queryKey: ['admin', 'email-template', selectedType],
-    queryFn: () => adminEmailTemplatesApi.getTemplate(selectedType!),
+    queryFn: () => adminEmailTemplatesApi.getTemplate(required(selectedType)),
     enabled: !!selectedType,
   });
 

@@ -130,7 +130,7 @@ export function StatCard({
       </div>
       {trendStyle && (
         <div className={`mt-1.5 text-xs font-medium ${trendStyle.className}`}>
-          {trendStyle.arrow} {Math.abs(delta!.percent)}%
+          {trendStyle.arrow} {Math.abs(delta?.percent ?? 0)}%
         </div>
       )}
     </div>
