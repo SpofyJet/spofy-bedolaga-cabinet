@@ -760,33 +760,6 @@
       "purchaseButton": "⚡ 通过SBP自动扣款订阅",
       "purchaseHint": "首次扣款即在银行应用中确认绑定；续费将按资费周期自动扣款。"
     },
-    "lavaRecurring": {
-      "title": "Lava 自动续订",
-      "connect": "连接",
-      "payFirst": "支付首期账单",
-      "cancel": "关闭",
-      "confirmCancel": "要关闭 Lava 自动续订吗？订阅将不再自动续订。",
-      "cancelled": "已关闭 Lava 自动续订",
-      "enableError": "无法开启 Lava 自动续订",
-      "cancelError": "无法关闭 Lava 自动续订",
-      "statusPending": "等待支付首期账单",
-      "statusActive": "已启用",
-      "statusPastDue": "扣款失败 — 请重试",
-      "nextCharge": "下次扣款 {{date}}",
-      "amountPerPeriod": "{{amount}} ₽ {{period}}",
-      "amountPerDays": "每 {{days}} 天 {{amount}} ₽",
-      "period": {
-        "day": "每天",
-        "week": "每周",
-        "month": "每月",
-        "quarter": "每季度",
-        "halfYear": "每半年",
-        "year": "每年"
-      },
-      "autopayHint": "订阅将通过 Lava 自动续订",
-      "purchaseButton": "⚡ 使用 Lava 自动续订下单",
-      "purchaseHint": "首期账单通过 Lava 链接支付；之后按产品周期自动扣款续订。"
-    },
     "backToList": "返回订阅列表",
     "confirmDelete": "删除订阅？",
     "cta": {
@@ -837,30 +810,6 @@
       "description": "您的试用期即将结束。请选择合适的套餐，以继续无限制使用 VPN。",
       "title": "升级订阅"
     },
-    "casheraRecurring": {
-      "title": "Cashera 自动续费",
-      "connect": "开通",
-      "confirm": "确认自动扣款",
-      "cancel": "关闭",
-      "confirmCancel": "关闭 Cashera 自动续费？订阅将不再自动续订。",
-      "cancelled": "已关闭 Cashera 自动续费",
-      "enableError": "无法开通 Cashera 自动续费",
-      "cancelError": "无法取消 Cashera 自动续费",
-      "statusPending": "等待通过链接确认",
-      "statusActive": "已开通",
-      "statusPastDue": "扣款失败，请重试",
-      "nextCharge": "下次扣款 {{date}}",
-      "amountPerInterval": "{{amount}} ₽ {{interval}}",
-      "interval": {
-        "daily": "每天",
-        "weekly": "每周",
-        "monthly": "每月",
-        "yearly": "每年"
-      },
-      "autopayHint": "订阅将通过 Cashera 自动续费",
-      "purchaseButton": "⚡ 使用 Cashera 自动付款订阅",
-      "purchaseHint": "通过 Cashera 链接确认自动扣款，之后续费将自动扣款。"
-    },
     "bypassSuspended": {
       "title": "绕行服务器已关闭——其流量已用完",
       "description": "普通服务器仍可正常使用，VPN 没有断开。购买更多流量或续订后，绕行服务器会恢复。",
@@ -894,9 +843,6 @@
     "chooseTariff": "选择套餐"
   },
   "balance": {
-    "paymentEmail": "支付邮箱",
-    "paymentEmailHelp": "Antilopay 需要买家的联系方式。账号邮箱不会更改。",
-    "paymentEmailInvalid": "请输入有效的支付邮箱。",
     "paymentRange": "从 {{min}} 至 {{max}}",
     "title": "余额",
     "currentBalance": "当前余额",
@@ -905,50 +851,11 @@
     "enterAmount": "输入金额",
     "paymentMethod": "支付方式",
     "paymentMethods": {
-      "yookassa": {
-        "description": "通过YooKassa支付"
-      },
       "cryptobot": {
         "description": "通过CryptoBot加密货币支付"
       },
       "telegram_stars": {
         "description": "通过Telegram Stars支付"
-      },
-      "tribute": {
-        "description": "通过Tribute银行卡支付"
-      },
-      "severpay": {
-        "description": "通过SeverPay支付"
-      },
-      "etoplatezhi": {
-        "description": "通过Etoplatezhi支付"
-      },
-      "antilopay": {
-        "description": "通过Antilopay支付"
-      },
-      "jupiter": {
-        "description": "通过 Jupiter (FPGate P2P) 使用 SBP 支付"
-      },
-      "cispay": {
-        "description": "通过 cisPay 使用银行卡或 SBP 支付"
-      },
-      "tabpay": {
-        "description": "通过 TabPay 使用银行卡或 SBP 支付"
-      },
-      "paritypay": {
-        "description": "通过 ParityPay 使用银行卡或 SBP 支付"
-      },
-      "donut": {
-        "description": "通过 Donut P2P 使用银行卡或 SBP 支付"
-      },
-      "lava": {
-        "description": "通过 Lava Business 使用银行卡或 SBP 支付"
-      },
-      "apple_iap": {
-        "description": "通过Apple应用内购买支付"
-      },
-      "cashera": {
-        "description": "SBP、银行卡、加密货币（Cashera）"
       }
     },
     "transactionHistory": "交易记录",
@@ -1027,26 +934,6 @@
       "pay": "支付",
       "checkStatus": "检查状态",
       "checking": "检查中..."
-    },
-    "savedCards": {
-      "title": "已保存的银行卡",
-      "card": "银行卡",
-      "unlink": "解绑",
-      "confirmUnlink": "确定要解绑此卡吗？解绑后将无法自动充值余额。",
-      "unlinkSuccess": "银行卡已成功解绑",
-      "unlinkError": "解绑失败",
-      "linkedAt": "绑定于 {{date}}",
-      "noCards": "银行卡将在下次充值时自动保存",
-      "pageTitle": "已保存的银行卡",
-      "backToBalance": "返回",
-      "empty": "暂无已保存的银行卡。银行卡将在下次充值时自动保存。",
-      "loadError": "加载银行卡失败，请稍后重试。",
-      "sbpSection": "SBP 自动扣款",
-      "sbpBinding": "SBP 绑定",
-      "sbpUnlink": "关闭 SBP 自动扣款",
-      "cardsSection": "银行卡",
-      "emptyTitle": "暂无银行卡",
-      "sbpUnlinkShort": "关闭"
     },
     "paymentSuccess": {
       "title": "支付成功",
@@ -1981,24 +1868,7 @@
       "quickAmountsAdd": "添加",
       "quickAmountsInvalid": "请输入正的卢布金额",
       "quickAmountsLimit": "最多 10 个金额",
-      "quickAmountsRemove": "删除金额 {{value}} ₽",
-      "overpayCertTitle": "mTLS 证书（Overpay）",
-      "overpayCertValid": "✅ 有效期至 {{date}}",
-      "overpayCertExpired": "⚠️ 已于 {{date}} 过期",
-      "overpayCertUnreadable": "⚠️ 证书无法读取——密码错误或文件损坏",
-      "overpayCertMissing": "❌ 未上传证书",
-      "overpayCertEnvLockedPath": "路径已通过环境变量 OVERPAY_P12_PATH 设置——数据库中的值不会生效",
-      "overpayCertEnvLockedPassphrase": "密码已通过环境变量 OVERPAY_P12_PASSPHRASE 设置——数据库中的值不会生效",
-      "overpayCertFile": "证书文件（.p12 / .pfx）",
-      "overpayCertChooseFile": "选择文件",
-      "overpayCertPassphrase": "证书密码",
-      "overpayCertPassphrasePlaceholder": "无密码请留空",
-      "overpayCertUpload": "上传",
-      "overpayCertDelete": "删除",
-      "overpayCertConfirmDelete": "确定删除 Overpay 证书？",
-      "overpayCertFileTooLarge": "文件超过 1 MB",
-      "overpayCertUploadError": "证书上传失败",
-      "overpayCertDeleteError": "证书删除失败"
+      "quickAmountsRemove": "删除金额 {{value}} ₽"
     },
     "emailTemplates": {
       "title": "邮件模板",
@@ -2606,31 +2476,10 @@
       "tree": {
         "payments_general": "通用",
         "payments_stars": "Telegram Stars",
-        "payments_yookassa": "YooKassa",
         "payments_cryptobot": "CryptoBot",
-        "payments_cloudpayments": "CloudPayments",
-        "payments_freekassa": "FreeKassa",
-        "payments_kassa_ai": "Kassa AI",
         "payments_platega": "Platega",
-        "payments_pal24": "PAL24",
         "payments_heleket": "Heleket",
-        "payments_mulenpay": "MulenPay",
-        "payments_tribute": "Tribute",
         "payments_wata": "Wata",
-        "payments_riopay": "RioPay",
-        "payments_severpay": "SeverPay",
-        "payments_paypear": "PayPear",
-        "payments_rollypay": "RollyPay",
-        "payments_aurapay": "AuraPay",
-        "payments_etoplatezhi": "Etoplatezhi",
-        "payments_antilopay": "Antilopay",
-        "payments_jupiter": "Jupiter",
-        "payments_cispay": "CisPay",
-        "payments_tabpay": "TabPay",
-        "payments_paritypay": "ParityPay",
-        "payments_donut": "Donut",
-        "payments_lava": "Lava",
-        "payments_apple_iap": "Apple IAP",
         "subs_core": "核心",
         "subs_trial": "试用",
         "subs_pricing": "定价",
@@ -2673,12 +2522,10 @@
         "iface_menu": "菜单按钮",
         "sys_cabinet": "用户中心",
         "sys_other": "其他设置",
-        "sys_dpichecker": "DPI//CHECKER",
-        "payments_cashera": "Cashera"
+        "sys_dpichecker": "DPI//CHECKER"
       },
       "categories": {
         "ANORE": "Anore",
-        "CISPAY": "CisPay",
         "CABINET": "用户中心",
         "INFO_PAGES": "法律文件与 FAQ",
         "MENU": "菜单按钮",
@@ -3222,8 +3069,6 @@
         "dailyPriceRequired": "请输入大于0的每日价格",
         "trafficPackagesRequired": "请添加至少一个流量包（或关闭流量购买）"
       },
-      "lavaProductLabel": "Lava 产品（自动续订）",
-      "lavaProductDesc": "来自 Lava 后台的产品 UUID：价格与扣款周期在那里设置。留空则该套餐不支持自动续订。",
       "panelTagLabel": "Remnawave 面板标签",
       "panelTagDesc": "最多 16 个字符：拉丁字母、数字和下划线。留空则使用设置中的通用标签（试用或付费）。面板中通过该标签可看出用户所用套餐。",
       "trialDaysLabel": "此套餐的试用天数",
@@ -4189,7 +4034,6 @@
             "balance": "余额",
             "topUp": "充值",
             "topUpResult": "支付结果",
-            "savedCards": "已保存的卡",
             "buy": "购买页",
             "connection": "连接",
             "contests": "活动",

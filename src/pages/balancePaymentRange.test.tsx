@@ -45,7 +45,6 @@ vi.mock('../api/balance', () => ({
         is_available: true,
       },
     ],
-    getSavedCards: async () => ({ cards: [], recurrent_enabled: false }),
   },
 }));
 afterEach(cleanup);

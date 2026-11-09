@@ -45,10 +45,6 @@ export interface TariffPurchaseFormProps {
   balanceKopeks: number | undefined;
   /** СБП-оформление (Platega recurrent) доступно — показать вторую CTA. */
   sbpPurchaseEnabled?: boolean;
-  /** Оформление привязкой Lava доступно — показать вторую CTA. */
-  lavaPurchaseEnabled?: boolean;
-  /** Оформление привязкой Cashera доступно — показать вторую CTA. */
-  casheraPurchaseEnabled?: boolean;
   onBack: () => void;
 }
 
@@ -57,8 +53,6 @@ export function TariffPurchaseForm({
   subscriptionId,
   balanceKopeks,
   sbpPurchaseEnabled = false,
-  lavaPurchaseEnabled = false,
-  casheraPurchaseEnabled = false,
   onBack,
 }: TariffPurchaseFormProps) {
   const { t } = useTranslation();
@@ -182,86 +176,6 @@ export function TariffPurchaseForm({
     </>
   );
 
-  const lavaPurchaseMutation = useMutation({
-    mutationFn: () =>
-      subscriptionApi.purchaseWithLavaRecurring(tariff.id, subscriptionId ?? undefined),
-    onSuccess: (data) => {
-      if (data.redirect_url) {
-        openPaymentUrl(data.redirect_url, platform, openLink);
-      }
-      queryClient.invalidateQueries({ queryKey: ['subscription'] });
-      queryClient.invalidateQueries({ queryKey: ['purchase-options'] });
-      queryClient.invalidateQueries({ queryKey: ['subscriptions-list'] });
-      queryClient.invalidateQueries({ queryKey: ['lava-recurring', data.subscription_id] });
-      navigate('/subscriptions', { replace: true });
-    },
-  });
-
-  const lavaPurchaseButton = lavaPurchaseEnabled && (
-    <>
-      <button
-        onClick={() => lavaPurchaseMutation.mutate()}
-        disabled={lavaPurchaseMutation.isPending || purchaseMutation.isPending}
-        className="mt-2 flex h-12 w-full items-center justify-center rounded-2xl bg-dark-800/70 text-[15px] font-semibold text-dark-100 transition-colors hover:bg-dark-700/70 disabled:opacity-50"
-      >
-        <span className="flex items-center justify-center gap-2">
-          {lavaPurchaseMutation.isPending && (
-            <span className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
-          )}
-          {t('subscription.lavaRecurring.purchaseButton')}
-        </span>
-      </button>
-      <div className="mt-1.5 text-center text-[13px] text-dark-500">
-        {t('subscription.lavaRecurring.purchaseHint')}
-      </div>
-      {lavaPurchaseMutation.isError && (
-        <div className="mt-2 text-center text-sm text-error-400">
-          {getErrorMessage(lavaPurchaseMutation.error)}
-        </div>
-      )}
-    </>
-  );
-
-  const casheraPurchaseMutation = useMutation({
-    mutationFn: () =>
-      subscriptionApi.purchaseWithCasheraRecurring(tariff.id, subscriptionId ?? undefined),
-    onSuccess: (data) => {
-      if (data.redirect_url) {
-        openPaymentUrl(data.redirect_url, platform, openLink);
-      }
-      queryClient.invalidateQueries({ queryKey: ['subscription'] });
-      queryClient.invalidateQueries({ queryKey: ['purchase-options'] });
-      queryClient.invalidateQueries({ queryKey: ['subscriptions-list'] });
-      queryClient.invalidateQueries({ queryKey: ['cashera-recurring', data.subscription_id] });
-      navigate('/subscriptions', { replace: true });
-    },
-  });
-
-  const casheraPurchaseButton = casheraPurchaseEnabled && (
-    <>
-      <button
-        onClick={() => casheraPurchaseMutation.mutate()}
-        disabled={casheraPurchaseMutation.isPending || purchaseMutation.isPending}
-        className="mt-2 flex h-12 w-full items-center justify-center rounded-2xl bg-dark-800/70 text-[15px] font-semibold text-dark-100 transition-colors hover:bg-dark-700/70 disabled:opacity-50"
-      >
-        <span className="flex items-center justify-center gap-2">
-          {casheraPurchaseMutation.isPending && (
-            <span className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
-          )}
-          {t('subscription.casheraRecurring.purchaseButton')}
-        </span>
-      </button>
-      <div className="mt-1.5 text-center text-[13px] text-dark-500">
-        {t('subscription.casheraRecurring.purchaseHint')}
-      </div>
-      {casheraPurchaseMutation.isError && (
-        <div className="mt-2 text-center text-sm text-error-400">
-          {getErrorMessage(casheraPurchaseMutation.error)}
-        </div>
-      )}
-    </>
-  );
-
   // Smooth scroll the form into view when first mounted.
   useEffect(() => {
     if (ref.current) {
@@ -376,8 +290,6 @@ export function TariffPurchaseForm({
                 </Button>
 
                 {sbpPurchaseButton}
-                {lavaPurchaseButton}
-                {casheraPurchaseButton}
 
                 {purchaseMutation.isError &&
                   !getInsufficientBalanceError(purchaseMutation.error) && (
@@ -788,8 +700,6 @@ export function TariffPurchaseForm({
                     </Button>
 
                     {sbpPurchaseButton}
-                    {lavaPurchaseButton}
-                    {casheraPurchaseButton}
                   </>
                 );
               })()}

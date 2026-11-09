@@ -26,8 +26,8 @@ vi.mock('../api/balance', () => ({
   balanceApi: {
     getPaymentMethods: vi.fn(async () => [
       {
-        id: 'cashera',
-        name: 'Cashera',
+        id: 'wata',
+        name: 'WATA',
         description: null,
         min_amount_kopeks: 10000,
         max_amount_kopeks: 10000000,
@@ -58,7 +58,7 @@ function renderPage(rate = 0.001) {
   client.setQueryData(['exchange-rates'], { USD: 100, CNY: 10, IRR: rate });
   return render(
     <QueryClientProvider client={client}>
-      <MemoryRouter initialEntries={['/balance/top-up/cashera?amount=500']}>
+      <MemoryRouter initialEntries={['/balance/top-up/wata?amount=500']}>
         <Routes>
           <Route path="/balance/top-up/:methodId" element={<TopUpAmount />} />
         </Routes>
@@ -94,7 +94,7 @@ it.each([
   const input = await screen.findByRole('spinbutton');
   fireEvent.change(input, { target: { value: '6407' } });
   await submit();
-  await waitFor(() => expect(createTopUp).toHaveBeenCalledWith(expected, 'cashera', 'sbp'));
+  await waitFor(() => expect(createTopUp).toHaveBeenCalledWith(expected, 'wata', 'sbp'));
 });
 it('preserves the canonical RUB prefill when shown in whole tomans', async () => {
   createTopUp.mockResolvedValue({
@@ -109,5 +109,5 @@ it('preserves the canonical RUB prefill when shown in whole tomans', async () =>
   const input = await screen.findByRole('spinbutton');
   expect((input as HTMLInputElement).value).toBe('50000');
   await submit();
-  await waitFor(() => expect(createTopUp).toHaveBeenCalledWith(50000, 'cashera', 'sbp'));
+  await waitFor(() => expect(createTopUp).toHaveBeenCalledWith(50000, 'wata', 'sbp'));
 });

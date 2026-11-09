@@ -376,8 +376,6 @@ export interface TariffsPurchaseOptions {
   // СБП-оформление (Platega recurrent): показывать кнопку «Оформить с
   // автооплатой СБП» рядом с покупкой с баланса
   platega_recurrent_enabled?: boolean;
-  lava_recurrent_enabled?: boolean;
-  cashera_recurrent_enabled?: boolean;
 }
 
 export interface ClassicPurchaseOptions {
@@ -804,46 +802,10 @@ export interface ManualCheckResponse {
   new_status: string | null;
 }
 
-// Saved payment method (card) for recurrent payments
-export interface SavedCard {
-  id: number;
-  method_type: string;
-  card_last4: string | null;
-  card_type: string | null;
-  title: string | null;
-  created_at: string;
-}
-
-export interface SavedCardsResponse {
-  cards: SavedCard[];
-  recurrent_enabled: boolean;
-}
-
 // Platega SBP recurring auto-payment status for a subscription
 export interface SbpRecurringInfo {
   status: string; // 'none' | 'PENDING' | 'ACTIVE' | 'PAST_DUE'
   interval?: number; // 1=day,2=week,3=month,4=year
-  amount_kopeks?: number;
-  next_charge_at?: string | null;
-  redirect_url?: string | null;
-}
-
-/**
- * Автопродление Lava. В отличие от Platega период задан продуктом в кабинете
- * Lava и приезжает числом дней (charge_days), а не enum-интервалом.
- */
-export interface LavaRecurringInfo {
-  status: string; // 'none' | 'PENDING' | 'ACTIVE' | 'PAST_DUE'
-  charge_days?: number;
-  amount_kopeks?: number;
-  next_charge_at?: string | null;
-  redirect_url?: string | null;
-}
-
-export interface CasheraRecurringInfo {
-  status: string; // 'none' | 'PENDING' | 'ACTIVE' | 'PAST_DUE'
-  charge_days?: number;
-  interval?: string; // daily | weekly | monthly | yearly
   amount_kopeks?: number;
   next_charge_at?: string | null;
   redirect_url?: string | null;

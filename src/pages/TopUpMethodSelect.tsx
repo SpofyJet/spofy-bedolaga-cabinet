@@ -21,21 +21,13 @@ import { cn } from '@/lib/utils';
 type MethodGroup = 'card' | 'crypto' | 'telegram' | 'other';
 const METHOD_GROUP_ORDER: MethodGroup[] = ['card', 'crypto', 'telegram', 'other'];
 const CRYPTO_METHODS = new Set(['cryptobot', 'heleket', 'xrocket']);
-const TELEGRAM_METHODS = new Set(['telegram_stars', 'tribute']);
-const CARD_METHODS = new Set([
-  'yookassa',
-  'wata',
-  'pal24',
-  'mulenpay',
-  'cloudpayments',
-  'cashera',
-  'lava',
-]);
+const TELEGRAM_METHODS = new Set(['telegram_stars']);
+const CARD_METHODS = new Set(['wata']);
 
 function methodGroup(id: string): MethodGroup {
   if (CRYPTO_METHODS.has(id)) return 'crypto';
   if (TELEGRAM_METHODS.has(id)) return 'telegram';
-  if (id.startsWith('platega') || id.startsWith('freekassa') || CARD_METHODS.has(id)) return 'card';
+  if (id.startsWith('platega') || CARD_METHODS.has(id)) return 'card';
   return 'other';
 }
 

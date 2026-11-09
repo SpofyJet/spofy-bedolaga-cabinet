@@ -39,8 +39,8 @@ vi.mock('../api/balance', () => ({
   balanceApi: {
     getPaymentMethods: vi.fn(async () => [
       {
-        id: 'cashera',
-        name: 'Cashera',
+        id: 'wata',
+        name: 'WATA',
         description: null,
         min_amount_kopeks: 10000,
         max_amount_kopeks: 10000000,
@@ -78,7 +78,7 @@ function renderPage() {
     <QueryClientProvider
       client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}
     >
-      <MemoryRouter initialEntries={['/balance/top-up/cashera?amount=500']}>
+      <MemoryRouter initialEntries={['/balance/top-up/wata?amount=500']}>
         <Routes>
           <Route path="/balance/top-up/:methodId" element={<TopUpAmount />} />
         </Routes>
@@ -97,7 +97,7 @@ async function submit() {
 it('показывает QR своего экрана оплаты и не уводит на страницу провайдера', async () => {
   createTopUp.mockResolvedValue({
     payment_id: '5',
-    payment_url: 'https://pay.cashera.cash/x',
+    payment_url: 'https://pay.example.com/x',
     amount_kopeks: 50000,
     amount_rubles: 500,
     status: 'pending',
@@ -115,7 +115,7 @@ it('показывает QR своего экрана оплаты и не ув�
 it('без QR — прежнее поведение', async () => {
   createTopUp.mockResolvedValue({
     payment_id: '5',
-    payment_url: 'https://pay.cashera.cash/x',
+    payment_url: 'https://pay.example.com/x',
     amount_kopeks: 50000,
     amount_rubles: 500,
     status: 'pending',
@@ -164,7 +164,7 @@ it('отправляет точный дробный минимум без по�
   const input = await screen.findByRole('spinbutton');
   fireEvent.change(input, { target: { value: '64.07' } });
   await submit();
-  await waitFor(() => expect(createTopUp).toHaveBeenCalledWith(6407, 'cashera', 'sbp'));
+  await waitFor(() => expect(createTopUp).toHaveBeenCalledWith(6407, 'wata', 'sbp'));
 });
 
 it('сохраняет настроенное имя метода на экране суммы и в данных платежа', async () => {

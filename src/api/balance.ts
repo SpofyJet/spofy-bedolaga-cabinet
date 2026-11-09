@@ -7,7 +7,6 @@ import type {
   PaginatedResponse,
   PendingPayment,
   ManualCheckResponse,
-  SavedCardsResponse,
 } from '../types';
 
 export const balanceApi = {
@@ -43,7 +42,6 @@ export const balanceApi = {
     amountKopeks: number,
     paymentMethod: string,
     paymentOption?: string,
-    customerEmail?: string,
   ): Promise<{
     payment_id: string;
     payment_url: string;
@@ -51,20 +49,18 @@ export const balanceApi = {
     amount_rubles: number;
     status: string;
     expires_at: string | null;
-    /** Свой экран оплаты (Cashera H2H): строка QR СБП или платёжная ссылка. */
+    /** Свой экран оплаты: строка QR СБП или платёжная ссылка. */
     qr_payload?: string | null;
   }> => {
     const payload: {
       amount_kopeks: number;
       payment_method: string;
       payment_option?: string;
-      customer_email?: string;
       language?: string;
     } = {
       amount_kopeks: amountKopeks,
       payment_method: paymentMethod,
     };
-    if (customerEmail && paymentMethod === 'antilopay') payload.customer_email = customerEmail;
     if (paymentOption) {
       payload.payment_option = paymentOption;
     }
@@ -144,16 +140,5 @@ export const balanceApi = {
       `/cabinet/balance/pending-payments/${encodeURIComponent(method)}/${encodeURIComponent(paymentId)}/check`,
     );
     return response.data;
-  },
-
-  // Get saved payment methods (cards) for recurrent payments
-  getSavedCards: async (): Promise<SavedCardsResponse> => {
-    const response = await apiClient.get<SavedCardsResponse>('/cabinet/balance/saved-cards');
-    return response.data;
-  },
-
-  // Unlink (delete) a saved payment method
-  deleteSavedCard: async (id: number): Promise<void> => {
-    await apiClient.delete(`/cabinet/balance/saved-cards/${id}`);
   },
 };

@@ -23,7 +23,6 @@ vi.mock('../api/balance', () => ({
     getBalance: async () => ({ balance_kopeks: 0, balance_rubles: 0 }),
     getTransactions: async () => ({ items: [], total: 0, page: 1, per_page: 20, pages: 0 }),
     getPaymentMethods: async () => [],
-    getSavedCards: async () => ({ cards: [], recurrent_enabled: false }),
     activatePromocode: async () => {
       state.end = 'granted-date';
       return {

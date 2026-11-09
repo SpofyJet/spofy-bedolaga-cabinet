@@ -139,7 +139,6 @@ const PAGES: PageCase[] = [
     entry: '/s/abc',
   },
   { name: 'Subscriptions', load: () => import('./Subscriptions') },
-  { name: 'SavedCards', load: () => import('./SavedCards') },
   { name: 'ConnectedAccounts', load: () => import('./ConnectedAccounts') },
   { name: 'Dashboard', load: () => import('./Dashboard') },
   { name: 'Connection', load: () => import('./Connection') },

@@ -41,7 +41,6 @@ import { RemountOnParam } from '@/components/RemountOnParam';
 import { saveReturnUrl } from './utils/token';
 import { ScreenViewReporter } from './components/ScreenViewReporter';
 import { useAnalyticsCounters } from './hooks/useAnalyticsCounters';
-import { useSiteVerification } from './hooks/useSiteVerification';
 import { useDoneKey } from './hooks/useDoneKey';
 // Auth pages - load immediately (small)
 import Login from './pages/Login';
@@ -63,7 +62,6 @@ const Subscriptions = lazyWithRetry(() => import('./pages/Subscriptions'));
 const SubscriptionScreen = lazyWithRetry(() => import('./pages/SubscriptionScreen'));
 const SubscriptionPurchase = lazyWithRetry(() => import('./pages/SubscriptionPurchase'));
 const Balance = lazyWithRetry(() => import('./pages/Balance'));
-const SavedCards = lazyWithRetry(() => import('./pages/SavedCards'));
 const Referral = lazyWithRetry(() => import('./pages/Referral'));
 const Support = lazyWithRetry(() => import('./pages/Support'));
 const SupportChat = lazyWithRetry(() => import('./pages/SupportChat'));
@@ -286,9 +284,6 @@ function LegacySubscriptionRedirect() {
 
 function App() {
   useAnalyticsCounters();
-  // Pulls site-verification tokens (Antilopay apay-tag etc.) from the bot
-  // backend and injects matching <meta> tags into document.head.
-  useSiteVerification();
   // Клавиша «Готово» на экранной клавиатуре для всех полей, включая экран входа.
   useDoneKey();
 
@@ -432,16 +427,6 @@ function App() {
           }
         />
         <Route
-          path="/balance/saved-cards"
-          element={
-            <ProtectedRoute>
-              <LazyPage>
-                <SavedCards />
-              </LazyPage>
-            </ProtectedRoute>
-          }
-        />
-        <Route
           path="/balance/top-up"
           element={
             <ProtectedRoute>
@@ -461,7 +446,7 @@ function App() {
             </ProtectedRoute>
           }
         />
-        {/* Path-based method variant: some providers (Lava) reject return URLs that carry a
+        {/* Path-based method variant: some providers reject return URLs that carry a
             query string, so the method is encoded in the path instead of ?method=. */}
         <Route
           path="/balance/top-up/result/:method"

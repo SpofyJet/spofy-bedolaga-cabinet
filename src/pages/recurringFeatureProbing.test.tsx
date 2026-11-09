@@ -10,14 +10,11 @@ import ruLocale from '@/locales/ru.json';
 /**
  * Выключенная автооплата не должна засыпать консоль красными 403.
  *
- * Кабинет спрашивал состояние автооплаты СБП/Lava у каждой подписки и узнавал
+ * Кабинет спрашивал состояние автооплаты СБП у каждой подписки и узнавал
  * про отключённую фичу из ответа 403. Браузер печатает каждый такой ответ
- * красной строкой с полным стеком, а на странице сохранённых карт их столько,
- * сколько у человека подписок.
+ * красной строкой с полным стеком.
  *
  * Признак «включено» приезжает в опциях покупки — спрашиваем только тогда.
- * На странице карт опций нет, поэтому там пробуем ОДНУ подписку: ответ на неё
- * и говорит, включена ли фича вообще.
  */
 
 function ru(key: string): string {
@@ -51,7 +48,7 @@ const featureDisabled = () =>
     response: { status: 403, data: { detail: 'Platega recurrent disabled' } },
   });
 
-const calls = { sbp: [] as number[], lava: [] as number[], cashera: [] as number[] };
+const calls = { sbp: [] as number[] };
 const state = { purchaseOptions: {} as Record<string, unknown> };
 
 const subscription = (id: number) => ({
@@ -78,14 +75,6 @@ vi.mock('@/api/subscription', () => ({
       calls.sbp.push(id);
       return featureDisabled();
     },
-    getLavaRecurring: (id: number) => {
-      calls.lava.push(id);
-      return featureDisabled();
-    },
-    getCasheraRecurring: (id: number) => {
-      calls.cashera.push(id);
-      return featureDisabled();
-    },
     getSubscriptions: () =>
       Promise.resolve({
         subscriptions: [subscription(1), subscription(2)],
@@ -98,10 +87,6 @@ vi.mock('@/api/subscription', () => ({
     getSubscriptionServers: () => Promise.resolve([]),
     getDevices: () => Promise.resolve({ devices: [] }),
   },
-}));
-
-vi.mock('@/api/balance', () => ({
-  balanceApi: { getSavedCards: () => Promise.resolve([]) },
 }));
 
 vi.mock('@/api/currency', () => ({
@@ -123,15 +108,11 @@ if (!window.matchMedia) {
 
 beforeEach(() => {
   calls.sbp = [];
-  calls.lava = [];
-  calls.cashera = [];
   state.purchaseOptions = {
     sales_mode: 'tariffs',
     tariffs: [],
     balance_kopeks: 0,
     platega_recurrent_enabled: false,
-    lava_recurrent_enabled: false,
-    cashera_recurrent_enabled: false,
   };
 });
 
@@ -160,40 +141,20 @@ async function renderSubscription() {
   await screen.findAllByText(/Базовый/);
 }
 
-async function renderSavedCards() {
-  const Page = (await import('@/pages/SavedCards')).default;
-  wrap(<Page />, '/saved-cards', '/saved-cards');
-  await new Promise((resolve) => setTimeout(resolve, 50));
-}
-
 describe('страница подписки', () => {
   it('не спрашивает состояние автооплаты, когда она выключена', async () => {
     await renderSubscription();
 
     expect(calls.sbp).toEqual([]);
-    expect(calls.lava).toEqual([]);
-    expect(calls.cashera).toEqual([]);
   });
 
   it('спрашивает, когда автооплата включена', async () => {
     state.purchaseOptions = {
       ...state.purchaseOptions,
       platega_recurrent_enabled: true,
-      lava_recurrent_enabled: true,
-      cashera_recurrent_enabled: true,
     };
     await renderSubscription();
     await new Promise((resolve) => setTimeout(resolve, 50));
-
-    expect(calls.sbp).toEqual([1]);
-    expect(calls.lava).toEqual([1]);
-    expect(calls.cashera).toEqual([1]);
-  });
-});
-
-describe('страница сохранённых карт', () => {
-  it('пробует одну подписку и не идёт по остальным, когда фича выключена', async () => {
-    await renderSavedCards();
 
     expect(calls.sbp).toEqual([1]);
   });

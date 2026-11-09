@@ -874,33 +874,6 @@
       "purchaseButton": "⚡ Subscribe with SBP auto-payment",
       "purchaseHint": "First charge confirms the binding in your bank app; renewals are charged automatically per the tariff cadence."
     },
-    "lavaRecurring": {
-      "title": "Lava auto-renewal",
-      "connect": "Connect",
-      "payFirst": "Pay the first invoice",
-      "cancel": "Disable",
-      "confirmCancel": "Disable Lava auto-renewal? The subscription will no longer renew automatically.",
-      "cancelled": "Lava auto-renewal disabled",
-      "enableError": "Could not enable Lava auto-renewal",
-      "cancelError": "Could not disable Lava auto-renewal",
-      "statusPending": "Waiting for the first invoice to be paid",
-      "statusActive": "Active",
-      "statusPastDue": "Payment failed — please try again",
-      "nextCharge": "next charge on {{date}}",
-      "amountPerPeriod": "{{amount}} ₽ {{period}}",
-      "amountPerDays": "{{amount}} ₽ every {{days}} days",
-      "period": {
-        "day": "daily",
-        "week": "weekly",
-        "month": "monthly",
-        "quarter": "quarterly",
-        "halfYear": "every six months",
-        "year": "yearly"
-      },
-      "autopayHint": "The subscription will renew automatically via Lava",
-      "purchaseButton": "⚡ Subscribe with Lava auto-renewal",
-      "purchaseHint": "The first invoice is paid via a Lava link; renewals are then charged automatically on the product’s schedule."
-    },
     "backToList": "Back to subscriptions",
     "confirmDelete": "Delete subscription?",
     "dailyAutoCharge": "Daily auto-charge",
@@ -931,30 +904,6 @@
     "statusExpired": "Expired",
     "statusLimited": "Limited",
     "statusTrial": "Trial",
-    "casheraRecurring": {
-      "title": "Cashera auto-renewal",
-      "connect": "Connect",
-      "confirm": "Confirm auto-charges",
-      "cancel": "Turn off",
-      "confirmCancel": "Turn off Cashera auto-renewal? The subscription will no longer renew automatically.",
-      "cancelled": "Cashera auto-renewal turned off",
-      "enableError": "Could not connect Cashera auto-renewal",
-      "cancelError": "Could not cancel Cashera auto-renewal",
-      "statusPending": "Waiting for confirmation via the link",
-      "statusActive": "Active",
-      "statusPastDue": "Payment failed — please try again",
-      "nextCharge": "next charge {{date}}",
-      "amountPerInterval": "{{amount}} ₽ {{interval}}",
-      "interval": {
-        "daily": "daily",
-        "weekly": "weekly",
-        "monthly": "monthly",
-        "yearly": "yearly"
-      },
-      "autopayHint": "Your subscription will renew automatically via Cashera",
-      "purchaseButton": "⚡ Subscribe with Cashera auto-pay",
-      "purchaseHint": "Confirm auto-charges via the Cashera link; renewals are then charged automatically."
-    },
     "bypassSuspended": {
       "title": "Bypass servers are off — their traffic is used up",
       "description": "Regular servers keep working, your VPN is still on. Bypass servers come back once you buy more traffic or renew your subscription.",
@@ -988,9 +937,6 @@
     "chooseTariff": "Choose a plan"
   },
   "balance": {
-    "paymentEmail": "Payment email",
-    "paymentEmailHelp": "Antilopay requires a customer contact. Your account email will not change.",
-    "paymentEmailInvalid": "Enter a valid payment email.",
     "paymentRange": "From {{min}} to {{max}}",
     "title": "Balance",
     "currentBalance": "Current Balance",
@@ -999,9 +945,6 @@
     "enterAmount": "Enter amount",
     "paymentMethod": "Payment Method",
     "paymentMethods": {
-      "yookassa": {
-        "description": "Pay via YooKassa"
-      },
       "cryptobot": {
         "description": "Pay with cryptocurrency via CryptoBot"
       },
@@ -1011,80 +954,11 @@
       "heleket": {
         "description": "Pay with cryptocurrency via Heleket"
       },
-      "mulenpay": {
-        "description": "Pay via MulenPay"
-      },
-      "pal24": {
-        "description": "Pay via PAL24"
-      },
       "platega": {
         "description": "Pay via Platega"
       },
       "wata": {
         "description": "Pay via Wata"
-      },
-      "cloudpayments": {
-        "description": "Pay with bank card via CloudPayments"
-      },
-      "freekassa": {
-        "description": "Pay via FreeKassa"
-      },
-      "freekassa_sbp": {
-        "description": "Pay via SBP (QR code)"
-      },
-      "freekassa_card": {
-        "description": "Pay with Russian bank card"
-      },
-      "tribute": {
-        "description": "Pay with bank card via Tribute"
-      },
-      "severpay": {
-        "description": "Pay via SeverPay"
-      },
-      "riopay": {
-        "description": "Pay via RioPay"
-      },
-      "kassa_ai": {
-        "description": "Pay via Kassa AI"
-      },
-      "paypear": {
-        "description": "Pay via PayPear"
-      },
-      "rollypay": {
-        "description": "Pay via RollyPay (SBP)"
-      },
-      "aurapay": {
-        "description": "Pay via AuraPay"
-      },
-      "etoplatezhi": {
-        "description": "Pay via Etoplatezhi"
-      },
-      "antilopay": {
-        "description": "Pay via Antilopay"
-      },
-      "jupiter": {
-        "description": "Pay via SBP through Jupiter (FPGate P2P)"
-      },
-      "cispay": {
-        "description": "Pay by card or via SBP (cisPay)"
-      },
-      "tabpay": {
-        "description": "Pay by card or via SBP (TabPay)"
-      },
-      "paritypay": {
-        "description": "Pay by card or via SBP (ParityPay)"
-      },
-      "donut": {
-        "description": "Pay by card or SBP through Donut P2P"
-      },
-      "lava": {
-        "description": "Pay by card or SBP through Lava Business"
-      },
-      "apple_iap": {
-        "description": "Pay via Apple In-App Purchase"
-      },
-      "cashera": {
-        "description": "SBP, cards, crypto (Cashera)"
       }
     },
     "transactionHistory": "Transaction History",
@@ -1151,26 +1025,6 @@
       "pay": "Pay",
       "checkStatus": "Check Status",
       "checking": "Checking..."
-    },
-    "savedCards": {
-      "title": "Saved Cards",
-      "card": "Card",
-      "unlink": "Unlink",
-      "confirmUnlink": "Are you sure you want to unlink this card? Automatic balance top-up will no longer be possible.",
-      "unlinkSuccess": "Card unlinked successfully",
-      "unlinkError": "Failed to unlink card",
-      "linkedAt": "Linked {{date}}",
-      "noCards": "Card will be saved automatically on next top-up",
-      "pageTitle": "Saved Cards",
-      "backToBalance": "Back",
-      "empty": "No saved cards. A card will be saved automatically on your next top-up.",
-      "loadError": "Failed to load saved cards. Please try again later.",
-      "sbpSection": "SBP Auto-payment",
-      "sbpBinding": "SBP binding",
-      "sbpUnlink": "Disable SBP auto-payment",
-      "cardsSection": "Cards",
-      "emptyTitle": "No cards yet",
-      "sbpUnlinkShort": "Turn off"
     },
     "paymentReady": "Payment link is ready",
     "clickToOpenPayment": "Click the button below to open the payment page in a new tab",
@@ -2217,23 +2071,6 @@
       "quickAmountsInvalid": "Enter a positive amount in rubles",
       "quickAmountsLimit": "No more than 10 amounts",
       "quickAmountsRemove": "Remove amount {{value}} ₽",
-      "overpayCertTitle": "mTLS certificate (Overpay)",
-      "overpayCertValid": "✅ Valid until {{date}}",
-      "overpayCertExpired": "⚠️ Expired {{date}}",
-      "overpayCertUnreadable": "⚠️ Certificate cannot be read — wrong passphrase or corrupted file",
-      "overpayCertMissing": "❌ Certificate not uploaded",
-      "overpayCertEnvLockedPath": "Path is set via the OVERPAY_P12_PATH environment variable — the database value is not applied",
-      "overpayCertEnvLockedPassphrase": "Passphrase is set via the OVERPAY_P12_PASSPHRASE environment variable — the database value is not applied",
-      "overpayCertFile": "Certificate file (.p12 / .pfx)",
-      "overpayCertChooseFile": "Choose file",
-      "overpayCertPassphrase": "Certificate passphrase",
-      "overpayCertPassphrasePlaceholder": "Leave empty if none",
-      "overpayCertUpload": "Upload",
-      "overpayCertDelete": "Delete",
-      "overpayCertConfirmDelete": "Delete the Overpay certificate?",
-      "overpayCertFileTooLarge": "File exceeds 1 MB",
-      "overpayCertUploadError": "Failed to upload certificate",
-      "overpayCertDeleteError": "Failed to delete certificate",
       "conditions": "Display conditions",
       "userTypeFilter": "User type",
       "userTypeAll": "All",
@@ -3523,31 +3360,10 @@
       "tree": {
         "payments_general": "General",
         "payments_stars": "Telegram Stars",
-        "payments_yookassa": "YooKassa",
         "payments_cryptobot": "CryptoBot",
-        "payments_cloudpayments": "CloudPayments",
-        "payments_freekassa": "FreeKassa",
-        "payments_kassa_ai": "Kassa AI",
         "payments_platega": "Platega",
-        "payments_pal24": "PAL24",
         "payments_heleket": "Heleket",
-        "payments_mulenpay": "MulenPay",
-        "payments_tribute": "Tribute",
         "payments_wata": "Wata",
-        "payments_riopay": "RioPay",
-        "payments_severpay": "SeverPay",
-        "payments_paypear": "PayPear",
-        "payments_rollypay": "RollyPay",
-        "payments_aurapay": "AuraPay",
-        "payments_etoplatezhi": "Etoplatezhi",
-        "payments_antilopay": "Antilopay",
-        "payments_jupiter": "Jupiter",
-        "payments_cispay": "CisPay",
-        "payments_tabpay": "TabPay",
-        "payments_paritypay": "ParityPay",
-        "payments_donut": "Donut",
-        "payments_lava": "Lava",
-        "payments_apple_iap": "Apple IAP",
         "subs_core": "Core",
         "subs_trial": "Trial",
         "subs_pricing": "Pricing",
@@ -3590,12 +3406,10 @@
         "iface_menu": "Menu button",
         "sys_cabinet": "Cabinet",
         "sys_other": "Other settings",
-        "sys_dpichecker": "DPI//CHECKER",
-        "payments_cashera": "Cashera"
+        "sys_dpichecker": "DPI//CHECKER"
       },
       "categories": {
         "ANORE": "Anore",
-        "CISPAY": "CisPay",
         "CABINET": "Cabinet",
         "INFO_PAGES": "Legal documents and FAQ",
         "MENU": "Menu button",
@@ -4265,8 +4079,6 @@
         "dailyPriceRequired": "Enter a price per day greater than 0",
         "trafficPackagesRequired": "Add at least one traffic package (or disable traffic topup)"
       },
-      "lavaProductLabel": "Lava product (auto-renewal)",
-      "lavaProductDesc": "Product UUID from the Lava dashboard: price and charge period are configured there. Empty — auto-renewal is unavailable for this tariff.",
       "panelTagLabel": "Remnawave panel tag",
       "panelTagDesc": "Up to 16 characters: Latin letters, digits and underscore. Empty — the global tag from settings (trial or paid). The tag shows in the panel which tariff a user is on.",
       "trialDaysLabel": "Trial days on this tariff",
@@ -5370,7 +5182,6 @@
             "balance": "Balance",
             "topUp": "Top-up",
             "topUpResult": "Payment result",
-            "savedCards": "Saved cards",
             "buy": "Purchase page",
             "connection": "Connection",
             "contests": "Contests",

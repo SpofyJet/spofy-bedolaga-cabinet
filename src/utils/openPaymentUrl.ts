@@ -3,7 +3,7 @@
  *
  * In the Telegram in-app WebView, navigating the SAME container to the provider page
  * (window.location.href) breaks when that page hands off to a bank app via a custom scheme
- * — SBP/RollyPay/YooKassa do this. Android then shows a full-page net::ERR_UNKNOWN_URL_SCHEME
+ * — SBP does this. Android then shows a full-page net::ERR_UNKNOWN_URL_SCHEME
  * and iOS opens nothing ("приложение не определяется"), even though link generation succeeded
  * (Telegram bug #654272). Opening in the EXTERNAL browser (openLink) lets the OS hand off to
  * the bank app, and the provider's return_url brings the user back.

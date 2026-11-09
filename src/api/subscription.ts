@@ -13,8 +13,6 @@ import type {
   PurchasePreview,
   AppConfig,
   SbpRecurringInfo,
-  CasheraRecurringInfo,
-  LavaRecurringInfo,
 } from '../types';
 
 /** Helper: build query params with optional subscription_id */
@@ -393,91 +391,6 @@ export const subscriptionApi = {
   ): Promise<{ status: string; redirect_url: string | null; subscription_id: number }> => {
     const response = await apiClient.post(
       '/cabinet/subscription/platega-recurrent/purchase',
-      {},
-      withSubId(subscriptionId, { tariff_id: tariffId }),
-    );
-    return response.data;
-  },
-
-  // ── Recurring (Lava) ──────────────────────────────────────────────────
-
-  getLavaRecurring: async (subscriptionId?: number): Promise<LavaRecurringInfo> => {
-    const response = await apiClient.get<LavaRecurringInfo>(
-      '/cabinet/subscription/lava-recurrent',
-      withSubId(subscriptionId),
-    );
-    return response.data;
-  },
-
-  enableLavaRecurring: async (
-    subscriptionId?: number,
-  ): Promise<{ status: string; redirect_url: string | null }> => {
-    const response = await apiClient.post(
-      '/cabinet/subscription/lava-recurrent/enable',
-      ...bodyWithSubId({}, subscriptionId),
-    );
-    return response.data;
-  },
-
-  cancelLavaRecurring: async (subscriptionId?: number): Promise<{ status: string }> => {
-    const response = await apiClient.post(
-      '/cabinet/subscription/lava-recurrent/cancel',
-      ...bodyWithSubId({}, subscriptionId),
-    );
-    return response.data;
-  },
-
-  /**
-   * Оформление подписки на тариф привязкой Lava: первое списание оплачивается
-   * по возвращённой ссылке и активирует подписку.
-   */
-  purchaseWithLavaRecurring: async (
-    tariffId: number,
-    subscriptionId?: number,
-  ): Promise<{ status: string; redirect_url: string | null; subscription_id: number }> => {
-    const response = await apiClient.post(
-      '/cabinet/subscription/lava-recurrent/purchase',
-      {},
-      withSubId(subscriptionId, { tariff_id: tariffId }),
-    );
-    return response.data;
-  },
-
-  // ── Recurring (Cashera) ───────────────────────────────────────────────
-
-  getCasheraRecurring: async (subscriptionId?: number): Promise<CasheraRecurringInfo> => {
-    const response = await apiClient.get<CasheraRecurringInfo>(
-      '/cabinet/subscription/cashera-recurrent',
-      withSubId(subscriptionId),
-    );
-    return response.data;
-  },
-
-  enableCasheraRecurring: async (
-    subscriptionId?: number,
-  ): Promise<{ status: string; redirect_url: string | null }> => {
-    const response = await apiClient.post(
-      '/cabinet/subscription/cashera-recurrent/enable',
-      ...bodyWithSubId({}, subscriptionId),
-    );
-    return response.data;
-  },
-
-  cancelCasheraRecurring: async (subscriptionId?: number): Promise<{ status: string }> => {
-    const response = await apiClient.post(
-      '/cabinet/subscription/cashera-recurrent/cancel',
-      ...bodyWithSubId({}, subscriptionId),
-    );
-    return response.data;
-  },
-
-  /** Оформление подписки на тариф привязкой Cashera: клиент подтверждает автосписания по ссылке. */
-  purchaseWithCasheraRecurring: async (
-    tariffId: number,
-    subscriptionId?: number,
-  ): Promise<{ status: string; redirect_url: string | null; subscription_id: number }> => {
-    const response = await apiClient.post(
-      '/cabinet/subscription/cashera-recurrent/purchase',
       {},
       withSubId(subscriptionId, { tariff_id: tariffId }),
     );

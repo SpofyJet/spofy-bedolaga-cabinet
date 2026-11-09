@@ -52,7 +52,6 @@ const stored: Partial<TariffDetail> = {
   external_squad_uuid: null,
   promo_groups: [],
   daily_price_kopeks: 0,
-  lava_product_id: null,
   traffic_topup_enabled: false,
   max_topup_traffic_gb: 0,
   traffic_topup_packages: {},

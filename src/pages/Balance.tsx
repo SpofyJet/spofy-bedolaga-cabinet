@@ -12,7 +12,6 @@ import {
   PiCaretRightBold,
   PiChartBarDuotone,
   PiCheckCircleDuotone,
-  PiCreditCardDuotone,
   PiGiftDuotone,
   PiPlusBold,
   PiReceiptDuotone,
@@ -221,20 +220,6 @@ export default function Balance() {
     queryKey: ['transactions', transactionsPage],
     queryFn: () => balanceApi.getTransactions({ per_page: 20, page: transactionsPage }),
     placeholderData: (previousData) => previousData,
-  });
-
-  const { data: paymentMethods } = useQuery({
-    queryKey: ['payment-methods'],
-    queryFn: balanceApi.getPaymentMethods,
-  });
-
-  // Deferred: only fetch saved cards after payment methods loaded to avoid extra request on first render.
-  // The recurrent_enabled flag is cached for 5 min to prevent refetching on every Balance visit.
-  const { data: savedCardsData } = useQuery({
-    queryKey: ['saved-cards'],
-    queryFn: balanceApi.getSavedCards,
-    enabled: !!paymentMethods,
-    staleTime: 5 * 60 * 1000,
   });
 
   const handlePromocodeActivate = async (subscriptionId?: number) => {
@@ -508,18 +493,6 @@ export default function Balance() {
               />
             );
           })}
-        </Group>
-      )}
-
-      {savedCardsData?.recurrent_enabled && (
-        <Group>
-          <Row
-            to="/balance/saved-cards"
-            icon={<PiCreditCardDuotone />}
-            iconTone="money"
-            label={t('balance.savedCards.title')}
-            hint={savedCardsData.cards.length > 0 ? String(savedCardsData.cards.length) : undefined}
-          />
         </Group>
       )}
 

@@ -1027,7 +1027,7 @@ export default function QuickPurchase() {
     setSubmitError(null);
 
     // Build the payment_method string: append sub-option suffix if selected
-    // e.g. "platega" + "2" → "platega_2", "yookassa" + "sbp" → "yookassa_sbp"
+    // e.g. "platega" + "2" → "platega_2"
     let paymentMethod = selectedMethod!;
     if (selectedSubOption) {
       paymentMethod = `${paymentMethod}_${selectedSubOption}`;

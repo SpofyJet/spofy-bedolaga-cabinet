@@ -11,18 +11,6 @@ import { PiCreditCardDuotone } from 'react-icons/pi';
 import { RowIcon } from '@/components/spofy/ui';
 import { openPaymentUrl } from '@/utils/openPaymentUrl';
 import { uiLocale } from '@/utils/uiLocale';
-import {
-  isLavaFeatureDisabledError,
-  lavaPeriodLabelKey,
-  lavaUiState,
-  type LavaUiState,
-} from '@/utils/lavaRecurring';
-import {
-  casheraIntervalLabelKey,
-  casheraUiState,
-  isCasheraFeatureDisabledError,
-  type CasheraUiState,
-} from '@/utils/casheraRecurring';
 import { isRecurringFeatureOff } from '@/utils/recurringFeature';
 import { isLifetimeSubscription } from '@/utils/lifetime';
 import {
@@ -38,7 +26,7 @@ export interface RecurringPanelsProps {
 }
 
 /**
- * Автосписания СБП (Platega), Lava и Cashera — независимые движки с одинаковой
+ * Автосписание СБП (Platega) с одинаковой
  * семантикой, поэтому живут одним компонентом.
  *
  * Вынесены из тела страницы подписки, чтобы ими мог пользоваться простой вид.
@@ -76,8 +64,6 @@ export function RecurringPanels({ subscription, subscriptionId }: RecurringPanel
   // такой запрос. Ждём ответа опций — до него неизвестно, включена ли фича.
   const featureFlagsSettled = purchaseOptionsQuery.isSuccess || purchaseOptionsQuery.isError;
   const sbpFeatureOff = isRecurringFeatureOff(purchaseOptions, 'platega_recurrent_enabled');
-  const lavaFeatureOff = isRecurringFeatureOff(purchaseOptions, 'lava_recurrent_enabled');
-  const casheraFeatureOff = isRecurringFeatureOff(purchaseOptions, 'cashera_recurrent_enabled');
 
   // SBP (Platega) recurring auto-payment status. Polls every 8s while a
   // payment is PENDING (waiting for bank-app confirmation) so the UI flips
@@ -154,165 +140,12 @@ export function RecurringPanels({ subscription, subscriptionId }: RecurringPanel
     cancelSbpMutation.mutate();
   };
 
-  // Автопродление Lava — независимый от Platega движок с той же семантикой
-  // состояний. Поллинг раз в 8с, пока привязка PENDING (ждём оплату первого
-  // счёта), чтобы UI сам перешёл в active/past_due.
-  const lavaQuery = useQuery({
-    queryKey: ['lava-recurring', subscriptionId],
-    queryFn: () => subscriptionApi.getLavaRecurring(subscriptionId),
-    enabled: !!subscription && !subscription.is_trial && featureFlagsSettled && !lavaFeatureOff,
-    retry: false,
-    refetchInterval: (query) => (query.state.data?.status === 'PENDING' ? 8000 : false),
-  });
-  const lavaInfo = lavaQuery.data;
-  const lavaFeatureDisabled = lavaFeatureOff || isLavaFeatureDisabledError(lavaQuery.error);
-  const lavaUiStateValue: LavaUiState =
-    lavaInfo !== undefined || lavaFeatureDisabled
-      ? offerable(lavaUiState(lavaInfo, lavaFeatureDisabled))
-      : 'hidden';
-
-  const enableLavaMutation = useMutation({
-    mutationFn: () => subscriptionApi.enableLavaRecurring(subscriptionId),
-    onSuccess: (data) => {
-      if (data.redirect_url) {
-        openPaymentUrl(data.redirect_url, platform, openLink);
-      }
-      queryClient.invalidateQueries({ queryKey: ['lava-recurring', subscriptionId] });
-      // Бэкенд снимает autopay_enabled при включении рекуррента провайдера.
-      queryClient.invalidateQueries({ queryKey: ['subscription', subscriptionId] });
-    },
-    onError: (error: unknown) => {
-      const detail = (error as { response?: { data?: { detail?: unknown } } })?.response?.data
-        ?.detail;
-      showToast({
-        type: 'error',
-        title: typeof detail === 'string' ? detail : t('subscription.lavaRecurring.enableError'),
-        message: '',
-        duration: 3000,
-      });
-    },
-  });
-
-  const cancelLavaMutation = useMutation({
-    mutationFn: () => subscriptionApi.cancelLavaRecurring(subscriptionId),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['lava-recurring', subscriptionId] });
-      queryClient.invalidateQueries({ queryKey: ['subscription', subscriptionId] });
-      showToast({
-        type: 'success',
-        title: t('subscription.lavaRecurring.cancelled'),
-        message: '',
-        duration: 3000,
-      });
-    },
-    onError: (error: unknown) => {
-      const detail = (error as { response?: { data?: { detail?: unknown } } })?.response?.data
-        ?.detail;
-      showToast({
-        type: 'error',
-        title: typeof detail === 'string' ? detail : t('subscription.lavaRecurring.cancelError'),
-        message: '',
-        duration: 3000,
-      });
-    },
-  });
-
-  const handleCancelLava = async () => {
-    const confirmed = await destructiveConfirm(
-      t('subscription.lavaRecurring.confirmCancel'),
-      t('subscription.lavaRecurring.cancel'),
-    );
-    if (!confirmed) return;
-    cancelLavaMutation.mutate();
-  };
-
-  // Автопродление Cashera — третий движок с той же семантикой состояний.
-  // Поллинг раз в 8с, пока привязка PENDING (ждём подтверждения по ссылке).
-  const casheraQuery = useQuery({
-    queryKey: ['cashera-recurring', subscriptionId],
-    queryFn: () => subscriptionApi.getCasheraRecurring(subscriptionId),
-    enabled: !!subscription && !subscription.is_trial && featureFlagsSettled && !casheraFeatureOff,
-    retry: false,
-    refetchInterval: (query) => (query.state.data?.status === 'PENDING' ? 8000 : false),
-  });
-  const casheraInfo = casheraQuery.data;
-  const casheraFeatureDisabled =
-    casheraFeatureOff || isCasheraFeatureDisabledError(casheraQuery.error);
-  const casheraUiStateValue: CasheraUiState =
-    casheraInfo !== undefined || casheraFeatureDisabled
-      ? offerable(casheraUiState(casheraInfo, casheraFeatureDisabled))
-      : 'hidden';
-
-  const enableCasheraMutation = useMutation({
-    mutationFn: () => subscriptionApi.enableCasheraRecurring(subscriptionId),
-    onSuccess: (data) => {
-      if (data.redirect_url) {
-        openPaymentUrl(data.redirect_url, platform, openLink);
-      }
-      queryClient.invalidateQueries({ queryKey: ['cashera-recurring', subscriptionId] });
-      // Бэкенд снимает autopay_enabled при включении рекуррента провайдера.
-      queryClient.invalidateQueries({ queryKey: ['subscription', subscriptionId] });
-    },
-    onError: (error: unknown) => {
-      const detail = (error as { response?: { data?: { detail?: unknown } } })?.response?.data
-        ?.detail;
-      showToast({
-        type: 'error',
-        title: typeof detail === 'string' ? detail : t('subscription.casheraRecurring.enableError'),
-        message: '',
-        duration: 3000,
-      });
-    },
-  });
-
-  const cancelCasheraMutation = useMutation({
-    mutationFn: () => subscriptionApi.cancelCasheraRecurring(subscriptionId),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['cashera-recurring', subscriptionId] });
-      queryClient.invalidateQueries({ queryKey: ['subscription', subscriptionId] });
-      showToast({
-        type: 'success',
-        title: t('subscription.casheraRecurring.cancelled'),
-        message: '',
-        duration: 3000,
-      });
-    },
-    onError: (error: unknown) => {
-      const detail = (error as { response?: { data?: { detail?: unknown } } })?.response?.data
-        ?.detail;
-      showToast({
-        type: 'error',
-        title: typeof detail === 'string' ? detail : t('subscription.casheraRecurring.cancelError'),
-        message: '',
-        duration: 3000,
-      });
-    },
-  });
-
-  const handleCancelCashera = async () => {
-    const confirmed = await destructiveConfirm(
-      t('subscription.casheraRecurring.confirmCancel'),
-      t('subscription.casheraRecurring.cancel'),
-    );
-    if (!confirmed) return;
-    cancelCasheraMutation.mutate();
-  };
-
   const formatChargeDate = (iso: string) =>
     new Date(iso).toLocaleDateString(uiLocale(), {
       day: '2-digit',
       month: '2-digit',
       year: 'numeric',
     });
-
-  const lavaAmountLine = (() => {
-    if (!lavaInfo) return null;
-    const periodKey = lavaPeriodLabelKey(lavaInfo.charge_days);
-    const amount = formatAmount((lavaInfo.amount_kopeks ?? 0) / 100);
-    return periodKey
-      ? t('subscription.lavaRecurring.amountPerPeriod', { amount, period: t(periodKey) })
-      : t('subscription.lavaRecurring.amountPerDays', { amount, days: lavaInfo.charge_days ?? 0 });
-  })();
 
   // Блоки ниже — сиблинги тоггла «Автопродление» с баланса и показываются
   // только по is_trial + своему состоянию: суточным тарифам они тоже нужны
@@ -357,77 +190,6 @@ export function RecurringPanels({ subscription, subscriptionId }: RecurringPanel
           cancelLabel={t('subscription.sbpRecurring.cancel')}
           onCancel={handleCancelSbp}
           cancelling={cancelSbpMutation.isPending}
-        />
-      )}
-
-      {/* Lava: период задан продуктом в кабинете Lava и приезжает числом
-          дней, поэтому подпись строится из charge_days. */}
-      {!subscription.is_trial && lavaUiStateValue !== 'hidden' && (
-        <ProviderRow
-          title={t('subscription.lavaRecurring.title')}
-          state={lavaUiStateValue}
-          hint={t('subscription.lavaRecurring.autopayHint')}
-          pendingText={t('subscription.lavaRecurring.statusPending')}
-          pastDueText={t('subscription.lavaRecurring.statusPastDue')}
-          amountLine={lavaAmountLine}
-          nextChargeLine={
-            lavaInfo?.next_charge_at
-              ? t('subscription.lavaRecurring.nextCharge', {
-                  date: formatChargeDate(lavaInfo.next_charge_at),
-                })
-              : null
-          }
-          connectLabel={t('subscription.lavaRecurring.connect')}
-          onConnect={() => enableLavaMutation.mutate()}
-          connecting={enableLavaMutation.isPending}
-          confirm={
-            lavaInfo?.redirect_url
-              ? { label: t('subscription.lavaRecurring.payFirst'), url: lavaInfo.redirect_url }
-              : undefined
-          }
-          onOpenUrl={(url) => openPaymentUrl(url, platform, openLink)}
-          cancelLabel={t('subscription.lavaRecurring.cancel')}
-          onCancel={handleCancelLava}
-          cancelling={cancelLavaMutation.isPending}
-        />
-      )}
-
-      {/* Cashera: интервал задаётся при оформлении и приезжает строкой
-          (daily/weekly/monthly/yearly). */}
-      {!subscription.is_trial && casheraUiStateValue !== 'hidden' && (
-        <ProviderRow
-          title={t('subscription.casheraRecurring.title')}
-          state={casheraUiStateValue}
-          hint={t('subscription.casheraRecurring.autopayHint')}
-          pendingText={t('subscription.casheraRecurring.statusPending')}
-          pastDueText={t('subscription.casheraRecurring.statusPastDue')}
-          amountLine={
-            casheraInfo
-              ? t('subscription.casheraRecurring.amountPerInterval', {
-                  amount: formatAmount((casheraInfo.amount_kopeks ?? 0) / 100),
-                  interval: t(casheraIntervalLabelKey(casheraInfo.interval)),
-                })
-              : null
-          }
-          nextChargeLine={
-            casheraInfo?.next_charge_at
-              ? t('subscription.casheraRecurring.nextCharge', {
-                  date: formatChargeDate(casheraInfo.next_charge_at),
-                })
-              : null
-          }
-          connectLabel={t('subscription.casheraRecurring.connect')}
-          onConnect={() => enableCasheraMutation.mutate()}
-          connecting={enableCasheraMutation.isPending}
-          confirm={
-            casheraInfo?.redirect_url
-              ? { label: t('subscription.casheraRecurring.confirm'), url: casheraInfo.redirect_url }
-              : undefined
-          }
-          onOpenUrl={(url) => openPaymentUrl(url, platform, openLink)}
-          cancelLabel={t('subscription.casheraRecurring.cancel')}
-          onCancel={handleCancelCashera}
-          cancelling={cancelCasheraMutation.isPending}
         />
       )}
     </>

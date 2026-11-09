@@ -144,11 +144,7 @@ export default function TopUpAmount() {
   };
 
   const initialDisplayAmount = getInitialAmount();
-  const userEmail = useAuthStore((state) => state.user?.email);
   const userBalanceRubles = useAuthStore((state) => state.user?.balance_rubles ?? null);
-  const [paymentEmail, setPaymentEmail] = useState<string | null>(null);
-  const emailRef = useRef<HTMLInputElement>(null);
-  const customerEmail = paymentEmail ?? userEmail ?? '';
   const [amount, setAmount] = useState(initialDisplayAmount);
   const [error, setError] = useState<string | null>(null);
   const [selectedOption, setSelectedOption] = useState<string | null>(
@@ -234,14 +230,6 @@ export default function TopUpAmount() {
   >({
     mutationFn: (amountKopeks: number) => {
       if (!method) throw new Error('Method not loaded');
-      if (method.id === 'antilopay') {
-        return balanceApi.createTopUp(
-          amountKopeks,
-          method.id,
-          selectedOption || undefined,
-          customerEmail.trim(),
-        );
-      }
       return balanceApi.createTopUp(amountKopeks, method.id, selectedOption || undefined);
     },
     onSuccess: (data) => {
@@ -368,15 +356,6 @@ export default function TopUpAmount() {
     setPaymentUrl(null);
     setQrPayload(null);
     inputRef.current?.blur();
-    if (
-      method.id === 'antilopay' &&
-      (!customerEmail.trim() || !emailRef.current?.checkValidity())
-    ) {
-      setError(t('balance.paymentEmailInvalid'));
-      emailRef.current?.focus();
-      return;
-    }
-
     if (!checkRateLimit(RATE_LIMIT_KEYS.PAYMENT, 3, 30000)) {
       setError(
         t('balance.errors.rateLimit', { seconds: getRateLimitResetTime(RATE_LIMIT_KEYS.PAYMENT) }),
@@ -539,36 +518,6 @@ export default function TopUpAmount() {
         </section>
       )}
 
-      {method.id === 'antilopay' && (
-        <Surface>
-          <label
-            htmlFor="payment-email"
-            className="block px-1 text-[13px] font-semibold text-dark-400"
-          >
-            {t('balance.paymentEmail')}
-          </label>
-          <input
-            ref={emailRef}
-            id="payment-email"
-            type="email"
-            inputMode="email"
-            autoComplete="email"
-            required
-            maxLength={254}
-            value={customerEmail}
-            onChange={(event) => {
-              setPaymentEmail(event.target.value);
-              setError(null);
-            }}
-            aria-describedby="payment-email-help"
-            className="mt-2 h-12 w-full rounded-2xl bg-dark-800/60 px-4 text-[15px] text-dark-50 placeholder:text-dark-500 focus:outline-none focus:ring-2 focus:ring-accent-500/60"
-          />
-          <p id="payment-email-help" className="mt-2 px-1 text-[13px] leading-snug text-dark-400">
-            {t('balance.paymentEmailHelp')}
-          </p>
-        </Surface>
-      )}
-
       {/* Сумма */}
       <Surface>
         <label
@@ -639,14 +588,6 @@ export default function TopUpAmount() {
                     setAmount(val);
                     setQuickRub(a);
                     inputRef.current?.blur();
-                    if (
-                      method.id === 'antilopay' &&
-                      (!customerEmail.trim() || !emailRef.current?.checkValidity())
-                    ) {
-                      setError(t('balance.paymentEmailInvalid'));
-                      emailRef.current?.focus();
-                      return;
-                    }
                   }}
                   className={cn(
                     'h-10 min-w-0 truncate rounded-xl px-1 text-[13px] font-semibold transition-colors',

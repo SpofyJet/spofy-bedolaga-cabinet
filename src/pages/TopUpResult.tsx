@@ -193,7 +193,7 @@ export default function TopUpResult() {
   const [pendingInfo] = useState(() => loadTopUpPendingInfo());
 
   // Fallback: read method for external-browser redirects where sessionStorage is unavailable.
-  // Providers that reject query strings (Lava) return to /balance/top-up/result/<method>, so
+  // Providers that reject query strings return to /balance/top-up/result/<method>, so
   // accept the method from the path param too, not just ?method=.
   const { method: methodFromPath } = useParams<{ method?: string }>();
   const methodFromUrl = searchParams.get('method') || methodFromPath || null;

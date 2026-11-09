@@ -492,7 +492,7 @@ function BuyTabContent({
           }
           return;
         }
-        // Non-Stars provider (RollyPay/YooKassa/SBP …): open externally inside Telegram so
+        // Non-Stars provider (SBP …): open externally inside Telegram so
         // a bank-app hand-off via custom scheme doesn't dead-end in the WebView (#654272).
         openPaymentUrl(result.payment_url, platform, openLink);
       } else {

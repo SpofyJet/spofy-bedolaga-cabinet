@@ -314,18 +314,6 @@ export default function SubscriptionPurchase() {
                   'platega_recurrent_enabled' in purchaseOptions &&
                   purchaseOptions.platega_recurrent_enabled === true
                 }
-                lavaPurchaseEnabled={
-                  isTariffsMode &&
-                  purchaseOptions !== undefined &&
-                  'lava_recurrent_enabled' in purchaseOptions &&
-                  purchaseOptions.lava_recurrent_enabled === true
-                }
-                casheraPurchaseEnabled={
-                  isTariffsMode &&
-                  purchaseOptions !== undefined &&
-                  'cashera_recurrent_enabled' in purchaseOptions &&
-                  purchaseOptions.cashera_recurrent_enabled === true
-                }
                 onBack={() => {
                   setShowTariffPurchase(false);
                   setSelectedTariff(null);
