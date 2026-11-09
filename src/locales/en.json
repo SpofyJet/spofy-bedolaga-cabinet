@@ -7279,7 +7279,8 @@
       "nMonths_one": "{{count}} month",
       "nMonths_other": "{{count}} months",
       "nDays": "{{count}} days",
-      "nMonths": "{{count}} months"
+      "nMonths": "{{count}} months",
+      "d360": "12 months"
     },
     "resultTitle": "Purchase"
   },

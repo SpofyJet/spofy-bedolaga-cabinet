@@ -12,8 +12,11 @@ describe('formatTraffic', () => {
   });
 
   it('formats gigabytes from 1 GB up', () => {
-    expect(formatTraffic(1, 'en-US')).toBe('1.0\u00A0GB');
-    expect(formatTraffic(999.94, 'en-US')).toBe('999.9\u00A0GB');
+    expect(formatTraffic(1, 'en-US')).toBe('1\u00A0GB');
+    expect(formatTraffic(2.5, 'en-US')).toBe('2.5\u00A0GB');
+    // от 10 ГБ — целым числом
+    expect(formatTraffic(38.4, 'en-US')).toBe('38\u00A0GB');
+    expect(formatTraffic(999.4, 'en-US')).toBe('999\u00A0GB');
   });
 
   it('formats sub-gigabyte values as megabytes', () => {
@@ -23,7 +26,7 @@ describe('formatTraffic', () => {
 
   // Русский интерфейс писал «41.2 ГБ» с точкой — дробь по правилам языка.
   it('uses the locale decimal separator', () => {
-    expect(formatTraffic(41.2, 'ru-RU')).toBe('41,2\u00A0GB');
+    expect(formatTraffic(4.2, 'ru-RU')).toBe('4,2\u00A0GB');
     expect(formatTraffic(1500, 'ru-RU')).toBe('1,5\u00A0TB');
   });
 
@@ -35,5 +38,6 @@ describe('formatTraffic', () => {
   // 999,99 ГБ округлялось до «1 000,0 ГБ» — такое число уже пишется в ТБ.
   it('switches to terabytes when rounding reaches 1000 GB', () => {
     expect(formatTraffic(999.99, 'en-US')).toBe('1.0\u00A0TB');
+    expect(formatTraffic(999.5, 'en-US')).toBe('1.0\u00A0TB');
   });
 });

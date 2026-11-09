@@ -15,7 +15,11 @@ vi.mock('react-i18next', () => ({
   initReactI18next: { type: '3rdParty', init: () => {} },
 }));
 vi.mock('@/hooks/useCurrency', () => ({
-  useCurrency: () => ({ formatAmount: String, currencySymbol: '¤' }),
+  useCurrency: () => ({
+    formatAmount: String,
+    currencySymbol: '¤',
+    formatMoney: (v: number) => `${String(v)}\u00A0¤`,
+  }),
 }));
 // Шит докупки трафика — ResponsiveSheet: ему нужен matchMedia, которого нет в jsdom.
 if (!window.matchMedia) {

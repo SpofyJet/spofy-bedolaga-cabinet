@@ -26,9 +26,16 @@ export async function renderRenew() {
   );
 }
 
-/** Карточка периода — кнопка вокруг подписи с числом дней. */
+/** Как срок подписан на экране: месяцами, а не днями. */
+export const PERIOD_LABEL: Record<number, string> = {
+  30: '1 месяц',
+  180: '6 месяцев',
+  360: '12 месяцев',
+};
+
+/** Карточка периода — кнопка вокруг подписи срока. */
 export function cardFor(days: number): HTMLElement {
-  const label = screen.getByText(new RegExp(`^${days} `));
+  const label = screen.getByText(PERIOD_LABEL[days]);
   const card = label.closest('button');
   if (!card) throw new Error(`не нашёл карточку периода ${days}`);
   return card;

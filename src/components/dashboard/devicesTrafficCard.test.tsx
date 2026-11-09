@@ -88,9 +88,11 @@ describe('deviceTiles', () => {
 
 describe('trafficPair', () => {
   it('целое число гигабайт — без «,0»', () => {
-    const pair = trafficPair(12.4, 50);
+    const pair = trafficPair(2.4, 50);
     expect(pair.limit).not.toMatch(/[.,]0\u00A0/);
-    expect(pair.used).toMatch(/12[.,]4/);
+    expect(pair.used).toMatch(/2[.,]4/);
+    // от 10 ГБ дробь не показываем
+    expect(trafficPair(12.4, 50).used).toBe('12');
   });
 
   it('убирает единицу у первого числа, только если она совпадает', () => {

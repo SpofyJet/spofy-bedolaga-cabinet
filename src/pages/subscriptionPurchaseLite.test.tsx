@@ -46,7 +46,11 @@ vi.mock('@/hooks/usePromoDiscount', () => ({
 }));
 
 vi.mock('@/hooks/useCurrency', () => ({
-  useCurrency: () => ({ formatAmount: (v: number) => String(v), currencySymbol: '₽' }),
+  useCurrency: () => ({
+    formatAmount: (v: number) => String(v),
+    currencySymbol: '₽',
+    formatMoney: (v: number) => `${String(v)}\u00A0₽`,
+  }),
 }));
 
 // jsdom не реализует matchMedia, а тема его спрашивает.

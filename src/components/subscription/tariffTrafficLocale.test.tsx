@@ -16,6 +16,7 @@ vi.mock('../../hooks/useCurrency', () => ({
   useCurrency: () => ({
     formatAmount: (v: number) => String(v),
     currencySymbol: 'RUB',
+    formatMoney: (v: number) => `${String(v)}\u00A0RUB`,
   }),
 }));
 vi.mock('../../platform', () => ({ usePlatform: () => ({ openLink: vi.fn(), platform: 'web' }) }));

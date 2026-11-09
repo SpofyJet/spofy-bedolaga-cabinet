@@ -21,6 +21,7 @@ vi.mock('@/hooks/useCurrency', () => ({
   useCurrency: () => ({
     formatAmount: (value: number) => String(value),
     currencySymbol: '₽',
+    formatMoney: (v: number) => `${String(v)}\u00A0₽`,
   }),
 }));
 

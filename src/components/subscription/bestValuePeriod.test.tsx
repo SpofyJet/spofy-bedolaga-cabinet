@@ -97,8 +97,10 @@ async function renderRenew() {
 }
 
 /** Карточка периода — ближайшая кнопка вокруг подписи с числом дней. */
+const PERIOD_LABEL: Record<number, string> = { 30: '1 месяц', 180: '6 месяцев', 360: '12 месяцев' };
+
 function cardFor(days: number): HTMLElement {
-  const label = screen.getByText(new RegExp(`^${days} `));
+  const label = screen.getByText(PERIOD_LABEL[days]);
   const card = label.closest('button');
   if (!card) throw new Error(`не нашёл карточку периода ${days}`);
   return card;
@@ -137,7 +139,7 @@ describe('выделенный период при продлении', () => {
   it('ничего не выделяет, когда оператор не выбрал период', async () => {
     state.options = [option({ period_days: 30 }), option({ period_days: 180 })];
     await renderRenew();
-    await screen.findByText(/^30 /);
+    await screen.findByText('1 месяц');
 
     expect(screen.queryByText(ru('subscription.bestValue'))).toBeNull();
   });

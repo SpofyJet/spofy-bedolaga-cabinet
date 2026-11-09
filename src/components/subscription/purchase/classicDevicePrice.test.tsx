@@ -16,7 +16,11 @@ vi.mock('react-i18next', () => ({
   initReactI18next: { type: '3rdParty', init: () => {} },
 }));
 vi.mock('@/hooks/useCurrency', () => ({
-  useCurrency: () => ({ formatAmount: (n: number) => n.toFixed(2), currencySymbol: '₽' }),
+  useCurrency: () => ({
+    formatAmount: (n: number) => n.toFixed(2),
+    currencySymbol: '₽',
+    formatMoney: (v: number) => `${v.toFixed(2).replace(/\.00$/, '')}\u00A0₽`,
+  }),
 }));
 vi.mock('@/hooks/usePromoDiscount', async (load) => {
   const actual = await load<typeof import('@/hooks/usePromoDiscount')>();

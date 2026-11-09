@@ -15,7 +15,11 @@ vi.mock('react-router', async (orig) => ({
   useNavigate: () => navigate,
 }));
 vi.mock('../hooks/useCurrency', () => ({
-  useCurrency: () => ({ formatAmount: (value: number) => String(value), currencySymbol: '₽' }),
+  useCurrency: () => ({
+    formatAmount: (value: number) => String(value),
+    currencySymbol: '₽',
+    formatMoney: (v: number) => `${String(v)}\u00A0₽`,
+  }),
 }));
 vi.mock('../hooks/useTelegramSDK', () => ({
   useTelegramSDK: () => ({

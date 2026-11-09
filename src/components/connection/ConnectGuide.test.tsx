@@ -105,8 +105,15 @@ describe('ConnectGuide', () => {
 
   it('recommends INCY first and numbers every open step', () => {
     guide();
-    // устройство определилось само
+    // устройство определилось само и названо строкой; сетка раскрывается по «Другое»
+    expect(screen.queryByRole('radio', { name: 'iOS' })).toBeNull();
+    expect(screen.getByText('iOS')).toBeTruthy();
+    fireEvent.click(
+      screen.getByRole('button', { name: 'subscription.connection.v10.otherDevice' }),
+    );
     expect(screen.getByRole('radio', { name: 'iOS' }).getAttribute('aria-checked')).toBe('true');
+    fireEvent.click(screen.getByRole('radio', { name: 'iOS' }));
+    expect(screen.queryByRole('radio', { name: 'iOS' })).toBeNull();
     const apps = screen.getAllByRole('radio').filter((r) => /Happ|INCY/.test(r.textContent ?? ''));
     expect(apps[0].textContent).toContain('INCY');
     expect(apps[0].getAttribute('aria-checked')).toBe('true');

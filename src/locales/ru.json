@@ -7845,7 +7845,8 @@
       "nMonths_few": "{{count}} месяца",
       "nMonths_many": "{{count}} месяцев",
       "nDays": "{{count}} дн",
-      "nMonths": "{{count}} мес"
+      "nMonths": "{{count}} мес",
+      "d360": "12 месяцев"
     },
     "resultTitle": "Покупка"
   },

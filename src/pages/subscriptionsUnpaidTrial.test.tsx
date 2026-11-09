@@ -20,7 +20,11 @@ vi.mock('@/platform', async (importOriginal) => ({
 }));
 vi.mock('../hooks/useTheme', () => ({ useTheme: () => ({ isDark: true }) }));
 vi.mock('../hooks/useCurrency', () => ({
-  useCurrency: () => ({ formatAmount: String, currencySymbol: '₽' }),
+  useCurrency: () => ({
+    formatAmount: String,
+    currencySymbol: '₽',
+    formatMoney: (v: number) => `${String(v)}\u00A0₽`,
+  }),
 }));
 vi.mock('../api/subscription', () => ({
   subscriptionApi: {

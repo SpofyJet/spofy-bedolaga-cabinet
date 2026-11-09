@@ -10,7 +10,11 @@ vi.mock('react-i18next', () => ({
   initReactI18next: { type: '3rdParty', init: () => {} },
 }));
 vi.mock('../../../hooks/useCurrency', () => ({
-  useCurrency: () => ({ formatAmount: (value: number) => String(value), currencySymbol: '₽' }),
+  useCurrency: () => ({
+    formatAmount: (value: number) => String(value),
+    currencySymbol: '₽',
+    formatMoney: (v: number) => `${String(v)}\u00A0₽`,
+  }),
 }));
 vi.mock('../../../hooks/usePromoDiscount', () => ({
   usePromoDiscount: () => ({ applyPromoDiscount: (value: number) => value }),

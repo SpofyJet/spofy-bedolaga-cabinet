@@ -11,8 +11,8 @@ import type { RenewalOption } from '@/types';
  * рамкой, но выбранным держал первый — клиент видел «-45%» на годовом, а внизу
  * «К оплате» за месяц и жаловался, что кнопка покупает не то.
  *
- * Держим и обратное: без отметки оператора поведение прежнее — сам за него
- * выгоду не выдумываем.
+ * Без отметки оператора в покупке выбран первый срок, в продлении — 3 месяца,
+ * а если такого нет, первый.
  */
 
 function ru(key: string): string {
@@ -168,13 +168,13 @@ describe('продление: выбранный по умолчанию пер�
     expect(cardFor(30).className).not.toContain(SELECTED);
   });
 
-  it('без отметки оператора не выбирает ничего — как было', async () => {
+  it('без отметки оператора выбран первый срок: кнопка оплаты не ждёт лишнего нажатия', async () => {
     state.options = [option({ period_days: 30 }), option({ period_days: 360 })];
     const { renderRenew, cardFor } = await import('./renewHarness');
     await renderRenew();
-    await screen.findByText(/^30 /);
+    await screen.findByText('1 месяц');
 
-    expect(cardFor(30).className).not.toContain(SELECTED);
+    expect(cardFor(30).className).toContain(SELECTED);
     expect(cardFor(360).className).not.toContain(SELECTED);
   });
 });

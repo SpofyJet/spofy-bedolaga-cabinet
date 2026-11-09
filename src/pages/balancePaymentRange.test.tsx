@@ -26,7 +26,11 @@ vi.mock('../store/auth', () => ({
   useAuthStore: (selector: (s: unknown) => unknown) => selector({ refreshUser: async () => {} }),
 }));
 vi.mock('../hooks/useCurrency', () => ({
-  useCurrency: () => ({ formatAmount: String, currencySymbol: '¤' }),
+  useCurrency: () => ({
+    formatAmount: String,
+    currencySymbol: '¤',
+    formatMoney: (v: number) => `${String(v)}\u00A0¤`,
+  }),
 }));
 vi.mock('../api/balance', () => ({
   balanceApi: {

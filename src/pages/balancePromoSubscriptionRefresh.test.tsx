@@ -15,7 +15,11 @@ vi.mock('../store/auth', () => ({
   useAuthStore: (selector: (s: typeof state) => unknown) => selector(state),
 }));
 vi.mock('../hooks/useCurrency', () => ({
-  useCurrency: () => ({ formatAmount: String, currencySymbol: 'RUB' }),
+  useCurrency: () => ({
+    formatAmount: String,
+    currencySymbol: 'RUB',
+    formatMoney: (v: number) => `${String(v)}\u00A0RUB`,
+  }),
 }));
 vi.mock('../hooks/useTheme', () => ({ useTheme: () => ({ isDark: true }) }));
 vi.mock('../api/balance', () => ({

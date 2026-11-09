@@ -20,7 +20,11 @@ vi.mock('react-i18next', () => ({
   initReactI18next: { type: '3rdParty', init: () => {} },
 }));
 vi.mock('../hooks/useCurrency', () => ({
-  useCurrency: () => ({ formatAmount: String, currencySymbol: 'RUB' }),
+  useCurrency: () => ({
+    formatAmount: String,
+    currencySymbol: 'RUB',
+    formatMoney: (v: number) => `${String(v)}\u00A0RUB`,
+  }),
 }));
 vi.mock('../hooks/useTheme', () => ({ useTheme: () => ({ isDark: true }) }));
 vi.mock('../hooks/useLiteMode', () => ({ useLiteMode: () => ({ lite: state.lite }) }));
