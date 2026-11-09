@@ -46,10 +46,13 @@ export function useCurrency() {
 
   // Format amount with currency conversion
   const formatAmount = useCallback(
-    (rubAmount: number, decimals: number = 2): string => {
-      // Разряды и дробь — по правилам языка: «3 002,00», а не «3002.00».
+    (rubAmount: number, decimals?: number): string => {
+      // Разряды и дробь — по правилам языка: «3 002», а не «3002.00».
+      // Без явной точности целые рубли идут без «,00», дробные — с копейками.
       if (isRussian) {
-        return formatDecimal(rubAmount, decimals, uiLocale());
+        const kopeks = Math.round(rubAmount * 100);
+        const auto = kopeks % 100 === 0 ? 0 : 2;
+        return formatDecimal(rubAmount, decimals ?? auto, uiLocale());
       }
 
       // Convert to target currency
@@ -59,14 +62,27 @@ export function useCurrency() {
         exchangeRates,
       );
 
-      return formatDecimal(convertedAmount, decimals, uiLocale());
+      return formatDecimal(convertedAmount, decimals ?? 2, uiLocale());
     },
     [isRussian, targetCurrency, exchangeRates],
   );
 
+  // Единый вид суммы на экране: «159 ₽», «1 290 ₽», «158,60 ₽»; знак приклеен
+  // неразрывным пробелом. round — для расчётных цен («за месяц»): до целого рубля.
+  const formatMoney = useCallback(
+    (rubAmount: number, options?: { round?: boolean }): string => {
+      const text =
+        options?.round && isRussian
+          ? formatAmount(Math.round(rubAmount), 0)
+          : formatAmount(rubAmount);
+      return `${text}\u00A0${currencySymbol}`;
+    },
+    [formatAmount, currencySymbol, isRussian],
+  );
+
   // Format amount with currency symbol
   const formatWithCurrency = useCallback(
-    (rubAmount: number, decimals: number = 2): string => {
+    (rubAmount: number, decimals?: number): string => {
       return `${formatAmount(rubAmount, decimals)}\u00A0${currencySymbol}`;
     },
     [formatAmount, currencySymbol],
@@ -74,7 +90,7 @@ export function useCurrency() {
 
   // Format amount with + sign (for earnings/bonuses)
   const formatPositive = useCallback(
-    (rubAmount: number, decimals: number = 2): string => {
+    (rubAmount: number, decimals?: number): string => {
       return `+${formatAmount(rubAmount, decimals)}\u00A0${currencySymbol}`;
     },
     [formatAmount, currencySymbol],
@@ -114,6 +130,7 @@ export function useCurrency() {
       isRussian,
       currencySymbol,
       formatAmount,
+      formatMoney,
       formatWithCurrency,
       formatPositive,
       convertAmount,
@@ -125,6 +142,7 @@ export function useCurrency() {
       isRussian,
       currencySymbol,
       formatAmount,
+      formatMoney,
       formatWithCurrency,
       formatPositive,
       convertAmount,

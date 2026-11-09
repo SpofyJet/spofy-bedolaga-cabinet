@@ -61,7 +61,7 @@ export function TariffPurchaseForm({
     isLifetimePeriod(period.days) ? t('subscription.lifetime.forever') : period.label;
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const { formatAmount, currencySymbol } = useCurrency();
+  const { formatMoney } = useCurrency();
   const { applyPromoDiscount } = usePromoDiscount();
   // Та же котировка, что на карточке тарифа: серверная цена + промокод один раз.
   const dailyQuote = dailyPriceQuote(tariff, applyPromoDiscount);
@@ -73,9 +73,7 @@ export function TariffPurchaseForm({
 
   // Целые суммы без «,00»: «299 ₽», а не «299,00 ₽».
   const formatPrice = (kopeks: number) =>
-    kopeks === 0
-      ? t('subscription.free', 'Бесплатно')
-      : `${formatAmount(kopeks / 100).replace(/[.,]00$/, '')}\u00A0${currencySymbol}`;
+    kopeks === 0 ? t('subscription.free', 'Бесплатно') : formatMoney(kopeks / 100);
 
   // Form-internal state — seeded from the tariff prop. Resets via
   // `key={tariff.id}` on the parent's render.

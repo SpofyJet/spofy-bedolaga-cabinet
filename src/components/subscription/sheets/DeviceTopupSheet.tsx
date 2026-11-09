@@ -48,11 +48,8 @@ export function DeviceTopupSheet({
 
   // Общий формат суммы, как на соседних экранах: «1 490,50 ₽», а не «1490.50 ₽»;
   // знак валюты приклеен неразрывным пробелом.
-  const { formatAmount, currencySymbol } = useCurrency();
-  const formatPrice = (kopeks: number) => {
-    const rubles = kopeks / 100;
-    return `${formatAmount(rubles, rubles % 1 === 0 ? 0 : 2)}\u00A0${currencySymbol}`;
-  };
+  const { formatMoney } = useCurrency();
+  const formatPrice = (kopeks: number) => formatMoney(kopeks / 100);
 
   const { data: devicePriceData } = useQuery({
     queryKey: ['device-price', devicesToAdd, subscriptionId],

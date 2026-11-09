@@ -34,7 +34,7 @@ export default function SuccessNotificationModal() {
   const isOpen = useSuccessNotification((state) => state.isOpen);
   const data = useSuccessNotification((state) => state.data);
   const hide = useSuccessNotification((state) => state.hide);
-  const { formatAmount, currencySymbol } = useCurrency();
+  const { formatMoney } = useCurrency();
   const { safeAreaInset, contentSafeAreaInset, isTelegramWebApp } = useTelegramSDK();
   const haptic = useHaptic();
 
@@ -93,15 +93,11 @@ export default function SuccessNotificationModal() {
   const isTrafficPurchased = data.type === 'traffic_purchased';
 
   // Format amount
-  const formattedAmount = data.amountKopeks
-    ? `${formatAmount(data.amountKopeks / 100)}\u00A0${currencySymbol}`
-    : null;
+  const formattedAmount = data.amountKopeks ? formatMoney(data.amountKopeks / 100) : null;
 
   // Format new balance
   const formattedBalance =
-    data.newBalanceKopeks !== undefined
-      ? `${formatAmount(data.newBalanceKopeks / 100)}\u00A0${currencySymbol}`
-      : null;
+    data.newBalanceKopeks !== undefined ? formatMoney(data.newBalanceKopeks / 100) : null;
 
   // Format expiry date. Вечная подписка (ULTIMA, конец в 2099-м) — «Навсегда».
   const lifetimeExpiry = isLifetimeEndDate(data.expiresAt);

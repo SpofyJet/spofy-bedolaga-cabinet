@@ -110,7 +110,7 @@ export default function Balance() {
   const { t } = useTranslation();
   const refreshUser = useAuthStore((state) => state.refreshUser);
   const queryClient = useQueryClient();
-  const { formatAmount, currencySymbol } = useCurrency();
+  const { formatAmount, formatMoney, currencySymbol } = useCurrency();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const paymentHandledRef = useRef(false);
@@ -316,7 +316,7 @@ export default function Balance() {
             balanceData === undefined ? (
               <Skeleton className="h-[30px] w-28" />
             ) : (
-              `${formatAmount(balanceRubles, Number.isInteger(balanceRubles) ? 0 : 2)} ${currencySymbol}`
+              formatMoney(balanceRubles)
             )
           }
           hint={
@@ -394,7 +394,7 @@ export default function Balance() {
                   {promocodeSuccess.amount > 0 && (
                     <p className="mt-0.5 text-dark-400">
                       {t('balance.promocode.balanceAdded', {
-                        amount: promocodeSuccess.amount.toFixed(2),
+                        amount: formatAmount(promocodeSuccess.amount),
                       })}
                     </p>
                   )}
@@ -483,9 +483,7 @@ export default function Balance() {
                 trailing={
                   <span className="flex shrink-0 items-center gap-2">
                     <span className="whitespace-nowrap text-[15px] font-bold text-dark-50">
-                      {formatAmount(option.price_rubles, 0)}
-                      {' '}
-                      {currencySymbol}
+                      {formatMoney(option.price_rubles)}
                     </span>
                     <PiCaretRightBold className="h-3.5 w-3.5 text-dark-500" aria-hidden />
                   </span>
@@ -562,7 +560,7 @@ export default function Balance() {
 /** Строка истории: иконка типа, описание, тип и дата, сумма зелёная/красная. */
 function TransactionRow({ tx }: { tx: Transaction }) {
   const { t } = useTranslation();
-  const { formatAmount, currencySymbol } = useCurrency();
+  const { formatMoney } = useCurrency();
   const { icon, tone } = TX_ICONS[tx.type?.toUpperCase?.() ?? ''] ?? TX_FALLBACK;
   const typeLabel = t(transactionTypeLabelKey(tx.type));
   const isZero = tx.amount_rubles === 0;
@@ -588,9 +586,7 @@ function TransactionRow({ tx }: { tx: Transaction }) {
       </span>
       <span className={`shrink-0 whitespace-nowrap text-[15px] font-bold ${colorClass}`}>
         {sign}
-        {formatAmount(amount, Number.isInteger(amount) ? 0 : 2)}
-        {' '}
-        {currencySymbol}
+        {formatMoney(amount)}
       </span>
     </div>
   );

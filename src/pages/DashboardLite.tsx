@@ -34,7 +34,7 @@ const PRIMARY_ACTION_CLASS =
  */
 export default function DashboardLite() {
   const { t } = useTranslation();
-  const { formatAmount, currencySymbol } = useCurrency();
+  const { formatMoney } = useCurrency();
 
   const {
     data: list,
@@ -267,7 +267,7 @@ export default function DashboardLite() {
           <LiteRow
             to="/balance"
             label={t('lite.rows.balance', 'Баланс')}
-            value={`${formatAmount(balance?.balance_rubles ?? 0)} ${currencySymbol}`}
+            value={formatMoney(balance?.balance_rubles ?? 0)}
           />
           {subscription && (
             <LiteRow

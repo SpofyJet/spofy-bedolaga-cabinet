@@ -31,13 +31,11 @@ export function TariffPickerLite({
   onSwitchTariff,
 }: TariffPickerGridProps) {
   const { t } = useTranslation();
-  const { formatAmount, currencySymbol } = useCurrency();
+  const { formatMoney } = useCurrency();
   const { applyPromoDiscount } = usePromoDiscount();
 
   const formatPrice = (kopeks: number) =>
-    kopeks === 0
-      ? t('subscription.free', 'Бесплатно')
-      : `${formatAmount(kopeks / 100)} ${currencySymbol}`;
+    kopeks === 0 ? t('subscription.free', 'Бесплатно') : formatMoney(kopeks / 100);
 
   /** Цена строкой: посуточная, «от» за первый период либо гибкая оплата. */
   const priceOf = (tariff: Tariff) => {

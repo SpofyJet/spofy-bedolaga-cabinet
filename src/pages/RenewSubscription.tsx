@@ -30,7 +30,7 @@ export default function RenewSubscription() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const { formatAmount, currencySymbol } = useCurrency();
+  const { formatMoney } = useCurrency();
   const { impact } = useHaptic();
 
   const [selectedPeriod, setSelectedPeriod] = useState<number | null>(null);
@@ -149,8 +149,8 @@ export default function RenewSubscription() {
   const missingAmount = insufficientMatch ? Number(insufficientMatch[1]) : null;
 
   // Целые суммы без «,00»: «299 ₽», а не «299,00 ₽».
-  const money = (kopeks: number) =>
-    `${formatAmount(kopeks / 100).replace(/[.,]00$/, '')} ${currencySymbol}`;
+  const money = (kopeks: number, options?: { round?: boolean }) =>
+    formatMoney(kopeks / 100, options);
   const selectedOption = options?.find((o) => o.period_days === selectedPeriod) ?? null;
   const isDailyRenewal = Boolean(subscription?.is_daily && !subscription.is_trial);
   const isLifetime = Boolean(subscription && isLifetimeSubscription(subscription));
@@ -269,7 +269,7 @@ export default function RenewSubscription() {
                     </span>
                     {perMonth !== null && (
                       <span className="mt-0.5 block text-[13px] text-dark-400">
-                        {money(perMonth)}/{t('subscription.month', 'мес')}
+                        {money(perMonth, { round: true })}/{t('subscription.month', 'мес')}
                       </span>
                     )}
                   </span>
@@ -297,11 +297,7 @@ export default function RenewSubscription() {
         <Surface className="space-y-4">
           <div className="flex items-center justify-between gap-3 text-[14px]">
             <span className="text-dark-400">{t('common.balance', 'Баланс')}</span>
-            <span className="font-semibold tabular-nums text-dark-100">
-              {formatAmount(balanceKopeks / 100)}
-              {' '}
-              {currencySymbol}
-            </span>
+            <span className="font-semibold tabular-nums text-dark-100">{money(balanceKopeks)}</span>
           </div>
           {selectedOption && (
             <div className="flex items-end justify-between gap-3 border-t border-dark-800/70 pt-4">

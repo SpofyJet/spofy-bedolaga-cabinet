@@ -29,7 +29,7 @@ import { cn } from '../lib/utils';
 import { copyToClipboard } from '../utils/clipboard';
 import { buildGiftClaimArtifacts } from '../utils/giftShare';
 import { getApiErrorMessage } from '../utils/api-error';
-import { formatPrice } from '../utils/format';
+import { formatPriceShort as formatPrice } from '../utils/format';
 import { pickBestValue } from '../utils/bestValue';
 import { BestValueBadge, bestValueFrame } from '../components/subscription/BestValueBadge';
 import { useCurrency } from '../hooks/useCurrency';

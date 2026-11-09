@@ -26,12 +26,10 @@ export interface DailyPausePanelProps {
 export function DailyPausePanel({ subscription, subscriptionId }: DailyPausePanelProps) {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
-  const { formatAmount, currencySymbol } = useCurrency();
+  const { formatMoney } = useCurrency();
 
   const formatPrice = (kopeks: number) =>
-    kopeks === 0
-      ? t('subscription.free', 'Бесплатно')
-      : `${formatAmount(kopeks / 100)}\u00A0${currencySymbol}`;
+    kopeks === 0 ? t('subscription.free', 'Бесплатно') : formatMoney(kopeks / 100);
 
   const isSuspended = ['expired', 'disabled', 'limited'].includes(subscription.status);
   const needsResume = subscription.is_daily_paused || isSuspended;

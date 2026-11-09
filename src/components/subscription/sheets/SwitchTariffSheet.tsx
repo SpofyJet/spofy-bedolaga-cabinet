@@ -82,14 +82,12 @@ export function SwitchTariffSheet({
   const { t } = useTranslation();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const { formatAmount, currencySymbol } = useCurrency();
+  const { formatMoney } = useCurrency();
   const { applyPromoDiscount } = usePromoDiscount();
   const ref = useRef<HTMLHeadingElement>(null);
 
   const formatPrice = (kopeks: number) =>
-    kopeks === 0
-      ? t('subscription.free', 'Бесплатно')
-      : `${formatAmount(kopeks / 100)}\u00A0${currencySymbol}`;
+    kopeks === 0 ? t('subscription.free', 'Бесплатно') : formatMoney(kopeks / 100);
 
   const {
     data: switchPreview,
@@ -261,7 +259,9 @@ export function SwitchTariffSheet({
               {switchPreview.has_enough_balance && (
                 <p className="text-sm text-dark-400">
                   {t('subscription.switchTariff.balanceAfter', {
-                    amount: `${formatAmount((switchPreview.balance_kopeks - switchPreview.upgrade_cost_kopeks) / 100)}\u00a0${currencySymbol}`,
+                    amount: formatMoney(
+                      (switchPreview.balance_kopeks - switchPreview.upgrade_cost_kopeks) / 100,
+                    ),
                   })}
                 </p>
               )}

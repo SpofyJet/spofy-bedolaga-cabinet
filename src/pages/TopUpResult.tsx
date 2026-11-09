@@ -41,7 +41,7 @@ function ResultScreen({
   actions?: ReactNode;
 }) {
   const { t } = useTranslation();
-  const { formatAmount, currencySymbol } = useCurrency();
+  const { formatMoney } = useCurrency();
   const toneClass = {
     accent: 'bg-accent-500/10 text-accent-400',
     success: 'bg-success-500/10 text-success-400',
@@ -67,9 +67,7 @@ function ResultScreen({
             {t('balance.topUpResult.topUpAmount')}
           </span>
           <span className="mt-0.5 block text-[26px] font-bold leading-tight tracking-tight text-dark-50">
-            {formatAmount(amountKopeks / 100)}
-            {' '}
-            {currencySymbol}
+            {formatMoney(amountKopeks / 100)}
           </span>
         </div>
       )}
