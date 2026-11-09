@@ -110,7 +110,7 @@ export function SettingsTableRow({
 
           {/* Description for long values */}
           {isLongValue && description && (
-            <p className="mt-1 text-xs leading-relaxed text-dark-400">{description}</p>
+            <p className="mt-1 text-[13px] leading-relaxed text-dark-400">{description}</p>
           )}
         </div>
 
@@ -124,7 +124,7 @@ export function SettingsTableRow({
           )}
         >
           {locked ? (
-            <span className="max-w-[240px] truncate rounded bg-dark-700/30 px-3 py-1.5 font-mono text-xs text-dark-400">
+            <span className="max-w-[240px] truncate rounded bg-dark-700/30 px-3 py-1.5 font-mono text-[13px] text-dark-400">
               {isBool
                 ? boolChecked
                   ? t('admin.settings.enabled')

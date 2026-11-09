@@ -378,8 +378,10 @@ export default function AdminBroadcastCreate() {
             <BroadcastIcon className="h-6 w-6" />
           </div>
           <div>
-            <h1 className="text-xl font-bold text-dark-100">{t('admin.broadcasts.create')}</h1>
-            <p className="text-sm text-dark-400">{t('admin.broadcasts.subtitle')}</p>
+            <h1 className="text-xl font-bold tracking-tight text-dark-50 sm:text-2xl">
+              {t('admin.broadcasts.create')}
+            </h1>
+            <p className="mt-0.5 text-[13px] text-dark-400">{t('admin.broadcasts.subtitle')}</p>
           </div>
         </div>
       </div>
@@ -392,10 +394,10 @@ export default function AdminBroadcastCreate() {
         <div className="flex gap-3">
           <button
             onClick={handleToggleTelegram}
-            className={`flex flex-1 items-center justify-center gap-2 rounded-lg border p-4 transition-all ${
+            className={`flex flex-1 items-center justify-center gap-2 rounded-3xl border p-4 transition-all ${
               telegramEnabled
                 ? 'border-accent-500 bg-accent-500/10 text-accent-400'
-                : 'border-dark-700 bg-dark-800 text-dark-300 hover:border-dark-600'
+                : 'border-dark-700 bg-dark-900/70 text-dark-300 hover:border-dark-600'
             }`}
           >
             <TelegramIcon />
@@ -403,10 +405,10 @@ export default function AdminBroadcastCreate() {
           </button>
           <button
             onClick={handleToggleEmail}
-            className={`flex flex-1 items-center justify-center gap-2 rounded-lg border p-4 transition-all ${
+            className={`flex flex-1 items-center justify-center gap-2 rounded-3xl border p-4 transition-all ${
               emailEnabled
                 ? 'border-accent-500 bg-accent-500/10 text-accent-400'
-                : 'border-dark-700 bg-dark-800 text-dark-300 hover:border-dark-600'
+                : 'border-dark-700 bg-dark-900/70 text-dark-300 hover:border-dark-600'
             }`}
           >
             <EmailIcon />
@@ -426,7 +428,7 @@ export default function AdminBroadcastCreate() {
         <label className="mb-3 block text-sm font-medium text-dark-300">
           {t('admin.broadcasts.category', 'Категория рассылки')}
         </label>
-        <p className="mb-3 text-xs text-dark-500">
+        <p className="mb-3 text-[13px] text-dark-500">
           {t(
             'admin.broadcasts.categoryDesc',
             'Пользователи могут отключить получение новостей и промо в настройках профиля. Системные рассылки доставляются всем.',
@@ -499,7 +501,9 @@ export default function AdminBroadcastCreate() {
               maxLength={4000}
               className="input min-h-[150px] resize-y"
             />
-            <div className="mt-1 text-right text-xs text-dark-400">{messageText.length}/4000</div>
+            <div className="mt-1 text-right text-[13px] text-dark-400">
+              {messageText.length}/4000
+            </div>
           </div>
 
           {/* Media upload */}
@@ -508,7 +512,7 @@ export default function AdminBroadcastCreate() {
               {t('admin.broadcasts.media')}
             </label>
             {mediaFile ? (
-              <div className="rounded-lg bg-dark-800 p-4">
+              <div className="rounded-2xl bg-dark-800 p-4">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     {mediaType === 'photo' && <PhotoIcon />}
@@ -516,7 +520,7 @@ export default function AdminBroadcastCreate() {
                     {mediaType === 'document' && <DocumentIcon />}
                     <div>
                       <p className="text-sm text-dark-100">{mediaFile.name}</p>
-                      <p className="text-xs text-dark-400">
+                      <p className="text-[13px] text-dark-400">
                         {(mediaFile.size / 1024 / 1024).toFixed(2)} MB
                       </p>
                     </div>
@@ -554,7 +558,7 @@ export default function AdminBroadcastCreate() {
                 />
                 <button
                   onClick={() => fileInputRef.current?.click()}
-                  className="flex w-full items-center justify-center gap-2 rounded-lg border-dashed bg-dark-800/50 p-6 text-dark-400 transition-colors hover:bg-dark-800 hover:text-dark-300"
+                  className="flex w-full items-center justify-center gap-2 rounded-3xl border-dashed bg-dark-900/70 p-6 text-dark-400 transition-colors hover:bg-dark-800 hover:text-dark-300"
                 >
                   <PhotoIcon />
                   <span>{t('admin.broadcasts.addMedia')}</span>
@@ -575,7 +579,7 @@ export default function AdminBroadcastCreate() {
                   onClick={() => toggleButton(button.key)}
                   className={`rounded-lg px-3 py-2 text-sm transition-colors ${
                     selectedButtons.includes(button.key)
-                      ? 'bg-accent-500 text-on-accent'
+                      ? 'bg-accent-500/15 text-accent-400'
                       : 'bg-dark-800 text-dark-300 hover:bg-dark-700'
                   }`}
                 >
@@ -606,7 +610,7 @@ export default function AdminBroadcastCreate() {
                           : t('admin.broadcasts.customButtonTypeCallback')}
                       </span>
                       <span className="truncate text-sm text-dark-100">{btn.label}</span>
-                      <span className="truncate text-xs text-dark-500">{btn.action_value}</span>
+                      <span className="truncate text-[13px] text-dark-500">{btn.action_value}</span>
                     </div>
                     <button
                       onClick={() => removeCustomButton(index)}
@@ -643,7 +647,7 @@ export default function AdminBroadcastCreate() {
                     onClick={() => setNewButtonActionType('callback')}
                     className={`flex-1 rounded-lg px-3 py-2 text-sm transition-colors ${
                       newButtonActionType === 'callback'
-                        ? 'bg-accent-500 text-on-accent'
+                        ? 'bg-accent-500/15 text-accent-400'
                         : 'bg-dark-800 text-dark-300 hover:bg-dark-700'
                     }`}
                   >
@@ -654,7 +658,7 @@ export default function AdminBroadcastCreate() {
                     onClick={() => setNewButtonActionType('url')}
                     className={`flex-1 rounded-lg px-3 py-2 text-sm transition-colors ${
                       newButtonActionType === 'url'
-                        ? 'bg-accent-500 text-on-accent'
+                        ? 'bg-accent-500/15 text-accent-400'
                         : 'bg-dark-800 text-dark-300 hover:bg-dark-700'
                     }`}
                   >
@@ -770,7 +774,9 @@ export default function AdminBroadcastCreate() {
             <label className="mb-2 block text-sm font-medium text-dark-300">
               {t('admin.broadcasts.emailContent')}
             </label>
-            <p className="mb-2 text-xs text-dark-400">{t('admin.broadcasts.emailContentHint')}</p>
+            <p className="mb-2 text-[13px] text-dark-400">
+              {t('admin.broadcasts.emailContentHint')}
+            </p>
             <textarea
               value={emailContent}
               onChange={(e) => setEmailContent(e.target.value)}
@@ -781,7 +787,7 @@ export default function AdminBroadcastCreate() {
           </div>
 
           {/* Email variables hint */}
-          <div className="rounded-lg bg-dark-800/50 p-4">
+          <div className="rounded-2xl bg-dark-800/50 p-4">
             <p className="mb-2 text-sm font-medium text-dark-300">
               {t('admin.broadcasts.emailVariables')}
             </p>
@@ -789,7 +795,7 @@ export default function AdminBroadcastCreate() {
               {['{{user_name}}', '{{email}}', '{{user_id}}'].map((variable) => (
                 <code
                   key={variable}
-                  className="rounded bg-dark-700 px-2 py-1 text-xs text-accent-400"
+                  className="rounded bg-dark-700 px-2 py-1 text-[13px] text-accent-400"
                 >
                   {variable}
                 </code>

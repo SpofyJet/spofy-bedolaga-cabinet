@@ -64,7 +64,7 @@ export function PointDetails({
   return (
     <dl className="grid grid-cols-1 gap-x-4 gap-y-1 rounded-xl bg-dark-800/40 p-3 sm:grid-cols-2">
       {facts.map((fact) => (
-        <div key={fact.column} className="flex min-w-0 gap-3 text-xs">
+        <div key={fact.column} className="flex min-w-0 gap-3 text-[13px]">
           <dt className="w-36 shrink-0 text-dark-400">{fact.label}</dt>
           <dd className="min-w-0 break-words text-dark-100">{fact.value}</dd>
         </div>

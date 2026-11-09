@@ -146,7 +146,7 @@ export default function AdminCampaignStats() {
       <div className="animate-fade-in">
         <div className="mb-6 flex items-center gap-3">
           <AdminBackButton to="/admin/campaigns" />
-          <h1 className="text-xl font-semibold text-dark-100">
+          <h1 className="text-xl font-bold tracking-tight text-dark-50 sm:text-2xl">
             {t('admin.campaigns.stats.title')}
           </h1>
         </div>
@@ -173,7 +173,9 @@ export default function AdminCampaignStats() {
             <ChartIcon className="h-6 w-6" />
           </div>
           <div className="min-w-0">
-            <h1 className="truncate text-xl font-semibold text-dark-100">{stats.name}</h1>
+            <h1 className="truncate text-xl font-bold tracking-tight text-dark-50 sm:text-2xl">
+              {stats.name}
+            </h1>
             <div className="mt-1 flex items-center gap-2">
               <span
                 className={`rounded px-2 py-0.5 text-xs ${bonusTypeConfig[stats.bonus_type].bgColor} ${bonusTypeConfig[stats.bonus_type].color}`}
@@ -199,8 +201,8 @@ export default function AdminCampaignStats() {
         {(stats.deep_link || stats.web_link) && (
           <div className="space-y-3">
             {stats.deep_link && (
-              <div className="rounded-xl bg-dark-800 p-4">
-                <div className="mb-1 text-xs font-medium text-dark-500">
+              <div className="rounded-3xl bg-dark-900/70 p-4">
+                <div className="mb-1 text-[13px] font-medium text-dark-500">
                   {t('admin.campaigns.stats.botLink')}
                 </div>
                 <div className="flex items-center justify-between gap-2">
@@ -223,8 +225,8 @@ export default function AdminCampaignStats() {
               </div>
             )}
             {stats.web_link && (
-              <div className="rounded-xl bg-dark-800 p-4">
-                <div className="mb-1 text-xs font-medium text-dark-500">
+              <div className="rounded-3xl bg-dark-900/70 p-4">
+                <div className="mb-1 text-[13px] font-medium text-dark-500">
                   {t('admin.campaigns.stats.webLink')}
                 </div>
                 <div className="flex items-center justify-between gap-2">
@@ -251,33 +253,35 @@ export default function AdminCampaignStats() {
 
         {/* Main Stats */}
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-          <div className="rounded-xl bg-dark-800 p-4 text-center">
+          <div className="rounded-3xl bg-dark-900/70 p-4 text-center">
             <div className="text-xl font-bold text-dark-100 sm:text-2xl">{stats.registrations}</div>
-            <div className="text-xs text-dark-500">{t('admin.campaigns.stats.registrations')}</div>
+            <div className="text-[13px] text-dark-500">
+              {t('admin.campaigns.stats.registrations')}
+            </div>
           </div>
-          <div className="rounded-xl bg-dark-800 p-4 text-center">
+          <div className="rounded-3xl bg-dark-900/70 p-4 text-center">
             {/* Без truncate: многоточие съедало цифры суммы. */}
             <div className="text-lg font-bold text-success-400 [overflow-wrap:anywhere] sm:text-2xl">
               {formatWithCurrency(stats.total_revenue_kopeks / PARTNER_STATS.KOPEKS_DIVISOR)}
             </div>
-            <div className="text-xs text-dark-500">{t('admin.campaigns.stats.revenue')}</div>
+            <div className="text-[13px] text-dark-500">{t('admin.campaigns.stats.revenue')}</div>
           </div>
-          <div className="rounded-xl bg-dark-800 p-4 text-center">
+          <div className="rounded-3xl bg-dark-900/70 p-4 text-center">
             <div className="text-xl font-bold text-accent-400 sm:text-2xl">
               {stats.paid_users_count}
             </div>
-            <div className="text-xs text-dark-500">{t('admin.campaigns.stats.paidUsers')}</div>
+            <div className="text-[13px] text-dark-500">{t('admin.campaigns.stats.paidUsers')}</div>
           </div>
-          <div className="rounded-xl bg-dark-800 p-4 text-center">
+          <div className="rounded-3xl bg-dark-900/70 p-4 text-center">
             <div className="text-xl font-bold text-accent-400 sm:text-2xl">
               {stats.conversion_rate}%
             </div>
-            <div className="text-xs text-dark-500">{t('admin.campaigns.stats.conversion')}</div>
+            <div className="text-[13px] text-dark-500">{t('admin.campaigns.stats.conversion')}</div>
           </div>
         </div>
 
         {/* Detailed Stats */}
-        <div className="rounded-xl bg-dark-800 p-4">
+        <div className="rounded-3xl bg-dark-900/70 p-4">
           <h3 className="mb-4 font-medium text-dark-200">
             {t('admin.campaigns.stats.detailedStats')}
           </h3>
@@ -409,7 +413,7 @@ export default function AdminCampaignStats() {
                         key={reg.id}
                         to={`/admin/users/${reg.id}`}
                         {...backTo(location)}
-                        className="flex items-center justify-between gap-3 rounded-xl bg-dark-800/30 p-3 transition-colors hover:bg-dark-700/50"
+                        className="flex items-center justify-between gap-3 rounded-3xl bg-dark-900/70 p-3 transition-colors hover:bg-dark-700/50"
                       >
                         <div className="min-w-0 flex-1">
                           <div className="flex min-w-0 items-center gap-2">
@@ -425,7 +429,7 @@ export default function AdminCampaignStats() {
                               <span className="badge-info">{t('admin.campaigns.stats.paid')}</span>
                             )}
                           </div>
-                          <div className="mt-0.5 text-xs text-dark-500">
+                          <div className="mt-0.5 text-[13px] text-dark-500">
                             {new Date(reg.created_at).toLocaleDateString(i18n.language)}
                           </div>
                         </div>
@@ -485,7 +489,7 @@ export default function AdminCampaignStats() {
                             reg.username ||
                             `${t('admin.campaigns.stats.users')} #${reg.user_id}`}
                         </div>
-                        <div className="text-xs text-dark-500">{reg.telegram_id}</div>
+                        <div className="text-[13px] text-dark-500">{reg.telegram_id}</div>
                       </div>
                       <div className="flex flex-wrap items-center gap-2">
                         {reg.has_paid && (
@@ -498,7 +502,9 @@ export default function AdminCampaignStats() {
                             {t('admin.campaigns.stats.hasSub')}
                           </span>
                         )}
-                        <span className="text-xs text-dark-500">{formatDate(reg.created_at)}</span>
+                        <span className="text-[13px] text-dark-500">
+                          {formatDate(reg.created_at)}
+                        </span>
                       </div>
                     </Link>
                   ))}

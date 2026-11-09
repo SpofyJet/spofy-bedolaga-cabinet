@@ -69,7 +69,9 @@ function HostRow({
         <CheckGlyph on={checked} />
         <span className="min-w-0 flex-1">
           <span className="block truncate text-sm font-medium text-dark-100">{host.remark}</span>
-          <span className="block truncate font-mono text-xs text-dark-400">{host.target_key}</span>
+          <span className="block truncate font-mono text-[13px] text-dark-400">
+            {host.target_key}
+          </span>
         </span>
       </button>
       <PurposeChip purpose={host.purpose} />
@@ -107,7 +109,7 @@ function HostList({
           className="input w-full text-sm"
         />
       )}
-      {isLoading && <p className="mt-2 text-xs text-dark-400">…</p>}
+      {isLoading && <p className="mt-2 text-[13px] text-dark-400">…</p>}
       <ul className="mt-2 max-h-72 space-y-1.5 overflow-y-auto pr-1">
         {shown.map((host) => (
           <HostRow
@@ -145,9 +147,9 @@ function AddressField({
         placeholder={t('admin.reachability.geo.targets.placeholder')}
         className="input w-full font-mono text-sm"
       />
-      <p className="mt-1.5 text-xs text-dark-400">{t('admin.reachability.geo.targets.hint')}</p>
+      <p className="mt-1.5 text-[13px] text-dark-400">{t('admin.reachability.geo.targets.hint')}</p>
       {hasCidr && (
-        <p className="mt-1 text-xs text-warning-400">
+        <p className="mt-1 text-[13px] text-warning-400">
           {t('admin.reachability.geo.targets.noCidr')}
         </p>
       )}
@@ -188,7 +190,7 @@ export function GeoTargets(props: GeoTargetsProps) {
         onChange={props.onKindChange}
       />
       {total > MAX_GEO_TARGETS && (
-        <p className="text-xs text-warning-400">
+        <p className="text-[13px] text-warning-400">
           {t(`${base}.overLimit`, { max: MAX_GEO_TARGETS })}
         </p>
       )}

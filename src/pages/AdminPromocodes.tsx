@@ -101,19 +101,21 @@ export default function AdminPromocodes() {
           {!capabilities.hasBackButton && (
             <button
               onClick={() => navigate('/admin')}
-              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-dark-800 transition-colors"
+              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-dark-900/70 transition-colors"
             >
               <BackIcon />
             </button>
           )}
           <div>
-            <h1 className="text-xl font-bold text-dark-100">{t('admin.promocodes.title')}</h1>
-            <p className="text-sm text-dark-400">{t('admin.promocodes.subtitle')}</p>
+            <h1 className="text-xl font-bold tracking-tight text-dark-50 sm:text-2xl">
+              {t('admin.promocodes.title')}
+            </h1>
+            <p className="mt-0.5 text-[13px] text-dark-400">{t('admin.promocodes.subtitle')}</p>
           </div>
         </div>
         <button
           onClick={() => navigate('/admin/promocodes/create')}
-          className="flex items-center justify-center gap-2 rounded-lg bg-accent-500 px-4 py-2 text-on-accent transition-colors hover:bg-accent-600"
+          className="flex items-center justify-center gap-2 rounded-2xl bg-cta-500 px-4 py-2 text-on-cta transition-colors hover:bg-cta-600"
         >
           <PlusIcon />
           {t('admin.promocodes.addPromocode')}
@@ -164,7 +166,7 @@ export default function AdminPromocodes() {
           {promocodes.map((promo: PromoCode) => (
             <div
               key={promo.id}
-              className={`rounded-xl border bg-dark-800 p-4 transition-colors ${
+              className={`rounded-3xl border bg-dark-900/70 p-4 transition-colors ${
                 promo.is_active ? 'border-dark-700' : 'border-dark-700/50 opacity-60'
               }`}
             >
@@ -277,7 +279,7 @@ export default function AdminPromocodes() {
       {/* Delete Confirmation */}
       {deleteConfirm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-dark-950/70 p-4">
-          <div className="w-full max-w-sm rounded-xl bg-dark-800 p-6">
+          <div className="w-full max-w-sm rounded-3xl bg-dark-900/70 p-6">
             <h3 className="mb-2 text-lg font-semibold text-dark-100">
               {t('admin.promocodes.confirm.deletePromocode')}
             </h3>

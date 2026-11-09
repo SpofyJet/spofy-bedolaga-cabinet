@@ -217,7 +217,7 @@ export function RecentJobs({ initialJobId, targetKey = null, onClearTarget }: Re
       />
       {targetLabel && (
         <div className="flex items-center gap-1.5">
-          <span className="rounded-lg bg-accent-500/10 px-2.5 py-1.5 text-xs font-medium text-accent-400">
+          <span className="rounded-lg bg-accent-500/10 px-2.5 py-1.5 text-[13px] font-medium text-accent-400">
             {`${t(`${base}.recent.server`)}: ${targetLabel}`}
           </span>
           {onClearTarget && (
@@ -270,7 +270,7 @@ export function RecentJobs({ initialJobId, targetKey = null, onClearTarget }: Re
 
       {jobs.data && entries.length > 0 && (
         <div className="overflow-hidden rounded-2xl border border-dark-700/60">
-          <div className={cn('hidden px-3 py-2 text-xs text-dark-400', GRID)}>
+          <div className={cn('hidden px-3 py-2 text-[13px] text-dark-400', GRID)}>
             <span />
             <span>{t(`${base}.recent.columns.target`)}</span>
             <span>{t(`${base}.recent.columns.outcome`)}</span>
@@ -344,13 +344,13 @@ function HistoryRow({ row, open, onToggle, children }: HistoryRowProps) {
         />
         <span className="min-w-0 flex-1 md:contents">
           <span className="block text-sm font-medium text-dark-100 md:truncate">{row.label}</span>
-          <span className="mt-0.5 block text-xs text-dark-400 md:hidden">
+          <span className="mt-0.5 block text-[13px] text-dark-400 md:hidden">
             {[row.age, row.word, row.units, row.cost].filter(Boolean).join(' · ')}
           </span>
-          <span className="hidden text-xs text-dark-300 md:block">{row.word}</span>
-          <span className="hidden text-xs text-dark-400 md:block">{row.units}</span>
-          <span className="hidden text-xs text-dark-400 md:block">{row.age}</span>
-          <span className="hidden text-xs tabular-nums text-dark-100 md:block md:text-right">
+          <span className="hidden text-[13px] text-dark-300 md:block">{row.word}</span>
+          <span className="hidden text-[13px] text-dark-400 md:block">{row.units}</span>
+          <span className="hidden text-[13px] text-dark-400 md:block">{row.age}</span>
+          <span className="hidden text-[13px] tabular-nums text-dark-100 md:block md:text-right">
             {row.cost}
           </span>
         </span>

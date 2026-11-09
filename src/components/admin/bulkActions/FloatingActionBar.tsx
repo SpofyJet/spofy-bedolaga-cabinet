@@ -150,7 +150,7 @@ export function FloatingActionBar({
               <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-accent-500/20 text-sm font-bold text-accent-400">
                 {selectedUserCount}
               </div>
-              <span className="hidden text-xs font-medium text-dark-300 sm:inline">
+              <span className="hidden text-[13px] font-medium text-dark-300 sm:inline">
                 {t('admin.bulkActions.usersSelected', { count: selectedUserCount })}
               </span>
             </div>
@@ -161,7 +161,7 @@ export function FloatingActionBar({
               <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-success-500/20 text-sm font-bold text-success-400">
                 {selectedSubscriptionCount}
               </div>
-              <span className="hidden text-xs font-medium text-dark-300 sm:inline">
+              <span className="hidden text-[13px] font-medium text-dark-300 sm:inline">
                 {t('admin.bulkActions.subscriptionsSelected', {
                   count: selectedSubscriptionCount,
                 })}
@@ -190,7 +190,7 @@ export function FloatingActionBar({
         <div className="relative ml-auto shrink-0">
           <button
             onClick={() => setOpen(!open)}
-            className="flex items-center gap-2 rounded-xl bg-accent-500 px-3 py-2 text-sm font-semibold text-on-accent transition-colors hover:bg-accent-600 sm:px-4"
+            className="flex items-center gap-2 rounded-2xl bg-cta-500 px-3 py-2 text-sm font-semibold text-on-cta transition-colors hover:bg-cta-600 sm:px-4"
           >
             {t('common.actions')}
             <ChevronDownIcon />
@@ -224,7 +224,7 @@ export function FloatingActionBar({
                         disabled ? 'cursor-not-allowed opacity-40' : a.colorClass,
                       )}
                     >
-                      <span className="border-current/20 bg-current/5 flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border text-xs font-bold">
+                      <span className="border-current/20 bg-current/5 flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border text-[13px] font-bold">
                         {a.icon}
                       </span>
                       {t(a.labelKey)}
@@ -257,7 +257,7 @@ export function FloatingActionBar({
                         disabled ? 'cursor-not-allowed opacity-40' : a.colorClass,
                       )}
                     >
-                      <span className="border-current/20 bg-current/5 flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border text-xs font-bold">
+                      <span className="border-current/20 bg-current/5 flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border text-[13px] font-bold">
                         {a.icon}
                       </span>
                       {t(a.labelKey)}

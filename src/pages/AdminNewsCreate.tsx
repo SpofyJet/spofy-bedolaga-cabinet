@@ -514,14 +514,14 @@ export default function AdminNewsCreate() {
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex min-w-0 flex-1 basis-48 items-center gap-3">
           <AdminBackButton to="/admin/news" />
-          <h1 className="text-xl font-bold text-dark-100">
+          <h1 className="text-xl font-bold tracking-tight text-dark-50 sm:text-2xl">
             {isEdit ? t('news.admin.edit') : t('news.admin.create')}
           </h1>
         </div>
         <button
           onClick={handleSave}
           disabled={saveMutation.isPending || !title.trim() || !slug.trim() || !selectedCategory}
-          className="min-h-[44px] rounded-lg bg-accent-500 px-6 py-2.5 text-sm font-medium text-on-accent transition-colors hover:bg-accent-600 disabled:cursor-not-allowed disabled:opacity-50"
+          className="min-h-[44px] rounded-2xl bg-cta-500 px-6 py-2.5 text-sm font-medium text-on-cta transition-colors hover:bg-cta-600 disabled:cursor-not-allowed disabled:opacity-50"
         >
           {saveMutation.isPending ? t('news.admin.saving') : t('news.admin.save')}
         </button>
@@ -875,7 +875,7 @@ export default function AdminNewsCreate() {
         <button
           onClick={handleSave}
           disabled={saveMutation.isPending || !title.trim() || !slug.trim() || !selectedCategory}
-          className="min-h-[44px] w-full rounded-lg bg-accent-500 py-3 text-sm font-medium text-on-accent transition-colors hover:bg-accent-600 disabled:cursor-not-allowed disabled:opacity-50"
+          className="min-h-[44px] w-full rounded-2xl bg-cta-500 py-3 text-sm font-medium text-on-cta transition-colors hover:bg-cta-600 disabled:cursor-not-allowed disabled:opacity-50"
         >
           {saveMutation.isPending ? t('news.admin.saving') : t('news.admin.save')}
         </button>

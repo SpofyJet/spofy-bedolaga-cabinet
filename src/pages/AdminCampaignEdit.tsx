@@ -66,7 +66,7 @@ function ServerSelector({
       <label className="mb-2 block text-sm font-medium text-dark-300">
         {t('admin.campaigns.form.servers')}
       </label>
-      <div className="max-h-48 space-y-2 overflow-y-auto rounded-lg bg-dark-800 p-3">
+      <div className="max-h-48 space-y-2 overflow-y-auto rounded-3xl bg-dark-900/70 p-3">
         {servers.map((server) => (
           <button
             key={server.id}
@@ -81,7 +81,7 @@ function ServerSelector({
             <div
               className={`flex h-5 w-5 shrink-0 items-center justify-center rounded ${
                 selected.includes(server.squad_uuid)
-                  ? 'bg-accent-500 text-on-accent'
+                  ? 'bg-accent-500/15 text-accent-400'
                   : 'bg-dark-600'
               }`}
             >
@@ -316,7 +316,7 @@ export default function AdminCampaignEdit() {
       <div className="animate-fade-in">
         <div className="mb-6 flex items-center gap-3">
           <AdminBackButton to="/admin/campaigns" />
-          <h1 className="text-xl font-semibold text-dark-100">
+          <h1 className="text-xl font-bold tracking-tight text-dark-50 sm:text-2xl">
             {t('admin.campaigns.modal.editTitle')}
           </h1>
         </div>
@@ -343,7 +343,7 @@ export default function AdminCampaignEdit() {
             <CampaignIcon />
           </div>
           <div className="min-w-0">
-            <h1 className="text-xl font-bold text-dark-100">
+            <h1 className="text-xl font-bold tracking-tight text-dark-50 sm:text-2xl">
               {t('admin.campaigns.modal.editTitle')}
             </h1>
             <p className="text-sm text-dark-400 [overflow-wrap:anywhere]">{campaign.name}</p>
@@ -372,7 +372,7 @@ export default function AdminCampaignEdit() {
             maxLength={255}
           />
           {name.length > 0 && !isNameValid && (
-            <p className="mt-1 text-xs text-error-400">
+            <p className="mt-1 text-[13px] text-error-400">
               {t('admin.campaigns.validation.nameRequired')}
             </p>
           )}
@@ -396,13 +396,13 @@ export default function AdminCampaignEdit() {
             placeholder="instagram_jan2024"
             maxLength={100}
           />
-          <p className="mt-1 text-xs text-dark-500">
+          <p className="mt-1 text-[13px] text-dark-500">
             {t('admin.campaigns.form.startParameterHint')}
           </p>
         </div>
 
         {/* Active toggle */}
-        <div className="flex items-center justify-between rounded-lg bg-dark-800 p-4">
+        <div className="flex items-center justify-between rounded-2xl bg-dark-800 p-4">
           <span className="text-sm font-medium text-dark-300">
             {t('admin.campaigns.form.active')}
           </span>
@@ -448,7 +448,7 @@ export default function AdminCampaignEdit() {
               role="radio"
               aria-checked={bonusType === type}
               onClick={() => setBonusType(type)}
-              className={`rounded-lg border p-4 text-left transition-all ${
+              className={`rounded-2xl border p-4 text-left transition-all ${
                 bonusType === type
                   ? `${bonusTypeConfig[type].bgColor} ${bonusTypeConfig[type].borderColor} ${bonusTypeConfig[type].color}`
                   : 'border-dark-700 bg-dark-800 text-dark-300 hover:border-dark-600'

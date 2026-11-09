@@ -43,7 +43,7 @@ const ArticleRow = memo(function ArticleRow({
   const color = safeColor(article.category_color);
 
   return (
-    <div className="rounded-xl bg-dark-800/50 p-4 transition-all">
+    <div className="rounded-3xl bg-dark-900/70 p-4 transition-all">
       {/* На телефоне кнопки — отдельной строкой: рядом с ними заголовку оставалось 72 px. */}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:gap-4">
         <div className="min-w-0 flex-1">
@@ -72,16 +72,16 @@ const ArticleRow = memo(function ArticleRow({
                 {t('news.admin.featured')}
               </span>
             )}
-            <span className="text-xs text-dark-500">#{article.id}</span>
+            <span className="text-[13px] text-dark-500">#{article.id}</span>
           </div>
 
           <p className="truncate text-sm font-medium text-dark-100">{article.title}</p>
 
           {article.excerpt && (
-            <p className="mt-1 truncate text-xs text-dark-400">{article.excerpt}</p>
+            <p className="mt-1 truncate text-[13px] text-dark-400">{article.excerpt}</p>
           )}
 
-          <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-dark-500">
+          <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-[13px] text-dark-500">
             <span className="whitespace-nowrap">
               {article.published_at ? new Date(article.published_at).toLocaleDateString() : '-'}
             </span>
@@ -259,7 +259,9 @@ export default function AdminNews() {
         <div className="flex min-w-0 flex-1 basis-48 items-center gap-3">
           <AdminBackButton />
           <div>
-            <h1 className="text-xl font-bold text-dark-100">{t('news.admin.title')}</h1>
+            <h1 className="text-xl font-bold tracking-tight text-dark-50 sm:text-2xl">
+              {t('news.admin.title')}
+            </h1>
           </div>
         </div>
         <div className="flex gap-2">
@@ -275,7 +277,7 @@ export default function AdminNews() {
               haptic.buttonPress();
               navigate('/admin/news/create');
             }}
-            className="flex min-h-[44px] items-center gap-2 rounded-lg bg-accent-500 px-4 py-2.5 text-on-accent transition-colors hover:bg-accent-600"
+            className="flex min-h-[44px] items-center gap-2 rounded-2xl bg-cta-500 px-4 py-2.5 text-on-cta transition-colors hover:bg-cta-600"
             aria-label={t('news.admin.create')}
           >
             <PlusIcon />
@@ -290,7 +292,7 @@ export default function AdminNews() {
           actions={[{ width: 'w-8' }, { width: 'w-14', pill: true }, { width: 'w-8' }]}
         />
       ) : articles.length === 0 ? (
-        <div className="flex flex-col items-center rounded-xl bg-dark-800/50 p-8 text-center text-dark-400">
+        <div className="flex flex-col items-center rounded-3xl bg-dark-900/70 p-8 text-center text-dark-400">
           <NewsIcon className="h-6 w-6" />
           <p className="mt-2">{t('news.noNews')}</p>
         </div>
@@ -311,7 +313,7 @@ export default function AdminNews() {
 
       {/* Pagination */}
       {totalPages > 1 && (
-        <div className="flex items-center justify-center gap-2 rounded-xl bg-dark-800/50 p-4">
+        <div className="flex items-center justify-center gap-2 rounded-3xl bg-dark-900/70 p-4">
           <button
             onClick={() => setPage((p) => Math.max(0, p - 1))}
             disabled={page === 0}

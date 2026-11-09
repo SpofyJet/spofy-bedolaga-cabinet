@@ -77,7 +77,7 @@ function RowLine({
         <span className={cn('text-sm font-medium', row.ok ? 'text-success-400' : 'text-error-400')}>
           {row.ok ? t('admin.dpichecker.result.ok') : t('admin.dpichecker.result.fail')}
         </span>
-        <span className="text-xs tabular-nums text-dark-400 sm:w-[46%] sm:text-end">
+        <span className="text-[13px] tabular-nums text-dark-400 sm:w-[46%] sm:text-end">
           {[...details, noteText].filter(Boolean).join(' · ')}
         </span>
       </button>
@@ -113,7 +113,7 @@ function ResourceCard({
         </span>
       </div>
       {resource.direct && (
-        <p className="text-xs text-dark-400">
+        <p className="text-[13px] text-dark-400">
           {resource.direct.ok
             ? t('admin.dpichecker.result.abroadOk', {
                 value: resource.direct.latency_ms ? Math.round(resource.direct.latency_ms) : '—',
@@ -268,7 +268,7 @@ export function CheckResult({ actionId }: { actionId: number }) {
           </h2>
           {check.resources.length > 0 && <CsvButton kind="report" actionId={actionId} />}
         </div>
-        <p className="text-xs text-dark-400">
+        <p className="text-[13px] text-dark-400">
           {[
             t(`admin.dpichecker.locations.${action.location ?? 'russia'}`),
             t('admin.dpichecker.result.points', { count: action.pop_count }),
@@ -327,7 +327,7 @@ export function CheckResult({ actionId }: { actionId: number }) {
               style={{ width: `${progress.percent ?? 0}%` }}
             />
           </div>
-          <p className="text-xs text-dark-400">
+          <p className="text-[13px] text-dark-400">
             {t('admin.dpichecker.result.progress', {
               done: progress.done ?? 0,
               total: progress.total,

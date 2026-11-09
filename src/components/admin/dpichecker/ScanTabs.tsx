@@ -30,7 +30,7 @@ function PairList({ title, items }: { title: string; items: { ip: string; domain
       <h4 className="text-sm font-medium text-dark-100">
         {title} — {items.length}
       </h4>
-      <ul className="space-y-0.5 text-xs text-dark-300">
+      <ul className="space-y-0.5 text-[13px] text-dark-300">
         {items.map((item) => (
           <li key={`${item.ip}-${item.domain}`} className="font-mono">
             {item.ip} {item.domain}
@@ -95,7 +95,7 @@ function ProbeReport({ scan }: { scan: ProbeScan }) {
       <p className="text-sm text-dark-200">
         {t('admin.dpichecker.probe.regions', { whole, part, clean })}
       </p>
-      <p className="text-xs text-dark-400">
+      <p className="text-[13px] text-dark-400">
         {t('admin.dpichecker.probe.pipeline', {
           scanned: results.scanned,
           kept: results.kept,
@@ -108,7 +108,7 @@ function ProbeReport({ scan }: { scan: ProbeScan }) {
         <h4 className="text-sm font-medium text-dark-100">{t('admin.dpichecker.probe.byIp')}</h4>
         <ul className="space-y-1">
           {results.assessment.per_ip.map((ip) => (
-            <li key={ip.ip} className="flex flex-wrap gap-x-3 text-xs text-dark-300">
+            <li key={ip.ip} className="flex flex-wrap gap-x-3 text-[13px] text-dark-300">
               <span className="font-mono text-dark-100">{ip.ip}</span>
               <span>{ip.domain}</span>
               <span>
@@ -130,7 +130,7 @@ function ProbeReport({ scan }: { scan: ProbeScan }) {
         <h4 className="text-sm font-medium text-dark-100">
           {t('admin.dpichecker.probe.byRegion')}
         </h4>
-        <ul className="grid gap-x-4 text-xs text-dark-300 sm:grid-cols-2">
+        <ul className="grid gap-x-4 text-[13px] text-dark-300 sm:grid-cols-2">
           {perPop.map((pop) => (
             <li key={pop.pop_id}>
               {t('admin.dpichecker.probe.regionLine', {
@@ -194,7 +194,7 @@ export function ScanResult({ actionId }: { actionId: number }) {
           {scan.cidr ?? scan.raw_target}
         </h3>
         {isProbe(scan) && (
-          <span className="text-xs tabular-nums text-dark-400">
+          <span className="text-[13px] tabular-nums text-dark-400">
             {t('admin.dpichecker.probe.cost', {
               fixed: Number(scan.fixed_cost ?? 0).toFixed(4),
               traffic: Number(scan.traffic_cost ?? 0).toFixed(4),
@@ -278,14 +278,14 @@ function ScanForm({ kind }: { kind: 'noisy' | 'probe' }) {
           </details>
         )}
         <textarea
-          className="input min-h-[96px] w-full font-mono text-xs"
+          className="input min-h-[96px] w-full font-mono text-[13px]"
           value={text}
           onChange={(event) => setText(event.target.value)}
           placeholder={t(`admin.dpichecker.${kind}.placeholder`)}
           aria-label={t(`admin.dpichecker.${kind}.placeholder`)}
         />
         {kind === 'probe' && (
-          <p className="text-xs text-dark-400">{t('admin.dpichecker.probe.price')}</p>
+          <p className="text-[13px] text-dark-400">{t('admin.dpichecker.probe.price')}</p>
         )}
         {exhausted && (
           <p className="text-sm text-warning-400">{t('admin.dpichecker.noisy.exhausted')}</p>

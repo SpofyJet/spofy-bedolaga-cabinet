@@ -175,12 +175,12 @@ export default function AdminPaymentMethodEdit() {
           {!capabilities.hasBackButton && (
             <button
               onClick={() => navigate('/admin/payment-methods')}
-              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-dark-800 transition-colors"
+              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-dark-900/70 transition-colors"
             >
               <BackIcon />
             </button>
           )}
-          <h1 className="text-2xl font-bold text-dark-50">
+          <h1 className="text-xl font-bold tracking-tight text-dark-50 sm:text-2xl">
             {t('admin.paymentMethods.notFound', 'Payment method not found')}
           </h1>
         </div>
@@ -198,13 +198,13 @@ export default function AdminPaymentMethodEdit() {
         {!capabilities.hasBackButton && (
           <button
             onClick={() => navigate('/admin/payment-methods')}
-            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-dark-800 transition-colors"
+            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-dark-900/70 transition-colors"
           >
             <BackIcon />
           </button>
         )}
         <div className="min-w-0">
-          <h1 className="text-2xl font-bold text-dark-50 [overflow-wrap:anywhere]">
+          <h1 className="[overflow-wrap:anywhere] text-xl font-bold tracking-tight text-dark-50 sm:text-2xl">
             {displayName}
           </h1>
           <p className="text-sm text-dark-500">
@@ -222,7 +222,7 @@ export default function AdminPaymentMethodEdit() {
               {t('admin.paymentMethods.methodEnabled')}
             </div>
             {!config.is_provider_configured && (
-              <div className="mt-0.5 text-xs text-warning-400">
+              <div className="mt-0.5 text-[13px] text-warning-400">
                 {t('admin.paymentMethods.providerNotConfigured')}
               </div>
             )}
@@ -250,7 +250,7 @@ export default function AdminPaymentMethodEdit() {
             <div className="text-sm font-medium text-dark-200">
               {t('admin.paymentMethods.openUrlDirect', 'Открывать страницу оплаты сразу')}
             </div>
-            <div className="mt-0.5 text-xs text-dark-500">
+            <div className="mt-0.5 text-[13px] text-dark-500">
               {t(
                 'admin.paymentMethods.openUrlDirectHint',
                 'Без панели со ссылкой — провайдер открывается внутри MiniApp/вкладки сразу после клика. После оплаты юзер возвращается на /balance/result.',
@@ -286,7 +286,7 @@ export default function AdminPaymentMethodEdit() {
             placeholder={config.default_display_name}
             className="input"
           />
-          <p className="mt-1 text-xs text-dark-500">
+          <p className="mt-1 text-[13px] text-dark-500">
             {t('admin.paymentMethods.displayNameHint')}: {config.default_display_name}
           </p>
         </div>
@@ -302,7 +302,9 @@ export default function AdminPaymentMethodEdit() {
             rows={2}
             className="input"
           />
-          <p className="mt-1 text-xs text-dark-500">{t('admin.paymentMethods.descriptionHint')}</p>
+          <p className="mt-1 text-[13px] text-dark-500">
+            {t('admin.paymentMethods.descriptionHint')}
+          </p>
         </div>
 
         {/* Sub-options */}
@@ -327,7 +329,7 @@ export default function AdminPaymentMethodEdit() {
                     <span className="text-sm">{opt.name}</span>
                     <div
                       className={`flex h-5 w-5 shrink-0 items-center justify-center rounded ${
-                        enabled ? 'bg-accent-500 text-on-accent' : 'bg-dark-700'
+                        enabled ? 'bg-accent-500/15 text-accent-400' : 'bg-dark-700'
                       }`}
                     >
                       {enabled && <CheckIcon />}
@@ -409,8 +411,10 @@ export default function AdminPaymentMethodEdit() {
               {t('admin.paymentMethods.quickAmountsAdd')}
             </button>
           </div>
-          {quickAmountsError && <p className="mt-1 text-xs text-error-400">{quickAmountsError}</p>}
-          <p className="mt-1 text-xs text-dark-500">
+          {quickAmountsError && (
+            <p className="mt-1 text-[13px] text-error-400">{quickAmountsError}</p>
+          )}
+          <p className="mt-1 text-[13px] text-dark-500">
             {t('admin.paymentMethods.quickAmountsHint', {
               defaults: (config.default_quick_amounts ?? [])
                 .map((kopeks) => kopeks / 100)
@@ -501,7 +505,7 @@ export default function AdminPaymentMethodEdit() {
             </div>
 
             {promoGroupFilterMode === 'selected' && (
-              <div className="max-h-48 space-y-1.5 overflow-y-auto rounded-xl bg-dark-900/30 p-3">
+              <div className="max-h-48 space-y-1.5 overflow-y-auto rounded-2xl bg-dark-900/30 p-3">
                 {promoGroups.length === 0 ? (
                   <p className="py-2 text-center text-sm text-dark-500">
                     {t('admin.paymentMethods.noPromoGroups')}
@@ -522,7 +526,7 @@ export default function AdminPaymentMethodEdit() {
                         <span>{group.name}</span>
                         <div
                           className={`flex h-4 w-4 items-center justify-center rounded ${
-                            selected ? 'bg-accent-500 text-on-accent' : 'border border-dark-600'
+                            selected ? 'bg-accent-500/15 text-accent-400' : 'border border-dark-600'
                           }`}
                         >
                           {selected && <CheckIcon />}

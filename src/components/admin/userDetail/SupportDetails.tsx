@@ -89,7 +89,7 @@ export function SupportDetails({
       <summary className="flex cursor-pointer list-none items-center gap-2.5 px-4 py-3.5 text-dark-300 [&::-webkit-details-marker]:hidden">
         <ChevronDownIcon className="h-4 w-4 shrink-0 text-dark-500 transition-transform group-open:rotate-180" />
         <span className="font-semibold">{t(`${ns}.subscription.support.title`)}</span>
-        <span className="hidden min-w-0 truncate text-xs text-dark-500 sm:inline">
+        <span className="hidden min-w-0 truncate text-[13px] text-dark-500 sm:inline">
           {t(`${ns}.subscription.support.hint`)}
         </span>
       </summary>
@@ -103,8 +103,8 @@ export function SupportDetails({
             className="flex flex-wrap items-center gap-x-2 gap-y-1.5 rounded-xl bg-dark-800/60 py-1.5 pl-3 pr-1.5"
           >
             <div className="min-w-0 flex-1 basis-56">
-              <div className="text-xs text-dark-500">{item.label}</div>
-              <div className="truncate font-mono text-xs text-dark-200">{item.value}</div>
+              <div className="text-[13px] text-dark-500">{item.label}</div>
+              <div className="truncate font-mono text-[13px] text-dark-200">{item.value}</div>
             </div>
             {/* Проверка — у той ссылки, которую проверяет BSCHEKER, а не отдельной кнопкой под
                 списком и не пунктом «Проверить конфиги (РФ)» в «⋯», где не было видно, что это он. */}
@@ -112,7 +112,7 @@ export function SupportDetails({
               <Link
                 to={reachabilityLink}
                 // На телефоне — отдельной строкой под ссылкой: рядом она сжимала адрес до «https://…».
-                className="btn-secondary order-last mb-1 min-h-0 shrink-0 gap-1.5 px-2.5 py-1.5 text-xs sm:order-none sm:mb-0"
+                className="btn-secondary order-last mb-1 min-h-0 shrink-0 gap-1.5 px-2.5 py-1.5 text-[13px] sm:order-none sm:mb-0"
               >
                 <RadarIcon className="h-4 w-4" />
                 {t('admin.reachability.shortcuts.checkSubscription')}
@@ -121,7 +121,7 @@ export function SupportDetails({
             {item.key === 'url' && dpicheckerLink && (
               <Link
                 to={dpicheckerLink}
-                className="btn-secondary order-last mb-1 min-h-0 shrink-0 gap-1.5 px-2.5 py-1.5 text-xs sm:order-none sm:mb-0"
+                className="btn-secondary order-last mb-1 min-h-0 shrink-0 gap-1.5 px-2.5 py-1.5 text-[13px] sm:order-none sm:mb-0"
               >
                 <WallIcon className="h-4 w-4" />
                 {t('admin.dpichecker.shortcuts.checkSubscription')}
@@ -142,7 +142,7 @@ export function SupportDetails({
         <div className="mt-1 flex items-center gap-2">
           <span className="text-sm font-semibold text-dark-200">{t(`${ns}.requestHistory`)}</span>
           {history.data && history.data.pages[0].total > 0 && (
-            <span className="text-xs tabular-nums text-dark-500">
+            <span className="text-[13px] tabular-nums text-dark-500">
               {history.data.pages[0].total}
             </span>
           )}
@@ -171,7 +171,7 @@ export function SupportDetails({
                     <span className="block truncate text-dark-200" title={record.userAgent ?? ''}>
                       {record.userAgent || '—'}
                     </span>
-                    <span className="block font-mono text-xs text-dark-500">
+                    <span className="block font-mono text-[13px] text-dark-500">
                       {record.requestIp || '—'}
                     </span>
                   </span>

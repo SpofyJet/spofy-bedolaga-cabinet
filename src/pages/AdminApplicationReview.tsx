@@ -54,7 +54,7 @@ export default function AdminApplicationReview() {
       <div className="animate-fade-in">
         <div className="mb-6 flex items-center gap-3">
           <AdminBackButton to="/admin/partners" />
-          <h1 className="text-xl font-semibold text-dark-100">
+          <h1 className="text-xl font-bold tracking-tight text-dark-50 sm:text-2xl">
             {t('admin.partners.approveDialog.title')}
           </h1>
         </div>
@@ -73,16 +73,16 @@ export default function AdminApplicationReview() {
       <div className="mb-6 flex items-center gap-3">
         <AdminBackButton to="/admin/partners" />
         <div>
-          <h1 className="text-xl font-semibold text-dark-100">
+          <h1 className="text-xl font-bold tracking-tight text-dark-50 sm:text-2xl">
             {t('admin.partners.actions.review')}
           </h1>
-          <p className="text-sm text-dark-400">{displayName}</p>
+          <p className="mt-0.5 text-[13px] text-dark-400">{displayName}</p>
         </div>
       </div>
 
       <div className="space-y-6">
         {/* Application Details */}
-        <div className="rounded-xl bg-dark-800 p-4">
+        <div className="rounded-3xl bg-dark-900/70 p-4">
           <h3 className="mb-4 font-medium text-dark-200">
             {t('admin.partners.tabs.applications')}
           </h3>
@@ -156,7 +156,7 @@ export default function AdminApplicationReview() {
         </div>
 
         {/* Approve Section */}
-        <div className="rounded-xl border border-success-500/30 bg-dark-800 p-4">
+        <div className="rounded-3xl border border-success-500/30 bg-dark-900/70 p-4">
           <h3 className="mb-2 text-lg font-semibold text-dark-100">
             {t('admin.partners.approveDialog.title')}
           </h3>
@@ -201,7 +201,7 @@ export default function AdminApplicationReview() {
         )}
 
         {/* Reject Section */}
-        <div className="rounded-xl border border-error-500/30 bg-dark-800 p-4">
+        <div className="rounded-3xl border border-error-500/30 bg-dark-900/70 p-4">
           <h3 className="mb-2 text-lg font-semibold text-dark-100">
             {t('admin.partners.rejectDialog.title')}
           </h3>

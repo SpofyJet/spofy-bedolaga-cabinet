@@ -74,7 +74,7 @@ function SortableLandingCard({
       ref={setNodeRef}
       style={style}
       className={cn(
-        'rounded-xl border bg-dark-800 p-3 transition-colors sm:p-4',
+        'rounded-3xl border bg-dark-900/70 p-3 transition-colors sm:p-4',
         isDragging
           ? 'border-accent-500/50 shadow-xl shadow-accent-500/20'
           : landing.is_active
@@ -198,7 +198,7 @@ function SortableLandingCard({
                 }
               >
                 {isPendingDelete ? (
-                  <span className="px-1 text-xs font-medium">{t('common.delete')}?</span>
+                  <span className="px-1 text-[13px] font-medium">{t('common.delete')}?</span>
                 ) : (
                   <TrashIcon />
                 )}
@@ -259,7 +259,7 @@ function SortableLandingCard({
               }
             >
               {isPendingDelete ? (
-                <span className="px-1 text-xs font-medium">{t('common.delete')}?</span>
+                <span className="px-1 text-[13px] font-medium">{t('common.delete')}?</span>
               ) : (
                 <TrashIcon />
               )}
@@ -398,13 +398,15 @@ export default function AdminLandings() {
           {!capabilities.hasBackButton && (
             <button
               onClick={() => navigate('/admin')}
-              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-dark-800 transition-colors"
+              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-dark-900/70 transition-colors"
             >
               <BackIcon />
             </button>
           )}
           <div>
-            <h1 className="text-xl font-semibold text-dark-100">{t('admin.landings.title')}</h1>
+            <h1 className="text-xl font-bold tracking-tight text-dark-50 sm:text-2xl">
+              {t('admin.landings.title')}
+            </h1>
           </div>
         </div>
         <div className="flex items-center gap-2">
@@ -424,7 +426,7 @@ export default function AdminLandings() {
           )}
           <button
             onClick={() => navigate('/admin/landings/create')}
-            className="flex items-center justify-center gap-2 rounded-lg bg-accent-500 px-4 py-2 text-on-accent transition-colors hover:bg-accent-600"
+            className="flex items-center justify-center gap-2 rounded-2xl bg-cta-500 px-4 py-2 text-on-cta transition-colors hover:bg-cta-600"
           >
             <PlusIcon />
             {t('admin.landings.create')}

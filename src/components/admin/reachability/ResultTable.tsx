@@ -68,9 +68,13 @@ export function UnitBadge({ label, noBs }: { label: UnitLabel; noBs: boolean }) 
       <OperatorIcon operator={label.code} className="h-4 w-4 rounded" />
       <span className="font-medium text-dark-100">{label.name}</span>
       {label.region && (
-        <span className="rounded bg-dark-700/60 px-1.5 text-xs text-dark-300">{label.region}</span>
+        <span className="rounded bg-dark-700/60 px-1.5 text-[13px] text-dark-300">
+          {label.region}
+        </span>
       )}
-      {noBs && <span className="text-xs text-dark-400">{t('admin.reachability.result.noBs')}</span>}
+      {noBs && (
+        <span className="text-[13px] text-dark-400">{t('admin.reachability.result.noBs')}</span>
+      )}
     </>
   );
 }
@@ -95,7 +99,7 @@ function CellValue({ state, value, subs, subTitle, icon }: ResultCellProps) {
       {icon}
       {text}
       {!value && (state === null || state === 'na') && (
-        <span className="text-xs text-dark-500">—</span>
+        <span className="text-[13px] text-dark-500">—</span>
       )}
     </span>
   );
@@ -116,7 +120,7 @@ export function GroupRow({
       <td colSpan={span} className="px-3 py-1.5">
         <span className="text-sm font-medium text-dark-100">{label}</span>
         {label !== targetKey && (
-          <span className="ml-2 font-mono text-xs text-dark-400">{targetKey}</span>
+          <span className="ml-2 font-mono text-[13px] text-dark-400">{targetKey}</span>
         )}
       </td>
     </tr>
@@ -256,7 +260,7 @@ export function ResultTable({ columns, groups, listLabel }: ResultTableProps) {
                           const cell = row.cells[index];
                           if (!cell) return null;
                           return (
-                            <div key={column.key} className="flex items-center gap-1.5 text-xs">
+                            <div key={column.key} className="flex items-center gap-1.5 text-[13px]">
                               <dt className="text-dark-400">{column.title}</dt>
                               <dd>
                                 <CellValue {...cell} />

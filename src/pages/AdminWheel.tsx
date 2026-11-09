@@ -129,7 +129,7 @@ function SortablePrizeCard({
         {/* Prize info */}
         <div className="min-w-0 flex-1">
           <div className="truncate font-semibold text-dark-100">{prize.display_name}</div>
-          <div className="truncate text-xs text-dark-400 sm:text-sm">
+          <div className="truncate text-[13px] text-dark-400 sm:text-sm">
             {t(`admin.wheel.prizes.types.${prize.prize_type}`)} •{' '}
             {(prize.prize_value_kopeks / 100).toFixed(0)}₽
           </div>
@@ -405,12 +405,14 @@ export default function AdminWheel() {
           {!capabilities.hasBackButton && (
             <button
               onClick={() => navigate('/admin')}
-              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-dark-800 transition-colors"
+              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-dark-900/70 transition-colors"
             >
               <BackIcon />
             </button>
           )}
-          <h1 className="text-xl font-bold text-dark-50 sm:text-2xl">{t('admin.wheel.title')}</h1>
+          <h1 className="text-xl font-bold tracking-tight text-dark-50 sm:text-2xl">
+            {t('admin.wheel.title')}
+          </h1>
         </div>
         <div className="flex items-center gap-2">
           <span
@@ -746,7 +748,7 @@ export default function AdminWheel() {
           </div>
 
           {/* Free spins for top-ups */}
-          <div className="space-y-4 rounded-2xl bg-dark-800/40 p-4 ring-1 ring-inset ring-dark-800/80">
+          <div className="space-y-4 rounded-3xl bg-dark-900/70 p-4 ring-1 ring-inset ring-dark-800/80">
             <label className="flex items-center justify-between gap-3">
               <span>
                 <span className="block text-sm font-semibold text-dark-100">
@@ -874,7 +876,7 @@ export default function AdminWheel() {
                   <p className="text-sm font-medium text-warning-400">
                     {t('admin.wheel.prizes.unsavedOrder')}
                   </p>
-                  <p className="text-xs text-warning-400">
+                  <p className="text-[13px] text-warning-400">
                     {t('admin.wheel.prizes.unsavedOrderHint')}
                   </p>
                 </div>
@@ -1195,7 +1197,7 @@ function InlinePrizeForm({
             min={0}
             className="input w-full"
           />
-          <p className="mt-1 text-xs text-dark-500">
+          <p className="mt-1 text-[13px] text-dark-500">
             = {(toNumber(formData.prize_value_kopeks) / 100).toFixed(2)} RUB
           </p>
         </div>
@@ -1258,7 +1260,7 @@ function InlinePrizeForm({
           placeholder="0.00 – 1.00"
           className="input w-full sm:w-1/2"
         />
-        <p className="mt-1 text-xs text-dark-500">
+        <p className="mt-1 text-[13px] text-dark-500">
           {t('admin.wheel.prizes.fields.probabilityHint')}
         </p>
       </div>

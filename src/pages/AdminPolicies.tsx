@@ -216,20 +216,22 @@ export default function AdminPolicies() {
           {!capabilities.hasBackButton && (
             <button
               onClick={() => navigate('/admin')}
-              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-dark-800 transition-colors"
+              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-dark-900/70 transition-colors"
             >
               <BackIcon />
             </button>
           )}
           <div>
-            <h1 className="text-xl font-semibold text-dark-100">{t('admin.policies.title')}</h1>
-            <p className="text-sm text-dark-400">{t('admin.policies.subtitle')}</p>
+            <h1 className="text-xl font-bold tracking-tight text-dark-50 sm:text-2xl">
+              {t('admin.policies.title')}
+            </h1>
+            <p className="mt-0.5 text-[13px] text-dark-400">{t('admin.policies.subtitle')}</p>
           </div>
         </div>
         <PermissionGate permission="roles:create">
           <button
             onClick={() => navigate('/admin/policies/create')}
-            className="flex items-center justify-center gap-2 rounded-lg bg-accent-500 px-4 py-2 text-on-accent transition-colors hover:bg-accent-600"
+            className="flex items-center justify-center gap-2 rounded-2xl bg-cta-500 px-4 py-2 text-on-cta transition-colors hover:bg-cta-600"
           >
             <PlusIcon />
             {t('admin.policies.createPolicy')}
@@ -297,7 +299,7 @@ export default function AdminPolicies() {
             return (
               <div
                 key={policy.id}
-                className={`rounded-xl border bg-dark-800 p-4 transition-colors ${
+                className={`rounded-3xl border bg-dark-900/70 p-4 transition-colors ${
                   policy.is_active ? 'border-dark-700' : 'border-dark-700/50 opacity-60'
                 }`}
               >
@@ -325,7 +327,7 @@ export default function AdminPolicies() {
                         </span>
                         <span className="text-dark-500">:</span>
                       </span>
-                      <span className="text-xs text-dark-300">
+                      <span className="text-[13px] text-dark-300">
                         {(policy.actions ?? [])
                           .map((a) => t(`admin.roles.form.permissionActions.${a}`, a))
                           .join(', ')}
@@ -390,7 +392,7 @@ export default function AdminPolicies() {
             aria-modal="true"
             aria-labelledby="policy-delete-title"
             tabIndex={-1}
-            className="relative w-full max-w-sm rounded-xl bg-dark-800 p-6"
+            className="relative w-full max-w-sm rounded-3xl bg-dark-900/70 p-6"
           >
             <h3 id="policy-delete-title" className="mb-2 text-lg font-semibold text-dark-100">
               {t('admin.policies.confirm.title')}

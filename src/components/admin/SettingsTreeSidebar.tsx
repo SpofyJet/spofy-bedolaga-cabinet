@@ -184,7 +184,7 @@ export function SettingsTreeSidebar({
                 <span className="truncate text-sm font-medium text-dark-100">
                   {getSettingDisplayName(setting)}
                 </span>
-                <span className="truncate text-xs text-dark-500">
+                <span className="truncate text-[13px] text-dark-500">
                   {t(`admin.settings.categories.${setting.category.key}`, setting.category.key)}
                 </span>
               </button>

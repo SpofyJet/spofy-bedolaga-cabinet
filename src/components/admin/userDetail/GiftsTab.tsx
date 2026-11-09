@@ -63,7 +63,7 @@ function GiftRow({
           </span>
         )}
       </div>
-      <div className="flex min-w-0 flex-wrap items-center gap-x-1.5 text-xs text-dark-500">
+      <div className="flex min-w-0 flex-wrap items-center gap-x-1.5 text-[13px] text-dark-500">
         <span>{sent ? t(`${ns}.to`) : t(`${ns}.from`)}</span>
         {partyId ? (
           <button
@@ -80,7 +80,7 @@ function GiftRow({
         {method && <span>· {method}</span>}
       </div>
       {gift.gift_message && (
-        <p className="m-0 truncate text-xs italic text-dark-400">«{gift.gift_message}»</p>
+        <p className="m-0 truncate text-[13px] italic text-dark-400">«{gift.gift_message}»</p>
       )}
     </li>
   );

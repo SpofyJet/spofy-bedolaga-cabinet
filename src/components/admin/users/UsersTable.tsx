@@ -89,7 +89,7 @@ export function UsersTable({ users, className }: UsersTableProps) {
                     <span className="sr-only">, {t('admin.users.connectedNow')}</span>
                   )}
                 </div>
-                <div className="truncate text-xs tabular-nums text-dark-500">
+                <div className="truncate text-[13px] tabular-nums text-dark-500">
                   {user.username ? `@${user.username} · ` : ''}
                   <span className="text-dark-400">{user.telegram_id}</span>
                   {user.promo_group_name ? ` · ${user.promo_group_name}` : ''}
@@ -111,7 +111,9 @@ export function UsersTable({ users, className }: UsersTableProps) {
                 )}
                 <UserStatusChip user={user} />
                 {caption && (
-                  <span className="hidden shrink-0 text-xs text-dark-500 xl:inline">{caption}</span>
+                  <span className="hidden shrink-0 text-[13px] text-dark-500 xl:inline">
+                    {caption}
+                  </span>
                 )}
               </div>
               {user.has_subscription && (

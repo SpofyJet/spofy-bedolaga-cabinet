@@ -23,7 +23,7 @@ export function VerdictBadge({ verdict, matches, className }: VerdictBadgeProps)
     <span
       title={expectation ?? undefined}
       className={cn(
-        'inline-block rounded-lg border px-2 py-1 text-xs font-medium',
+        'inline-block rounded-lg border px-2 py-1 text-[13px] font-medium',
         toneClasses(verdictTone(verdict, matches)),
         className,
       )}

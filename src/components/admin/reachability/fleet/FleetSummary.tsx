@@ -84,7 +84,7 @@ export function FleetSummary({ counts, checkedAt, unitsLine }: FleetSummaryProps
             <span>{item.text}</span>
           </span>
         ))}
-        {meta && <span className="text-xs text-dark-400">{meta}</span>}
+        {meta && <span className="text-[13px] text-dark-400">{meta}</span>}
       </div>
     </section>
   );

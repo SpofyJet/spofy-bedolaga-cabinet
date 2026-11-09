@@ -87,19 +87,21 @@ export default function AdminPromoOffers() {
           {!capabilities.hasBackButton && (
             <button
               onClick={() => navigate('/admin')}
-              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-dark-800 transition-colors"
+              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-dark-900/70 transition-colors"
             >
               <BackIcon />
             </button>
           )}
           <div>
-            <h1 className="text-xl font-semibold text-dark-100">{t('admin.promoOffers.title')}</h1>
-            <p className="text-sm text-dark-400">{t('admin.promoOffers.subtitle')}</p>
+            <h1 className="text-xl font-bold tracking-tight text-dark-50 sm:text-2xl">
+              {t('admin.promoOffers.title')}
+            </h1>
+            <p className="mt-0.5 text-[13px] text-dark-400">{t('admin.promoOffers.subtitle')}</p>
           </div>
         </div>
         <button
           onClick={() => navigate('/admin/promo-offers/send')}
-          className="flex items-center justify-center gap-2 rounded-lg bg-accent-500 px-4 py-2 text-on-accent transition-colors hover:bg-accent-600"
+          className="flex items-center justify-center gap-2 rounded-2xl bg-cta-500 px-4 py-2 text-on-cta transition-colors hover:bg-cta-600"
         >
           <SendIcon />
           {t('admin.promoOffers.sendButton')}
@@ -143,7 +145,7 @@ export default function AdminPromoOffers() {
             {templates.map((template) => (
               <div
                 key={template.id}
-                className={`rounded-xl border bg-dark-800 p-4 transition-colors ${
+                className={`rounded-3xl border bg-dark-900/70 p-4 transition-colors ${
                   template.is_active ? 'border-dark-700' : 'border-dark-700/50 opacity-60'
                 }`}
               >
@@ -152,7 +154,7 @@ export default function AdminPromoOffers() {
                     <span className="text-2xl">{getOfferTypeIcon(template.offer_type)}</span>
                     <div>
                       <h3 className="font-medium text-dark-100">{template.name}</h3>
-                      <span className="text-xs text-dark-500">
+                      <span className="text-[13px] text-dark-500">
                         {getOfferTypeLabel(template.offer_type)}
                       </span>
                     </div>
@@ -241,7 +243,7 @@ export default function AdminPromoOffers() {
         ) : (
           <div className="space-y-3">
             {logs.map((log: PromoOfferLog) => (
-              <div key={log.id} className="rounded-xl bg-dark-800 p-4">
+              <div key={log.id} className="rounded-3xl bg-dark-900/70 p-4">
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
                   <div className="flex items-center gap-3">
                     <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-dark-700">
@@ -268,7 +270,7 @@ export default function AdminPromoOffers() {
                       </div>
                     </div>
                   </div>
-                  <div className="flex items-center gap-1 pl-[3.25rem] text-xs text-dark-500 sm:pl-0">
+                  <div className="flex items-center gap-1 pl-[3.25rem] text-[13px] text-dark-500 sm:pl-0">
                     <ClockIcon className="h-4 w-4" />
                     {formatDateTime(log.created_at)}
                   </div>

@@ -71,7 +71,7 @@ export function AnalyticsTab() {
       )}
 
       {/* Yandex Metrika */}
-      <div className="rounded-2xl bg-dark-800/50 p-6">
+      <div className="rounded-3xl bg-dark-900/70 p-6">
         <div className="mb-1 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-warning-500/20 to-error-500/20">
@@ -113,7 +113,7 @@ export function AnalyticsTab() {
               <button
                 onClick={handleSaveYandex}
                 disabled={updateMutation.isPending}
-                className="rounded-xl bg-accent-500 px-4 py-2.5 text-on-accent transition-colors hover:bg-accent-600 disabled:opacity-50"
+                className="rounded-2xl bg-cta-500 px-4 py-2.5 text-on-cta transition-colors hover:bg-cta-600 disabled:opacity-50"
               >
                 <CheckIcon />
               </button>
@@ -146,7 +146,7 @@ export function AnalyticsTab() {
               </button>
             </div>
           )}
-          <p className="text-xs text-dark-500">{t('admin.settings.yandexIdHint')}</p>
+          <p className="text-[13px] text-dark-500">{t('admin.settings.yandexIdHint')}</p>
         </div>
         {/* Offline Conversions (inside Yandex block) */}
         {analytics?.offline_conv_enabled && (
@@ -197,7 +197,7 @@ export function AnalyticsTab() {
                       <code className="rounded-md bg-dark-700/50 px-2 py-0.5 text-xs text-dark-400">
                         {goal.event_id}
                       </code>
-                      <span className="text-xs text-dark-500">{goal.dedup}</span>
+                      <span className="text-[13px] text-dark-500">{goal.dedup}</span>
                     </div>
                   </div>
                 ))}
@@ -208,7 +208,7 @@ export function AnalyticsTab() {
       </div>
 
       {/* Google Ads */}
-      <div className="rounded-2xl bg-dark-800/50 p-6">
+      <div className="rounded-3xl bg-dark-900/70 p-6">
         <div className="mb-1 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-accent-500/20 to-success-500/20">
@@ -248,7 +248,7 @@ export function AnalyticsTab() {
                 <button
                   onClick={handleSaveGoogleId}
                   disabled={updateMutation.isPending}
-                  className="rounded-xl bg-accent-500 px-4 py-2.5 text-on-accent transition-colors hover:bg-accent-600 disabled:opacity-50"
+                  className="rounded-2xl bg-cta-500 px-4 py-2.5 text-on-cta transition-colors hover:bg-cta-600 disabled:opacity-50"
                 >
                   <CheckIcon />
                 </button>
@@ -281,7 +281,7 @@ export function AnalyticsTab() {
                 </button>
               </div>
             )}
-            <p className="text-xs text-dark-500">{t('admin.settings.googleIdHint')}</p>
+            <p className="text-[13px] text-dark-500">{t('admin.settings.googleIdHint')}</p>
           </div>
 
           {/* Conversion Label */}
@@ -302,7 +302,7 @@ export function AnalyticsTab() {
                 <button
                   onClick={handleSaveGoogleLabel}
                   disabled={updateMutation.isPending}
-                  className="rounded-xl bg-accent-500 px-4 py-2.5 text-on-accent transition-colors hover:bg-accent-600 disabled:opacity-50"
+                  className="rounded-2xl bg-cta-500 px-4 py-2.5 text-on-cta transition-colors hover:bg-cta-600 disabled:opacity-50"
                 >
                   <CheckIcon />
                 </button>
@@ -335,13 +335,13 @@ export function AnalyticsTab() {
                 </button>
               </div>
             )}
-            <p className="text-xs text-dark-500">{t('admin.settings.googleLabelHint')}</p>
+            <p className="text-[13px] text-dark-500">{t('admin.settings.googleLabelHint')}</p>
           </div>
         </div>
       </div>
 
       {/* Info block */}
-      <div className="rounded-2xl bg-dark-800/30 p-4">
+      <div className="rounded-3xl bg-dark-900/70 p-4">
         <p className="text-sm leading-relaxed text-dark-500">{t('admin.settings.analyticsHint')}</p>
       </div>
     </div>

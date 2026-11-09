@@ -109,7 +109,9 @@ export default function AdminReferralLevels() {
       <div className="animate-fade-in">
         <div className="mb-6 flex items-center gap-3">
           <AdminBackButton to="/admin" />
-          <h1 className="text-xl font-semibold text-dark-100">{t('admin.referralLevels.title')}</h1>
+          <h1 className="text-xl font-bold tracking-tight text-dark-50 sm:text-2xl">
+            {t('admin.referralLevels.title')}
+          </h1>
         </div>
         <div className="rounded-xl border border-error-500/30 bg-error-500/10 p-6 text-center">
           <p className="text-error-400">{t('admin.referralLevels.loadError')}</p>
@@ -180,8 +182,10 @@ export default function AdminReferralLevels() {
           <SettingsIcon className="h-6 w-6" />
         </div>
         <div>
-          <h1 className="text-xl font-semibold text-dark-100">{t('admin.referralLevels.title')}</h1>
-          <p className="text-sm text-dark-400">
+          <h1 className="text-xl font-bold tracking-tight text-dark-50 sm:text-2xl">
+            {t('admin.referralLevels.title')}
+          </h1>
+          <p className="mt-0.5 text-[13px] text-dark-400">
             {isTiers ? t('admin.referralLevels.tiersSubtitle') : t('admin.referralLevels.subtitle')}
           </p>
         </div>
@@ -272,7 +276,7 @@ export default function AdminReferralLevels() {
                   )
                 }
               />
-              <p className="text-xs text-dark-500">
+              <p className="text-[13px] text-dark-500">
                 {t('admin.referralLevels.chainDepthHint', { max: data.max_supported_level })}
               </p>
               {/* Ключ из .env: правка отбивается 409, а несохранённое значение
@@ -385,7 +389,7 @@ export default function AdminReferralLevels() {
                 {/* Глубина ограничивает только цепочку: под рангами работают все
                     заведённые уровни, и метка «не платит» была бы ложной. */}
                 {!isTiers && level.level > data.max_level_depth && (
-                  <p className="text-xs text-warning-400">
+                  <p className="text-[13px] text-warning-400">
                     {t('admin.referralLevels.beyondDepth', { count: data.max_level_depth })}
                   </p>
                 )}
@@ -418,7 +422,7 @@ export default function AdminReferralLevels() {
                 }
                 className="rounded-xl bg-dark-800/30 p-3 text-left"
               >
-                <div className="text-xs text-dark-500">
+                <div className="text-[13px] text-dark-500">
                   {t('admin.referralLevels.activeBonuses')}
                 </div>
                 <div className="font-medium text-dark-100">
@@ -431,7 +435,7 @@ export default function AdminReferralLevels() {
                 onClick={() => save(level.level, { trigger: cycle(TRIGGERS, level.trigger) })}
                 className="rounded-xl bg-dark-800/30 p-3 text-left"
               >
-                <div className="text-xs text-dark-500">{t('admin.referralLevels.trigger')}</div>
+                <div className="text-[13px] text-dark-500">{t('admin.referralLevels.trigger')}</div>
                 <div className="font-medium text-dark-100">
                   {t(`admin.referralLevels.triggers.${level.trigger}`)}
                 </div>
@@ -476,7 +480,7 @@ export default function AdminReferralLevels() {
                 {level.reward_mode !== 'money' &&
                   level.referrer_days > 0 &&
                   !level.referrer_tariff_id && (
-                    <p className="mt-1 text-xs text-dark-500">
+                    <p className="mt-1 text-[13px] text-dark-500">
                       {t('admin.referralLevels.noTariffHint')}
                     </p>
                   )}
@@ -534,7 +538,7 @@ export default function AdminReferralLevels() {
                   level.reward_mode !== 'money' &&
                   level.referee_days > 0 &&
                   !level.referee_tariff_id && (
-                    <p className="mt-2 rounded-lg border border-warning-500/30 bg-warning-500/10 p-2 text-xs text-warning-400">
+                    <p className="mt-2 rounded-lg border border-warning-500/30 bg-warning-500/10 p-2 text-[13px] text-warning-400">
                       {t('admin.referralLevels.registrationNeedsTariff')}
                     </p>
                   )}
@@ -562,7 +566,7 @@ export default function AdminReferralLevels() {
                       required_referrals_active_only: !level.required_referrals_active_only,
                     })
                   }
-                  className="text-xs text-accent-400 underline"
+                  className="text-[13px] text-accent-400 underline"
                 >
                   {level.required_referrals_active_only
                     ? t('admin.referralLevels.countingActive')
@@ -626,7 +630,7 @@ function NumberField({
 }) {
   return (
     <label className="mb-2 block">
-      <span className="mb-1 block text-xs text-dark-500">{label}</span>
+      <span className="mb-1 block text-[13px] text-dark-500">{label}</span>
       <input
         // Remounted whenever the server value changes, so a normalized or
         // rejected entry is replaced by what was actually stored. An uncontrolled
@@ -679,7 +683,7 @@ function TariffSelect({
 }) {
   return (
     <label className="mt-2 block">
-      <span className="mb-1 block text-xs text-dark-500">{label}</span>
+      <span className="mb-1 block text-[13px] text-dark-500">{label}</span>
       <select
         value={value ?? ''}
         disabled={disabled}

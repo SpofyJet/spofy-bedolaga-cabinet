@@ -127,8 +127,10 @@ export default function AdminSystemErrors() {
         <div className="flex items-center gap-3">
           <AdminBackButton to="/admin" />
           <div>
-            <h1 className="text-xl font-semibold text-dark-100">{t('admin.systemErrors.title')}</h1>
-            <p className="text-sm text-dark-400">{t('admin.systemErrors.subtitle')}</p>
+            <h1 className="text-xl font-bold tracking-tight text-dark-50 sm:text-2xl">
+              {t('admin.systemErrors.title')}
+            </h1>
+            <p className="mt-0.5 text-[13px] text-dark-400">{t('admin.systemErrors.subtitle')}</p>
           </div>
         </div>
       </div>
@@ -213,7 +215,7 @@ export default function AdminSystemErrors() {
                   </span>
                   <span className="min-w-0 flex-1">
                     <span className="block truncate text-sm text-dark-100">{item.event}</span>
-                    <span className="block truncate text-xs text-dark-400">
+                    <span className="block truncate text-[13px] text-dark-400">
                       {item.error_type ? `${item.error_type} · ` : ''}
                       {item.logger_name || '—'} · {formatDateTime(item.created_at)}
                     </span>
@@ -226,7 +228,7 @@ export default function AdminSystemErrors() {
                 </button>
 
                 {isOpen && (
-                  <div className="border-t border-dark-700 p-3 text-xs">
+                  <div className="border-t border-dark-700 p-3 text-[13px]">
                     <dl className="mb-3 grid grid-cols-2 gap-2 text-dark-300 sm:grid-cols-4">
                       <div>
                         <dt className="text-dark-500">{t('admin.systemErrors.detail.level')}</dt>

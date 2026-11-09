@@ -40,7 +40,7 @@ function HeadlineLine({ job, targetKey, prefix }: LineProps) {
         </span>
       </p>
       {headline.blocked.length > 0 && (
-        <p className="mt-0.5 text-xs text-dark-400">
+        <p className="mt-0.5 text-[13px] text-dark-400">
           {t('admin.reachability.recent.headline.blockedList', {
             list: formatList(unitNameList(headline.blocked, catalog), LISTED, more),
           })}

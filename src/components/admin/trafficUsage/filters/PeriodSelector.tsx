@@ -44,14 +44,14 @@ export function PeriodSelector({
     return (
       <div className="flex flex-wrap items-center gap-2">
         <CalendarIcon className="h-4 w-4 shrink-0" />
-        <span className="text-xs text-dark-400">{t('admin.trafficUsage.dateFrom')}</span>
+        <span className="text-[13px] text-dark-400">{t('admin.trafficUsage.dateFrom')}</span>
         <DateField
           value={customStart}
           min={minDate}
           max={customEnd || today}
           onChange={onCustomStartChange}
         />
-        <span className="text-xs text-dark-400">{t('admin.trafficUsage.dateTo')}</span>
+        <span className="text-[13px] text-dark-400">{t('admin.trafficUsage.dateTo')}</span>
         <DateField
           value={customEnd}
           min={customStart || minDate}
@@ -71,15 +71,15 @@ export function PeriodSelector({
 
   return (
     <div className="flex items-center gap-2">
-      <span className="text-xs text-dark-400">{label}</span>
+      <span className="text-[13px] text-dark-400">{label}</span>
       <div className="flex gap-1">
         {PERIODS.map((p) => (
           <button
             key={p}
             onClick={() => onChange(p)}
-            className={`rounded-lg px-2.5 py-1 text-xs font-medium transition-colors ${
+            className={`rounded-lg px-2.5 py-1 text-[13px] font-medium transition-colors ${
               value === p
-                ? 'bg-accent-500 text-on-accent'
+                ? 'bg-accent-500/15 text-accent-400'
                 : 'bg-dark-800 text-dark-400 hover:bg-dark-700 hover:text-dark-200'
             }`}
           >

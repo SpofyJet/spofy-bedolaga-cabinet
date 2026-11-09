@@ -678,7 +678,7 @@ export default function AdminBulkActions() {
               )}
               <div className="min-w-0">
                 <div className="flex items-center gap-1.5">
-                  <span className="truncate text-xs font-medium text-dark-100">
+                  <span className="truncate text-[13px] font-medium text-dark-100">
                     {user.full_name}
                   </span>
                   {canExpand && (
@@ -703,7 +703,7 @@ export default function AdminBulkActions() {
         cell: ({ row }) => {
           const user = row.original;
           if (!user.has_subscription) {
-            return <span className="text-xs text-dark-500">-</span>;
+            return <span className="text-[13px] text-dark-500">-</span>;
           }
           return <StatusBadge status={user.subscription_status} />;
         },
@@ -723,9 +723,9 @@ export default function AdminBulkActions() {
 
           if (uniqueNames.length === 0) {
             if (!user.tariff_name) {
-              return <span className="text-xs text-dark-500">—</span>;
+              return <span className="text-[13px] text-dark-500">—</span>;
             }
-            return <span className="text-xs text-dark-200">{user.tariff_name}</span>;
+            return <span className="text-[13px] text-dark-200">{user.tariff_name}</span>;
           }
 
           return (
@@ -748,7 +748,7 @@ export default function AdminBulkActions() {
         header: t('admin.bulkActions.columns.balance'),
         size: 100,
         cell: ({ getValue }) => (
-          <span className="text-xs font-medium text-dark-200">
+          <span className="text-[13px] font-medium text-dark-200">
             {formatWithCurrency(getValue() as number)}
           </span>
         ),
@@ -765,7 +765,7 @@ export default function AdminBulkActions() {
               {name}
             </span>
           ) : (
-            <span className="text-xs text-dark-500">-</span>
+            <span className="text-[13px] text-dark-500">-</span>
           );
         },
       },
@@ -777,7 +777,7 @@ export default function AdminBulkActions() {
         cell: ({ getValue }) => {
           const kopeks = getValue() as number;
           return (
-            <span className="text-xs text-dark-300">
+            <span className="text-[13px] text-dark-300">
               {kopeks > 0 ? formatWithCurrency(kopeks / 100) : '-'}
             </span>
           );
@@ -853,7 +853,7 @@ export default function AdminBulkActions() {
           {!capabilities.hasBackButton && (
             <button
               onClick={() => navigate('/admin')}
-              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-dark-800 transition-colors"
+              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-dark-900/70 transition-colors"
               aria-label={t('common.back')}
             >
               <BackIcon />
@@ -861,7 +861,9 @@ export default function AdminBulkActions() {
           )}
           <div>
             <div className="flex items-center gap-2.5">
-              <h1 className="text-xl font-bold text-dark-100">{t('admin.bulkActions.title')}</h1>
+              <h1 className="text-xl font-bold tracking-tight text-dark-50 sm:text-2xl">
+                {t('admin.bulkActions.title')}
+              </h1>
               <span className="rounded-lg bg-dark-800 px-2 py-0.5 text-xs font-medium tabular-nums text-dark-400">
                 {total.toLocaleString()}
               </span>
@@ -983,7 +985,7 @@ export default function AdminBulkActions() {
                     {headerGroup.headers.map((header) => (
                       <th
                         key={header.id}
-                        className="whitespace-nowrap px-3 py-2.5 text-xs font-medium text-dark-400"
+                        className="whitespace-nowrap px-3 py-2.5 text-[13px] font-medium text-dark-400"
                         style={{ width: header.getSize() }}
                       >
                         {header.isPlaceholder
@@ -1052,14 +1054,14 @@ export default function AdminBulkActions() {
             {offset + 1}&ndash;{Math.min(offset + limit, total)} / {total}
           </span>
           <div className="flex items-center gap-1.5">
-            <span className="text-xs text-dark-500">{t('admin.bulkActions.perPage')}</span>
+            <span className="text-[13px] text-dark-500">{t('admin.bulkActions.perPage')}</span>
             <select
               value={limit}
               onChange={(e) => {
                 setLimit(Number(e.target.value));
                 setOffset(0);
               }}
-              className="rounded-lg border border-dark-700 bg-dark-800 px-2 py-1.5 text-xs text-dark-200 outline-none transition-colors focus:border-accent-500/40"
+              className="rounded-lg border border-dark-700 bg-dark-800 px-2 py-1.5 text-[13px] text-dark-200 outline-none transition-colors focus:border-accent-500/40"
             >
               {[25, 50, 100, 200].map((n) => (
                 <option key={n} value={n}>

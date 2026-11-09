@@ -74,7 +74,7 @@ export function GeoCheckSetup({
             aria-selected={mode === item.id}
             onClick={() => onModeChange(item.id)}
             className={cn(
-              'flex-1 whitespace-nowrap rounded-lg px-2 py-2 text-xs font-medium transition-colors sm:px-3 sm:text-sm',
+              'flex-1 whitespace-nowrap rounded-lg px-2 py-2 text-[13px] font-medium transition-colors sm:px-3 sm:text-sm',
               mode === item.id
                 ? 'bg-accent-500/20 text-accent-400'
                 : 'text-dark-400 hover:bg-dark-700/50 hover:text-dark-200',
@@ -89,7 +89,7 @@ export function GeoCheckSetup({
         <label htmlFor="geocheck-route-value" className="block text-sm font-medium text-dark-200">
           {modes.find((item) => item.id === mode)?.label}
         </label>
-        <p className="mt-0.5 text-xs text-dark-400">{hint}</p>
+        <p className="mt-0.5 text-[13px] text-dark-400">{hint}</p>
 
         <div className="relative mt-2">
           <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-dark-500">
@@ -120,7 +120,7 @@ export function GeoCheckSetup({
         </div>
 
         {isInvalid && (
-          <p className="mt-1.5 text-xs text-error-400">
+          <p className="mt-1.5 text-[13px] text-error-400">
             {mode === 'ip'
               ? t('admin.remnawave.geoCheck.invalidIp', 'Enter a valid IPv4 or IPv6 address')
               : t('admin.remnawave.geoCheck.invalidInterface', 'Enter a valid interface name')}

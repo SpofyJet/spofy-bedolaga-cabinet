@@ -33,15 +33,19 @@ function DeliveryRow({ delivery }: { delivery: WebhookDelivery }) {
             defaultValue: delivery.event,
           })}
         </span>
-        <span className={cn('flex shrink-0 items-center gap-1.5 text-xs font-medium', tone.text)}>
+        <span
+          className={cn('flex shrink-0 items-center gap-1.5 text-[13px] font-medium', tone.text)}
+        >
           <span className={cn('inline-block h-2 w-2 shrink-0 rounded-full', tone.dot)} />
           {t(`admin.dpichecker.deliveries.status.${delivery.status}`, {
             defaultValue: delivery.status,
           })}
         </span>
       </div>
-      <span className="text-xs tabular-nums text-dark-400">{facts.join(' · ')}</span>
-      {delivery.last_error && <span className="text-xs text-error-400">{delivery.last_error}</span>}
+      <span className="text-[13px] tabular-nums text-dark-400">{facts.join(' · ')}</span>
+      {delivery.last_error && (
+        <span className="text-[13px] text-error-400">{delivery.last_error}</span>
+      )}
     </li>
   );
 }

@@ -79,7 +79,7 @@ export function SortableSelectedMethodCard({
       {expanded && (
         <div className="space-y-3 border-t border-dark-700 px-3 py-3">
           <div>
-            <label className="mb-1 block text-xs text-dark-500">
+            <label className="mb-1 block text-[13px] text-dark-500">
               {t('admin.landings.methodDisplayName', 'Display name')}
             </label>
             <input
@@ -90,7 +90,7 @@ export function SortableSelectedMethodCard({
             />
           </div>
           <div>
-            <label className="mb-1 block text-xs text-dark-500">
+            <label className="mb-1 block text-[13px] text-dark-500">
               {t('admin.landings.methodDescription', 'Description')}
             </label>
             <input
@@ -102,7 +102,7 @@ export function SortableSelectedMethodCard({
             />
           </div>
           <div>
-            <label className="mb-1 block text-xs text-dark-500">
+            <label className="mb-1 block text-[13px] text-dark-500">
               {t('admin.landings.methodIconUrl', 'Icon URL')}
             </label>
             <input
@@ -115,7 +115,7 @@ export function SortableSelectedMethodCard({
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="mb-1 block text-xs text-dark-500">
+              <label className="mb-1 block text-[13px] text-dark-500">
                 {t('admin.landings.methodMinAmount', 'Min amount (kopeks)')}
               </label>
               <input
@@ -135,7 +135,7 @@ export function SortableSelectedMethodCard({
               />
             </div>
             <div>
-              <label className="mb-1 block text-xs text-dark-500">
+              <label className="mb-1 block text-[13px] text-dark-500">
                 {t('admin.landings.methodMaxAmount', 'Max amount (kopeks)')}
               </label>
               <input
@@ -156,7 +156,7 @@ export function SortableSelectedMethodCard({
             </div>
           </div>
           <div>
-            <label className="mb-1 block text-xs text-dark-500">
+            <label className="mb-1 block text-[13px] text-dark-500">
               {t('admin.landings.methodCurrency', 'Currency')}
             </label>
             <input
@@ -168,7 +168,7 @@ export function SortableSelectedMethodCard({
             />
           </div>
           <div>
-            <label className="mb-1 block text-xs text-dark-500">
+            <label className="mb-1 block text-[13px] text-dark-500">
               {t('admin.landings.methodReturnUrl', 'Return URL after payment')}
             </label>
             <input
@@ -184,7 +184,7 @@ export function SortableSelectedMethodCard({
           </div>
           {availableSubOptions && availableSubOptions.length > 0 && (
             <div>
-              <label className="mb-1.5 block text-xs text-dark-500">
+              <label className="mb-1.5 block text-[13px] text-dark-500">
                 {t('admin.landings.methodSubOptions', 'Payment sub-options')}
               </label>
               <div className="flex flex-wrap gap-2">
@@ -204,7 +204,7 @@ export function SortableSelectedMethodCard({
                         onSubOptionsChange(method.method_id, { ...current, [opt.id]: !enabled });
                       }}
                       className={cn(
-                        'flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs transition-colors',
+                        'flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-[13px] transition-colors',
                         enabled
                           ? 'border-accent-500/30 bg-accent-500/10 text-accent-300'
                           : 'border-dark-700 bg-dark-800 text-dark-500',
@@ -214,7 +214,7 @@ export function SortableSelectedMethodCard({
                         aria-hidden="true"
                         className={cn(
                           'flex h-3.5 w-3.5 items-center justify-center rounded',
-                          enabled ? 'bg-accent-500 text-on-accent' : 'bg-dark-700',
+                          enabled ? 'bg-accent-500/15 text-accent-400' : 'bg-dark-700',
                         )}
                       >
                         {enabled && <CheckIcon className="h-2.5 w-2.5" />}

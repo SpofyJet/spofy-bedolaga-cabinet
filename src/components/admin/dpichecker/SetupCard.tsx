@@ -50,7 +50,7 @@ export function SetupCard({ status }: { status: DpiStatus }) {
               <span className="block text-sm font-medium text-dark-100">
                 {t(`admin.dpichecker.setup.${step.key}`)}
               </span>
-              <span className="block text-xs text-dark-400">
+              <span className="block text-[13px] text-dark-400">
                 {t(`admin.dpichecker.setup.${step.key}Hint`)}
               </span>
             </span>
@@ -69,7 +69,7 @@ export function SetupCard({ status }: { status: DpiStatus }) {
           {t('admin.dpichecker.setup.openSite')}
         </button>
       </div>
-      <p className="mt-3 text-xs text-dark-400">{t('admin.dpichecker.setup.envNote')}</p>
+      <p className="mt-3 text-[13px] text-dark-400">{t('admin.dpichecker.setup.envNote')}</p>
     </section>
   );
 }

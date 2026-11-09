@@ -204,7 +204,7 @@ export function PopPicker({ location, onLocation, selected, onSelected, onPops }
                 onClick={() => choose(toggleGroup(ids, selected, pops))}
               >
                 {group.region}{' '}
-                <span className="text-xs tabular-nums text-dark-400">
+                <span className="text-[13px] tabular-nums text-dark-400">
                   {chosen}/{group.alive}
                 </span>
               </button>

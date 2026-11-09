@@ -33,7 +33,7 @@ function RunLine({ run }: { run: MonitorRun }) {
         <span className="text-sm tabular-nums text-dark-100">
           {formatDate(run.scheduled_for ?? run.created_at)}
         </span>
-        <span className={cn('flex items-center gap-1.5 text-xs font-medium', tone.text)}>
+        <span className={cn('flex items-center gap-1.5 text-[13px] font-medium', tone.text)}>
           <span className={cn('inline-block h-2 w-2 shrink-0 rounded-full', tone.dot)} />
           {t(`admin.dpichecker.status.${status}`, { defaultValue: status })}
           {run.cost !== null && (

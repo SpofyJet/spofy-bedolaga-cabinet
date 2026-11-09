@@ -103,7 +103,7 @@ export function MultiSelectDropdown({
             <button
               type="button"
               onClick={handleSelectAll}
-              className="text-xs font-medium text-accent-400 transition-colors hover:text-accent-300"
+              className="text-[13px] font-medium text-accent-400 transition-colors hover:text-accent-300"
             >
               {t('admin.bulkActions.filters.selectAll')}
             </button>
@@ -111,7 +111,7 @@ export function MultiSelectDropdown({
             <button
               type="button"
               onClick={handleDeselectAll}
-              className="text-xs font-medium text-dark-400 transition-colors hover:text-dark-300"
+              className="text-[13px] font-medium text-dark-400 transition-colors hover:text-dark-300"
             >
               {t('admin.bulkActions.filters.deselectAll')}
             </button>

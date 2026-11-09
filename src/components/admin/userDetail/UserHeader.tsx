@@ -55,7 +55,9 @@ export function UserHeader({ user, panelInfo, actions, menu }: UserHeaderProps) 
         />
       </div>
       <div className="min-w-0">
-        <h1 className="truncate text-xl font-bold text-dark-100">{user.full_name}</h1>
+        <h1 className="truncate text-xl font-bold tracking-tight text-dark-50 sm:text-2xl">
+          {user.full_name}
+        </h1>
         <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-dark-400">
           {user.telegram_id > 0 && (
             <CopyValue
@@ -77,7 +79,7 @@ export function UserHeader({ user, panelInfo, actions, menu }: UserHeaderProps) 
               <span className="truncate">{user.email}</span>
               <span
                 className={cn(
-                  'hidden text-xs sm:inline',
+                  'hidden text-[13px] sm:inline',
                   user.email_verified ? 'text-dark-500' : 'text-warning-400',
                 )}
               >

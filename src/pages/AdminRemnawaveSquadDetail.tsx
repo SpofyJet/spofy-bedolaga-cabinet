@@ -46,7 +46,7 @@ export default function AdminRemnawaveSquadDetail() {
       <div className="animate-fade-in">
         <div className="mb-6 flex items-center gap-3">
           <AdminBackButton to="/admin/remnawave" />
-          <h1 className="text-xl font-semibold text-dark-100">
+          <h1 className="text-xl font-bold tracking-tight text-dark-50 sm:text-2xl">
             {t('admin.remnawave.squads.detail', 'Squad Details')}
           </h1>
         </div>
@@ -77,7 +77,7 @@ export default function AdminRemnawaveSquadDetail() {
           </div>
         </div>
         <div className="min-w-0 flex-1 basis-40">
-          <h1 className="text-xl font-semibold text-dark-100 [overflow-wrap:anywhere]">
+          <h1 className="[overflow-wrap:anywhere] text-xl font-bold tracking-tight text-dark-50 sm:text-2xl">
             <Twemoji tag="span" options={{ className: 'twemoji', folder: 'svg', ext: '.svg' }}>
               {squad.display_name || squad.name}
             </Twemoji>
@@ -103,7 +103,7 @@ export default function AdminRemnawaveSquadDetail() {
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
           <div>
             <p className="text-sm text-dark-500">UUID</p>
-            <p className="break-all font-mono text-xs text-dark-200">{squad.uuid}</p>
+            <p className="break-all font-mono text-[13px] text-dark-200">{squad.uuid}</p>
           </div>
           <div>
             <p className="text-sm text-dark-500">
@@ -225,7 +225,7 @@ export default function AdminRemnawaveSquadDetail() {
                   {String(inbound.tag || inbound.uuid || `Inbound ${idx + 1}`)}
                 </span>
                 {typeof inbound.type === 'string' && (
-                  <span className="ml-2 shrink-0 rounded bg-dark-600 px-2 py-1 text-xs text-dark-400">
+                  <span className="ml-2 shrink-0 rounded bg-dark-600 px-2 py-1 text-[13px] text-dark-400">
                     {inbound.type}
                   </span>
                 )}

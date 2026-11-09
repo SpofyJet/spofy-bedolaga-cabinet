@@ -66,7 +66,9 @@ export function UserPicker({
 
   return (
     <Popover open={open} onOpenChange={changeOpen}>
-      <PopoverTrigger className={cn('btn-secondary min-h-0 px-2.5 py-1 text-xs', triggerClassName)}>
+      <PopoverTrigger
+        className={cn('btn-secondary min-h-0 px-2.5 py-1 text-[13px]', triggerClassName)}
+      >
         {trigger}
       </PopoverTrigger>
       <PopoverContent
@@ -114,7 +116,7 @@ export function UserPicker({
                     <UserAvatar firstName={user.first_name} username={user.username} size="sm" />
                     <span className="min-w-0">
                       <span className="block truncate text-sm text-dark-100">{user.full_name}</span>
-                      <span className="block truncate text-xs tabular-nums text-dark-500">
+                      <span className="block truncate text-[13px] tabular-nums text-dark-500">
                         {user.username ? `@${user.username} · ` : ''}
                         {user.telegram_id || `#${user.id}`}
                       </span>

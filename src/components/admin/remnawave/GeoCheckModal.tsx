@@ -103,12 +103,12 @@ export function GeoCheckModal({ node, onClose }: GeoCheckModalProps) {
         aria-labelledby="geocheck-modal-title"
         tabIndex={-1}
         className={cn(
-          'relative flex w-full flex-col bg-dark-900 shadow-2xl',
+          'relative flex w-full flex-col bg-dark-900/70 shadow-2xl',
           // max-h-full, а не 100dvh: отступы safe-зон уже урезали контейнер,
           // и абсолютная высота вылезала бы за них.
           fullscreen
             ? 'h-full max-h-full max-w-none rounded-none p-3'
-            : 'max-h-full overflow-y-auto rounded-2xl p-5',
+            : 'max-h-full overflow-y-auto rounded-3xl p-5',
           // Отчёт заметно шире формы запуска — под него модалка расширяется.
           !fullscreen && (job.phase === 'done' ? 'max-w-4xl' : 'max-w-2xl'),
         )}
@@ -137,7 +137,7 @@ export function GeoCheckModal({ node, onClose }: GeoCheckModalProps) {
               >
                 {fullscreen ? node.name : t('admin.remnawave.geoCheck.title', 'GeoCheck')}
               </h3>
-              {!fullscreen && <p className="truncate text-xs text-dark-400">{node.name}</p>}
+              {!fullscreen && <p className="truncate text-[13px] text-dark-400">{node.name}</p>}
             </div>
           </div>
           {!isRunning && (
@@ -187,7 +187,7 @@ export function GeoCheckModal({ node, onClose }: GeoCheckModalProps) {
             <p className="text-sm font-medium text-dark-100">
               {t('admin.remnawave.geoCheck.running', 'Running the geo check')}
             </p>
-            <p className="max-w-sm text-xs text-dark-400">
+            <p className="max-w-sm text-[13px] text-dark-400">
               {t(
                 'admin.remnawave.geoCheck.runningHint',
                 'The node is testing its connection — this usually takes up to a minute.',
@@ -204,7 +204,7 @@ export function GeoCheckModal({ node, onClose }: GeoCheckModalProps) {
             <p className="text-sm font-medium text-dark-100">
               {t('admin.remnawave.geoCheck.error.title', 'Check failed')}
             </p>
-            <p className="max-w-sm break-words text-xs text-dark-400">{errorText}</p>
+            <p className="max-w-sm break-words text-[13px] text-dark-400">{errorText}</p>
             <div className="mt-1 flex items-center gap-2">
               <button type="button" onClick={job.reset} className="btn-secondary">
                 {t('admin.remnawave.geoCheck.changeRoute', 'Change route')}

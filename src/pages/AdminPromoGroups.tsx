@@ -62,14 +62,16 @@ export default function AdminPromoGroups() {
           {!capabilities.hasBackButton && (
             <button
               onClick={() => navigate('/admin')}
-              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-dark-800 transition-colors"
+              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-dark-900/70 transition-colors"
             >
               <BackIcon />
             </button>
           )}
           <div>
-            <h1 className="text-xl font-semibold text-dark-100">{t('admin.promoGroups.title')}</h1>
-            <p className="text-sm text-dark-400">{t('admin.promoGroups.subtitle')}</p>
+            <h1 className="text-xl font-bold tracking-tight text-dark-50 sm:text-2xl">
+              {t('admin.promoGroups.title')}
+            </h1>
+            <p className="mt-0.5 text-[13px] text-dark-400">{t('admin.promoGroups.subtitle')}</p>
           </div>
         </div>
         <div className="flex flex-wrap gap-2">
@@ -100,7 +102,7 @@ export default function AdminPromoGroups() {
       {recalculation.isRunning && (
         <div
           role="status"
-          className="mb-6 flex items-center gap-2 rounded-xl bg-dark-800 px-4 py-3 text-sm text-dark-300"
+          className="mb-6 flex items-center gap-2 rounded-3xl bg-dark-900/70 px-4 py-3 text-sm text-dark-300"
         >
           <Spinner className="h-4 w-4 shrink-0" />
           {t('admin.promoGroups.recalculating')}
@@ -143,7 +145,7 @@ export default function AdminPromoGroups() {
       ) : (
         <div className="space-y-3">
           {groups.map((group: PromoGroup) => (
-            <div key={group.id} className="rounded-xl bg-dark-800 p-4">
+            <div key={group.id} className="rounded-3xl bg-dark-900/70 p-4">
               <div className="flex items-start justify-between gap-4">
                 <div className="min-w-0 flex-1">
                   <div className="mb-1 flex flex-wrap items-center gap-2">
@@ -233,7 +235,7 @@ export default function AdminPromoGroups() {
             aria-modal="true"
             aria-labelledby="promo-group-delete-title"
             tabIndex={-1}
-            className="relative w-full max-w-sm rounded-xl bg-dark-800 p-6"
+            className="relative w-full max-w-sm rounded-3xl bg-dark-900/70 p-6"
           >
             <h3 id="promo-group-delete-title" className="mb-2 text-lg font-semibold text-dark-100">
               {t('admin.promoGroups.confirm.title')}

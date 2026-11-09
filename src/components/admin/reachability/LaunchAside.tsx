@@ -100,7 +100,7 @@ function LaunchDetails({ launch }: { launch: LaunchState }) {
           <dd className="text-right text-dark-100">
             {launch.isPricing ? '…' : (launch.geo?.n_nodes ?? '—')}
             {launch.geo?.max_nodes ? (
-              <span className="block text-xs text-dark-400">
+              <span className="block text-[13px] text-dark-400">
                 {t('admin.reachability.geo.launch.maxNodes', { count: launch.geo.max_nodes })}
               </span>
             ) : null}
@@ -122,7 +122,7 @@ function LaunchDetails({ launch }: { launch: LaunchState }) {
               {launch.isPricing ? '…' : formatCredits(launch.cost)}
             </span>
             {launch.cost !== null && !launch.isPricing && (
-              <span className="block text-xs text-dark-400">≈ {formatKopeks(launch.cost)}</span>
+              <span className="block text-[13px] text-dark-400">≈ {formatKopeks(launch.cost)}</span>
             )}
           </dd>
         </div>
@@ -144,24 +144,24 @@ function LaunchDetails({ launch }: { launch: LaunchState }) {
       {launch.preview &&
         !launch.preview.estimate_is_exact &&
         launch.preview.warnings.length === 0 && (
-          <p className="text-xs text-warning-400">{t('admin.reachability.launch.estimate')}</p>
+          <p className="text-[13px] text-warning-400">{t('admin.reachability.launch.estimate')}</p>
         )}
       {skipped && skipped.dpi_off.length > 0 && (
-        <p className="text-xs text-dark-400">
+        <p className="text-[13px] text-dark-400">
           {t('admin.reachability.launch.skippedDpiOff', {
             units: skippedNames(skipped.dpi_off, catalog),
           })}
         </p>
       )}
       {skipped && skipped.unavailable.length > 0 && (
-        <p className="text-xs text-dark-400">
+        <p className="text-[13px] text-dark-400">
           {t('admin.reachability.launch.skippedUnavailable', {
             units: skippedNames(skipped.unavailable, catalog),
           })}
         </p>
       )}
       {launch.preview?.warnings.map((warning) => (
-        <p key={warning} className="text-xs text-warning-400">
+        <p key={warning} className="text-[13px] text-warning-400">
           {warning}
         </p>
       ))}
@@ -205,7 +205,7 @@ export function LaunchAside({ launch, hint, onApplyCityLimit }: LaunchProps) {
           {primaryLabel(t, launch, false)}
         </Button>
       </div>
-      {hint && !launch.confirming && <p className="mt-3 text-xs text-dark-500">{hint}</p>}
+      {hint && !launch.confirming && <p className="mt-3 text-[13px] text-dark-500">{hint}</p>}
     </aside>
   );
 }
@@ -229,7 +229,7 @@ export function LaunchBar({ launch, onApplyCityLimit }: LaunchProps) {
     >
       <div
         className={cn(
-          'mx-auto max-w-2xl rounded-2xl border bg-dark-900 p-3 shadow-2xl transition-colors',
+          'mx-auto max-w-2xl rounded-3xl border bg-dark-900/70 p-3 shadow-2xl transition-colors',
           launch.confirming ? 'border-accent-500/50' : 'border-dark-700',
         )}
       >
@@ -241,7 +241,7 @@ export function LaunchBar({ launch, onApplyCityLimit }: LaunchProps) {
               <LaunchDetails launch={launch} />
             )}
             {launch.blocker && !launch.confirming && (
-              <p className="mt-2 text-xs text-dark-400">{launch.blocker}</p>
+              <p className="mt-2 text-[13px] text-dark-400">{launch.blocker}</p>
             )}
             <ApplyCityLimit launch={launch} onApply={onApplyCityLimit} />
           </div>
@@ -262,7 +262,7 @@ export function LaunchBar({ launch, onApplyCityLimit }: LaunchProps) {
                 <span className="block truncate font-semibold tabular-nums text-dark-50">
                   {launch.isPricing ? '…' : formatCredits(launch.cost)}
                 </span>
-                <span className="block truncate text-xs text-dark-400">
+                <span className="block truncate text-[13px] text-dark-400">
                   {launch.blocker ??
                     t('admin.reachability.launch.formula', {
                       targets: t(`admin.reachability.launch.${targetsKey}`, {

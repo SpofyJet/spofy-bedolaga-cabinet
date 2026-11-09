@@ -57,7 +57,9 @@ export function SubscriptionTargets(props: SubscriptionTargetsProps) {
       {props.embedded ? (
         <div>
           <h3 className="text-sm font-medium text-dark-200">{props.embedded.title}</h3>
-          {props.embedded.hint && <p className="text-xs text-dark-400">{props.embedded.hint}</p>}
+          {props.embedded.hint && (
+            <p className="text-[13px] text-dark-400">{props.embedded.hint}</p>
+          )}
         </div>
       ) : (
         <SectionHeading
@@ -95,7 +97,7 @@ export function SubscriptionTargets(props: SubscriptionTargetsProps) {
         />
       )}
       <div className="space-y-1">
-        <p className="text-xs text-dark-400">
+        <p className="text-[13px] text-dark-400">
           {t(
             pastedMode
               ? 'admin.reachability.subscription.fromInput'

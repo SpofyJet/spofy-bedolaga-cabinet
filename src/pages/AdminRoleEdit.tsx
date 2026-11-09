@@ -156,7 +156,7 @@ function PermissionMatrix({
                     {t(`admin.roles.form.permissionSections.${section.section}`, section.section)}
                   </span>
                   <div className="flex shrink-0 items-center gap-2">
-                    <span className="text-xs text-dark-500">
+                    <span className="text-[13px] text-dark-500">
                       {section.actions.filter((a) => isPermSelected(section.section, a)).length}/
                       {section.actions.length}
                     </span>
@@ -181,7 +181,7 @@ function PermissionMatrix({
                           key={perm}
                           type="button"
                           onClick={() => onToggle(perm)}
-                          className={`rounded-md px-2.5 py-1 text-xs font-medium transition-colors ${
+                          className={`rounded-md px-2.5 py-1 text-[13px] font-medium transition-colors ${
                             selected
                               ? 'bg-accent-500/20 text-accent-400'
                               : 'bg-dark-700/50 text-dark-400 hover:bg-dark-700 hover:text-dark-300'
@@ -356,7 +356,7 @@ export default function AdminRoleEdit() {
       <div className="flex items-center gap-3">
         <AdminBackButton to="/admin/roles" />
         <div>
-          <h1 className="text-xl font-semibold text-dark-100">
+          <h1 className="text-xl font-bold tracking-tight text-dark-50 sm:text-2xl">
             {isEdit ? t('admin.roles.modal.editTitle') : t('admin.roles.modal.createTitle')}
           </h1>
         </div>
@@ -364,7 +364,7 @@ export default function AdminRoleEdit() {
 
       {/* Form */}
       <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="rounded-xl bg-dark-800 p-4 sm:p-6">
+        <div className="rounded-3xl bg-dark-900/70 p-4 sm:p-6">
           <div className="space-y-4">
             {/* Name */}
             <div>
@@ -434,7 +434,7 @@ export default function AdminRoleEdit() {
                   aria-label={t('admin.roles.form.levelValue')}
                 />
               </div>
-              <p className="mt-1 text-xs text-dark-500">{t('admin.roles.form.levelHint')}</p>
+              <p className="mt-1 text-[13px] text-dark-500">{t('admin.roles.form.levelHint')}</p>
             </div>
 
             {/* Color picker */}
@@ -469,7 +469,7 @@ export default function AdminRoleEdit() {
                     key={key}
                     type="button"
                     onClick={() => handleApplyPreset(key)}
-                    className="rounded-lg border border-dark-600 bg-dark-700 px-3 py-1.5 text-xs font-medium text-dark-300 transition-colors hover:border-accent-500/50 hover:bg-accent-500/10 hover:text-accent-400"
+                    className="rounded-lg border border-dark-600 bg-dark-700 px-3 py-1.5 text-[13px] font-medium text-dark-300 transition-colors hover:border-accent-500/50 hover:bg-accent-500/10 hover:text-accent-400"
                   >
                     {t(`admin.roles.presets.${key}`)}
                   </button>
@@ -481,21 +481,21 @@ export default function AdminRoleEdit() {
 
         {/* Permission Matrix */}
         {permissionRegistry && permissionRegistry.length > 0 && (
-          <div className="rounded-xl bg-dark-800 p-4 sm:p-6">
+          <div className="rounded-3xl bg-dark-900/70 p-4 sm:p-6">
             <PermissionMatrix
               registry={permissionRegistry}
               selectedPermissions={formData.permissions}
               onToggle={handleTogglePermission}
               onToggleSection={handleToggleSection}
             />
-            <p className="mt-2 text-xs text-dark-500">
+            <p className="mt-2 text-[13px] text-dark-500">
               {t('admin.roles.form.selectedPermissions', { count: formData.permissions.length })}
             </p>
           </div>
         )}
 
         {/* Error & Submit */}
-        <div className="rounded-xl bg-dark-800 p-4 sm:p-6">
+        <div className="rounded-3xl bg-dark-900/70 p-4 sm:p-6">
           {formError && <p className="mb-4 text-sm text-error-400">{formError}</p>}
           <div className="flex justify-end gap-3">
             <button
@@ -508,7 +508,7 @@ export default function AdminRoleEdit() {
             <button
               type="submit"
               disabled={isSaving}
-              className="rounded-lg bg-accent-500 px-4 py-2 text-on-accent transition-colors hover:bg-accent-600 disabled:opacity-50"
+              className="rounded-2xl bg-cta-500 px-4 py-2 text-on-cta transition-colors hover:bg-cta-600 disabled:opacity-50"
             >
               {isSaving ? t('admin.roles.form.saving') : t('admin.roles.form.save')}
             </button>

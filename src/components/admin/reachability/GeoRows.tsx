@@ -29,7 +29,7 @@ function Verdict({ row }: { row: GeoRow }) {
         {t(`${KEY}.verdicts.${row.verdict}`, { defaultValue: row.verdict })}
       </span>
       {row.heavy && (
-        <span className="block text-xs text-dark-400">
+        <span className="block text-[13px] text-dark-400">
           <Speed row={row} />
         </span>
       )}
@@ -42,7 +42,7 @@ function Targets({ row }: { row: GeoRow }) {
   const { t } = useTranslation();
   if (row.err) {
     return (
-      <span className="text-xs text-dark-400">
+      <span className="text-[13px] text-dark-400">
         {t(`${KEY}.rows.notChecked`, { reason: row.err })}
       </span>
     );
@@ -165,7 +165,7 @@ export function GeoRows({ rows, job = null, recheck = null }: GeoRowsProps) {
               <tr key={rowKey(row)} className={TABLE_STYLES.row}>
                 <td className={TABLE_STYLES.unitCell}>
                   <span className="block text-sm text-dark-100">{row.city_ru || row.city}</span>
-                  <span className="block text-xs text-dark-400">
+                  <span className="block text-[13px] text-dark-400">
                     {[row.district, row.region_ru].filter(Boolean).join(' · ')}
                   </span>
                 </td>
@@ -191,18 +191,20 @@ export function GeoRows({ rows, job = null, recheck = null }: GeoRowsProps) {
       </div>
       <ul className="space-y-2 md:hidden">
         {rows.map((row) => (
-          <li key={rowKey(row)} className="rounded-xl bg-dark-900/30 p-3">
+          <li key={rowKey(row)} className="rounded-3xl bg-dark-900/70 p-3">
             <div className="flex items-start justify-between gap-3">
               <span className="min-w-0">
                 <span className="block text-sm font-medium text-dark-100">
                   {row.city_ru || row.city}
                 </span>
-                <span className="block text-xs text-dark-400">
+                <span className="block text-[13px] text-dark-400">
                   {[row.district, row.region_ru, row.provider].filter(Boolean).join(' · ')}
                 </span>
                 <RowTags row={row} />
               </span>
-              <span className="shrink-0 text-xs tabular-nums text-dark-300">{latency(row)}</span>
+              <span className="shrink-0 text-[13px] tabular-nums text-dark-300">
+                {latency(row)}
+              </span>
             </div>
             <div className="mt-2">
               <Verdict row={row} />

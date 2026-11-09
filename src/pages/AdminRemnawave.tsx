@@ -137,8 +137,8 @@ function NodeTrafficBreakdown({
             key={it.tag}
             className="flex items-center justify-between gap-3 rounded-lg bg-dark-900/50 px-2.5 py-1.5"
           >
-            <span className="min-w-0 flex-1 truncate text-xs text-dark-200">{it.tag}</span>
-            <div className="flex shrink-0 gap-2.5 font-mono text-[11px] text-dark-400">
+            <span className="min-w-0 flex-1 truncate text-[13px] text-dark-200">{it.tag}</span>
+            <div className="flex shrink-0 gap-2.5 text-[11px] text-dark-400">
               <span>↓ {formatBytes(it.downloadBytes)}</span>
               <span>↑ {formatBytes(it.uploadBytes)}</span>
               <span className="font-medium text-dark-300">{formatBytes(it.totalBytes)}</span>
@@ -349,7 +349,7 @@ function NodeCard({ node, providerName, realtime, onAction, isLoading }: NodeCar
 
         {/* Address + traffic + uptime */}
         <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-[11px] text-dark-400">
-          <span className="flex min-w-0 max-w-full items-center gap-1 font-mono text-dark-500">
+          <span className="flex min-w-0 max-w-full items-center gap-1 text-dark-500">
             <GlobeIcon className="h-3 w-3 shrink-0" />
             <span className="truncate">{node.address}</span>
           </span>
@@ -378,7 +378,7 @@ function NodeCard({ node, providerName, realtime, onAction, isLoading }: NodeCar
         {(ramPct !== null || loadAvg || rx > 0 || tx > 0 || node.versions) && (
           <>
             {/* Mobile: processor · traffic · versions */}
-            <div className="mt-2 space-y-1 border-t border-dark-700/60 pt-2 font-mono text-[10.5px] tabular-nums text-dark-500 sm:hidden">
+            <div className="mt-2 space-y-1 border-t border-dark-700/60 pt-2 text-[10.5px] tabular-nums text-dark-500 sm:hidden">
               {(loadAvg || ramPct !== null) && (
                 <div className="flex items-center gap-3">
                   {loadAvg && (
@@ -432,7 +432,7 @@ function NodeCard({ node, providerName, realtime, onAction, isLoading }: NodeCar
             </div>
 
             {/* Desktop: single wrap row (original) */}
-            <div className="mt-2 hidden flex-wrap items-center gap-x-3 gap-y-1 border-t border-dark-700/60 pt-2 font-mono text-[10.5px] tabular-nums text-dark-500 sm:flex">
+            <div className="mt-2 hidden flex-wrap items-center gap-x-3 gap-y-1 border-t border-dark-700/60 pt-2 text-[10.5px] tabular-nums text-dark-500 sm:flex">
               {ramPct !== null && (
                 <span className="flex items-center gap-1.5" title="RAM">
                   <MemoryIcon className="h-3 w-3 text-dark-500" />
@@ -519,7 +519,7 @@ function SquadCard({ squad, onClick }: SquadCardProps) {
   return (
     <div
       onClick={onClick}
-      className="cursor-pointer rounded-xl bg-dark-800/50 p-4 transition-colors"
+      className="cursor-pointer rounded-3xl bg-dark-900/70 p-4 transition-colors"
     >
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0 flex-1">
@@ -540,9 +540,9 @@ function SquadCard({ squad, onClick }: SquadCardProps) {
               </span>
             )}
           </div>
-          <p className="mt-1 truncate text-xs text-dark-500">{squad.name}</p>
+          <p className="mt-1 truncate text-[13px] text-dark-500">{squad.name}</p>
 
-          <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-xs text-dark-400">
+          <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-[13px] text-dark-400">
             <span className="flex items-center gap-1">
               <UsersIcon className="h-3.5 w-3.5" />
               {t('admin.remnawave.squads.membersCount', '{{count}} members', {
@@ -587,14 +587,14 @@ function SyncCard({ title, description, onAction, isLoading, lastResult }: SyncC
   const { t } = useTranslation();
 
   return (
-    <div className="rounded-xl bg-dark-800/50 p-4">
+    <div className="rounded-3xl bg-dark-900/70 p-4">
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0 flex-1">
           <h3 className="font-medium text-dark-100">{title}</h3>
-          <p className="mt-1 text-xs text-dark-400">{description}</p>
+          <p className="mt-1 text-[13px] text-dark-400">{description}</p>
           {lastResult && (
             <p
-              className={`mt-2 text-xs ${lastResult.success ? 'text-success-400' : 'text-error-400'}`}
+              className={`mt-2 text-[13px] ${lastResult.success ? 'text-success-400' : 'text-error-400'}`}
             >
               {lastResult.message}
             </p>
@@ -635,12 +635,12 @@ function BreakdownCard({
 }) {
   const max = Math.max(1, ...items.map((i) => i.count));
   return (
-    <div className="rounded-xl bg-dark-800/50 p-4">
+    <div className="rounded-3xl bg-dark-900/70 p-4">
       <h4 className="mb-3 text-sm font-medium text-dark-200">{title}</h4>
       <div className={wide ? 'grid grid-cols-1 gap-x-6 gap-y-2 sm:grid-cols-2' : 'space-y-2'}>
         {items.slice(0, wide ? 16 : 8).map((it) => (
           <div key={it.label}>
-            <div className="flex items-center justify-between text-xs">
+            <div className="flex items-center justify-between text-[13px]">
               <span className="truncate text-dark-300">{it.label}</span>
               <span className="ml-2 shrink-0 text-dark-400">{it.count}</span>
             </div>
@@ -1135,7 +1135,7 @@ function NodesTab({
 
       {/* Realtime traffic totals (merged from the former Traffic tab) */}
       {traffic.total > 0 && (
-        <div className="flex flex-wrap items-center gap-x-4 gap-y-1 px-1 text-xs text-dark-400">
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-1 px-1 text-[13px] text-dark-400">
           <span className="font-medium text-dark-300">
             {t('admin.remnawave.traffic.realtimeTitle', 'Realtime traffic')}
           </span>
@@ -1315,7 +1315,7 @@ function SyncTab({
     <div className="space-y-6">
       {/* Auto Sync Status */}
       {autoSyncStatus && (
-        <div className="rounded-xl bg-dark-800/50 p-4">
+        <div className="rounded-3xl bg-dark-900/70 p-4">
           <div className="mb-3 flex items-center justify-between">
             <h3 className="flex items-center gap-2 font-medium text-dark-100">
               <SyncIcon />
@@ -1336,7 +1336,7 @@ function SyncTab({
 
           <div className="grid grid-cols-2 gap-3 text-sm">
             <div className="rounded-lg bg-dark-700/50 p-3">
-              <p className="text-xs text-dark-500">
+              <p className="text-[13px] text-dark-500">
                 {t('admin.remnawave.sync.schedule', 'Schedule')}
               </p>
               <p className="mt-1 text-dark-200">
@@ -1344,7 +1344,9 @@ function SyncTab({
               </p>
             </div>
             <div className="rounded-lg bg-dark-700/50 p-3">
-              <p className="text-xs text-dark-500">{t('admin.remnawave.sync.status', 'Status')}</p>
+              <p className="text-[13px] text-dark-500">
+                {t('admin.remnawave.sync.status', 'Status')}
+              </p>
               <p
                 className={`mt-1 ${
                   autoSyncStatus.is_running
@@ -1362,7 +1364,7 @@ function SyncTab({
               </p>
             </div>
             <div className="rounded-lg bg-dark-700/50 p-3">
-              <p className="text-xs text-dark-500">
+              <p className="text-[13px] text-dark-500">
                 {t('admin.remnawave.sync.lastRun', 'Last Run')}
               </p>
               <p className="mt-1 text-dark-200">
@@ -1372,7 +1374,7 @@ function SyncTab({
               </p>
             </div>
             <div className="rounded-lg bg-dark-700/50 p-3">
-              <p className="text-xs text-dark-500">
+              <p className="text-[13px] text-dark-500">
                 {t('admin.remnawave.sync.nextRun', 'Next Run')}
               </p>
               <p className="mt-1 text-dark-200">
@@ -1635,7 +1637,7 @@ export default function AdminRemnawave() {
           {!capabilities.hasBackButton && (
             <button
               onClick={() => navigate('/admin')}
-              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-dark-800 transition-colors"
+              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-dark-900/70 transition-colors"
             >
               <BackIcon className="text-dark-400" />
             </button>
@@ -1644,10 +1646,10 @@ export default function AdminRemnawave() {
             <RemnawaveIcon className="h-6 w-6 text-accent-400" />
           </div>
           <div>
-            <h1 className="text-xl font-semibold text-dark-100">
+            <h1 className="text-xl font-bold tracking-tight text-dark-50 sm:text-2xl">
               {t('admin.remnawave.title', 'Remnawave')}
             </h1>
-            <p className="text-sm text-dark-400">
+            <p className="mt-0.5 text-[13px] text-dark-400">
               {t('admin.remnawave.subtitle', 'Panel management and statistics')}
             </p>
           </div>

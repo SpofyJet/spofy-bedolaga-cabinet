@@ -19,9 +19,9 @@ interface FormBaseProps<T> {
 
 function InlineForm({ id, hint, children }: { id?: string; hint?: string; children: ReactNode }) {
   return (
-    <div id={id} className="flex scroll-mt-24 flex-col gap-2 rounded-xl bg-dark-800/60 p-3">
+    <div id={id} className="flex scroll-mt-24 flex-col gap-2 rounded-3xl bg-dark-900/70 p-3">
       <div className="flex flex-wrap items-end gap-2">{children}</div>
-      {hint && <p className="text-xs text-dark-500">{hint}</p>}
+      {hint && <p className="text-[13px] text-dark-500">{hint}</p>}
     </div>
   );
 }
@@ -80,7 +80,7 @@ export function DaysForm({
   };
   return (
     <InlineForm>
-      <label htmlFor={id} className="flex flex-col gap-1 text-xs text-dark-500">
+      <label htmlFor={id} className="flex flex-col gap-1 text-[13px] text-dark-500">
         {label}
         <input
           id={id}
@@ -120,7 +120,7 @@ export function TariffForm({
   const [value, setValue] = useState('');
   return (
     <InlineForm id="subscription-tariff">
-      <label htmlFor={id} className="flex flex-col gap-1 text-xs text-dark-500">
+      <label htmlFor={id} className="flex flex-col gap-1 text-[13px] text-dark-500">
         {t(`${ns}.newTariff`)}
         <DropdownSelect
           id={id}
@@ -162,7 +162,7 @@ export function TrafficForm({
   const [value, setValue] = useState(packages[0] ?? '');
   return (
     <InlineForm id="subscription-traffic" hint={t(`${ns}.addTrafficNote`)}>
-      <label htmlFor={id} className="flex flex-col gap-1 text-xs text-dark-500">
+      <label htmlFor={id} className="flex flex-col gap-1 text-[13px] text-dark-500">
         {t(`${ns}.package`)}
         <DropdownSelect
           id={id}
@@ -199,7 +199,7 @@ export function DeviceLimitForm({
   const valid = Number.isInteger(parsed) && parsed >= 1 && (max == null || parsed <= max);
   return (
     <InlineForm hint={max != null ? t(`${ns}.deviceLimitHint`, { max }) : undefined}>
-      <label htmlFor={id} className="flex flex-col gap-1 text-xs text-dark-500">
+      <label htmlFor={id} className="flex flex-col gap-1 text-[13px] text-dark-500">
         {t(`${ns}.deviceLimitTitle`)}
         <input
           id={id}

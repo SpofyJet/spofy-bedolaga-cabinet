@@ -49,9 +49,9 @@ function MonitorCard({ monitor, canRun }: { monitor: Monitor; canRun: boolean })
             {monitor.label ?? t('admin.dpichecker.monitors.untitled', { id: monitor.id })}
           </h3>
           {fromSite && (
-            <p className="text-xs text-dark-400">{t('admin.dpichecker.monitors.foreign')}</p>
+            <p className="text-[13px] text-dark-400">{t('admin.dpichecker.monitors.foreign')}</p>
           )}
-          <p className="text-xs text-dark-400">
+          <p className="text-[13px] text-dark-400">
             {[
               t(`admin.dpichecker.tabs.${monitor.check_type}`),
               t(`admin.dpichecker.locations.${monitor.location}`),
@@ -77,14 +77,14 @@ function MonitorCard({ monitor, canRun }: { monitor: Monitor; canRun: boolean })
           : t('admin.dpichecker.monitors.noRuns')}
         {down && ` · ${t('admin.dpichecker.monitors.fails', { count: monitor.consecutive_fails })}`}
       </p>
-      <p className="text-xs text-dark-400">
+      <p className="text-[13px] text-dark-400">
         {t('admin.dpichecker.monitors.lastNext', {
           last: when(monitor.last_checked_at),
           next: when(monitor.next_run_at),
         })}
       </p>
       {!monitor.deleted && !monitor.is_active && monitor.paused_reason && (
-        <p className="text-xs text-warning-400">
+        <p className="text-[13px] text-warning-400">
           {t(`admin.dpichecker.monitors.paused.${monitor.paused_reason}`, {
             defaultValue: t('admin.dpichecker.monitors.paused.other'),
           })}

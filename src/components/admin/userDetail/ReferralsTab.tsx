@@ -234,7 +234,7 @@ export function ReferralsTab({ user, userId, canEdit, onUserRefresh }: Referrals
         <ul className="m-0 list-none divide-y divide-dark-800/80 p-0">
           {referrals.map((item) => (
             <li key={item.id} className="flex items-center gap-3 py-2.5">
-              <span className="w-11 shrink-0 font-mono text-xs tabular-nums text-dark-500">
+              <span className="w-11 shrink-0 font-mono text-[13px] tabular-nums text-dark-500">
                 {formatShortDate(item.created_at).slice(0, 5)}
               </span>
               <UserAvatar
@@ -251,7 +251,7 @@ export function ReferralsTab({ user, userId, canEdit, onUserRefresh }: Referrals
                 <span className="block truncate text-sm text-dark-100 hover:text-accent-400">
                   {item.full_name}
                 </span>
-                <span className="flex min-w-0 items-center gap-1.5 text-xs text-dark-500">
+                <span className="flex min-w-0 items-center gap-1.5 text-[13px] text-dark-500">
                   <span className="truncate">
                     {[item.username ? `@${item.username}` : null, item.tariff_name]
                       .filter(Boolean)

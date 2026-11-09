@@ -20,9 +20,9 @@ export function SectionHeading({ id, title, hint, aside }: SectionHeadingProps) 
         <h2 id={id} className="min-w-0 text-lg font-semibold text-dark-100">
           {title}
         </h2>
-        {aside && <div className="shrink-0 text-xs text-dark-400">{aside}</div>}
+        {aside && <div className="shrink-0 text-[13px] text-dark-400">{aside}</div>}
       </div>
-      {hint && <p className="text-xs text-dark-400">{hint}</p>}
+      {hint && <p className="text-[13px] text-dark-400">{hint}</p>}
     </div>
   );
 }

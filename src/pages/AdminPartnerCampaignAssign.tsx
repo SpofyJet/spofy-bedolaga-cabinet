@@ -52,7 +52,7 @@ export default function AdminPartnerCampaignAssign() {
       <div className="mb-6 flex items-center gap-3">
         <AdminBackButton to={`/admin/partners/${userId}`} />
         <div>
-          <h1 className="text-xl font-semibold text-dark-100">
+          <h1 className="text-xl font-bold tracking-tight text-dark-50 sm:text-2xl">
             {t('admin.partnerDetail.campaigns.assignTitle')}
           </h1>
           {partnerName && <p className="text-sm text-dark-400">{partnerName}</p>}
@@ -64,7 +64,7 @@ export default function AdminPartnerCampaignAssign() {
           <Skeleton variant="card" count={3} className="h-16" />
         </SkeletonGroup>
       ) : available.length === 0 ? (
-        <div className="rounded-xl bg-dark-800 p-6">
+        <div className="rounded-3xl bg-dark-900/70 p-6">
           <div className="py-4 text-center text-sm text-dark-500">
             {t('admin.partnerDetail.campaigns.noAvailable')}
           </div>
@@ -72,7 +72,7 @@ export default function AdminPartnerCampaignAssign() {
             onClick={() =>
               navigate(`/admin/campaigns/create?partnerId=${userId}`, backTo(location))
             }
-            className="mt-2 w-full rounded-lg bg-accent-500 px-4 py-3 font-medium text-on-accent transition-colors hover:bg-accent-600"
+            className="mt-2 w-full rounded-2xl bg-cta-500 px-4 py-3 font-medium text-on-cta transition-colors hover:bg-cta-600"
           >
             {t('admin.partnerDetail.campaigns.createNew')}
           </button>
@@ -80,7 +80,7 @@ export default function AdminPartnerCampaignAssign() {
       ) : (
         <div className="space-y-3">
           {available.map((campaign) => (
-            <div key={campaign.id} className="rounded-xl bg-dark-800 p-4">
+            <div key={campaign.id} className="rounded-3xl bg-dark-900/70 p-4">
               <div className="flex items-center justify-between gap-4">
                 <div className="min-w-0 flex-1">
                   <div className="flex flex-wrap items-center gap-2">
@@ -93,7 +93,7 @@ export default function AdminPartnerCampaignAssign() {
                       </span>
                     )}
                   </div>
-                  <div className="mt-1 flex min-w-0 flex-wrap items-center gap-x-3 gap-y-0.5 text-xs text-dark-500">
+                  <div className="mt-1 flex min-w-0 flex-wrap items-center gap-x-3 gap-y-0.5 text-[13px] text-dark-500">
                     <span className="min-w-0 font-mono break-all">
                       ?start={campaign.start_parameter}
                     </span>
@@ -116,7 +116,7 @@ export default function AdminPartnerCampaignAssign() {
 
           {/* Show campaigns assigned to other partners as greyed out */}
           {takenByOthers.map((campaign) => (
-            <div key={campaign.id} className="rounded-xl bg-dark-800 p-4 opacity-50">
+            <div key={campaign.id} className="rounded-3xl bg-dark-900/70 p-4 opacity-50">
               <div className="flex items-center justify-between gap-4">
                 <div className="min-w-0 flex-1">
                   <div className="flex flex-wrap items-center gap-2">
@@ -127,7 +127,7 @@ export default function AdminPartnerCampaignAssign() {
                       {campaign.partner_name}
                     </span>
                   </div>
-                  <div className="mt-1 text-xs text-dark-500">
+                  <div className="mt-1 text-[13px] text-dark-500">
                     <span className="font-mono break-all">?start={campaign.start_parameter}</span>
                   </div>
                 </div>

@@ -82,20 +82,24 @@ function ProgressView({ progress }: { progress: ProgressState }) {
         <div className="flex items-center gap-1.5">
           <div className="h-2 w-2 rounded-full bg-success-400" />
           <span className="text-sm tabular-nums text-success-400">{progress.successCount}</span>
-          <span className="text-xs text-dark-500">{t('admin.bulkActions.progress.succeeded')}</span>
+          <span className="text-[13px] text-dark-500">
+            {t('admin.bulkActions.progress.succeeded')}
+          </span>
         </div>
         <div className="flex items-center gap-1.5">
           <div className="h-2 w-2 rounded-full bg-error-400" />
           <span className="text-sm tabular-nums text-error-400">{progress.errorCount}</span>
-          <span className="text-xs text-dark-500">{t('admin.bulkActions.progress.failed')}</span>
+          <span className="text-[13px] text-dark-500">
+            {t('admin.bulkActions.progress.failed')}
+          </span>
         </div>
       </div>
 
       {progress.log.length > 0 && (
-        <div className="max-h-48 overflow-y-auto rounded-xl bg-dark-800/50 p-3">
+        <div className="max-h-48 overflow-y-auto rounded-3xl bg-dark-900/70 p-3">
           <div className="space-y-1">
             {progress.log.slice(-10).map((entry, idx) => (
-              <div key={idx} className="flex items-start gap-2 text-xs">
+              <div key={idx} className="flex items-start gap-2 text-[13px]">
                 {entry.success ? (
                   <span className="mt-0.5 shrink-0 text-success-400" aria-hidden="true">
                     <CheckIcon className="h-3 w-3" />
@@ -150,7 +154,7 @@ function ErrorDetails({ result }: { result: BulkActionResult }) {
         <div className="max-h-48 overflow-y-auto border-t border-error-500/20 px-4 py-3">
           <div className="space-y-2">
             {result.errors.map((err, idx) => (
-              <div key={idx} className="flex items-start gap-2 text-xs">
+              <div key={idx} className="flex items-start gap-2 text-[13px]">
                 <span className="mt-0.5 shrink-0 text-error-400" aria-hidden="true">
                   <XIcon className="h-3 w-3" />
                 </span>
@@ -430,7 +434,7 @@ export function ActionModal({
               />
             </div>
             <div className="rounded-xl border border-warning-500/20 bg-warning-500/5 px-3 py-2.5">
-              <p className="text-xs text-warning-400">
+              <p className="text-[13px] text-warning-400">
                 {t('admin.bulkActions.grantSubscription.warning')}
               </p>
             </div>
@@ -444,7 +448,7 @@ export function ActionModal({
               <p className="text-sm font-medium text-error-400">
                 {t('admin.bulkActions.deleteSubscription.warning')}
               </p>
-              <p className="mt-1 text-xs text-error-300">
+              <p className="mt-1 text-[13px] text-error-300">
                 {t('admin.bulkActions.deleteSubscription.hint')}
               </p>
             </div>
@@ -492,7 +496,7 @@ export function ActionModal({
               <p className="text-sm font-medium text-error-400">
                 {t('admin.bulkActions.deleteUser.warning')}
               </p>
-              <p className="mt-1 text-xs text-error-300">
+              <p className="mt-1 text-[13px] text-error-300">
                 {t('admin.bulkActions.deleteUser.hint')}
               </p>
             </div>
@@ -546,7 +550,7 @@ export function ActionModal({
         aria-modal="true"
         aria-labelledby="bulk-action-modal-title"
         tabIndex={-1}
-        className="relative max-h-[calc(100dvh-2rem)] w-full max-w-md overflow-y-auto rounded-2xl bg-dark-900 p-6 shadow-2xl"
+        className="relative max-h-[calc(100dvh-2rem)] w-full max-w-md overflow-y-auto rounded-3xl bg-dark-900/70 p-6 shadow-2xl"
       >
         <div className="mb-5 flex items-center justify-between">
           <h3 id="bulk-action-modal-title" className="text-lg font-bold text-dark-100">
@@ -566,13 +570,13 @@ export function ActionModal({
         {modal.loading && modal.progress ? (
           <div className="space-y-4">
             <ProgressView progress={modal.progress} />
-            <p className="text-center text-xs text-dark-500">
+            <p className="text-center text-[13px] text-dark-500">
               {t('admin.bulkActions.progress.doNotClose')}
             </p>
           </div>
         ) : modal.result ? (
           <div className="space-y-4">
-            <div className="rounded-xl bg-dark-800/50 p-4">
+            <div className="rounded-3xl bg-dark-900/70 p-4">
               <div className="mb-3 text-center text-sm font-semibold text-dark-100">
                 {t('admin.bulkActions.complete')}
               </div>
@@ -600,7 +604,7 @@ export function ActionModal({
                   <div className="text-2xl font-bold text-success-400">
                     {modal.result.success_count}
                   </div>
-                  <div className="text-xs text-dark-400">
+                  <div className="text-[13px] text-dark-400">
                     {t('admin.bulkActions.successCount', { count: modal.result.success_count })}
                   </div>
                 </div>
@@ -609,7 +613,7 @@ export function ActionModal({
                     <div className="text-2xl font-bold text-error-400">
                       {modal.result.error_count}
                     </div>
-                    <div className="text-xs text-dark-400">
+                    <div className="text-[13px] text-dark-400">
                       {t('admin.bulkActions.errorCount', { count: modal.result.error_count })}
                     </div>
                   </div>
@@ -621,7 +625,7 @@ export function ActionModal({
 
             <button
               onClick={onClose}
-              className="w-full rounded-xl bg-accent-500 px-4 py-2.5 text-sm font-semibold text-on-accent transition-colors hover:bg-accent-600"
+              className="w-full rounded-2xl bg-cta-500 px-4 py-2.5 text-sm font-semibold text-on-cta transition-colors hover:bg-cta-600"
             >
               {t('common.close')}
             </button>
@@ -647,7 +651,7 @@ export function ActionModal({
               <button
                 onClick={handleSubmit}
                 disabled={isConfirmDisabled}
-                className="flex min-h-[44px] flex-1 items-center justify-center gap-2 rounded-xl bg-accent-500 px-4 py-2.5 text-sm font-semibold text-on-accent transition-colors hover:bg-accent-600 disabled:opacity-50"
+                className="flex min-h-[44px] flex-1 items-center justify-center gap-2 rounded-2xl bg-cta-500 px-4 py-2.5 text-sm font-semibold text-on-cta transition-colors hover:bg-cta-600 disabled:opacity-50"
               >
                 {t('admin.bulkActions.confirm')}
               </button>

@@ -43,9 +43,9 @@ export function SubscriptionInput({ value, onChange, parsed }: SubscriptionInput
         autoCapitalize="none"
         autoCorrect="off"
         spellCheck={false}
-        className="input mt-1.5 w-full font-mono text-xs"
+        className="input mt-1.5 w-full font-mono text-[13px]"
       />
-      <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs">
+      <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-[13px]">
         {parsed.isFetching && (
           <span role="status" className="text-dark-400">
             {t('admin.reachability.subscription.loading')}
@@ -79,7 +79,7 @@ export function SubscriptionInput({ value, onChange, parsed }: SubscriptionInput
       {data?.rejected
         .filter((item) => item.reason === 'subscription_failed')
         .map((item) => (
-          <p key={item.preview} role="alert" className="mt-1.5 text-xs text-error-400">
+          <p key={item.preview} role="alert" className="mt-1.5 text-[13px] text-error-400">
             {t('admin.reachability.subscription.notLoaded')}:{' '}
             {item.detail ??
               t('admin.reachability.subscription.rejectedReasons.subscription_failed')}
@@ -88,7 +88,7 @@ export function SubscriptionInput({ value, onChange, parsed }: SubscriptionInput
       {data?.sources
         .filter((source) => source.note)
         .map((source) => (
-          <p key={`${source.kind}:${source.label}`} className="mt-1.5 text-xs text-warning-400">
+          <p key={`${source.kind}:${source.label}`} className="mt-1.5 text-[13px] text-warning-400">
             {source.note}
           </p>
         ))}

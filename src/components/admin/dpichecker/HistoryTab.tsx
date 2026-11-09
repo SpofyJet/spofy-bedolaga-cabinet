@@ -43,18 +43,18 @@ function Row({ action, onOpen }: { action: ActionOut; onOpen: () => void }) {
           HISTORY_GRID,
         )}
       >
-        <span className="hidden text-xs tabular-nums text-dark-500 sm:block">#{action.id}</span>
+        <span className="hidden text-[13px] tabular-nums text-dark-500 sm:block">#{action.id}</span>
         <span className="flex min-w-0 items-baseline gap-2">
           <span className="min-w-0 truncate text-sm font-medium text-dark-100">{action.label}</span>
           <span className="shrink-0 rounded-md bg-dark-800 px-1.5 py-0.5 text-[11px] text-dark-200">
             {t(`admin.dpichecker.tabs.${type}`, { defaultValue: type })}
           </span>
         </span>
-        <span className="text-xs text-dark-400">
+        <span className="text-[13px] text-dark-400">
           <span className="sm:hidden">#{action.id} · </span>
           {where}
         </span>
-        <span className="hidden text-xs tabular-nums text-dark-300 sm:block">
+        <span className="hidden text-[13px] tabular-nums text-dark-300 sm:block">
           {action.resource_count
             ? t('admin.dpichecker.result.resources', { count: action.resource_count })
             : ''}
@@ -62,7 +62,7 @@ function Row({ action, onOpen }: { action: ActionOut; onOpen: () => void }) {
         {/* Телефон: деньги, кто и когда — одной строкой, итог справа; с sm обёртки растворяются в колонки. */}
         <span className="flex items-start justify-between gap-3 sm:contents">
           <span className="flex min-w-0 flex-wrap gap-x-3 gap-y-0.5 sm:contents">
-            <span className="text-xs tabular-nums text-dark-200">
+            <span className="text-[13px] tabular-nums text-dark-200">
               {action.cost_usd !== null
                 ? t('admin.dpichecker.money.usd', { value: usd4(action.cost_usd) })
                 : ''}
@@ -72,14 +72,16 @@ function Row({ action, onOpen }: { action: ActionOut; onOpen: () => void }) {
                 </span>
               ) : null}
             </span>
-            <span className="min-w-0 truncate text-xs text-dark-200">
+            <span className="min-w-0 truncate text-[13px] text-dark-200">
               {action.admin_name ?? '—'}
             </span>
-            <span className="text-xs tabular-nums text-dark-400">
+            <span className="text-[13px] tabular-nums text-dark-400">
               {formatDate(action.created_at)}
             </span>
           </span>
-          <span className={cn('flex shrink-0 items-center gap-1.5 text-xs font-medium', tone.text)}>
+          <span
+            className={cn('flex shrink-0 items-center gap-1.5 text-[13px] font-medium', tone.text)}
+          >
             <span className={cn('inline-block h-2 w-2 shrink-0 rounded-full', tone.dot)} />
             {t(`admin.dpichecker.status.${action.status}`, { defaultValue: action.status })}
           </span>

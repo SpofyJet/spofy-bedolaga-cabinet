@@ -68,7 +68,7 @@ function ContactDisplay({ type, value }: { type: 'email' | 'telegram'; value: st
       ) : (
         <TelegramSmallIcon className="h-3.5 w-3.5" />
       )}
-      <span className="min-w-0 truncate text-xs">{value}</span>
+      <span className="min-w-0 truncate text-[13px]">{value}</span>
     </span>
   );
 }
@@ -103,7 +103,7 @@ function PurchaseCard({ item, formatPrice, lang, t }: PurchaseCardProps) {
     : null;
 
   return (
-    <div className="rounded-xl bg-dark-800/40 p-3 transition-colors sm:p-4">
+    <div className="rounded-3xl bg-dark-900/70 p-3 transition-colors sm:p-4">
       {/* Mobile: stacked | Desktop: horizontal */}
       <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-4">
         {/* Status badge */}
@@ -143,7 +143,7 @@ function PurchaseCard({ item, formatPrice, lang, t }: PurchaseCardProps) {
         </div>
 
         {/* Payment method */}
-        <div className="shrink-0 text-xs text-dark-500">{item.payment_method}</div>
+        <div className="shrink-0 text-[13px] text-dark-500">{item.payment_method}</div>
 
         {/* Gift badge */}
         {item.is_gift && (
@@ -165,7 +165,7 @@ function PurchaseCard({ item, formatPrice, lang, t }: PurchaseCardProps) {
           </div>
         )}
         {/* Date + Time */}
-        <div className="shrink-0 text-xs text-dark-500">
+        <div className="shrink-0 text-[13px] text-dark-500">
           {dateStr} <span className="text-dark-600">{timeStr}</span>
         </div>
       </div>
@@ -309,7 +309,9 @@ export default function AdminLandingStats() {
       <div className="animate-fade-in">
         <div className="mb-6 flex items-center gap-3">
           <AdminBackButton to="/admin/landings" />
-          <h1 className="text-xl font-semibold text-dark-100">{t('admin.landings.stats.title')}</h1>
+          <h1 className="text-xl font-bold tracking-tight text-dark-50 sm:text-2xl">
+            {t('admin.landings.stats.title')}
+          </h1>
         </div>
         <div className="rounded-xl border border-error-500/30 bg-error-500/10 p-6 text-center">
           <p className="text-error-400">{t('admin.landings.stats.loadError')}</p>
@@ -339,7 +341,9 @@ export default function AdminLandingStats() {
             <ChartIcon className="h-6 w-6" />
           </div>
           <div className="min-w-0">
-            <h1 className="truncate text-xl font-semibold text-dark-100">{landingTitle}</h1>
+            <h1 className="truncate text-xl font-bold tracking-tight text-dark-50 sm:text-2xl">
+              {landingTitle}
+            </h1>
             <div className="mt-1 flex items-center gap-2">
               {landing?.is_active ? (
                 <span className="rounded bg-success-500/20 px-2 py-0.5 text-xs text-success-400">
@@ -440,7 +444,7 @@ export default function AdminLandingStats() {
                     </Funnel>
                   </FunnelChart>
                 </ResponsiveContainer>
-                <div className="mt-2 flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-xs text-dark-400">
+                <div className="mt-2 flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-[13px] text-dark-400">
                   {funnelData.map((s, i) => (
                     <span key={i} className="flex items-center gap-1.5">
                       <span
@@ -466,7 +470,7 @@ export default function AdminLandingStats() {
                   {giftsClaimed}
                   <span className="text-base text-dark-500"> / {stats.total_gifts}</span>
                 </div>
-                <div className="mt-0.5 text-xs text-dark-500">
+                <div className="mt-0.5 text-[13px] text-dark-500">
                   {t('admin.landings.stats.giftClaimLabel', 'claimed / sent')}
                 </div>
               </div>
@@ -582,7 +586,7 @@ export default function AdminLandingStats() {
               {/* Pagination */}
               {purchaseTotalPages > 1 && (
                 <div className="mt-4 flex flex-col items-center gap-2 sm:flex-row sm:justify-between">
-                  <span className="text-xs text-dark-500">
+                  <span className="text-[13px] text-dark-500">
                     {t('admin.landings.purchases.showing', {
                       from: purchaseOffset + 1,
                       to: Math.min(purchaseOffset + PURCHASES_PAGE_SIZE, purchaseTotal),
@@ -602,7 +606,7 @@ export default function AdminLandingStats() {
                       <span className="hidden sm:inline">{t('admin.landings.purchases.prev')}</span>
                     </button>
 
-                    <span className="px-2 text-xs text-dark-400">
+                    <span className="px-2 text-[13px] text-dark-400">
                       {t('admin.landings.purchases.page', {
                         current: purchaseCurrentPage,
                         total: purchaseTotalPages,

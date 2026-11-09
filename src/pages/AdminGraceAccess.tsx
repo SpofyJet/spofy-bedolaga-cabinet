@@ -220,7 +220,7 @@ function SectionCard({
             </h2>
             {aside && <div className="shrink-0">{aside}</div>}
           </div>
-          {hint && <p className="mt-0.5 text-xs text-dark-400">{hint}</p>}
+          {hint && <p className="mt-0.5 text-[13px] text-dark-400">{hint}</p>}
         </div>
       </div>
       {children !== undefined && children !== null && children !== false && (
@@ -267,7 +267,7 @@ function FieldLabel({ htmlFor, children }: { htmlFor: string; children: ReactNod
 }
 
 function FieldHint({ children }: { children: ReactNode }) {
-  return <p className="mt-1 text-xs text-dark-400">{children}</p>;
+  return <p className="mt-1 text-[13px] text-dark-400">{children}</p>;
 }
 
 function SquadField({
@@ -335,7 +335,7 @@ function SquadField({
         <input
           id={id}
           type="text"
-          className={cn('input font-mono text-xs', invalid && 'border-error-500/50')}
+          className={cn('input font-mono text-[13px]', invalid && 'border-error-500/50')}
           placeholder="00000000-0000-0000-0000-000000000000"
           value={value}
           disabled={disabled}
@@ -349,12 +349,12 @@ function SquadField({
       )}
       {description && <FieldHint>{description}</FieldHint>}
       {!squadsAvailable && (
-        <p className="mt-1 text-xs text-warning-400">
+        <p className="mt-1 text-[13px] text-warning-400">
           {unavailableHint ?? t('admin.graceAccess.squads.unavailable')}
         </p>
       )}
       {squadsAvailable && synced && (
-        <p className="mt-1 text-xs text-warning-400">{t('admin.graceAccess.squads.synced')}</p>
+        <p className="mt-1 text-[13px] text-warning-400">{t('admin.graceAccess.squads.synced')}</p>
       )}
     </div>
   );
@@ -375,7 +375,7 @@ function FilterChip({
       onClick={onClick}
       aria-pressed={active}
       className={cn(
-        'rounded-lg px-3 py-1.5 text-xs font-medium transition-colors',
+        'rounded-lg px-3 py-1.5 text-[13px] font-medium transition-colors',
         active
           ? 'bg-accent-500/15 text-accent-400 ring-1 ring-accent-500/30'
           : 'bg-dark-800/50 text-dark-400 hover:text-dark-200',
@@ -394,14 +394,14 @@ function SessionState({ session }: { session: GraceSessionItem }) {
         {t(`admin.graceAccess.sessions.states.${session.state}`, { defaultValue: session.state })}
       </div>
       {session.completion_reason && (
-        <div className="text-xs text-dark-400">
+        <div className="text-[13px] text-dark-400">
           {t(`admin.graceAccess.sessions.completion.${session.completion_reason}`, {
             defaultValue: session.completion_reason,
           })}
         </div>
       )}
       {session.last_error && (
-        <div className="mt-1 break-words text-xs text-error-400">{session.last_error}</div>
+        <div className="mt-1 break-words text-[13px] text-error-400">{session.last_error}</div>
       )}
     </>
   );
@@ -463,7 +463,7 @@ function SessionsSection() {
           {/* Телефон: карточки, как в остальных админских списках. */}
           <ul className="mt-4 space-y-2 md:hidden">
             {data.items.map((session) => (
-              <li key={session.id} className="rounded-xl bg-dark-800/30 p-3">
+              <li key={session.id} className="rounded-3xl bg-dark-900/70 p-3">
                 {/* Состояние с текстом ошибки уходит под имя, а не распирает строку:
                     длинная ошибка панели делала страницу шириной 908 px. */}
                 <div className="flex flex-wrap items-start justify-between gap-x-3 gap-y-1">
@@ -471,15 +471,15 @@ function SessionsSection() {
                     <div className="truncate text-sm font-medium text-dark-100">
                       {session.user?.full_name || `#${session.subscription_id}`}
                     </div>
-                    <div className="text-xs text-dark-400 [overflow-wrap:anywhere]">
+                    <div className="text-[13px] text-dark-400 [overflow-wrap:anywhere]">
                       {userLine(session)}
                     </div>
                   </div>
-                  <div className="min-w-0 max-w-full text-right text-xs [overflow-wrap:anywhere]">
+                  <div className="min-w-0 max-w-full text-right text-[13px] [overflow-wrap:anywhere]">
                     <SessionState session={session} />
                   </div>
                 </div>
-                <div className="mt-2 flex flex-wrap justify-between gap-x-3 text-xs text-dark-400">
+                <div className="mt-2 flex flex-wrap justify-between gap-x-3 text-[13px] text-dark-400">
                   <span>
                     {t(`admin.graceAccess.sessions.reasons.${session.reason}`, {
                       defaultValue: session.reason,
@@ -512,7 +512,7 @@ function SessionsSection() {
                       <div className="text-dark-100">
                         {session.user?.full_name || `#${session.subscription_id}`}
                       </div>
-                      <div className="text-xs text-dark-400">{userLine(session)}</div>
+                      <div className="text-[13px] text-dark-400">{userLine(session)}</div>
                     </td>
                     <td className="py-2 pr-3 text-dark-300">
                       {t(`admin.graceAccess.sessions.reasons.${session.reason}`, {
@@ -655,7 +655,9 @@ export default function AdminGraceAccess() {
       <div className="animate-fade-in">
         <div className="mb-6 flex items-center gap-3">
           <AdminBackButton to="/admin" />
-          <h1 className="text-xl font-bold text-dark-100">{t('admin.graceAccess.title')}</h1>
+          <h1 className="text-xl font-bold tracking-tight text-dark-50 sm:text-2xl">
+            {t('admin.graceAccess.title')}
+          </h1>
         </div>
         <div className="rounded-2xl border border-error-500/30 bg-error-500/10 p-6 text-center">
           <p className="text-error-400">{t('admin.graceAccess.loadError')}</p>
@@ -686,7 +688,7 @@ export default function AdminGraceAccess() {
 
   const lockNote = (field: keyof GraceAccessConfig) =>
     isLocked(field) ? (
-      <p className="mt-1 flex items-center gap-1 text-xs text-warning-400">
+      <p className="mt-1 flex items-center gap-1 text-[13px] text-warning-400">
         <LockIcon className="h-3 w-3" />
         {t('admin.graceAccess.envLocked')}
       </p>
@@ -694,7 +696,7 @@ export default function AdminGraceAccess() {
 
   const restartNote = (field: keyof GraceAccessConfig) =>
     restartOnly.has(field) ? (
-      <p className="mt-1 text-xs text-dark-400">{t('admin.graceAccess.restartOnly')}</p>
+      <p className="mt-1 text-[13px] text-dark-400">{t('admin.graceAccess.restartOnly')}</p>
     ) : null;
 
   const numberField = (
@@ -734,7 +736,9 @@ export default function AdminGraceAccess() {
         </div>
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-2">
-            <h1 className="text-xl font-bold text-dark-100">{t('admin.graceAccess.title')}</h1>
+            <h1 className="text-xl font-bold tracking-tight text-dark-50 sm:text-2xl">
+              {t('admin.graceAccess.title')}
+            </h1>
             <span
               className={cn(
                 'rounded-full px-2.5 py-0.5 text-xs font-medium',
@@ -746,7 +750,7 @@ export default function AdminGraceAccess() {
               {runningLabel}
             </span>
           </div>
-          <p className="text-xs text-dark-400">{t('admin.graceAccess.subtitle')}</p>
+          <p className="text-[13px] text-dark-400">{t('admin.graceAccess.subtitle')}</p>
         </div>
       </header>
 
@@ -833,7 +837,7 @@ export default function AdminGraceAccess() {
                   >
                     {t(`admin.graceAccess.modes.${mode}.label`)}
                   </span>
-                  <span className="mt-0.5 block text-xs text-dark-400">
+                  <span className="mt-0.5 block text-[13px] text-dark-400">
                     {t(`admin.graceAccess.modes.${mode}.desc`)}
                   </span>
                 </span>
@@ -885,14 +889,16 @@ export default function AdminGraceAccess() {
             </h3>
             <ul className="mt-2 space-y-2">
               {data.recent_errors.map((row) => (
-                <li key={row.id} className="rounded-xl bg-dark-800/30 p-3">
-                  <div className="text-xs text-dark-400">
+                <li key={row.id} className="rounded-3xl bg-dark-900/70 p-3">
+                  <div className="text-[13px] text-dark-400">
                     {t('admin.graceAccess.health.subscription', { id: row.subscription_id })} ·{' '}
                     {t(`admin.graceAccess.sessions.states.${row.state}`, {
                       defaultValue: row.state,
                     })}
                   </div>
-                  <div className="mt-0.5 break-words text-xs text-error-400">{row.last_error}</div>
+                  <div className="mt-0.5 break-words text-[13px] text-error-400">
+                    {row.last_error}
+                  </div>
                 </li>
               ))}
             </ul>
@@ -942,7 +948,7 @@ export default function AdminGraceAccess() {
               <div className="text-sm font-medium text-dark-100">
                 {t('admin.graceAccess.fields.reset_traffic_on_start')}
               </div>
-              <div className="text-xs text-dark-400">
+              <div className="text-[13px] text-dark-400">
                 {t('admin.graceAccess.limits.resetTrafficDesc')}
               </div>
               {lockNote('reset_traffic_on_start')}
@@ -970,7 +976,7 @@ export default function AdminGraceAccess() {
                 <div className="text-sm font-medium text-dark-100">
                   {t(`admin.graceAccess.notifications.${field}`)}
                 </div>
-                <div className="text-xs text-dark-400">
+                <div className="text-[13px] text-dark-400">
                   {t(`admin.graceAccess.notifications.${field}Desc`)}
                 </div>
                 {lockNote(field)}
@@ -1038,7 +1044,7 @@ export default function AdminGraceAccess() {
               <div className="text-sm font-medium text-dark-100">
                 {t('admin.graceAccess.coverage.paid')}
               </div>
-              <div className="text-xs text-dark-400">
+              <div className="text-[13px] text-dark-400">
                 {t('admin.graceAccess.coverage.paidDesc')}
               </div>
             </div>
@@ -1052,7 +1058,7 @@ export default function AdminGraceAccess() {
                 <div className="text-sm font-medium text-dark-100">
                   {t(`admin.graceAccess.coverage.${field}`)}
                 </div>
-                <div className="text-xs text-dark-400">
+                <div className="text-[13px] text-dark-400">
                   {t(`admin.graceAccess.coverage.${field}Desc`)}
                 </div>
                 {lockNote(field)}
@@ -1093,7 +1099,9 @@ export default function AdminGraceAccess() {
               <FieldLabel htmlFor="grace-external-squad">
                 {t('admin.graceAccess.fields.external_squad_uuid')}
               </FieldLabel>
-              <p className="mb-2 text-xs text-dark-400">{t('admin.graceAccess.external.hint')}</p>
+              <p className="mb-2 text-[13px] text-dark-400">
+                {t('admin.graceAccess.external.hint')}
+              </p>
               <DropdownSelect
                 id="grace-external-squad"
                 value={externalChoice}
@@ -1145,7 +1153,7 @@ export default function AdminGraceAccess() {
               <h3 className="text-sm font-medium text-dark-200">
                 {t('admin.graceAccess.reconcile.background')}
               </h3>
-              <p className="mt-0.5 text-xs text-dark-400">
+              <p className="mt-0.5 text-[13px] text-dark-400">
                 {t('admin.graceAccess.reconcile.backgroundHint')}
               </p>
               <div className="mt-3 grid gap-4 sm:grid-cols-3">
@@ -1173,9 +1181,9 @@ export default function AdminGraceAccess() {
       <SessionsSection />
 
       <div className="sticky bottom-4 z-10">
-        <div className="rounded-2xl bg-dark-900/90 p-3 backdrop-blur">
+        <div className="rounded-3xl bg-dark-900/70 p-3 backdrop-blur">
           {(modeBlockers.length > 0 || emptyNumbers.length > 0 || externalIncomplete) && (
-            <ul className="mb-2 space-y-1 text-xs text-error-400">
+            <ul className="mb-2 space-y-1 text-[13px] text-error-400">
               {modeBlockers.map((issue) => (
                 <li key={`${issue.field}-${issue.code}`}>· {issueText(issue)}</li>
               ))}
@@ -1197,7 +1205,7 @@ export default function AdminGraceAccess() {
               )}
             </ul>
           )}
-          {saveError && <p className="mb-2 text-xs text-error-400">{saveError}</p>}
+          {saveError && <p className="mb-2 text-[13px] text-error-400">{saveError}</p>}
           <div className="flex items-center gap-3">
             <button
               type="button"
@@ -1219,7 +1227,9 @@ export default function AdminGraceAccess() {
             >
               {t('admin.graceAccess.discard')}
             </button>
-            {dirty && <span className="text-xs text-dark-400">{t('admin.graceAccess.dirty')}</span>}
+            {dirty && (
+              <span className="text-[13px] text-dark-400">{t('admin.graceAccess.dirty')}</span>
+            )}
           </div>
         </div>
       </div>

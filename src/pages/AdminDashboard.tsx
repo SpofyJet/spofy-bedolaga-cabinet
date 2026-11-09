@@ -71,7 +71,7 @@ function NodeCard({ node, onRestart, onToggle, isLoading }: NodeCardProps) {
 
   return (
     <div
-      className={`rounded-xl bg-dark-800/50 ${node.is_disabled ? 'border-dark-700' : node.is_connected ? 'border-success-500/30' : 'border-error-500/30'} p-4 transition-colors`}
+      className={`rounded-3xl bg-dark-900/70 ${node.is_disabled ? 'border-dark-700' : node.is_connected ? 'border-success-500/30' : 'border-error-500/30'} p-4 transition-colors`}
     >
       <div className="mb-3 flex items-start justify-between gap-2">
         <div className="flex min-w-0 items-center gap-3">
@@ -80,7 +80,7 @@ function NodeCard({ node, onRestart, onToggle, isLoading }: NodeCardProps) {
           />
           <div className="min-w-0">
             <div className="font-medium text-dark-100 [overflow-wrap:anywhere]">{node.name}</div>
-            <div className="text-xs text-dark-500 break-all">{node.address}</div>
+            <div className="text-[13px] text-dark-500 break-all">{node.address}</div>
           </div>
         </div>
         <span
@@ -92,7 +92,7 @@ function NodeCard({ node, onRestart, onToggle, isLoading }: NodeCardProps) {
 
       {/* Xray Version & Uptime */}
       {(node.versions?.xray || node.xray_uptime > 0) && (
-        <div className="mb-3 flex items-center gap-3 text-xs">
+        <div className="mb-3 flex items-center gap-3 text-[13px]">
           {node.versions?.xray && (
             <span className="rounded bg-dark-700/50 px-2 py-1 text-dark-300">
               Xray {node.versions.xray}
@@ -109,20 +109,22 @@ function NodeCard({ node, onRestart, onToggle, isLoading }: NodeCardProps) {
         <div className="mb-3 rounded-lg border border-error-500/20 bg-error-500/10 p-2">
           <div className="flex items-start gap-2">
             <ExclamationIcon className="h-4 w-4" />
-            <span className="break-all text-xs text-error-400">{node.last_status_message}</span>
+            <span className="break-all text-[13px] text-error-400">{node.last_status_message}</span>
           </div>
         </div>
       )}
 
       <div className="mb-3 grid grid-cols-2 gap-3">
         <div className="rounded-lg bg-dark-900/50 p-2.5">
-          <div className="mb-0.5 text-xs text-dark-500">
+          <div className="mb-0.5 text-[13px] text-dark-500">
             {t('adminDashboard.nodes.usersOnline')}
           </div>
           <div className="text-lg font-semibold text-dark-100">{node.users_online}</div>
         </div>
         <div className="rounded-lg bg-dark-900/50 p-2.5">
-          <div className="mb-0.5 text-xs text-dark-500">{t('adminDashboard.nodes.traffic')}</div>
+          <div className="mb-0.5 text-[13px] text-dark-500">
+            {t('adminDashboard.nodes.traffic')}
+          </div>
           <div className="text-lg font-semibold text-dark-100">
             {formatTraffic(node.traffic_used_bytes)}
           </div>
@@ -301,13 +303,15 @@ export default function AdminDashboard() {
           {!capabilities.hasBackButton && (
             <button
               onClick={() => navigate('/admin')}
-              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-dark-800 transition-colors"
+              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-dark-900/70 transition-colors"
             >
               <BackIcon />
             </button>
           )}
           <div>
-            <h1 className="text-2xl font-bold text-dark-100">{t('adminDashboard.title')}</h1>
+            <h1 className="text-xl font-bold tracking-tight text-dark-50 sm:text-2xl">
+              {t('adminDashboard.title')}
+            </h1>
             <p className="text-dark-400">{t('adminDashboard.subtitle')}</p>
           </div>
         </div>
@@ -351,7 +355,7 @@ export default function AdminDashboard() {
       </div>
 
       {/* Nodes Section */}
-      <div className="rounded-xl bg-dark-800/30 p-5">
+      <div className="rounded-3xl bg-dark-900/70 p-5">
         <div className="mb-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="rounded-lg bg-accent-500/20 p-2.5 text-accent-400">
@@ -368,15 +372,15 @@ export default function AdminDashboard() {
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <span className="flex items-center gap-1.5 text-xs text-dark-400">
+            <span className="flex items-center gap-1.5 text-[13px] text-dark-400">
               <span className="h-2 w-2 rounded-full bg-success-500"></span>
               {stats?.nodes.online || 0}
             </span>
-            <span className="flex items-center gap-1.5 text-xs text-dark-400">
+            <span className="flex items-center gap-1.5 text-[13px] text-dark-400">
               <span className="h-2 w-2 rounded-full bg-error-500"></span>
               {stats?.nodes.offline || 0}
             </span>
-            <span className="flex items-center gap-1.5 text-xs text-dark-400">
+            <span className="flex items-center gap-1.5 text-[13px] text-dark-400">
               <span className="h-2 w-2 rounded-full bg-dark-500"></span>
               {stats?.nodes.disabled || 0}
             </span>
@@ -420,7 +424,7 @@ export default function AdminDashboard() {
       {/* Revenue and Subscriptions */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         {/* Revenue Chart */}
-        <div className="rounded-xl bg-dark-800/30 p-5">
+        <div className="rounded-3xl bg-dark-900/70 p-5">
           <div className="mb-4 flex items-center gap-3">
             <div className="rounded-lg bg-warning-500/20 p-2.5 text-warning-400">
               <ChartBarIcon />
@@ -450,7 +454,7 @@ export default function AdminDashboard() {
         </div>
 
         {/* Subscription Stats */}
-        <div className="rounded-xl bg-dark-800/30 p-5">
+        <div className="rounded-3xl bg-dark-900/70 p-5">
           <div className="mb-4 flex items-center gap-3">
             <div className="rounded-lg bg-accent-500/20 p-2.5 text-accent-400">
               <SparklesIcon />
@@ -535,7 +539,7 @@ export default function AdminDashboard() {
 
       {/* Tariff Stats */}
       {stats?.tariff_stats && stats.tariff_stats.tariffs.length > 0 && (
-        <div className="rounded-xl bg-dark-800/30 p-5">
+        <div className="rounded-3xl bg-dark-900/70 p-5">
           <div className="mb-4 flex items-center gap-3">
             <div className="rounded-lg bg-success-500/20 p-2.5 text-success-400">
               <TagIcon />
@@ -552,22 +556,22 @@ export default function AdminDashboard() {
             <table className="w-full">
               <thead>
                 <tr className="border-b border-dark-700">
-                  <th className="px-2 py-3 text-left text-xs font-medium text-dark-500">
+                  <th className="px-2 py-3 text-left text-[13px] font-medium text-dark-500">
                     {t('adminDashboard.tariffs.tariffName')}
                   </th>
-                  <th className="px-2 py-3 text-center text-xs font-medium text-dark-500">
+                  <th className="px-2 py-3 text-center text-[13px] font-medium text-dark-500">
                     {t('adminDashboard.tariffs.activeSubscriptions')}
                   </th>
-                  <th className="px-2 py-3 text-center text-xs font-medium text-dark-500">
+                  <th className="px-2 py-3 text-center text-[13px] font-medium text-dark-500">
                     {t('adminDashboard.tariffs.trialSubscriptions')}
                   </th>
-                  <th className="px-2 py-3 text-center text-xs font-medium text-dark-500">
+                  <th className="px-2 py-3 text-center text-[13px] font-medium text-dark-500">
                     {t('adminDashboard.tariffs.purchasedToday')}
                   </th>
-                  <th className="px-2 py-3 text-center text-xs font-medium text-dark-500">
+                  <th className="px-2 py-3 text-center text-[13px] font-medium text-dark-500">
                     {t('adminDashboard.tariffs.purchasedWeek')}
                   </th>
-                  <th className="px-2 py-3 text-center text-xs font-medium text-dark-500">
+                  <th className="px-2 py-3 text-center text-[13px] font-medium text-dark-500">
                     {t('adminDashboard.tariffs.purchasedMonth')}
                   </th>
                 </tr>
@@ -612,7 +616,7 @@ export default function AdminDashboard() {
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         {/* Top Referrers */}
         {referrers && (referrers.by_earnings.length > 0 || referrers.by_invited.length > 0) && (
-          <div className="rounded-xl bg-dark-800/30 p-4 sm:p-5">
+          <div className="rounded-3xl bg-dark-900/70 p-4 sm:p-5">
             <div className="mb-4 flex items-center justify-between">
               <div className="flex items-center gap-2 sm:gap-3">
                 <div className="rounded-lg bg-accent-500/20 p-2 text-accent-400 sm:p-2.5">
@@ -622,7 +626,7 @@ export default function AdminDashboard() {
                   <h2 className="text-base font-semibold text-dark-100 sm:text-lg">
                     {t('adminDashboard.topReferrers.title')}
                   </h2>
-                  <p className="text-xs text-dark-400 sm:text-sm">
+                  <p className="text-[13px] text-dark-400 sm:text-sm">
                     {referrers.total_referrers}{' '}
                     {t('adminDashboard.topReferrers.stats', { count: referrers.total_referrals })}
                   </p>
@@ -634,7 +638,7 @@ export default function AdminDashboard() {
             <div className="mb-4 flex gap-2">
               <button
                 onClick={() => setReferrersTab('earnings')}
-                className={`rounded-lg px-2 py-1.5 text-xs font-medium transition-colors sm:px-3 sm:text-sm ${
+                className={`rounded-lg px-2 py-1.5 text-[13px] font-medium transition-colors sm:px-3 sm:text-sm ${
                   referrersTab === 'earnings'
                     ? 'bg-accent-500/20 text-accent-400'
                     : 'bg-dark-700/50 text-dark-400 hover:text-dark-200'
@@ -644,7 +648,7 @@ export default function AdminDashboard() {
               </button>
               <button
                 onClick={() => setReferrersTab('invited')}
-                className={`rounded-lg px-2 py-1.5 text-xs font-medium transition-colors sm:px-3 sm:text-sm ${
+                className={`rounded-lg px-2 py-1.5 text-[13px] font-medium transition-colors sm:px-3 sm:text-sm ${
                   referrersTab === 'invited'
                     ? 'bg-accent-500/20 text-accent-400'
                     : 'bg-dark-700/50 text-dark-400 hover:text-dark-200'
@@ -667,7 +671,7 @@ export default function AdminDashboard() {
                         {idx + 1}
                       </span>
                       <div className="min-w-0">
-                        <div className="truncate text-xs font-medium text-dark-100 sm:text-sm">
+                        <div className="truncate text-[13px] font-medium text-dark-100 sm:text-sm">
                           {ref.display_name}
                         </div>
                         {ref.username && (
@@ -680,7 +684,7 @@ export default function AdminDashboard() {
                     <div className="flex-shrink-0 text-right">
                       {referrersTab === 'earnings' ? (
                         <>
-                          <div className="text-xs font-semibold text-success-400 sm:text-sm">
+                          <div className="text-[13px] font-semibold text-success-400 sm:text-sm">
                             {formatAmount(ref.earnings_total_kopeks / 100)}
                             {'\u00A0'}
                             {currencySymbol}
@@ -691,7 +695,7 @@ export default function AdminDashboard() {
                         </>
                       ) : (
                         <>
-                          <div className="text-xs font-semibold text-accent-400 sm:text-sm">
+                          <div className="text-[13px] font-semibold text-accent-400 sm:text-sm">
                             {ref.invited_count} {t('adminDashboard.topReferrers.people')}
                           </div>
                           <div className="text-[10px] text-dark-500 sm:text-xs">
@@ -747,7 +751,7 @@ export default function AdminDashboard() {
 
         {/* Top Campaigns */}
         {campaigns && campaigns.campaigns.length > 0 && (
-          <div className="rounded-xl bg-dark-800/30 p-4 sm:p-5">
+          <div className="rounded-3xl bg-dark-900/70 p-4 sm:p-5">
             <div className="mb-4 flex items-center gap-2 sm:gap-3">
               <div className="rounded-lg bg-warning-500/20 p-2 text-warning-400 sm:p-2.5">
                 <MegaphoneIcon />
@@ -756,7 +760,7 @@ export default function AdminDashboard() {
                 <h2 className="text-base font-semibold text-dark-100 sm:text-lg">
                   {t('adminDashboard.topCampaigns.title')}
                 </h2>
-                <p className="text-xs text-dark-400 sm:text-sm">
+                <p className="text-[13px] text-dark-400 sm:text-sm">
                   {campaigns.total_campaigns}{' '}
                   {t('adminDashboard.topCampaigns.stats', { count: campaigns.total_registrations })}
                 </p>
@@ -774,7 +778,7 @@ export default function AdminDashboard() {
                       {idx + 1}
                     </span>
                     <div className="min-w-0">
-                      <div className="truncate text-xs font-medium text-dark-100 sm:text-sm">
+                      <div className="truncate text-[13px] font-medium text-dark-100 sm:text-sm">
                         {campaign.name}
                       </div>
                       <div className="truncate text-[10px] text-dark-500 sm:text-xs">
@@ -783,7 +787,7 @@ export default function AdminDashboard() {
                     </div>
                   </div>
                   <div className="flex-shrink-0 text-right">
-                    <div className="text-xs font-semibold text-warning-400 sm:text-sm">
+                    <div className="text-[13px] font-semibold text-warning-400 sm:text-sm">
                       {formatAmount(campaign.total_revenue_kopeks / 100)}
                       {'\u00A0'}
                       {currencySymbol}
@@ -798,7 +802,7 @@ export default function AdminDashboard() {
 
             <div className="mt-4 border-t border-dark-700 pt-4">
               <div className="flex items-center justify-between">
-                <span className="text-xs text-dark-400 sm:text-sm">
+                <span className="text-[13px] text-dark-400 sm:text-sm">
                   {t('adminDashboard.topCampaigns.total')}
                 </span>
                 <span className="text-sm font-bold text-warning-400 sm:text-base">
@@ -814,7 +818,7 @@ export default function AdminDashboard() {
 
       {/* Recent Payments */}
       {payments && payments.payments.length > 0 && (
-        <div className="rounded-xl bg-dark-800/30 p-4 sm:p-5">
+        <div className="rounded-3xl bg-dark-900/70 p-4 sm:p-5">
           <div className="mb-4 flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="rounded-lg bg-success-500/20 p-2 text-success-400 sm:p-2.5">
@@ -824,7 +828,7 @@ export default function AdminDashboard() {
                 <h2 className="text-base font-semibold text-dark-100 sm:text-lg">
                   {t('adminDashboard.recentPayments.title')}
                 </h2>
-                <p className="text-xs text-dark-400 sm:text-sm">
+                <p className="text-[13px] text-dark-400 sm:text-sm">
                   {t('adminDashboard.recentPayments.today', {
                     amount: `${formatAmount(payments.total_today_kopeks / 100)}\u00A0${currencySymbol}`,
                   })}
@@ -845,19 +849,19 @@ export default function AdminDashboard() {
             <table className="w-full">
               <thead>
                 <tr className="border-b border-dark-700">
-                  <th className="px-2 py-3 text-left text-xs font-medium text-dark-500">
+                  <th className="px-2 py-3 text-left text-[13px] font-medium text-dark-500">
                     {t('adminDashboard.table.user')}
                   </th>
-                  <th className="px-2 py-3 text-left text-xs font-medium text-dark-500">
+                  <th className="px-2 py-3 text-left text-[13px] font-medium text-dark-500">
                     {t('adminDashboard.table.type')}
                   </th>
-                  <th className="px-2 py-3 text-right text-xs font-medium text-dark-500">
+                  <th className="px-2 py-3 text-right text-[13px] font-medium text-dark-500">
                     {t('adminDashboard.table.amount')}
                   </th>
-                  <th className="px-2 py-3 text-left text-xs font-medium text-dark-500">
+                  <th className="px-2 py-3 text-left text-[13px] font-medium text-dark-500">
                     {t('adminDashboard.table.method')}
                   </th>
-                  <th className="px-2 py-3 text-right text-xs font-medium text-dark-500">
+                  <th className="px-2 py-3 text-right text-[13px] font-medium text-dark-500">
                     {t('adminDashboard.table.date')}
                   </th>
                 </tr>
@@ -879,7 +883,7 @@ export default function AdminDashboard() {
                           {payment.display_name}
                         </div>
                         {payment.username && (
-                          <div className="text-xs text-dark-500">@{payment.username}</div>
+                          <div className="text-[13px] text-dark-500">@{payment.username}</div>
                         )}
                       </button>
                     </td>
@@ -902,14 +906,14 @@ export default function AdminDashboard() {
                       </span>
                     </td>
                     <td className="px-2 py-3">
-                      <span className="text-xs text-dark-400">
+                      <span className="text-[13px] text-dark-400">
                         {payment.payment_method
                           ? (METHOD_LABELS[payment.payment_method] ?? payment.payment_method)
                           : '-'}
                       </span>
                     </td>
                     <td className="px-2 py-3 text-right">
-                      <span className="text-xs text-dark-400">
+                      <span className="text-[13px] text-dark-400">
                         {new Date(payment.created_at).toLocaleString('ru-RU', {
                           day: '2-digit',
                           month: '2-digit',
@@ -927,7 +931,7 @@ export default function AdminDashboard() {
           {/* Mobile Cards */}
           <div className="space-y-2 md:hidden">
             {payments.payments.slice(0, 10).map((payment) => (
-              <div key={payment.id} className="rounded-lg bg-dark-900/50 p-3">
+              <div key={payment.id} className="rounded-2xl bg-dark-900/50 p-3">
                 <div className="mb-2 flex items-center justify-between">
                   <div className="flex min-w-0 flex-1 items-center gap-2">
                     <button
@@ -943,7 +947,7 @@ export default function AdminDashboard() {
                     {currencySymbol}
                   </span>
                 </div>
-                <div className="flex items-center justify-between gap-2 text-xs text-dark-500">
+                <div className="flex items-center justify-between gap-2 text-[13px] text-dark-500">
                   <span className="flex min-w-0 items-center gap-2">
                     <span
                       className={`shrink-0 whitespace-nowrap rounded-full px-1.5 py-0.5 text-[10px] ${
@@ -977,7 +981,7 @@ export default function AdminDashboard() {
 
       {/* System Info */}
       {systemInfo && (
-        <div className="rounded-xl bg-dark-800 p-4">
+        <div className="rounded-3xl bg-dark-900/70 p-4">
           <h3 className="mb-3 text-sm font-semibold text-dark-300">
             {t('adminDashboard.systemInfo.title')}
           </h3>

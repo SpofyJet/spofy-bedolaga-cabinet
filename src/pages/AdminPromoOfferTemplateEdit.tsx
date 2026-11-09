@@ -115,7 +115,7 @@ export default function AdminPromoOfferTemplateEdit() {
       <div className="animate-fade-in">
         <div className="mb-6 flex items-center gap-3">
           <AdminBackButton to="/admin/promo-offers" />
-          <h1 className="text-xl font-semibold text-dark-100">
+          <h1 className="text-xl font-bold tracking-tight text-dark-50 sm:text-2xl">
             {t('admin.promoOffers.form.editTemplate')}
           </h1>
         </div>
@@ -133,7 +133,7 @@ export default function AdminPromoOfferTemplateEdit() {
         <AdminBackButton to="/admin/promo-offers" />
         <div className="flex items-center gap-3">
           <span className="text-2xl">{getOfferTypeIcon(template.offer_type)}</span>
-          <h1 className="text-xl font-semibold text-dark-100">
+          <h1 className="text-xl font-bold tracking-tight text-dark-50 sm:text-2xl">
             {t('admin.promoOffers.form.editTemplate')}
           </h1>
         </div>
@@ -141,7 +141,7 @@ export default function AdminPromoOfferTemplateEdit() {
 
       {/* Form */}
       <div className="mx-auto max-w-2xl space-y-6">
-        <div className="rounded-xl bg-dark-800 p-6">
+        <div className="rounded-3xl bg-dark-900/70 p-6">
           <div className="space-y-4">
             <div>
               <label
@@ -211,7 +211,7 @@ export default function AdminPromoOfferTemplateEdit() {
                   min={1}
                   placeholder="0"
                 />
-                <p className="mt-1 text-xs text-dark-500">
+                <p className="mt-1 text-[13px] text-dark-500">
                   {t('admin.promoOffers.form.activationTime')}
                 </p>
               </div>
@@ -256,7 +256,7 @@ export default function AdminPromoOfferTemplateEdit() {
                     min={0}
                     placeholder="0"
                   />
-                  <p className="mt-1 text-xs text-dark-500">
+                  <p className="mt-1 text-[13px] text-dark-500">
                     {t('admin.promoOffers.form.defaultZero')}
                   </p>
                 </div>
@@ -305,7 +305,7 @@ export default function AdminPromoOfferTemplateEdit() {
                     </p>
                   )}
                   {selectedSquadUuids.length === 0 && (
-                    <p className="mt-1 text-xs text-warning-400">
+                    <p className="mt-1 text-[13px] text-warning-400">
                       {t(
                         'admin.promoOffers.form.selectSquadHint',
                         'Выберите хотя бы один сервер для тестового доступа',
@@ -331,7 +331,7 @@ export default function AdminPromoOfferTemplateEdit() {
                   min={0}
                   placeholder="0"
                 />
-                <p className="mt-1 text-xs text-dark-500">
+                <p className="mt-1 text-[13px] text-dark-500">
                   {t('admin.promoOffers.form.discountDurationHint')}
                 </p>
               </div>

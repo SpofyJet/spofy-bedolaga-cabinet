@@ -35,13 +35,15 @@ export default function AdminReminders() {
       <div className="flex items-center justify-between gap-3">
         <div className="flex items-center gap-3">
           <AdminBackButton />
-          <h1 className="text-xl font-bold text-dark-50">{t('admin.reminders.title')}</h1>
+          <h1 className="text-xl font-bold tracking-tight text-dark-50 sm:text-2xl">
+            {t('admin.reminders.title')}
+          </h1>
         </div>
         <PermissionGate permission="user_reminders:create">
           <button
             type="button"
             onClick={() => navigate('/admin/reminders/create')}
-            className="flex items-center gap-2 rounded-xl bg-accent-500 px-4 py-2 text-sm font-medium text-white"
+            className="flex items-center gap-2 rounded-2xl bg-cta-500 px-4 py-2 text-sm font-medium text-on-cta"
           >
             <PlusIcon /> {t('admin.reminders.create')}
           </button>
@@ -71,11 +73,11 @@ export default function AdminReminders() {
         {data.map((r) => (
           <div
             key={r.id}
-            className={`rounded-xl p-4 ${r.is_active ? 'border-success-500/50 bg-success-500/5' : 'border-dark-700 bg-dark-800/50'}`}
+            className={`rounded-3xl p-4 ${r.is_active ? 'border-success-500/50 bg-success-500/5' : 'border-dark-700 bg-dark-900/70'}`}
           >
             <div className="flex items-start justify-between gap-3">
               <div className="min-w-0 flex-1">
-                <div className="mb-1 flex flex-wrap items-center gap-2 text-xs">
+                <div className="mb-1 flex flex-wrap items-center gap-2 text-[13px]">
                   <span
                     className={`rounded-full px-2 py-1 ${r.is_active ? 'bg-success-500/20 text-success-400' : 'bg-dark-500/20 text-dark-400'}`}
                   >
@@ -91,7 +93,7 @@ export default function AdminReminders() {
                   </span>
                 </div>
                 <div className="font-medium text-dark-50">{r.name}</div>
-                <div className="mt-1 text-xs text-dark-400">
+                <div className="mt-1 text-[13px] text-dark-400">
                   {t('admin.reminders.stats', {
                     sent: r.stats.sent_total,
                     dismissed: r.stats.dismissed_total,
@@ -105,7 +107,7 @@ export default function AdminReminders() {
                   <button
                     type="button"
                     onClick={() => toggle.mutate(r.id)}
-                    className="rounded-lg bg-dark-700 px-3 py-1 text-xs text-dark-100"
+                    className="rounded-lg bg-dark-700 px-3 py-1 text-[13px] text-dark-100"
                   >
                     {t(r.is_active ? 'admin.reminders.disable' : 'admin.reminders.enable')}
                   </button>

@@ -149,10 +149,10 @@ export default function AdminSalesStats() {
       <div className="flex items-center gap-3">
         <AdminBackButton />
         <div>
-          <h1 className="text-xl font-bold text-dark-100 sm:text-2xl">
+          <h1 className="text-xl font-bold tracking-tight text-dark-50 sm:text-2xl">
             {t('admin.salesStats.title')}
           </h1>
-          <p className="text-sm text-dark-400">{t('admin.salesStats.subtitle')}</p>
+          <p className="mt-0.5 text-[13px] text-dark-400">{t('admin.salesStats.subtitle')}</p>
         </div>
       </div>
 
@@ -264,7 +264,7 @@ export default function AdminSalesStats() {
             aria-selected={activeTab === tab.id}
             aria-controls={`panel-${tab.id}`}
             onClick={() => setActiveTab(tab.id)}
-            className={`shrink-0 whitespace-nowrap rounded-lg px-3 py-2.5 text-xs font-medium transition-colors sm:text-sm ${
+            className={`shrink-0 whitespace-nowrap rounded-lg px-3 py-2.5 text-[13px] font-medium transition-colors sm:text-sm ${
               activeTab === tab.id
                 ? 'bg-dark-700/60 text-dark-100'
                 : 'text-dark-400 hover:text-dark-300'

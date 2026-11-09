@@ -55,10 +55,12 @@ export default function AdminReachability() {
         </div>
         <div className="min-w-0">
           <div className="flex flex-wrap items-center gap-2">
-            <h1 className="text-xl font-bold text-dark-50">{t('admin.reachability.title')}</h1>
+            <h1 className="text-xl font-bold tracking-tight text-dark-50 sm:text-2xl">
+              {t('admin.reachability.title')}
+            </h1>
             {status?.tier && ready && <TierBadge tier={status.tier} />}
           </div>
-          <p className="text-xs text-dark-400">{t('admin.reachability.subtitle')}</p>
+          <p className="text-[13px] text-dark-400">{t('admin.reachability.subtitle')}</p>
         </div>
         <div className="ms-auto flex items-center gap-4">
           {isLoading && <Skeleton className="h-6 w-28" />}

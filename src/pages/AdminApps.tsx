@@ -45,12 +45,14 @@ export default function AdminApps() {
         {!capabilities.hasBackButton && (
           <button
             onClick={() => navigate('/admin')}
-            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-dark-800 transition-colors"
+            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-dark-900/70 transition-colors"
           >
             <BackIcon className="h-5 w-5 text-dark-400" />
           </button>
         )}
-        <h1 className="text-2xl font-bold text-dark-50 sm:text-3xl">{t('admin.apps.title')}</h1>
+        <h1 className="text-xl font-bold tracking-tight text-dark-50 sm:text-2xl">
+          {t('admin.apps.title')}
+        </h1>
       </div>
 
       {/* Status card */}
@@ -66,7 +68,7 @@ export default function AdminApps() {
           </span>
         </div>
         {status?.config_uuid && (
-          <div className="mt-2 truncate font-mono text-xs text-dark-500">
+          <div className="mt-2 truncate font-mono text-[13px] text-dark-500">
             UUID: {status.config_uuid}
           </div>
         )}
@@ -91,14 +93,14 @@ export default function AdminApps() {
                     setUuidMutation.mutate(config.uuid);
                   }
                 }}
-                className={`w-full rounded-lg border p-4 text-left transition-colors ${
+                className={`w-full rounded-3xl border p-4 text-left transition-colors ${
                   currentUuid === config.uuid
                     ? 'border-accent-500 bg-accent-500/10'
-                    : 'border-dark-700 bg-dark-800/50 hover:border-dark-600'
+                    : 'border-dark-700 bg-dark-900/70 hover:border-dark-600'
                 }`}
               >
                 <div className="font-medium text-dark-100">{config.name}</div>
-                <div className="mt-1 font-mono text-xs text-dark-500">{config.uuid}</div>
+                <div className="mt-1 font-mono text-[13px] text-dark-500">{config.uuid}</div>
               </button>
             ))}
           </div>

@@ -135,7 +135,7 @@ export function GeoCheckReport({
                 onClick={() => setTab(item.id)}
                 aria-pressed={tab === item.id}
                 className={cn(
-                  'flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-colors',
+                  'flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-[13px] font-medium transition-colors',
                   tab === item.id
                     ? 'bg-accent-500/20 text-accent-400'
                     : 'text-dark-400 hover:bg-dark-700/50 hover:text-dark-200',
@@ -204,7 +204,7 @@ export function GeoCheckReport({
       </div>
 
       {result.message && (
-        <p className="mt-3 rounded-xl bg-warning-500/10 px-3 py-2 text-xs text-warning-400">
+        <p className="mt-3 rounded-xl bg-warning-500/10 px-3 py-2 text-[13px] text-warning-400">
           {result.message}
         </p>
       )}

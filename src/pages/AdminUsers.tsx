@@ -188,7 +188,9 @@ export default function AdminUsers() {
             <UsersIcon className="h-5 w-5" />
           </div>
           <div className="min-w-0">
-            <h1 className="text-xl font-bold text-dark-100">{t('admin.users.title')}</h1>
+            <h1 className="text-xl font-bold tracking-tight text-dark-50 sm:text-2xl">
+              {t('admin.users.title')}
+            </h1>
             {summaryStats ? (
               <>
                 <p className="hidden text-sm tabular-nums text-dark-400 sm:block">

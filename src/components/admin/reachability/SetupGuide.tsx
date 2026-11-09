@@ -61,7 +61,7 @@ export function SetupGuide({ status }: SetupGuideProps) {
               <span className="block text-sm font-medium text-dark-100">
                 {t(`admin.reachability.setup.${step.key}`)}
               </span>
-              <span className="block text-xs text-dark-400">
+              <span className="block text-[13px] text-dark-400">
                 {t(`admin.reachability.setup.${step.key}Hint`)}
               </span>
             </span>
@@ -80,7 +80,7 @@ export function SetupGuide({ status }: SetupGuideProps) {
           {t('admin.reachability.setup.openSite')}
         </button>
       </div>
-      <p className="mt-3 text-xs text-dark-400">{t('admin.reachability.setup.envNote')}</p>
+      <p className="mt-3 text-[13px] text-dark-400">{t('admin.reachability.setup.envNote')}</p>
     </section>
   );
 }

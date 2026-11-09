@@ -96,7 +96,7 @@ export function DevicesCard({
             type="button"
             onClick={resetAll}
             disabled={busy}
-            className="btn-secondary min-h-0 px-3 py-1.5 text-xs"
+            className="btn-secondary min-h-0 px-3 py-1.5 text-[13px]"
           >
             {t(`${ns}.devices.resetAll`)}
           </button>
@@ -150,7 +150,7 @@ export function DevicesCard({
                       {deviceDisplayName(device)}
                     </div>
                   )}
-                  <div className="mt-0.5 truncate text-xs text-dark-500">
+                  <div className="mt-0.5 truncate text-[13px] text-dark-500">
                     {subtitle.join(' · ')}
                   </div>
                 </div>

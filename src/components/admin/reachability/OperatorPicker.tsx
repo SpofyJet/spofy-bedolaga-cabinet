@@ -132,7 +132,7 @@ export function OperatorPicker({ kind, units, selected, onChange, loading }: Ope
         >
           <ModeDot dpi="on" />
           {t(`${base}.bs`)}{' '}
-          <span className="text-xs tabular-nums text-dark-400">{bsKeys.length}</span>
+          <span className="text-[13px] tabular-nums text-dark-400">{bsKeys.length}</span>
         </button>
         <button
           type="button"
@@ -143,7 +143,7 @@ export function OperatorPicker({ kind, units, selected, onChange, loading }: Ope
         >
           <ModeDot dpi="off" />
           {t(`${base}.regular`)}{' '}
-          <span className="text-xs tabular-nums text-dark-400">{regularKeys.length}</span>
+          <span className="text-[13px] tabular-nums text-dark-400">{regularKeys.length}</span>
         </button>
         {recalled.length > 0 && (
           <button
@@ -198,7 +198,7 @@ function DistrictRow({ district, selected, onToggleDistrict, onToggleUnit }: Dis
       >
         <CheckGlyph on={state === 'all'} mixed={state === 'some'} />
         <span className="text-sm font-semibold text-dark-100">{district.label}</span>
-        <span className="text-xs tabular-nums text-dark-500">
+        <span className="text-[13px] tabular-nums text-dark-500">
           {chosen}/{alive.length}
         </span>
       </button>

@@ -67,7 +67,7 @@ function SortableTariffCard({
     <div
       ref={setNodeRef}
       style={style}
-      className={`rounded-xl border bg-dark-800 p-4 transition-colors ${
+      className={`rounded-3xl border bg-dark-900/70 p-4 transition-colors ${
         isDragging
           ? 'border-accent-500/50 shadow-xl shadow-accent-500/20'
           : tariff.is_active
@@ -101,7 +101,7 @@ function SortableTariffCard({
                 )}
                 {tariff.panel_tag && (
                   <span
-                    className="rounded bg-dark-600 px-2 py-0.5 font-mono text-xs text-dark-200"
+                    className="rounded bg-dark-600 px-2 py-0.5 text-xs text-dark-200"
                     title={t('admin.tariffs.panelTagLabel')}
                   >
                     {tariff.panel_tag}
@@ -310,14 +310,16 @@ export default function AdminTariffs() {
           {!capabilities.hasBackButton && (
             <button
               onClick={() => navigate('/admin')}
-              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-dark-800 transition-colors"
+              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-dark-900/70 transition-colors"
             >
               <BackIcon />
             </button>
           )}
           <div>
-            <h1 className="text-xl font-bold text-dark-100">{t('admin.tariffs.title')}</h1>
-            <p className="text-sm text-dark-400">{t('admin.tariffs.subtitle')}</p>
+            <h1 className="text-xl font-bold tracking-tight text-dark-50 sm:text-2xl">
+              {t('admin.tariffs.title')}
+            </h1>
+            <p className="mt-0.5 text-[13px] text-dark-400">{t('admin.tariffs.subtitle')}</p>
           </div>
         </div>
         <div className="flex items-center gap-2">
@@ -337,7 +339,7 @@ export default function AdminTariffs() {
           )}
           <button
             onClick={() => navigate('/admin/tariffs/create')}
-            className="flex items-center justify-center gap-2 rounded-lg bg-accent-500 px-4 py-2 text-on-accent transition-colors hover:bg-accent-600"
+            className="flex items-center justify-center gap-2 rounded-2xl bg-cta-500 px-4 py-2 text-on-cta transition-colors hover:bg-cta-600"
           >
             <PlusIcon />
             {t('admin.tariffs.create')}

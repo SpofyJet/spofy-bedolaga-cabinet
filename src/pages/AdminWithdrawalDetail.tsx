@@ -64,7 +64,7 @@ export default function AdminWithdrawalDetail() {
       <div className="animate-fade-in">
         <div className="mb-6 flex items-center gap-3">
           <AdminBackButton to="/admin/withdrawals" />
-          <h1 className="text-xl font-semibold text-dark-100">
+          <h1 className="text-xl font-bold tracking-tight text-dark-50 sm:text-2xl">
             {t('admin.withdrawals.detail.title')}
           </h1>
         </div>
@@ -97,7 +97,7 @@ export default function AdminWithdrawalDetail() {
         <div className="flex items-center gap-3">
           <AdminBackButton to="/admin/withdrawals" />
           <div>
-            <h1 className="text-xl font-semibold text-dark-100">
+            <h1 className="text-xl font-bold tracking-tight text-dark-50 sm:text-2xl">
               {t('admin.withdrawals.detail.title')} #{detail.id}
             </h1>
             <div className="mt-1 flex items-center gap-2">
@@ -114,7 +114,7 @@ export default function AdminWithdrawalDetail() {
 
       <div className="space-y-6">
         {/* User Info Section */}
-        <div className="rounded-xl bg-dark-800 p-4">
+        <div className="rounded-3xl bg-dark-900/70 p-4">
           <h3 className="mb-4 font-medium text-dark-200">
             {t('admin.withdrawals.detail.userInfo')}
           </h3>
@@ -139,9 +139,7 @@ export default function AdminWithdrawalDetail() {
               <div className="mb-1 text-sm text-dark-400">
                 {t('admin.withdrawals.detail.telegramId')}
               </div>
-              <div className="font-mono text-sm font-medium text-dark-200">
-                {detail.telegram_id ?? '-'}
-              </div>
+              <div className=" text-sm font-medium text-dark-200">{detail.telegram_id ?? '-'}</div>
             </div>
             <div className="rounded-lg bg-dark-700/50 p-3">
               <div className="mb-1 text-sm text-dark-400">
@@ -177,7 +175,7 @@ export default function AdminWithdrawalDetail() {
         </div>
 
         {/* Payment Details Section */}
-        <div className="rounded-xl bg-dark-800 p-4">
+        <div className="rounded-3xl bg-dark-900/70 p-4">
           <h3 className="mb-3 font-medium text-dark-200">
             {t('admin.withdrawals.detail.paymentDetails')}
           </h3>
@@ -189,7 +187,7 @@ export default function AdminWithdrawalDetail() {
         </div>
 
         {/* Risk Analysis Section */}
-        <div className="rounded-xl bg-dark-800 p-4">
+        <div className="rounded-3xl bg-dark-900/70 p-4">
           <h3 className="mb-4 font-medium text-dark-200">
             {t('admin.withdrawals.detail.riskAnalysis')}
           </h3>
@@ -247,7 +245,7 @@ export default function AdminWithdrawalDetail() {
                   </div>
                   <ul className="space-y-1.5">
                     {section.rows.map((row, index) => (
-                      <li key={`${section.id}-${index}`} className="text-xs">
+                      <li key={`${section.id}-${index}`} className="text-[13px]">
                         <div className="flex items-baseline justify-between gap-3">
                           <span className="min-w-0 text-dark-500 [overflow-wrap:anywhere]">
                             {row.label.key
@@ -281,7 +279,7 @@ export default function AdminWithdrawalDetail() {
 
         {/* Admin Comment Section */}
         {detail.admin_comment && (
-          <div className="rounded-xl bg-dark-800 p-4">
+          <div className="rounded-3xl bg-dark-900/70 p-4">
             <h3 className="mb-3 font-medium text-dark-200">
               {t('admin.withdrawals.detail.adminComment')}
             </h3>
@@ -293,7 +291,7 @@ export default function AdminWithdrawalDetail() {
 
         {/* Processed At */}
         {detail.processed_at && (
-          <div className="rounded-xl bg-dark-800 p-4">
+          <div className="rounded-3xl bg-dark-900/70 p-4">
             <div className="flex items-center justify-between">
               <span className="text-sm text-dark-400">
                 {t('admin.withdrawals.detail.processedAt')}
@@ -337,7 +335,7 @@ export default function AdminWithdrawalDetail() {
             <button
               onClick={() => completeMutation.mutate()}
               disabled={completeMutation.isPending}
-              className="w-full rounded-lg bg-accent-500 px-4 py-3 font-medium text-on-accent transition-colors hover:bg-accent-600 disabled:opacity-50"
+              className="w-full rounded-2xl bg-cta-500 px-4 py-3 font-medium text-on-cta transition-colors hover:bg-cta-600 disabled:opacity-50"
             >
               {completeMutation.isPending
                 ? t('admin.withdrawals.detail.completing')

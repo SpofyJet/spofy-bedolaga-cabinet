@@ -54,7 +54,7 @@ export function LinkAction({
       type="button"
       onClick={onClick}
       disabled={disabled}
-      className="btn-secondary min-h-0 shrink-0 gap-1 whitespace-nowrap px-2.5 py-1 text-xs"
+      className="btn-secondary min-h-0 shrink-0 gap-1 whitespace-nowrap px-2.5 py-1 text-[13px]"
     >
       {short ? (
         <>

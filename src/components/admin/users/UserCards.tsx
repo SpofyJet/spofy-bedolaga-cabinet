@@ -52,7 +52,7 @@ export function UserCards({ users, className }: UserCardsProps) {
                     <span className="sr-only">, {t('admin.users.connectedNow')}</span>
                   )}
                 </div>
-                <div className="truncate text-xs tabular-nums text-dark-500">
+                <div className="truncate text-[13px] tabular-nums text-dark-500">
                   {user.username ? `@${user.username} · ` : ''}
                   <span className="text-dark-400">{user.telegram_id}</span>
                 </div>
@@ -71,14 +71,16 @@ export function UserCards({ users, className }: UserCardsProps) {
                       {t('admin.users.moreTariffs', { count: extraTariffsCount(user) })}
                     </span>
                   )}
-                  {caption && <span className="shrink-0 text-xs text-dark-500">· {caption}</span>}
+                  {caption && (
+                    <span className="shrink-0 text-[13px] text-dark-500">· {caption}</span>
+                  )}
                 </div>
                 <TrafficBar usedGb={user.traffic_used_gb} limitGb={user.traffic_limit_gb} />
               </>
             )}
 
             <div className="flex items-center justify-between gap-3">
-              <RelativeTime value={user.last_activity} className="text-xs" />
+              <RelativeTime value={user.last_activity} className="text-[13px]" />
               <span
                 className={cn(
                   'text-sm font-medium tabular-nums',

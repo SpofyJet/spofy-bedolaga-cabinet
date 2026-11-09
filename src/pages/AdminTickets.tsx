@@ -291,12 +291,14 @@ export default function AdminTickets() {
           {!capabilities.hasBackButton && (
             <button
               onClick={() => navigate('/admin')}
-              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-dark-800 transition-colors"
+              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-dark-900/70 transition-colors"
             >
               <BackIcon />
             </button>
           )}
-          <h1 className="text-xl font-bold text-dark-100">{t('admin.tickets.title')}</h1>
+          <h1 className="text-xl font-bold tracking-tight text-dark-50 sm:text-2xl">
+            {t('admin.tickets.title')}
+          </h1>
         </div>
         <button
           onClick={() => navigate('/admin/tickets/settings')}
@@ -382,10 +384,10 @@ export default function AdminTickets() {
                     setReplyText('');
                     clearAttachments();
                   }}
-                  className={`w-full rounded-xl border p-4 text-left transition-all ${
+                  className={`w-full rounded-3xl border p-4 text-left transition-all ${
                     selectedTicketId === ticket.id
                       ? 'border-accent-500 bg-accent-500/10'
-                      : 'border-dark-700/50 bg-dark-800/30 hover:border-dark-600'
+                      : 'border-dark-700/50 bg-dark-900/70 hover:border-dark-600'
                   }`}
                 >
                   <div className="mb-2 flex items-start justify-between gap-2">
@@ -398,7 +400,7 @@ export default function AdminTickets() {
                       )}
                     </span>
                   </div>
-                  <div className="text-xs text-dark-500">
+                  <div className="text-[13px] text-dark-500">
                     {formatUser(ticket)}
                     {ticket.user?.telegram_id && (
                       <button
@@ -415,7 +417,7 @@ export default function AdminTickets() {
                     | {new Date(ticket.updated_at).toLocaleDateString()}
                   </div>
                   {ticket.last_message && (
-                    <div className="mt-1 truncate text-xs text-dark-600">
+                    <div className="mt-1 truncate text-[13px] text-dark-600">
                       {ticket.last_message.is_from_admin
                         ? t('admin.tickets.you')
                         : t('admin.tickets.user')}
@@ -525,7 +527,7 @@ export default function AdminTickets() {
                         statusMutation.mutate({ ticketId: selectedTicket.id, status: s })
                       }
                       disabled={selectedTicket.status === s || statusMutation.isPending}
-                      className={`rounded-lg border px-3 py-1.5 text-xs transition-all ${
+                      className={`rounded-lg border px-3 py-1.5 text-[13px] transition-all ${
                         selectedTicket.status === s
                           ? 'border-accent-500/50 bg-accent-500/20 text-accent-400'
                           : 'border-dark-700/50 text-dark-400 hover:border-dark-600 hover:text-dark-200'
@@ -542,7 +544,7 @@ export default function AdminTickets() {
                 {selectedTicket.messages.map((msg) => (
                   <div
                     key={msg.id}
-                    className={`rounded-xl p-4 ${
+                    className={`rounded-2xl p-4 ${
                       msg.is_from_admin
                         ? 'ml-4 border border-accent-500/20 bg-accent-500/10'
                         : 'mr-4 bg-dark-800/50'
@@ -550,13 +552,13 @@ export default function AdminTickets() {
                   >
                     <div className="mb-2 flex items-center justify-between">
                       <span
-                        className={`text-xs font-medium ${msg.is_from_admin ? 'text-accent-400' : 'text-dark-400'}`}
+                        className={`text-[13px] font-medium ${msg.is_from_admin ? 'text-accent-400' : 'text-dark-400'}`}
                       >
                         {msg.is_from_admin
                           ? t('admin.tickets.adminLabel')
                           : t('admin.tickets.userLabel')}
                       </span>
-                      <span className="text-xs text-dark-500">
+                      <span className="text-[13px] text-dark-500">
                         {new Date(msg.created_at).toLocaleString()}
                       </span>
                     </div>
@@ -595,7 +597,7 @@ export default function AdminTickets() {
                               className="h-16 w-16 rounded-lg object-cover"
                             />
                           ) : (
-                            <div className="flex h-16 w-16 items-center justify-center rounded-lg bg-dark-700 text-xs text-dark-400">
+                            <div className="flex h-16 w-16 items-center justify-center rounded-lg bg-dark-700 text-[13px] text-dark-400">
                               {att.file.name.slice(-6)}
                             </div>
                           )}
@@ -606,7 +608,7 @@ export default function AdminTickets() {
                           )}
                           {att.error && (
                             <div className="absolute inset-0 flex items-center justify-center rounded-lg bg-error-500/30">
-                              <span className="text-xs text-error-300">!</span>
+                              <span className="text-[13px] text-error-300">!</span>
                             </div>
                           )}
                           <button

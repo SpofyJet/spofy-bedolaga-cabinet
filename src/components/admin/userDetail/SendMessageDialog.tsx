@@ -62,7 +62,7 @@ export function SendMessageDialog({ userId, open, onClose }: SendMessageDialogPr
         role="dialog"
         aria-modal="true"
         aria-labelledby="send-message-title"
-        className="relative w-full max-w-md rounded-2xl bg-dark-800 p-5"
+        className="relative w-full max-w-md rounded-3xl bg-dark-900/70 p-5"
       >
         <h2 id="send-message-title" className="mb-3 text-lg font-semibold text-dark-100">
           {t('admin.users.sendMessage.title')}
@@ -76,7 +76,7 @@ export function SendMessageDialog({ userId, open, onClose }: SendMessageDialogPr
           placeholder={t('admin.users.sendMessage.placeholder')}
           className="input resize-y"
         />
-        <div className="mt-1 text-right text-xs text-dark-500">
+        <div className="mt-1 text-right text-[13px] text-dark-500">
           {text.length}/{MAX_LENGTH}
         </div>
         <div className="mt-3 flex justify-end gap-2">

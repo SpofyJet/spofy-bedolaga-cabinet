@@ -72,9 +72,9 @@ function MaxPerRowSelector({ value, onChange }: MaxPerRowSelectorProps) {
         <button
           key={n}
           onClick={() => onChange(n)}
-          className={`flex h-7 w-7 items-center justify-center rounded-lg text-xs font-semibold transition-all ${
+          className={`flex h-7 w-7 items-center justify-center rounded-lg text-[13px] font-semibold transition-all ${
             value === n
-              ? 'bg-accent-500 text-on-accent'
+              ? 'bg-accent-500/15 text-accent-400'
               : 'bg-dark-700/50 text-dark-400 hover:bg-dark-600 hover:text-dark-300'
           }`}
         >
@@ -183,7 +183,7 @@ function ButtonChip({
         <div className="space-y-3 border-t border-dark-700/30 px-3 py-3">
           {/* Color selector */}
           <div>
-            <label className="mb-1.5 block text-xs font-medium text-dark-300">
+            <label className="mb-1.5 block text-[13px] font-medium text-dark-300">
               {t('admin.buttons.color')}
             </label>
             <div className="flex flex-wrap gap-1.5">
@@ -191,7 +191,7 @@ function ButtonChip({
                 <button
                   key={opt.value}
                   onClick={() => onUpdate({ style: opt.value })}
-                  className={`flex h-7 items-center gap-1.5 rounded-lg border px-2.5 text-xs font-medium transition-all ${
+                  className={`flex h-7 items-center gap-1.5 rounded-lg border px-2.5 text-[13px] font-medium transition-all ${
                     button.style === opt.value
                       ? 'border-accent-500 bg-accent-500/10 text-accent-400'
                       : 'border-dark-600 bg-dark-700/50 text-dark-300 hover:border-dark-500'
@@ -206,7 +206,7 @@ function ButtonChip({
 
           {/* Emoji ID */}
           <div>
-            <label className="mb-1.5 block text-xs font-medium text-dark-300">
+            <label className="mb-1.5 block text-[13px] font-medium text-dark-300">
               {t('admin.buttons.emojiId')}
             </label>
             <input
@@ -222,7 +222,7 @@ function ButtonChip({
           {!isBuiltin && (
             <>
               <div>
-                <label className="mb-1.5 block text-xs font-medium text-dark-300">URL</label>
+                <label className="mb-1.5 block text-[13px] font-medium text-dark-300">URL</label>
                 <input
                   type="url"
                   value={button.url || ''}
@@ -232,7 +232,7 @@ function ButtonChip({
                 />
               </div>
               <div>
-                <label className="mb-1.5 block text-xs font-medium text-dark-300">
+                <label className="mb-1.5 block text-[13px] font-medium text-dark-300">
                   {t('admin.menuEditor.openIn')}
                 </label>
                 <div className="flex gap-1.5">
@@ -240,7 +240,7 @@ function ButtonChip({
                     <button
                       key={mode}
                       onClick={() => onUpdate({ open_in: mode })}
-                      className={`flex h-7 items-center gap-1.5 rounded-lg border px-2.5 text-xs font-medium transition-all ${
+                      className={`flex h-7 items-center gap-1.5 rounded-lg border px-2.5 text-[13px] font-medium transition-all ${
                         button.open_in === mode
                           ? 'border-accent-500 bg-accent-500/10 text-accent-400'
                           : 'border-dark-600 bg-dark-700/50 text-dark-300 hover:border-dark-500'
@@ -256,7 +256,7 @@ function ButtonChip({
 
           {/* Localized labels */}
           <div>
-            <label className="mb-1.5 block text-xs font-medium text-dark-300">
+            <label className="mb-1.5 block text-[13px] font-medium text-dark-300">
               {t('admin.buttons.customLabels')}
             </label>
             <div className="space-y-2">
@@ -428,7 +428,7 @@ function InlineAddPanel({ rowId, usedBuiltinIds, onAddBuiltin, onAddCustom }: In
     <div className="space-y-1 rounded-xl bg-dark-900/30 p-2">
       {availableBuiltins.length > 0 && (
         <>
-          <p className="px-2 pb-0.5 text-xs font-medium text-dark-500">
+          <p className="px-2 pb-0.5 text-[13px] font-medium text-dark-500">
             {t('admin.menuEditor.builtinButtons')}
           </p>
           {availableBuiltins.map((id) => (
@@ -458,7 +458,7 @@ function InlineAddPanel({ rowId, usedBuiltinIds, onAddBuiltin, onAddCustom }: In
       </button>
       <button
         onClick={() => setIsOpen(false)}
-        className="flex w-full items-center justify-center rounded-lg py-1.5 text-xs text-dark-500 transition-colors hover:text-dark-400"
+        className="flex w-full items-center justify-center rounded-lg py-1.5 text-[13px] text-dark-500 transition-colors hover:text-dark-400"
       >
         {t('common.cancel')}
       </button>
@@ -776,7 +776,7 @@ export function MenuEditorTab() {
           <button
             onClick={handleSave}
             disabled={updateMutation.isPending}
-            className="rounded-xl bg-accent-500 px-4 py-2 text-sm font-medium text-on-accent transition-colors hover:bg-accent-600 disabled:opacity-50"
+            className="rounded-2xl bg-cta-500 px-4 py-2 text-sm font-medium text-on-cta transition-colors hover:bg-cta-600 disabled:opacity-50"
           >
             {updateMutation.isPending ? t('common.saving') : t('common.save')}
           </button>

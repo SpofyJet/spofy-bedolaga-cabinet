@@ -65,7 +65,7 @@ export function BatchRunning({ batch, onStop, stopping, estimatedMinutes }: Batc
       </div>
       <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1">
         <p className="text-sm font-medium text-dark-200">{line}</p>
-        <p className="text-xs text-dark-400">
+        <p className="text-[13px] text-dark-400">
           {t(`${base}.canLeave`)} {t(`${base}.onlyChecked`)}
         </p>
       </div>
@@ -105,7 +105,7 @@ export function BatchAside({ batch, rows }: { batch: Batch; rows: FleetRow[] }) 
   };
 
   return (
-    <section className="space-y-3 rounded-2xl bg-dark-900/60 p-5">
+    <section className="space-y-3 rounded-3xl bg-dark-900/70 p-5">
       <h3 className="text-[13px] font-semibold text-dark-400">{t(`${base}.batch.aside`)}</h3>
       <ul className="divide-y divide-dark-700/30">
         {items.map(([key, progress]) => {
@@ -131,7 +131,7 @@ export function BatchAside({ batch, rows }: { batch: Batch; rows: FleetRow[] }) 
           );
         })}
       </ul>
-      <p className="text-xs text-dark-400">
+      <p className="text-[13px] text-dark-400">
         {t(`${base}.batch.spentSoFar`, { price: formatCredits(spentSoFar(batch)) })}
       </p>
     </section>

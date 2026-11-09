@@ -36,7 +36,7 @@ export const usd4 = (value: number | string | null | undefined) => Number(value 
 function Stat({ label, value, bad = false }: { label: string; value: string; bad?: boolean }) {
   return (
     <div className="rounded-xl bg-dark-800/50 px-3 py-2">
-      <div className="text-xs text-dark-400">{label}</div>
+      <div className="text-[13px] text-dark-400">{label}</div>
       <div
         className={cn(
           'text-sm font-semibold tabular-nums',
@@ -63,7 +63,7 @@ export function NumberField({
   onChange: (value: number) => void;
 }) {
   return (
-    <label className="flex flex-col gap-1 text-xs text-dark-400">
+    <label className="flex flex-col gap-1 text-[13px] text-dark-400">
       {label}
       <input
         type="number"
@@ -106,7 +106,7 @@ export function TotalStep(props: TotalStepProps) {
         />
       </div>
       {estimate && (
-        <p className="text-xs text-dark-400">
+        <p className="text-[13px] text-dark-400">
           {t('admin.dpichecker.form.total.tariff', {
             pop: estimate.pop_price,
             resource: estimate.resource_price,
@@ -129,7 +129,7 @@ export function TotalStep(props: TotalStepProps) {
             onChange={(value) => props.onProbeMode(value as ProbeMode)}
             className="w-full sm:w-96"
           />
-          <p className="text-xs text-dark-400">{t('admin.dpichecker.form.probeMode.hint')}</p>
+          <p className="text-[13px] text-dark-400">{t('admin.dpichecker.form.probeMode.hint')}</p>
         </div>
       )}
 
@@ -187,7 +187,7 @@ export function TotalStep(props: TotalStepProps) {
               label={t('admin.dpichecker.form.schedule.notify')}
               size="md"
             />
-            <p className="text-xs text-dark-400">
+            <p className="text-[13px] text-dark-400">
               {t('admin.dpichecker.form.schedule.notifyHint')}
             </p>
           </div>

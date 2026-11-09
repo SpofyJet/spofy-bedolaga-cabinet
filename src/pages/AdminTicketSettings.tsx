@@ -105,7 +105,9 @@ export default function AdminTicketSettings() {
       <div className="animate-fade-in">
         <div className="mb-6 flex items-center gap-3">
           <AdminBackButton to="/admin/tickets" />
-          <h1 className="text-xl font-semibold text-dark-100">{t('admin.tickets.settings')}</h1>
+          <h1 className="text-xl font-bold tracking-tight text-dark-50 sm:text-2xl">
+            {t('admin.tickets.settings')}
+          </h1>
         </div>
         <div className="rounded-xl border border-error-500/30 bg-error-500/10 p-6 text-center">
           <p className="text-error-400">{t('admin.tickets.settingsLoadError')}</p>
@@ -129,8 +131,10 @@ export default function AdminTicketSettings() {
           <SettingsIcon className="h-6 w-6" />
         </div>
         <div>
-          <h1 className="text-xl font-semibold text-dark-100">{t('admin.tickets.settings')}</h1>
-          <p className="text-sm text-dark-400">{t('admin.tickets.settingsSubtitle')}</p>
+          <h1 className="text-xl font-bold tracking-tight text-dark-50 sm:text-2xl">
+            {t('admin.tickets.settings')}
+          </h1>
+          <p className="mt-0.5 text-[13px] text-dark-400">{t('admin.tickets.settingsSubtitle')}</p>
         </div>
       </div>
 
@@ -256,11 +260,11 @@ export default function AdminTicketSettings() {
               disabled={!formData.sla_enabled || envLocked.has('sla_minutes')}
             />
             {formData.sla_enabled && formData.sla_minutes !== '' && !isSlaMinutesValid && (
-              <p className="mt-1 text-xs text-error-400">
+              <p className="mt-1 text-[13px] text-error-400">
                 {t('admin.tickets.validation.slaMinutesRange')}
               </p>
             )}
-            <p className="mt-1 text-xs text-dark-500">{t('admin.tickets.slaMinutesDesc')}</p>
+            <p className="mt-1 text-[13px] text-dark-500">{t('admin.tickets.slaMinutesDesc')}</p>
           </div>
 
           {/* Check Interval */}
@@ -287,11 +291,11 @@ export default function AdminTicketSettings() {
             {formData.sla_enabled &&
               formData.sla_check_interval_seconds !== '' &&
               !isCheckIntervalValid && (
-                <p className="mt-1 text-xs text-error-400">
+                <p className="mt-1 text-[13px] text-error-400">
                   {t('admin.tickets.validation.checkIntervalRange')}
                 </p>
               )}
-            <p className="mt-1 text-xs text-dark-500">{t('admin.tickets.checkIntervalDesc')}</p>
+            <p className="mt-1 text-[13px] text-dark-500">{t('admin.tickets.checkIntervalDesc')}</p>
           </div>
 
           {/* Reminder Cooldown */}
@@ -319,11 +323,13 @@ export default function AdminTicketSettings() {
             {formData.sla_enabled &&
               formData.sla_reminder_cooldown_minutes !== '' &&
               !isReminderCooldownValid && (
-                <p className="mt-1 text-xs text-error-400">
+                <p className="mt-1 text-[13px] text-error-400">
                   {t('admin.tickets.validation.reminderCooldownRange')}
                 </p>
               )}
-            <p className="mt-1 text-xs text-dark-500">{t('admin.tickets.reminderCooldownDesc')}</p>
+            <p className="mt-1 text-[13px] text-dark-500">
+              {t('admin.tickets.reminderCooldownDesc')}
+            </p>
           </div>
         </div>
 

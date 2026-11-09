@@ -62,7 +62,7 @@ function TemplateCard({
           <h3 className="line-clamp-2 text-sm font-medium text-dark-100 transition-colors group-hover:text-accent-400">
             {label}
           </h3>
-          <p className="mt-1 line-clamp-2 text-xs text-dark-400">{description}</p>
+          <p className="mt-1 line-clamp-2 text-[13px] text-dark-400">{description}</p>
         </div>
         <div className="mt-0.5 flex flex-shrink-0 items-center gap-1 sm:gap-1.5">
           {Object.entries(template.languages).map(([lang, status]) => (
@@ -295,7 +295,7 @@ function TemplateEditor({
           </button>
           <div className="min-w-0">
             <h2 className="truncate text-base font-semibold text-dark-100 sm:text-lg">{label}</h2>
-            <p className="line-clamp-2 text-xs text-dark-400">
+            <p className="line-clamp-2 text-[13px] text-dark-400">
               {detail.description[interfaceLang] || detail.description.en || ''}
             </p>
           </div>
@@ -318,7 +318,7 @@ function TemplateEditor({
             <div className="text-sm font-medium text-dark-100">
               {t('admin.emailTemplates.sendingToggle')}
             </div>
-            <p className="text-xs text-dark-400">
+            <p className="text-[13px] text-dark-400">
               {detail.can_disable === false
                 ? t('admin.emailTemplates.sendingLocked')
                 : sendingEnabled
@@ -348,7 +348,7 @@ function TemplateEditor({
                   return;
                 setActiveLang(lang);
               }}
-              className={`flex flex-1 items-center justify-center gap-1 whitespace-nowrap rounded-md px-2 py-2 text-xs font-medium transition-all duration-150 sm:gap-1.5 sm:px-3 sm:text-sm ${
+              className={`flex flex-1 items-center justify-center gap-1 whitespace-nowrap rounded-md px-2 py-2 text-[13px] font-medium transition-all duration-150 sm:gap-1.5 sm:px-3 sm:text-sm ${
                 isActive
                   ? 'bg-dark-700 text-dark-100 shadow-sm'
                   : 'text-dark-400 hover:bg-dark-800 hover:text-dark-200'
@@ -368,7 +368,7 @@ function TemplateEditor({
       <div className="flex items-center gap-1 rounded-lg bg-dark-900 p-1">
         <button
           onClick={() => setActiveTab('editor')}
-          className={`flex flex-1 items-center justify-center gap-1.5 rounded-md px-3 py-2 text-xs font-medium transition-all duration-150 sm:text-sm ${
+          className={`flex flex-1 items-center justify-center gap-1.5 rounded-md px-3 py-2 text-[13px] font-medium transition-all duration-150 sm:text-sm ${
             activeTab === 'editor'
               ? 'bg-dark-700 text-dark-100 shadow-sm'
               : 'text-dark-400 hover:bg-dark-800 hover:text-dark-200'
@@ -379,7 +379,7 @@ function TemplateEditor({
         </button>
         <button
           onClick={openPreview}
-          className={`flex flex-1 items-center justify-center gap-1.5 rounded-md px-3 py-2 text-xs font-medium transition-all duration-150 sm:text-sm ${
+          className={`flex flex-1 items-center justify-center gap-1.5 rounded-md px-3 py-2 text-[13px] font-medium transition-all duration-150 sm:text-sm ${
             activeTab === 'preview'
               ? 'bg-dark-700 text-dark-100 shadow-sm'
               : 'text-dark-400 hover:bg-dark-800 hover:text-dark-200'
@@ -394,7 +394,9 @@ function TemplateEditor({
         <div className="space-y-2">
           {previewSubject && (
             <div className="rounded-lg bg-dark-900/60 px-3 py-2">
-              <span className="text-xs text-dark-400">{t('admin.emailTemplates.subject')}: </span>
+              <span className="text-[13px] text-dark-400">
+                {t('admin.emailTemplates.subject')}:{' '}
+              </span>
               <span className="text-sm text-dark-100">{previewSubject}</span>
             </div>
           )}
@@ -440,7 +442,7 @@ function TemplateEditor({
             <div className="space-y-2.5 rounded-lg bg-dark-900/60 p-2.5 sm:p-3">
               {detail.context_vars.length > 0 && (
                 <div>
-                  <p className="mb-1.5 text-xs font-medium text-dark-300">
+                  <p className="mb-1.5 text-[13px] font-medium text-dark-300">
                     {t('admin.emailTemplates.variables')}
                   </p>
                   <div className="flex flex-wrap gap-1 sm:gap-1.5">
@@ -459,7 +461,7 @@ function TemplateEditor({
               )}
               {(detail.common_context_vars?.length ?? 0) > 0 && (
                 <div>
-                  <p className="mb-1.5 text-xs font-medium text-dark-400">
+                  <p className="mb-1.5 text-[13px] font-medium text-dark-400">
                     {t('admin.emailTemplates.variablesCommon')}
                   </p>
                   <div className="flex flex-wrap gap-1 sm:gap-1.5">
@@ -487,7 +489,7 @@ function TemplateEditor({
               </label>
               <button
                 onClick={insertDefaultTemplate}
-                className="text-xs text-dark-400 underline-offset-2 transition-colors hover:text-accent-400 hover:underline"
+                className="text-[13px] text-dark-400 underline-offset-2 transition-colors hover:text-accent-400 hover:underline"
               >
                 {t('admin.emailTemplates.insertDefault')}
               </button>
@@ -500,7 +502,7 @@ function TemplateEditor({
                 setIsDirty(true);
               }}
               rows={12}
-              className="input min-h-[200px] resize-y font-mono text-xs leading-relaxed sm:min-h-[300px] sm:text-sm"
+              className="input min-h-[200px] resize-y font-mono text-[13px] leading-relaxed sm:min-h-[300px] sm:text-sm"
               placeholder="<h2>Title</h2><p>Content...</p>"
               spellCheck={false}
             />
@@ -515,7 +517,7 @@ function TemplateEditor({
           <button
             onClick={() => saveMutation.mutate()}
             disabled={!isDirty || saveMutation.isPending}
-            className="inline-flex items-center justify-center gap-1.5 rounded-lg bg-accent-500 px-3 py-2.5 text-sm font-medium text-on-accent transition-colors hover:bg-accent-600 disabled:cursor-not-allowed disabled:opacity-40 sm:px-4 sm:py-2"
+            className="inline-flex items-center justify-center gap-1.5 rounded-2xl bg-cta-500 px-3 py-2.5 text-sm font-medium text-on-cta transition-colors hover:bg-cta-600 disabled:cursor-not-allowed disabled:opacity-40 sm:px-4 sm:py-2"
           >
             <SaveIcon className="h-4 w-4" />
             {saveMutation.isPending ? t('common.loading') : t('common.save')}
@@ -540,7 +542,7 @@ function TemplateEditor({
 
       {/* Test email */}
       <div className="rounded-lg bg-dark-900/60 p-2.5 sm:p-3">
-        <p className="mb-2 text-xs font-medium text-dark-300">
+        <p className="mb-2 text-[13px] font-medium text-dark-300">
           {t('admin.emailTemplates.sendTest')}
         </p>
         <div className="flex flex-col gap-2 sm:flex-row">
@@ -596,10 +598,10 @@ export default function AdminEmailTemplates() {
             <MailIcon className="h-6 w-6" />
           </div>
           <div className="min-w-0">
-            <h1 className="truncate text-lg font-bold text-dark-100 sm:text-xl">
+            <h1 className="truncate text-xl font-bold tracking-tight text-dark-50 sm:text-2xl">
               {t('admin.emailTemplates.title')}
             </h1>
-            <p className="truncate text-xs text-dark-400">
+            <p className="truncate text-[13px] text-dark-400">
               {t('admin.emailTemplates.description')}
             </p>
           </div>

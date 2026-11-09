@@ -25,12 +25,12 @@ export default function AdminPartnerRevoke() {
       {/* Header */}
       <div className="mb-6 flex items-center gap-3">
         <AdminBackButton to={`/admin/partners/${userId}`} />
-        <h1 className="text-xl font-semibold text-dark-100">
+        <h1 className="text-xl font-bold tracking-tight text-dark-50 sm:text-2xl">
           {t('admin.partnerDetail.revokeDialog.title')}
         </h1>
       </div>
 
-      <div className="rounded-xl border border-error-500/30 bg-dark-800 p-6">
+      <div className="rounded-3xl border border-error-500/30 bg-dark-900/70 p-6">
         <div className="mb-6 rounded-lg bg-error-500/10 p-4">
           <p className="text-dark-400">{t('admin.partnerDetail.revokeDialog.description')}</p>
         </div>

@@ -91,7 +91,7 @@ export function EmailQueueCard() {
   // её ищут глазами в разделе писем, и «ничего нет» неотличимо от «раздела нет».
   if (isLoading) {
     return (
-      <div className="rounded-xl bg-dark-800 p-3 sm:p-4">
+      <div className="rounded-3xl bg-dark-900/70 p-3 sm:p-4">
         <Skeleton className="h-5 w-40" />
       </div>
     );
@@ -99,7 +99,7 @@ export function EmailQueueCard() {
 
   if (isError || !data) {
     return (
-      <div className="rounded-xl bg-dark-800 p-3 text-xs text-dark-400 sm:p-4">
+      <div className="rounded-3xl bg-dark-900/70 p-3 text-[13px] text-dark-400 sm:p-4">
         {t(
           'admin.emailQueue.unavailable',
           'Состояние очереди писем недоступно. Возможно, бот ещё не обновлён.',
@@ -122,7 +122,7 @@ export function EmailQueueCard() {
   const visible = data.items.slice(0, MAX_VISIBLE_ITEMS);
 
   return (
-    <div className="rounded-xl bg-dark-800 p-3 sm:p-4">
+    <div className="rounded-3xl bg-dark-900/70 p-3 sm:p-4">
       <div className="flex items-center gap-2">
         <ClockIcon className="h-5 w-5 flex-shrink-0 text-dark-400" />
         <h2 className="text-sm font-semibold text-dark-100">
@@ -158,7 +158,7 @@ export function EmailQueueCard() {
               type="button"
               onClick={() => handleClear(true)}
               disabled={clearMutation.isPending}
-              className="flex-1 rounded-lg border border-dark-700 px-2 py-1.5 text-xs text-dark-300 transition-colors hover:bg-dark-700 disabled:opacity-50"
+              className="flex-1 rounded-lg border border-dark-700 px-2 py-1.5 text-[13px] text-dark-300 transition-colors hover:bg-dark-700 disabled:opacity-50"
             >
               {t('admin.emailQueue.clearPending', 'Убрать ожидающие')}
             </button>
@@ -167,7 +167,7 @@ export function EmailQueueCard() {
             type="button"
             onClick={() => handleClear(false)}
             disabled={clearMutation.isPending}
-            className="flex flex-1 items-center justify-center gap-1 rounded-lg border border-dark-700 px-2 py-1.5 text-xs text-dark-300 transition-colors hover:bg-dark-700 disabled:opacity-50"
+            className="flex flex-1 items-center justify-center gap-1 rounded-lg border border-dark-700 px-2 py-1.5 text-[13px] text-dark-300 transition-colors hover:bg-dark-700 disabled:opacity-50"
           >
             <TrashIcon className="h-3.5 w-3.5" />
             {t('admin.emailQueue.clearAll', 'Очистить')}
@@ -178,7 +178,7 @@ export function EmailQueueCard() {
       {!data.smtp_configured && (
         <div className="mt-3 flex items-start gap-2 rounded-lg bg-amber-500/10 p-2.5">
           <WarningIcon className="mt-0.5 h-4 w-4 flex-shrink-0 text-amber-400" />
-          <p className="text-xs text-amber-200">
+          <p className="text-[13px] text-amber-200">
             {t(
               'admin.emailQueue.noSmtp',
               'Почтовый сервер не настроен, письма не отправляются. Адрес сервера задаётся в настройках, раздел SMTP.',
@@ -194,7 +194,7 @@ export function EmailQueueCard() {
             return (
               <li key={item.id} className="rounded-lg bg-dark-900/50 px-2.5 py-1.5">
                 <div className="flex items-center justify-between gap-2">
-                  <p className="truncate text-xs text-dark-200">{item.to_email}</p>
+                  <p className="truncate text-[13px] text-dark-200">{item.to_email}</p>
                   <StatusPill item={item} />
                 </div>
                 <div className="mt-0.5 flex items-baseline justify-between gap-2 text-[11px]">

@@ -75,12 +75,12 @@ function SortablePaymentCard({ config, onClick }: SortableCardProps) {
     <div
       ref={setNodeRef}
       style={style}
-      className={`group flex items-center gap-3 rounded-xl border p-4 ${
+      className={`group flex items-center gap-3 rounded-3xl border p-4 ${
         isDragging
-          ? 'border-accent-500/50 bg-dark-800 shadow-xl shadow-accent-500/20'
+          ? 'border-accent-500/50 bg-dark-900/70 shadow-xl shadow-accent-500/20'
           : config.is_enabled
-            ? 'border-dark-700/50 bg-dark-800/50 hover:border-dark-600'
-            : 'border-dark-800/50 bg-dark-900/30 opacity-60'
+            ? 'border-dark-700/50 bg-dark-900/70 hover:border-dark-600'
+            : 'border-dark-800/50 bg-dark-900/70 opacity-60'
       }`}
     >
       {/* Drag handle */}
@@ -213,14 +213,16 @@ export default function AdminPaymentMethods() {
           {!capabilities.hasBackButton && (
             <button
               onClick={() => navigate('/admin')}
-              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-dark-800 transition-colors"
+              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-dark-900/70 transition-colors"
             >
               <BackIcon />
             </button>
           )}
           <div>
-            <h1 className="text-xl font-bold text-dark-100">{t('admin.paymentMethods.title')}</h1>
-            <p className="text-sm text-dark-400">{t('admin.paymentMethods.subtitle')}</p>
+            <h1 className="text-xl font-bold tracking-tight text-dark-50 sm:text-2xl">
+              {t('admin.paymentMethods.title')}
+            </h1>
+            <p className="mt-0.5 text-[13px] text-dark-400">{t('admin.paymentMethods.subtitle')}</p>
           </div>
         </div>
         {orderChanged && (

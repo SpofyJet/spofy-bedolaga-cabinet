@@ -86,7 +86,7 @@ export function OperationsFeed({ userId }: { userId: number }) {
                 .join(' · ');
               return (
                 <li key={tx.id} className="flex items-start gap-3 py-2.5">
-                  <span className="w-11 shrink-0 font-mono text-xs leading-5 tabular-nums text-dark-500">
+                  <span className="w-11 shrink-0 font-mono text-[13px] leading-5 tabular-nums text-dark-500">
                     {stamp.day}
                     <span className="block">{stamp.time}</span>
                   </span>
@@ -98,7 +98,7 @@ export function OperationsFeed({ userId }: { userId: number }) {
                         }) ||
                         t(`${ns}.operation`)}
                     </span>
-                    <span className="block truncate text-xs text-dark-500">
+                    <span className="block truncate text-[13px] text-dark-500">
                       {detail}
                       {!tx.is_completed && ` · ${t(`${ns}.notCompleted`)}`}
                     </span>
@@ -125,7 +125,7 @@ export function OperationsFeed({ userId }: { userId: number }) {
               <Skeleton variant="line" className="h-10" />
             </SkeletonGroup>
           )}
-          <p className="text-xs tabular-nums text-dark-500">
+          <p className="text-[13px] tabular-nums text-dark-500">
             {t('admin.users.shown', { shown: items.length, total })}
           </p>
         </>

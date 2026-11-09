@@ -26,7 +26,7 @@ export function LaunchConfirm({ launch }: { launch: LaunchState }) {
       <p className="text-sm font-semibold text-dark-50">
         {t('admin.reachability.launch.confirmTitle')}
       </p>
-      <p className="break-words text-xs text-dark-300">
+      <p className="break-words text-[13px] text-dark-300">
         {t(
           launch.noun === 'servers'
             ? 'admin.reachability.launch.confirmServers'
@@ -37,7 +37,7 @@ export function LaunchConfirm({ launch }: { launch: LaunchState }) {
           },
         )}
       </p>
-      <p className="break-words text-xs text-dark-300">
+      <p className="break-words text-[13px] text-dark-300">
         {launch.kind === 'geo'
           ? t('admin.reachability.geo.launch.confirmCities', { count: launch.geo?.n_nodes ?? 0 })
           : t('admin.reachability.launch.confirmUnits', {
@@ -54,7 +54,7 @@ export function LaunchConfirm({ launch }: { launch: LaunchState }) {
         )}
       </p>
       {summary.balanceAfter !== null && (
-        <p className="text-xs text-dark-400">
+        <p className="text-[13px] text-dark-400">
           {t('admin.reachability.launch.confirmBalanceAfter', {
             balance: formatMoney(summary.balanceAfter),
           })}

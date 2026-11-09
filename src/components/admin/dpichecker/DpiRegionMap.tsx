@@ -206,7 +206,7 @@ function MapBody({ map, states }: { map: RussiaMap; states: ReadonlyMap<string, 
           />
         )}
       </div>
-      <ul className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-dark-400">
+      <ul className="flex flex-wrap gap-x-4 gap-y-1 text-[13px] text-dark-400">
         {LEGEND.map((status) => (
           <li key={status} className="flex items-center gap-1.5">
             <span

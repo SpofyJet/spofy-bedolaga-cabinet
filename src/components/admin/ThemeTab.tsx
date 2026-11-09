@@ -213,7 +213,7 @@ export function ThemeTab() {
   return (
     <div className="space-y-6">
       {/* Theme toggles */}
-      <div className="rounded-2xl bg-dark-800/50 p-6">
+      <div className="rounded-3xl bg-dark-900/70 p-6">
         <h3 className="mb-4 text-lg font-semibold text-dark-100">
           {t('admin.settings.availableThemes')}
         </h3>
@@ -256,7 +256,7 @@ export function ThemeTab() {
       </div>
 
       {/* Quick Presets */}
-      <div className="rounded-2xl bg-dark-800/50 p-6">
+      <div className="rounded-3xl bg-dark-900/70 p-6">
         <button
           onClick={() => toggleSection('presets')}
           className="flex w-full items-center justify-between"
@@ -285,7 +285,10 @@ export function ThemeTab() {
                     className="h-4 w-4 rounded-full ring-2 ring-white/20"
                     style={{ backgroundColor: preset.colors.accent }}
                   />
-                  <span className="text-xs font-medium" style={{ color: preset.colors.darkText }}>
+                  <span
+                    className="text-[13px] font-medium"
+                    style={{ color: preset.colors.darkText }}
+                  >
                     {t(`admin.settings.presets.${preset.id}`)}
                   </span>
                 </div>
@@ -310,7 +313,7 @@ export function ThemeTab() {
       </div>
 
       {/* Custom Colors */}
-      <div className="rounded-2xl bg-dark-800/50 p-6">
+      <div className="rounded-3xl bg-dark-900/70 p-6">
         <button
           onClick={() => toggleSection('colors')}
           className="flex w-full items-center justify-between"
@@ -430,7 +433,7 @@ export function ThemeTab() {
           <button
             onClick={() => updateColorsMutation.mutate(draftColors)}
             disabled={updateColorsMutation.isPending}
-            className="rounded-xl bg-accent-500 px-4 py-2 text-sm font-medium text-on-accent transition-colors hover:bg-accent-600 disabled:opacity-50"
+            className="rounded-2xl bg-cta-500 px-4 py-2 text-sm font-medium text-on-cta transition-colors hover:bg-cta-600 disabled:opacity-50"
           >
             {updateColorsMutation.isPending
               ? t('common.saving', t('common.save'))

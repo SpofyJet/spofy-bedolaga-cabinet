@@ -81,7 +81,9 @@ export default function AdminServerEdit() {
       <div className="animate-fade-in">
         <div className="mb-6 flex items-center gap-3">
           <AdminBackButton to="/admin/servers" />
-          <h1 className="text-xl font-semibold text-dark-100">{t('admin.servers.edit')}</h1>
+          <h1 className="text-xl font-bold tracking-tight text-dark-50 sm:text-2xl">
+            {t('admin.servers.edit')}
+          </h1>
         </div>
         <div className="rounded-xl border border-error-500/30 bg-error-500/10 p-6 text-center">
           <p className="text-error-400">{t('admin.servers.loadError')}</p>
@@ -108,8 +110,10 @@ export default function AdminServerEdit() {
           </div>
         </div>
         <div>
-          <h1 className="text-xl font-semibold text-dark-100">{t('admin.servers.edit')}</h1>
-          <p className="text-sm text-dark-400">
+          <h1 className="text-xl font-bold tracking-tight text-dark-50 sm:text-2xl">
+            {t('admin.servers.edit')}
+          </h1>
+          <p className="mt-0.5 text-[13px] text-dark-400">
             <Twemoji tag="span" options={{ className: 'twemoji', folder: 'svg', ext: '.svg' }}>
               {server.display_name}
             </Twemoji>
@@ -225,7 +229,7 @@ export default function AdminServerEdit() {
               />
               <span className="text-dark-400">₽</span>
             </div>
-            <p className="mt-1 text-xs text-dark-500">{t('admin.servers.priceHint')}</p>
+            <p className="mt-1 text-[13px] text-dark-500">{t('admin.servers.priceHint')}</p>
           </div>
 
           {/* Max Users */}

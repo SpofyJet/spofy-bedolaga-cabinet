@@ -64,20 +64,22 @@ export default function AdminServers() {
           {!capabilities.hasBackButton && (
             <button
               onClick={() => navigate('/admin')}
-              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-dark-800 transition-colors"
+              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-dark-900/70 transition-colors"
             >
               <BackIcon />
             </button>
           )}
           <div>
-            <h1 className="text-xl font-semibold text-dark-100">{t('admin.servers.title')}</h1>
-            <p className="text-sm text-dark-400">{t('admin.servers.subtitle')}</p>
+            <h1 className="text-xl font-bold tracking-tight text-dark-50 sm:text-2xl">
+              {t('admin.servers.title')}
+            </h1>
+            <p className="mt-0.5 text-[13px] text-dark-400">{t('admin.servers.subtitle')}</p>
           </div>
         </div>
         <button
           onClick={() => syncMutation.mutate()}
           disabled={syncMutation.isPending}
-          className="flex items-center justify-center gap-2 rounded-lg bg-accent-500 px-4 py-2 text-on-accent transition-colors hover:bg-accent-600 disabled:opacity-50"
+          className="flex items-center justify-center gap-2 rounded-2xl bg-cta-500 px-4 py-2 text-on-cta transition-colors hover:bg-cta-600 disabled:opacity-50"
         >
           <SyncIcon />
           {syncMutation.isPending ? t('admin.servers.syncing') : t('admin.servers.sync')}
@@ -104,7 +106,7 @@ export default function AdminServers() {
           {servers.map((server: ServerListItem) => (
             <div
               key={server.id}
-              className={`rounded-xl border bg-dark-800 p-4 transition-colors ${
+              className={`rounded-3xl border bg-dark-900/70 p-4 transition-colors ${
                 server.is_available ? 'border-dark-700' : 'border-dark-700/50 opacity-60'
               }`}
             >
@@ -146,7 +148,7 @@ export default function AdminServers() {
                       {server.price_rubles}
                       {'\u00A0'}₽
                     </span>
-                    <span className="max-w-[200px] truncate font-mono text-xs text-dark-500">
+                    <span className="max-w-[200px] truncate font-mono text-[13px] text-dark-500">
                       {server.squad_uuid}
                     </span>
                   </div>

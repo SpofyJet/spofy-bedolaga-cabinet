@@ -72,7 +72,7 @@ export function TrafficBar({
         )}
       </div>
       {label && (
-        <span className="shrink-0 whitespace-nowrap text-xs tabular-nums text-dark-400">
+        <span className="shrink-0 whitespace-nowrap text-[13px] tabular-nums text-dark-400">
           {trafficLabel(usedGb, limitGb)}
         </span>
       )}

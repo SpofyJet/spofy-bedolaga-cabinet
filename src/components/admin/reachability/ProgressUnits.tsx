@@ -18,7 +18,7 @@ export function ProgressUnits({ job }: { job: Job }) {
   const answered = keys.filter((key) => legsByKey.has(key)).length;
   return (
     <div className="space-y-2">
-      <p className="text-xs text-dark-400">
+      <p className="text-[13px] text-dark-400">
         {t('admin.reachability.progress.answered', { answered, total: keys.length })}
       </p>
       <ul
@@ -37,7 +37,7 @@ export function ProgressUnits({ job }: { job: Job }) {
               {leg ? (
                 <VerdictBadge verdict={leg.verdict} matches={leg.matches_expectation} />
               ) : (
-                <span className="text-xs text-dark-500">
+                <span className="text-[13px] text-dark-500">
                   {t('admin.reachability.progress.waitingUnit')}
                 </span>
               )}

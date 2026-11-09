@@ -138,12 +138,12 @@ function ReleaseCard({ release }: { release: ReleaseItem }) {
         )}
         <div className="flex items-center gap-1 text-dark-500 sm:ml-auto">
           <CalendarIcon className="h-3.5 w-3.5" />
-          <span className="text-xs">{formatDate(release.published_at)}</span>
+          <span className="text-[13px]">{formatDate(release.published_at)}</span>
         </div>
       </div>
       {bodyHtml ? (
         <div
-          className="release-body max-h-48 overflow-auto rounded-lg bg-dark-900/50 p-3 text-xs leading-relaxed text-dark-300 [&_a]:text-accent-400 [&_a]:underline [&_a]:underline-offset-2 hover:[&_a]:text-accent-300 [&_code]:rounded [&_code]:bg-dark-700/50 [&_code]:px-1 [&_code]:py-0.5 [&_code]:font-mono [&_code]:text-dark-200 [&_h2]:mb-1.5 [&_h2]:mt-2 [&_h2]:text-sm [&_h2]:font-semibold [&_h2]:text-dark-200 first:[&_h2]:mt-0 [&_h3]:mb-1 [&_h3]:mt-2 [&_h3]:text-xs [&_h3]:font-semibold [&_h3]:text-dark-200 first:[&_h3]:mt-0 [&_h4]:mb-0.5 [&_h4]:mt-1.5 [&_h4]:text-xs [&_h4]:font-medium [&_h4]:text-dark-300 [&_li]:ml-4 [&_li]:list-disc [&_li]:py-0.5 [&_p]:my-1"
+          className="release-body max-h-48 overflow-auto rounded-3xl bg-dark-900/70 p-3 text-xs leading-relaxed text-dark-300 [&_a]:text-accent-400 [&_a]:underline [&_a]:underline-offset-2 hover:[&_a]:text-accent-300 [&_code]:rounded [&_code]:bg-dark-700/50 [&_code]:px-1 [&_code]:py-0.5 [&_code]:font-mono [&_code]:text-dark-200 [&_h2]:mb-1.5 [&_h2]:mt-2 [&_h2]:text-sm [&_h2]:font-semibold [&_h2]:text-dark-200 first:[&_h2]:mt-0 [&_h3]:mb-1 [&_h3]:mt-2 [&_h3]:text-xs [&_h3]:font-semibold [&_h3]:text-dark-200 first:[&_h3]:mt-0 [&_h4]:mb-0.5 [&_h4]:mt-1.5 [&_h4]:text-xs [&_h4]:font-medium [&_h4]:text-dark-300 [&_li]:ml-4 [&_li]:list-disc [&_li]:py-0.5 [&_p]:my-1"
           dangerouslySetInnerHTML={{ __html: bodyHtml }}
         />
       ) : null}
@@ -180,16 +180,16 @@ function ProjectSection({
             <h2 className="text-base font-semibold text-dark-100">{title}</h2>
             <VersionBadge hasUpdate={hasUpdate} />
           </div>
-          <p className="text-xs text-dark-500">
+          <p className="text-[13px] text-dark-500">
             {t('adminUpdates.currentVersion')}:{' '}
-            <span className="font-mono font-medium text-dark-300">{currentVersion || '—'}</span>
+            <span className=" font-medium text-dark-300">{currentVersion || '—'}</span>
           </p>
         </div>
         <a
           href={repoUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center gap-1 rounded-lg border border-dark-700/50 px-2.5 py-1.5 text-xs text-dark-400 transition-colors hover:border-dark-600 hover:text-dark-300"
+          className="flex items-center gap-1 rounded-lg border border-dark-700/50 px-2.5 py-1.5 text-[13px] text-dark-400 transition-colors hover:border-dark-600 hover:text-dark-300"
         >
           GitHub
           <ExternalLinkIcon className="h-4 w-4" />
@@ -247,13 +247,15 @@ export default function AdminUpdates() {
           <BackIcon />
         </button>
         <div className="min-w-0 flex-1">
-          <h1 className="text-xl font-bold text-dark-100">{t('adminUpdates.title')}</h1>
-          <p className="text-xs text-dark-500">{t('adminUpdates.subtitle')}</p>
+          <h1 className="text-xl font-bold tracking-tight text-dark-50 sm:text-2xl">
+            {t('adminUpdates.title')}
+          </h1>
+          <p className="text-[13px] text-dark-500">{t('adminUpdates.subtitle')}</p>
         </div>
         <button
           onClick={() => refetch()}
           disabled={isFetching}
-          className="flex items-center gap-1.5 rounded-lg bg-dark-800/40 px-3 py-2 text-xs text-dark-300 transition-colors hover:bg-dark-800 disabled:opacity-50"
+          className="flex items-center gap-1.5 rounded-lg bg-dark-800/40 px-3 py-2 text-[13px] text-dark-300 transition-colors hover:bg-dark-800 disabled:opacity-50"
         >
           <span className={isFetching ? 'animate-spin' : ''}>
             <RefreshIcon />

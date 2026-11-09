@@ -54,7 +54,7 @@ function RunRow({
           HISTORY_GRID,
         )}
       >
-        <span className="text-xs tabular-nums text-dark-400">#{run.id}</span>
+        <span className="text-[13px] tabular-nums text-dark-400">#{run.id}</span>
         <span className="flex min-w-0 items-baseline gap-2">
           <span className="min-w-0 truncate text-sm font-medium text-dark-100">{what}</span>
           {kind !== 'check' && (
@@ -63,25 +63,29 @@ function RunRow({
             </span>
           )}
         </span>
-        <span className="text-xs text-dark-400">{where}</span>
-        <span className="hidden text-xs tabular-nums text-dark-300 sm:block">
+        <span className="text-[13px] text-dark-400">{where}</span>
+        <span className="hidden text-[13px] tabular-nums text-dark-300 sm:block">
           {run.resource_count
             ? t('admin.dpichecker.result.resources', { count: run.resource_count })
             : ''}
         </span>
         <span className="flex items-start justify-between gap-3 sm:contents">
           <span className="flex min-w-0 flex-wrap gap-x-3 gap-y-0.5 sm:contents">
-            <span className="text-xs tabular-nums text-dark-200">
+            <span className="text-[13px] tabular-nums text-dark-200">
               {run.usd_cost !== null && run.usd_cost !== undefined
                 ? t('admin.dpichecker.money.usd', { value: usd4(run.usd_cost) })
                 : ''}
             </span>
-            <span className="min-w-0 truncate text-xs text-dark-200">
+            <span className="min-w-0 truncate text-[13px] text-dark-200">
               {t(`admin.dpichecker.history.sources.${run.source}`, { defaultValue: run.source })}
             </span>
-            <span className="text-xs tabular-nums text-dark-400">{formatDate(run.created_at)}</span>
+            <span className="text-[13px] tabular-nums text-dark-400">
+              {formatDate(run.created_at)}
+            </span>
           </span>
-          <span className={cn('flex shrink-0 items-center gap-1.5 text-xs font-medium', tone.text)}>
+          <span
+            className={cn('flex shrink-0 items-center gap-1.5 text-[13px] font-medium', tone.text)}
+          >
             <span className={cn('inline-block h-2 w-2 shrink-0 rounded-full', tone.dot)} />
             {t(`admin.dpichecker.status.${run.status}`, { defaultValue: run.status })}
           </span>

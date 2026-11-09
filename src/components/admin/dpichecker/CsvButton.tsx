@@ -30,7 +30,7 @@ export function CsvButton({ kind, actionId }: { kind: 'report' | 'noisy'; action
         {t('admin.dpichecker.result.csv')}
       </button>
       {download.isError && (
-        <span role="alert" className="text-xs text-error-400">
+        <span role="alert" className="text-[13px] text-error-400">
           {getApiErrorMessage(download.error, t('admin.dpichecker.result.csvFailed'))}
         </span>
       )}

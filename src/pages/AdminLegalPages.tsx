@@ -58,7 +58,7 @@ function ContentLengthMeta({ text, botVisible }: { text: string; botVisible: boo
   const { t } = useTranslation();
   const parts = botVisible ? estimateTelegramParts(text) : 0;
   return (
-    <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs">
+    <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-[13px]">
       <span className="text-dark-500">
         {t('admin.legalPages.charCount', {
           count: text.length,
@@ -131,7 +131,7 @@ function DisplayModeSelector({
             className={cn(
               'min-h-[44px] rounded-lg px-4 py-2.5 text-sm font-medium transition-colors',
               value === mode
-                ? 'bg-accent-500 text-on-accent'
+                ? 'bg-accent-500/15 text-accent-400'
                 : 'bg-dark-700 text-dark-300 hover:bg-dark-600 hover:text-dark-100',
               disabled && 'cursor-not-allowed opacity-50',
             )}
@@ -141,7 +141,9 @@ function DisplayModeSelector({
         ))}
       </div>
       {disabled && (
-        <p className="mt-1.5 text-xs text-dark-500">{t('admin.legalPages.displayModeLocked')}</p>
+        <p className="mt-1.5 text-[13px] text-dark-500">
+          {t('admin.legalPages.displayModeLocked')}
+        </p>
       )}
     </div>
   );
@@ -169,7 +171,7 @@ function LanguageTabs({
             className={cn(
               'min-h-[44px] rounded-lg px-4 py-2.5 text-sm font-medium uppercase transition-colors',
               active === lang
-                ? 'bg-accent-500 text-on-accent'
+                ? 'bg-accent-500/15 text-accent-400'
                 : 'bg-dark-700 text-dark-300 hover:bg-dark-600 hover:text-dark-100',
             )}
           >
@@ -306,7 +308,7 @@ function DocumentEditor({
       <button
         onClick={() => saveMutation.mutate()}
         disabled={saveMutation.isPending}
-        className="min-h-[44px] rounded-lg bg-accent-500 px-6 py-2.5 text-sm font-medium text-on-accent transition-colors hover:bg-accent-600 disabled:opacity-50"
+        className="min-h-[44px] rounded-2xl bg-cta-500 px-6 py-2.5 text-sm font-medium text-on-cta transition-colors hover:bg-cta-600 disabled:opacity-50"
       >
         {saveMutation.isPending ? t('admin.legalPages.saving') : t('admin.legalPages.save')}
       </button>
@@ -411,7 +413,7 @@ function RulesEditor({ onDirtyChange }: { onDirtyChange: (dirty: boolean) => voi
       <button
         onClick={() => saveMutation.mutate()}
         disabled={saveMutation.isPending}
-        className="min-h-[44px] rounded-lg bg-accent-500 px-6 py-2.5 text-sm font-medium text-on-accent transition-colors hover:bg-accent-600 disabled:opacity-50"
+        className="min-h-[44px] rounded-2xl bg-cta-500 px-6 py-2.5 text-sm font-medium text-on-cta transition-colors hover:bg-cta-600 disabled:opacity-50"
       >
         {saveMutation.isPending ? t('admin.legalPages.saving') : t('admin.legalPages.save')}
       </button>
@@ -467,7 +469,7 @@ function FaqQuestionRow({
   });
 
   return (
-    <div className="space-y-3 rounded-xl bg-dark-800/50 p-4">
+    <div className="space-y-3 rounded-3xl bg-dark-900/70 p-4">
       <div className="flex flex-wrap items-center gap-2">
         <input
           value={title}
@@ -698,7 +700,7 @@ function FaqEditor({ onDirtyChange }: { onDirtyChange: (dirty: boolean) => void 
           <button
             onClick={() => createMutation.mutate()}
             disabled={createMutation.isPending}
-            className="flex min-h-[44px] items-center gap-2 rounded-lg bg-accent-500 px-4 py-2.5 text-sm font-medium text-on-accent transition-colors hover:bg-accent-600 disabled:opacity-50"
+            className="flex min-h-[44px] items-center gap-2 rounded-2xl bg-cta-500 px-4 py-2.5 text-sm font-medium text-on-cta transition-colors hover:bg-cta-600 disabled:opacity-50"
           >
             <PlusIcon />
             <span className="hidden sm:inline">{t('admin.legalPages.addQuestion')}</span>
@@ -749,8 +751,10 @@ export default function AdminLegalPages() {
       <div className="flex items-center gap-3">
         <AdminBackButton to="/admin" />
         <div>
-          <h1 className="text-xl font-bold text-dark-100">{t('admin.legalPages.title')}</h1>
-          <p className="text-sm text-dark-400">{t('admin.legalPages.subtitle')}</p>
+          <h1 className="text-xl font-bold tracking-tight text-dark-50 sm:text-2xl">
+            {t('admin.legalPages.title')}
+          </h1>
+          <p className="mt-0.5 text-[13px] text-dark-400">{t('admin.legalPages.subtitle')}</p>
         </div>
       </div>
 
@@ -763,7 +767,7 @@ export default function AdminLegalPages() {
             className={cn(
               'min-h-[44px] rounded-lg px-4 py-2.5 text-sm font-medium transition-colors',
               activeTab === tab
-                ? 'bg-accent-500 text-on-accent'
+                ? 'bg-accent-500/15 text-accent-400'
                 : 'bg-dark-700 text-dark-300 hover:bg-dark-600 hover:text-dark-100',
             )}
           >

@@ -34,23 +34,23 @@ export function SniHostsField({ value, onChange, autoNames }: SniHostsFieldProps
         spellCheck={false}
         className="input mt-1.5 w-full font-mono text-sm sm:max-w-md"
       />
-      <p className="mt-1.5 text-xs text-dark-400">
+      <p className="mt-1.5 text-[13px] text-dark-400">
         {t('admin.reachability.probes.sniHostHint', { max: MAX_SNI_HOSTS })}
       </p>
       {parsed.invalid.length > 0 && (
-        <p className="mt-1 text-xs text-warning-400">
+        <p className="mt-1 text-[13px] text-warning-400">
           {t('admin.reachability.probes.sniInvalid', { names: parsed.invalid.join(', ') })}
         </p>
       )}
       {parsed.overLimit > 0 && (
-        <p className="mt-1 text-xs text-warning-400">
+        <p className="mt-1 text-[13px] text-warning-400">
           {t('admin.reachability.probes.sniOverLimit', {
             count: parsed.overLimit,
             max: MAX_SNI_HOSTS,
           })}
         </p>
       )}
-      <p className="mt-1 text-xs text-dark-300">
+      <p className="mt-1 text-[13px] text-dark-300">
         {effective.length > 0 ? (
           <>
             <span className="text-dark-400">

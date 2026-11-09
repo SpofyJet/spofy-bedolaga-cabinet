@@ -99,7 +99,7 @@ export default function AdminPromocodeStats() {
       <div className="animate-fade-in">
         <div className="mb-6 flex items-center gap-3">
           <AdminBackButton to="/admin/promocodes" />
-          <h1 className="text-xl font-semibold text-dark-100">
+          <h1 className="text-xl font-bold tracking-tight text-dark-50 sm:text-2xl">
             {t('admin.promocodes.stats.title')}
           </h1>
         </div>
@@ -134,7 +134,7 @@ export default function AdminPromocodeStats() {
         </div>
         <button
           onClick={() => navigate(`/admin/promocodes/${id}/edit`)}
-          className="flex items-center justify-center gap-2 rounded-lg bg-accent-500 px-4 py-2 text-on-accent transition-colors hover:bg-accent-600"
+          className="flex items-center justify-center gap-2 rounded-2xl bg-cta-500 px-4 py-2 text-on-cta transition-colors hover:bg-cta-600"
         >
           <EditIcon />
           {t('admin.promocodes.modal.edit')}
@@ -165,7 +165,7 @@ export default function AdminPromocodeStats() {
         </div>
 
         {/* Details */}
-        <div className="rounded-xl bg-dark-800/50 p-4">
+        <div className="rounded-3xl bg-dark-900/70 p-4">
           <h4 className="mb-4 font-medium text-dark-200">{t('admin.promocodes.stats.details')}</h4>
           <div className="grid grid-cols-1 gap-3 text-sm sm:grid-cols-2">
             <div className="flex justify-between rounded-lg bg-dark-700/50 p-3">
@@ -243,7 +243,7 @@ export default function AdminPromocodeStats() {
         </div>
 
         {/* Usage History */}
-        <div className="rounded-xl bg-dark-800/50 p-4">
+        <div className="rounded-3xl bg-dark-900/70 p-4">
           <h4 className="mb-4 flex items-center gap-2 font-medium text-dark-200">
             <ClockIcon className="h-4 w-4" />
             {t('admin.promocodes.stats.usageHistory')}
@@ -268,11 +268,13 @@ export default function AdminPromocodeStats() {
                         {use.user_full_name || use.user_username || `User #${use.user_id}`}
                       </div>
                       {use.user_username && (
-                        <div className="truncate text-xs text-dark-500">@{use.user_username}</div>
+                        <div className="truncate text-[13px] text-dark-500">
+                          @{use.user_username}
+                        </div>
                       )}
                     </div>
                   </div>
-                  <div className="pl-11 text-xs text-dark-400 sm:pl-0">
+                  <div className="pl-11 text-[13px] text-dark-400 sm:pl-0">
                     {formatDateTime(use.used_at)}
                   </div>
                 </div>

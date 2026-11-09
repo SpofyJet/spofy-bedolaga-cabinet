@@ -116,7 +116,7 @@ export function GeoMapTooltip(props: GeoMapTooltipProps) {
       role="tooltip"
       style={style}
       className={cn(
-        'absolute z-10 w-max rounded-xl bg-dark-900/95 p-2.5 text-xs shadow-lg backdrop-blur',
+        'absolute z-10 w-max rounded-xl bg-dark-900/95 p-2.5 text-[13px] shadow-lg backdrop-blur',
         props.pinned ? 'pointer-events-auto' : 'pointer-events-none',
       )}
     >

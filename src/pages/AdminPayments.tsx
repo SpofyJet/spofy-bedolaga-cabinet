@@ -193,14 +193,16 @@ export default function AdminPayments() {
           {!capabilities.hasBackButton && (
             <button
               onClick={() => navigate('/admin')}
-              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-dark-800 transition-colors"
+              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-dark-900/70 transition-colors"
             >
               <BackIcon />
             </button>
           )}
           <div>
-            <h1 className="text-xl font-bold text-dark-100">{t('admin.payments.title')}</h1>
-            <p className="text-sm text-dark-400">{t('admin.payments.description')}</p>
+            <h1 className="text-xl font-bold tracking-tight text-dark-50 sm:text-2xl">
+              {t('admin.payments.title')}
+            </h1>
+            <p className="mt-0.5 text-[13px] text-dark-400">{t('admin.payments.description')}</p>
           </div>
         </div>
         <button onClick={() => refetch()} className="btn-secondary flex items-center gap-2">
@@ -223,7 +225,7 @@ export default function AdminPayments() {
             className="w-full rounded-xl border border-dark-700 bg-dark-800 py-3 pl-10 pr-4 text-dark-100 placeholder-dark-500 transition-colors focus:border-accent-500 focus:outline-none focus:ring-1 focus:ring-accent-500"
           />
         </div>
-        <p className="mt-1.5 text-xs text-dark-500">{t('admin.payments.searchHint')}</p>
+        <p className="mt-1.5 text-[13px] text-dark-500">{t('admin.payments.searchHint')}</p>
       </div>
 
       {/* Search result banner */}
@@ -254,7 +256,7 @@ export default function AdminPayments() {
               onClick={() => setStatusFilter(option.value)}
               className={`rounded-lg px-3 py-1.5 text-sm transition-all ${
                 statusFilter === option.value
-                  ? 'bg-accent-500 text-on-accent'
+                  ? 'bg-accent-500/15 text-accent-400'
                   : 'bg-dark-800 text-dark-300 hover:bg-dark-700'
               }`}
             >
@@ -271,7 +273,7 @@ export default function AdminPayments() {
               onClick={() => handlePeriodChange(option.value)}
               className={`rounded-lg px-3 py-1.5 text-sm transition-all ${
                 periodFilter === option.value
-                  ? 'bg-accent-500 text-on-accent'
+                  ? 'bg-accent-500/15 text-accent-400'
                   : 'bg-dark-800 text-dark-300 hover:bg-dark-700'
               }`}
             >
@@ -282,7 +284,7 @@ export default function AdminPayments() {
             onClick={() => handlePeriodChange('custom')}
             className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm transition-all ${
               periodFilter === 'custom'
-                ? 'bg-accent-500 text-on-accent'
+                ? 'bg-accent-500/15 text-accent-400'
                 : 'bg-dark-800 text-dark-300 hover:bg-dark-700'
             }`}
           >
@@ -312,7 +314,7 @@ export default function AdminPayments() {
       {showDateRange && (
         <div className="flex flex-wrap items-end gap-3 rounded-xl border border-accent-500/30 bg-accent-500/5 p-4">
           <div className="min-w-0 flex-1">
-            <label className="mb-1 block text-xs text-dark-400">
+            <label className="mb-1 block text-[13px] text-dark-400">
               {t('admin.payments.dateFrom')}
             </label>
             <DateField
@@ -323,7 +325,9 @@ export default function AdminPayments() {
             />
           </div>
           <div className="min-w-0 flex-1">
-            <label className="mb-1 block text-xs text-dark-400">{t('admin.payments.dateTo')}</label>
+            <label className="mb-1 block text-[13px] text-dark-400">
+              {t('admin.payments.dateTo')}
+            </label>
             <DateField
               value={dateTo}
               min={dateFrom}
@@ -420,7 +424,7 @@ export default function AdminPayments() {
               const isCancelled = payment.status.toLowerCase().includes('cancel');
 
               return (
-                <div key={paymentKey} className="rounded-xl bg-dark-800/30 p-4">
+                <div key={paymentKey} className="rounded-2xl bg-dark-800/30 p-4">
                   <div className="flex flex-wrap items-start justify-between gap-4">
                     <div className="min-w-0 flex-1 basis-60">
                       {/* Status badge + method */}
@@ -507,7 +511,7 @@ export default function AdminPayments() {
                       )}
 
                       {/* Timestamp */}
-                      <div className="mt-1 text-xs text-dark-500">
+                      <div className="mt-1 text-[13px] text-dark-500">
                         {new Date(payment.created_at).toLocaleString()}
                       </div>
                     </div>
@@ -519,7 +523,7 @@ export default function AdminPayments() {
                           href={payment.payment_url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="btn-secondary px-3 py-1.5 text-xs"
+                          className="btn-secondary px-3 py-1.5 text-[13px]"
                         >
                           {t('admin.payments.openLink')}
                         </a>
@@ -528,7 +532,7 @@ export default function AdminPayments() {
                         <button
                           onClick={() => handleCheckPayment(payment)}
                           disabled={isChecking}
-                          className="btn-primary px-3 py-1.5 text-xs"
+                          className="btn-primary px-3 py-1.5 text-[13px]"
                         >
                           {isChecking ? (
                             <span className="flex items-center gap-1">
@@ -600,7 +604,7 @@ export default function AdminPayments() {
               type="button"
               onClick={() => setPage((prev) => Math.max(1, prev - 1))}
               disabled={payments.page <= 1}
-              className={`btn-secondary min-w-[100px] flex-1 text-xs sm:flex-none sm:text-sm ${
+              className={`btn-secondary min-w-[100px] flex-1 text-[13px] sm:flex-none sm:text-sm ${
                 payments.page <= 1 ? 'cursor-not-allowed opacity-50' : ''
               }`}
             >
@@ -616,7 +620,7 @@ export default function AdminPayments() {
               type="button"
               onClick={() => setPage((prev) => Math.min(payments.pages, prev + 1))}
               disabled={payments.page >= payments.pages}
-              className={`btn-secondary min-w-[100px] flex-1 text-xs sm:flex-none sm:text-sm ${
+              className={`btn-secondary min-w-[100px] flex-1 text-[13px] sm:flex-none sm:text-sm ${
                 payments.page >= payments.pages ? 'cursor-not-allowed opacity-50' : ''
               }`}
             >

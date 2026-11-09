@@ -178,10 +178,10 @@ export default function AdminPinnedMessageCreate() {
             <PinIcon className="h-6 w-6" />
           </div>
           <div>
-            <h1 className="text-xl font-bold text-dark-100">
+            <h1 className="text-xl font-bold tracking-tight text-dark-50 sm:text-2xl">
               {isEditing ? t('admin.pinnedMessages.editMessage') : t('admin.pinnedMessages.create')}
             </h1>
-            <p className="text-sm text-dark-400">{t('admin.pinnedMessages.subtitle')}</p>
+            <p className="mt-0.5 text-[13px] text-dark-400">{t('admin.pinnedMessages.subtitle')}</p>
           </div>
         </div>
       </div>
@@ -202,7 +202,7 @@ export default function AdminPinnedMessageCreate() {
             maxLength={4000}
             className="input min-h-[150px] resize-y"
           />
-          <div className="mt-1 text-right text-xs text-dark-400">{content.length}/4000</div>
+          <div className="mt-1 text-right text-[13px] text-dark-400">{content.length}/4000</div>
         </div>
 
         {/* Media upload */}
@@ -211,7 +211,7 @@ export default function AdminPinnedMessageCreate() {
             {t('admin.pinnedMessages.media')}
           </label>
           {mediaFile || existingMediaType ? (
-            <div className="rounded-lg bg-dark-800 p-4">
+            <div className="rounded-2xl bg-dark-800 p-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   {(mediaType === 'photo' || existingMediaType === 'photo') && <PhotoIcon />}
@@ -223,7 +223,7 @@ export default function AdminPinnedMessageCreate() {
                         : `${existingMediaType} (${t('admin.pinnedMessages.media')})`}
                     </p>
                     {mediaFile && (
-                      <p className="text-xs text-dark-400">
+                      <p className="text-[13px] text-dark-400">
                         {(mediaFile.size / 1024 / 1024).toFixed(2)} MB
                       </p>
                     )}
@@ -262,7 +262,7 @@ export default function AdminPinnedMessageCreate() {
               />
               <button
                 onClick={() => fileInputRef.current?.click()}
-                className="flex w-full items-center justify-center gap-2 rounded-lg border-dashed bg-dark-800/50 p-6 text-dark-400 transition-colors hover:bg-dark-800 hover:text-dark-300"
+                className="flex w-full items-center justify-center gap-2 rounded-3xl border-dashed bg-dark-900/70 p-6 text-dark-400 transition-colors hover:bg-dark-800 hover:text-dark-300"
               >
                 <PhotoIcon />
                 <span>{t('admin.pinnedMessages.addMedia')}</span>

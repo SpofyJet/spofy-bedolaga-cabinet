@@ -82,7 +82,7 @@ export function JobProgress({ jobId, onReset }: JobProgressProps) {
               elapsed: elapsedLabel(job.started_at),
             })}
           </p>
-          <p className="mt-1 text-xs text-dark-400">
+          <p className="mt-1 text-[13px] text-dark-400">
             {t(`admin.reachability.progress.${HINT_KEY[job.kind]}`)}{' '}
             {t('admin.reachability.progress.canLeave')}
           </p>

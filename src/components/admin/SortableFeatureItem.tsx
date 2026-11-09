@@ -42,8 +42,8 @@ export function SortableFeatureItem({
       ref={setNodeRef}
       style={style}
       className={cn(
-        'flex items-start gap-2 rounded-lg border p-3',
-        isDragging ? 'border-accent-500/50 bg-dark-700' : 'border-dark-700 bg-dark-800/50',
+        'flex items-start gap-2 rounded-3xl border p-3',
+        isDragging ? 'border-accent-500/50 bg-dark-700' : 'border-dark-700 bg-dark-900/70',
       )}
     >
       <button

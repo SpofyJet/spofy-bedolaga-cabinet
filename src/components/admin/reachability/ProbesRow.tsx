@@ -51,7 +51,7 @@ export function ProbesRow({ probes, onChange, locked = [] }: ProbesRowProps) {
             </span>
             <span
               className={cn(
-                'block text-xs leading-tight',
+                'block text-[13px] leading-tight',
                 on ? 'text-accent-400' : 'text-dark-400',
               )}
             >

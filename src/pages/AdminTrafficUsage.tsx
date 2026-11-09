@@ -452,7 +452,9 @@ export default function AdminTrafficUsage() {
                 {item.full_name?.[0] || '?'}
               </div>
               <div className="min-w-0">
-                <div className="truncate text-xs font-medium text-dark-100">{item.full_name}</div>
+                <div className="truncate text-[13px] font-medium text-dark-100">
+                  {item.full_name}
+                </div>
                 {item.username ? (
                   <div className="truncate text-[10px] leading-tight text-dark-500">
                     @{item.username}
@@ -475,7 +477,7 @@ export default function AdminTrafficUsage() {
         size: 120,
         minSize: 80,
         cell: ({ getValue }) => (
-          <span className="text-xs text-dark-300">
+          <span className="text-[13px] text-dark-300">
             {(getValue() as string | null) || t('admin.trafficUsage.noTariff')}
           </span>
         ),
@@ -488,7 +490,7 @@ export default function AdminTrafficUsage() {
         minSize: 60,
         meta: { align: 'center' as const },
         cell: ({ getValue }) => (
-          <span className="text-xs text-dark-300">{getValue() as number}</span>
+          <span className="text-[13px] text-dark-300">{getValue() as number}</span>
         ),
       },
       {
@@ -500,7 +502,9 @@ export default function AdminTrafficUsage() {
         meta: { align: 'center' as const },
         cell: ({ getValue }) => {
           const gb = getValue() as number;
-          return <span className="text-xs text-dark-300">{gb > 0 ? `${gb} GB` : '\u221E'}</span>;
+          return (
+            <span className="text-[13px] text-dark-300">{gb > 0 ? `${gb} GB` : '\u221E'}</span>
+          );
         },
       },
       // ---- Enrichment columns ----
@@ -514,7 +518,9 @@ export default function AdminTrafficUsage() {
         cell: ({ row }) => {
           const e = enrichment?.[row.original.user_id];
           if (enrichmentLoading && !enrichment) return cellSkeleton('w-8');
-          return <span className="text-xs text-dark-300">{e?.devices_connected ?? '\u2014'}</span>;
+          return (
+            <span className="text-[13px] text-dark-300">{e?.devices_connected ?? '\u2014'}</span>
+          );
         },
       },
       {
@@ -528,9 +534,11 @@ export default function AdminTrafficUsage() {
           const e = enrichment?.[row.original.user_id];
           if (enrichmentLoading && !enrichment) return cellSkeleton('w-12');
           if (!e || e.total_spent_kopeks === 0)
-            return <span className="text-xs text-dark-300">{'\u2014'}</span>;
+            return <span className="text-[13px] text-dark-300">{'\u2014'}</span>;
           return (
-            <span className="text-xs text-dark-300">{formatCurrency(e.total_spent_kopeks)}</span>
+            <span className="text-[13px] text-dark-300">
+              {formatCurrency(e.total_spent_kopeks)}
+            </span>
           );
         },
       },
@@ -545,7 +553,7 @@ export default function AdminTrafficUsage() {
           const e = enrichment?.[row.original.user_id];
           if (enrichmentLoading && !enrichment) return cellSkeleton('w-14');
           return (
-            <span className="text-xs text-dark-300">
+            <span className="text-[13px] text-dark-300">
               {formatShortDate(e?.subscription_start_date ?? null)}
             </span>
           );
@@ -562,7 +570,7 @@ export default function AdminTrafficUsage() {
           const e = enrichment?.[row.original.user_id];
           if (enrichmentLoading && !enrichment) return cellSkeleton('w-14');
           return (
-            <span className="text-xs text-dark-300">
+            <span className="text-[13px] text-dark-300">
               {formatShortDate(e?.subscription_end_date ?? null)}
             </span>
           );
@@ -578,7 +586,7 @@ export default function AdminTrafficUsage() {
         cell: ({ row }) => {
           const e = enrichment?.[row.original.user_id];
           if (enrichmentLoading && !enrichment) return cellSkeleton('w-16');
-          return <span className="text-xs text-dark-300">{e?.last_node_name ?? '\u2014'}</span>;
+          return <span className="text-[13px] text-dark-300">{e?.last_node_name ?? '\u2014'}</span>;
         },
       },
       // ---- Dynamic node columns ----
@@ -594,7 +602,7 @@ export default function AdminTrafficUsage() {
           cell: ({ getValue }) => {
             const bytes = getValue() as number;
             if (bytes <= 0) {
-              return <span className="text-xs text-dark-300">{'\u2014'}</span>;
+              return <span className="text-[13px] text-dark-300">{'\u2014'}</span>;
             }
             const dailyNode = bytesToGbPerDay(bytes, periodDays);
             const nodeRatio = hasNodeThreshold ? getRatio(dailyNode, nodeThresholdNum) : 0;
@@ -602,7 +610,7 @@ export default function AdminTrafficUsage() {
             return (
               <div className="flex flex-col items-center">
                 <span
-                  className="text-xs text-dark-300"
+                  className="text-[13px] text-dark-300"
                   style={{
                     color: textColor,
                     fontWeight: nodeRatio > 0.8 ? 600 : undefined,
@@ -661,12 +669,12 @@ export default function AdminTrafficUsage() {
       cell: ({ getValue }) => {
         const bytes = getValue() as number;
         if (bytes <= 0) {
-          return <span className="text-xs font-semibold text-dark-100">{'\u2014'}</span>;
+          return <span className="text-[13px] font-semibold text-dark-100">{'\u2014'}</span>;
         }
         const dailyTotal = bytesToGbPerDay(bytes, periodDays);
         return (
           <div className="flex flex-col items-center">
-            <span className="text-xs font-semibold text-dark-100">{formatBytes(bytes)}</span>
+            <span className="text-[13px] font-semibold text-dark-100">{formatBytes(bytes)}</span>
             {hasTotalThreshold && (
               <span className="text-[9px] leading-tight text-dark-400">
                 {formatGbPerDay(dailyTotal)} GB/d
@@ -737,8 +745,10 @@ export default function AdminTrafficUsage() {
             </button>
           )}
           <div>
-            <h1 className="text-xl font-bold text-dark-100">{t('admin.trafficUsage.title')}</h1>
-            <p className="text-sm text-dark-400">{t('admin.trafficUsage.subtitle')}</p>
+            <h1 className="text-xl font-bold tracking-tight text-dark-50 sm:text-2xl">
+              {t('admin.trafficUsage.title')}
+            </h1>
+            <p className="mt-0.5 text-[13px] text-dark-400">{t('admin.trafficUsage.subtitle')}</p>
           </div>
         </div>
         <button
@@ -794,7 +804,7 @@ export default function AdminTrafficUsage() {
               step="0.1"
               min="0"
               max="9999"
-              className="w-20 bg-transparent text-xs text-dark-200 placeholder-dark-500 [appearance:textfield] focus:outline-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+              className="w-20 bg-transparent text-[13px] text-dark-200 placeholder-dark-500 [appearance:textfield] focus:outline-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
             />
             {totalThreshold && (
               <button
@@ -815,7 +825,7 @@ export default function AdminTrafficUsage() {
               step="0.1"
               min="0"
               max="9999"
-              className="w-20 bg-transparent text-xs text-dark-200 placeholder-dark-500 [appearance:textfield] focus:outline-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+              className="w-20 bg-transparent text-[13px] text-dark-200 placeholder-dark-500 [appearance:textfield] focus:outline-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
             />
             {nodeThreshold && (
               <button
@@ -830,7 +840,7 @@ export default function AdminTrafficUsage() {
           <button
             onClick={handleExport}
             disabled={exporting}
-            className="flex items-center gap-1.5 rounded-lg bg-dark-800 px-3 py-1.5 text-xs font-medium text-dark-200 transition-colors hover:bg-dark-700 disabled:opacity-50"
+            className="flex items-center gap-1.5 rounded-lg bg-dark-800 px-3 py-1.5 text-[13px] font-medium text-dark-200 transition-colors hover:bg-dark-700 disabled:opacity-50"
           >
             <DownloadIcon />
             {t('admin.trafficUsage.exportCsv')}
@@ -878,7 +888,7 @@ export default function AdminTrafficUsage() {
                       return (
                         <th
                           key={header.id}
-                          className={`relative overflow-hidden text-ellipsis whitespace-nowrap px-3 py-2 text-xs font-medium ${
+                          className={`relative overflow-hidden text-ellipsis whitespace-nowrap px-3 py-2 text-[13px] font-medium ${
                             isBold ? 'font-semibold text-dark-200' : 'text-dark-400'
                           } ${align} ${
                             isSticky ? 'sticky left-0 z-10 bg-dark-800' : ''

@@ -85,7 +85,7 @@ export function ScanResult({ job }: { job: Job }) {
                 >
                   <OperatorIcon operator={item.code} className="h-4 w-4 rounded" />
                   <span>
-                    {item.name} <span className="text-xs text-dark-400">{item.region}</span>
+                    {item.name} <span className="text-[13px] text-dark-400">{item.region}</span>
                   </span>
                   <span className="font-semibold tabular-nums text-dark-50">
                     {summary.aliveByUnit[opKey]}
@@ -100,7 +100,7 @@ export function ScanResult({ job }: { job: Job }) {
       {summary.ips.length > 0 && (
         <div className="space-y-2">
           {units.length > 0 && (
-            <label className="flex items-center gap-2 text-xs text-dark-300">
+            <label className="flex items-center gap-2 text-[13px] text-dark-300">
               <input
                 type="checkbox"
                 className="h-4 w-4 rounded border-dark-600 accent-accent-500"
@@ -110,8 +110,8 @@ export function ScanResult({ job }: { job: Job }) {
               {t(`${base}.perUnit`)}
             </label>
           )}
-          <div className="max-h-96 overflow-auto rounded-xl bg-dark-900/60 p-3">
-            <ul className="space-y-1.5 text-xs">
+          <div className="max-h-96 overflow-auto rounded-3xl bg-dark-900/70 p-3">
+            <ul className="space-y-1.5 text-[13px]">
               {summary.ips.map((item) => (
                 <li key={item.ip} className="flex flex-wrap items-baseline gap-x-3 gap-y-0.5">
                   <span className="font-mono text-dark-100">{item.ip}</span>

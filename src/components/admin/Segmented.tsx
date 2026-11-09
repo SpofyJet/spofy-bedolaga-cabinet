@@ -52,7 +52,7 @@ export function Segmented<T extends string>({
               ITEM[size],
               selected
                 ? // Заливка — как у главной кнопки (.btn-primary), и в светлой теме тоже.
-                  'bg-accent-500 text-on-accent shadow-sm light:bg-champagne-700 light:text-white'
+                  'bg-accent-500/15 text-accent-400 shadow-sm light:bg-champagne-700 light:text-white'
                 : 'text-dark-400 hover:bg-dark-700/60 hover:text-dark-100',
             )}
           >

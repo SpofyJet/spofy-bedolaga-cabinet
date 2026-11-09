@@ -66,7 +66,7 @@ export function ActivityTab({ userId, types }: ActivityTabProps) {
           <Skeleton variant="line" className="h-10" />
         </SkeletonGroup>
       )}
-      <p className="text-xs tabular-nums text-dark-500">
+      <p className="text-[13px] tabular-nums text-dark-500">
         {t('admin.users.shown', { shown: items.length, total })}
       </p>
     </div>

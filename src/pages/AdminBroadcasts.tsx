@@ -125,14 +125,16 @@ export default function AdminBroadcasts() {
           {!capabilities.hasBackButton && (
             <button
               onClick={() => navigate('/admin')}
-              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-dark-800 transition-colors"
+              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-dark-900/70 transition-colors"
             >
               <BackIcon />
             </button>
           )}
           <div>
-            <h1 className="text-xl font-bold text-dark-100">{t('admin.broadcasts.title')}</h1>
-            <p className="text-sm text-dark-400">{t('admin.broadcasts.subtitle')}</p>
+            <h1 className="text-xl font-bold tracking-tight text-dark-50 sm:text-2xl">
+              {t('admin.broadcasts.title')}
+            </h1>
+            <p className="mt-0.5 text-[13px] text-dark-400">{t('admin.broadcasts.subtitle')}</p>
           </div>
         </div>
         <div className="flex gap-2">
@@ -144,7 +146,7 @@ export default function AdminBroadcasts() {
           </button>
           <button
             onClick={() => navigate('/admin/broadcasts/create')}
-            className="flex items-center gap-2 rounded-lg bg-accent-500 px-4 py-2 text-on-accent transition-colors hover:bg-accent-600"
+            className="flex items-center gap-2 rounded-2xl bg-cta-500 px-4 py-2 text-on-cta transition-colors hover:bg-cta-600"
           >
             <PlusIcon />
             <span className="hidden sm:inline">{t('admin.broadcasts.create')}</span>
@@ -156,7 +158,7 @@ export default function AdminBroadcasts() {
       {isLoading ? (
         <ListSkeleton />
       ) : broadcasts.length === 0 ? (
-        <div className="rounded-xl bg-dark-800/50 p-8 text-center text-dark-400">
+        <div className="rounded-3xl bg-dark-900/70 p-8 text-center text-dark-400">
           <BroadcastIcon className="h-6 w-6" />
           <p className="mt-2">{t('admin.broadcasts.empty')}</p>
         </div>
@@ -166,13 +168,13 @@ export default function AdminBroadcasts() {
             <button
               key={broadcast.id}
               onClick={() => navigate(`/admin/broadcasts/${broadcast.id}`)}
-              className="w-full rounded-xl bg-dark-800/50 p-4 text-left transition-all hover:bg-dark-800"
+              className="w-full rounded-3xl bg-dark-900/70 p-4 text-left transition-all hover:bg-dark-800"
             >
               <div className="flex items-start justify-between gap-4">
                 <div className="min-w-0 flex-1">
                   <div className="mb-1 flex items-center gap-2">
                     <StatusBadge status={broadcast.status} />
-                    <span className="text-xs text-dark-400">#{broadcast.id}</span>
+                    <span className="text-[13px] text-dark-400">#{broadcast.id}</span>
                     {broadcast.has_media && (
                       <span className="text-dark-400">
                         {broadcast.media_type === 'photo' && <PhotoIcon />}
@@ -182,7 +184,7 @@ export default function AdminBroadcasts() {
                     )}
                   </div>
                   <p className="truncate text-sm text-dark-100">{broadcast.message_text}</p>
-                  <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-dark-400">
+                  <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-[13px] text-dark-400">
                     <span className="min-w-0 [overflow-wrap:anywhere]">
                       {broadcast.audience
                         ? `${t('admin.broadcasts.audience.conditions')} (${broadcast.audience.conditions.length})`
@@ -213,7 +215,7 @@ export default function AdminBroadcasts() {
                         style={{ width: `${broadcast.progress_percent}%` }}
                       />
                     </div>
-                    <p className="mt-1 text-center text-xs text-dark-400">
+                    <p className="mt-1 text-center text-[13px] text-dark-400">
                       {broadcast.progress_percent.toFixed(0)}%
                     </p>
                   </div>
@@ -226,7 +228,7 @@ export default function AdminBroadcasts() {
 
       {/* Pagination */}
       {totalPages > 1 && (
-        <div className="flex items-center justify-center gap-2 rounded-xl bg-dark-800/50 p-4">
+        <div className="flex items-center justify-center gap-2 rounded-3xl bg-dark-900/70 p-4">
           <button
             onClick={() => setPage((p) => Math.max(0, p - 1))}
             disabled={page === 0}

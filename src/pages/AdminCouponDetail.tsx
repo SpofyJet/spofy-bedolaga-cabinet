@@ -145,16 +145,16 @@ export default function AdminCouponDetail() {
         {!capabilities.hasBackButton && (
           <button
             onClick={() => navigate('/admin/coupons')}
-            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-dark-800 transition-colors"
+            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-dark-900/70 transition-colors"
           >
             <BackIcon />
           </button>
         )}
         <div className="min-w-0">
-          <h1 className="truncate text-xl font-bold text-dark-100">
+          <h1 className="truncate text-xl font-bold tracking-tight text-dark-50 sm:text-2xl">
             {t('admin.coupons.detail.title', { id: batch.id })} · {batch.name}
           </h1>
-          <p className="text-sm text-dark-400">
+          <p className="mt-0.5 text-[13px] text-dark-400">
             {batch.tariff_name || '—'} · {batch.period_days} {t('admin.coupons.days')}
             {batch.is_revoked && (
               <span className="ml-2 rounded bg-error-500/20 px-2 py-0.5 text-xs text-error-400">
@@ -188,7 +188,7 @@ export default function AdminCouponDetail() {
       </div>
 
       {/* Info card */}
-      <div className="mb-6 space-y-2 rounded-xl bg-dark-800 p-4 text-sm">
+      <div className="mb-6 space-y-2 rounded-3xl bg-dark-900/70 p-4 text-sm">
         <div className="flex justify-between gap-4">
           <span className="text-dark-400">{t('admin.coupons.detail.total')}</span>
           <span className="text-dark-100">{batch.coupons_total}</span>
@@ -225,7 +225,7 @@ export default function AdminCouponDetail() {
 
       {/* Links */}
       {hasActive && links && (
-        <div className="mb-6 rounded-xl bg-dark-800 p-4">
+        <div className="mb-6 rounded-3xl bg-dark-900/70 p-4">
           <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
             <span className="text-sm font-medium text-dark-200">
               {t('admin.coupons.detail.linksTitle', { count: links.count })}
@@ -251,7 +251,7 @@ export default function AdminCouponDetail() {
             readOnly
             value={links.links.join('\n')}
             rows={Math.min(10, links.count)}
-            className="input w-full resize-none font-mono text-xs"
+            className="input w-full resize-none font-mono text-[13px]"
           />
         </div>
       )}
@@ -284,7 +284,7 @@ export default function AdminCouponDetail() {
       {/* Delete confirmation */}
       {deleteConfirm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-dark-950/70 p-4">
-          <div className="w-full max-w-sm rounded-xl bg-dark-800 p-6">
+          <div className="w-full max-w-sm rounded-3xl bg-dark-900/70 p-6">
             <h3 className="mb-2 text-lg font-semibold text-dark-100">
               {t('admin.coupons.delete.confirmTitle')}
             </h3>
@@ -317,7 +317,7 @@ export default function AdminCouponDetail() {
       {/* Revoke confirmation */}
       {revokeConfirm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-dark-950/70 p-4">
-          <div className="w-full max-w-sm rounded-xl bg-dark-800 p-6">
+          <div className="w-full max-w-sm rounded-3xl bg-dark-900/70 p-6">
             <h3 className="mb-2 text-lg font-semibold text-dark-100">
               {t('admin.coupons.revoke.confirmTitle')}
             </h3>

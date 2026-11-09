@@ -167,7 +167,7 @@ export function SubscriptionCard({
       <div className="grid gap-x-8 gap-y-4 lg:grid-cols-2">
         <KeyValues rows={facts} />
         <div className="flex flex-col gap-1.5">
-          <div className="flex items-baseline justify-between gap-3 text-xs">
+          <div className="flex items-baseline justify-between gap-3 text-[13px]">
             <span className="text-dark-500">{t('admin.users.detail.overview.trafficPeriod')}</span>
             <span className="font-medium tabular-nums text-dark-200">
               {trafficLabel(usedGb, sub.traffic_limit_gb)}
@@ -175,7 +175,7 @@ export function SubscriptionCard({
           </div>
           <TrafficBar usedGb={usedGb} limitGb={sub.traffic_limit_gb} label={false} />
           {sub.purchased_traffic_gb > 0 && (
-            <span className="text-xs text-dark-500">
+            <span className="text-[13px] text-dark-500">
               {t(`${ns}.purchasedExtra`, { gb: formatGb(sub.purchased_traffic_gb) })}
             </span>
           )}

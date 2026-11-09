@@ -100,7 +100,9 @@ export default function AdminPartnerSettings() {
       <div className="animate-fade-in">
         <div className="mb-6 flex items-center gap-3">
           <AdminBackButton to="/admin/partners" />
-          <h1 className="text-xl font-semibold text-dark-100">{t('admin.partners.settings')}</h1>
+          <h1 className="text-xl font-bold tracking-tight text-dark-50 sm:text-2xl">
+            {t('admin.partners.settings')}
+          </h1>
         </div>
         <div className="rounded-xl border border-error-500/30 bg-error-500/10 p-6 text-center">
           <p className="text-error-400">{t('admin.partners.settingsLoadError')}</p>
@@ -124,8 +126,10 @@ export default function AdminPartnerSettings() {
           <SettingsIcon className="h-6 w-6" />
         </div>
         <div>
-          <h1 className="text-xl font-semibold text-dark-100">{t('admin.partners.settings')}</h1>
-          <p className="text-sm text-dark-400">{t('admin.partners.settingsSubtitle')}</p>
+          <h1 className="text-xl font-bold tracking-tight text-dark-50 sm:text-2xl">
+            {t('admin.partners.settings')}
+          </h1>
+          <p className="mt-0.5 text-[13px] text-dark-400">{t('admin.partners.settingsSubtitle')}</p>
         </div>
       </div>
 
@@ -253,7 +257,7 @@ export default function AdminPartnerSettings() {
                 !formData.withdrawal_enabled || envLocked.has('withdrawal_min_amount_kopeks')
               }
             />
-            <p className="mt-1 text-xs text-dark-500">
+            <p className="mt-1 text-[13px] text-dark-500">
               {t('admin.partners.settingsFields.minAmountDesc')}
             </p>
           </div>
@@ -278,7 +282,7 @@ export default function AdminPartnerSettings() {
               className="input"
               disabled={!formData.withdrawal_enabled || envLocked.has('withdrawal_cooldown_days')}
             />
-            <p className="mt-1 text-xs text-dark-500">
+            <p className="mt-1 text-[13px] text-dark-500">
               {t('admin.partners.settingsFields.cooldownDaysDesc')}
             </p>
           </div>
@@ -299,7 +303,7 @@ export default function AdminPartnerSettings() {
               disabled={!formData.withdrawal_enabled || envLocked.has('withdrawal_requisites_text')}
               placeholder={t('admin.partners.settingsFields.requisitesTextPlaceholder')}
             />
-            <p className="mt-1 text-xs text-dark-500">
+            <p className="mt-1 text-[13px] text-dark-500">
               {t('admin.partners.settingsFields.requisitesTextDesc')}
             </p>
           </div>

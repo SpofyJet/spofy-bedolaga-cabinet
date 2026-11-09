@@ -48,9 +48,11 @@ export function ScanTargets({ cidr, onChange }: ScanTargetsProps) {
           className="input mt-1.5 w-full font-mono sm:w-72"
         />
         {invalid ? (
-          <p className="mt-1.5 text-xs text-warning-400">{t('admin.reachability.scan.invalid')}</p>
+          <p className="mt-1.5 text-[13px] text-warning-400">
+            {t('admin.reachability.scan.invalid')}
+          </p>
         ) : (
-          <p className="mt-1.5 text-xs text-dark-400">
+          <p className="mt-1.5 text-[13px] text-dark-400">
             {subnet
               ? t('admin.reachability.scan.willScan', { subnet })
               : t('admin.reachability.scan.cidrHint')}
@@ -59,7 +61,7 @@ export function ScanTargets({ cidr, onChange }: ScanTargetsProps) {
       </div>
       {suggestions.length > 0 && (
         <div>
-          <p className="text-xs text-dark-400">{t('admin.reachability.scan.fromHost')}</p>
+          <p className="text-[13px] text-dark-400">{t('admin.reachability.scan.fromHost')}</p>
           <div className="mt-1.5 flex flex-wrap gap-1.5">
             {suggestions.map((item) => {
               const on = subnet === item.subnet;
@@ -77,7 +79,7 @@ export function ScanTargets({ cidr, onChange }: ScanTargetsProps) {
                   )}
                 >
                   <span className="truncate">{item.label}</span>
-                  <span className="font-mono text-xs text-dark-400">{item.subnet}</span>
+                  <span className="font-mono text-[13px] text-dark-400">{item.subnet}</span>
                 </button>
               );
             })}

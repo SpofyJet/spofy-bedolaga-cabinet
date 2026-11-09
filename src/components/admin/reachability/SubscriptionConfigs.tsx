@@ -66,7 +66,7 @@ export function SubscriptionConfigs({
 
   return (
     <div>
-      <div className="flex flex-wrap items-center gap-x-3 gap-y-2 text-xs text-dark-400">
+      <div className="flex flex-wrap items-center gap-x-3 gap-y-2 text-[13px] text-dark-400">
         <span>
           {t('admin.reachability.subscription.selectedOf', {
             selected: selected.length,
@@ -84,7 +84,7 @@ export function SubscriptionConfigs({
         <span className="flex flex-wrap gap-1.5">
           <button
             type="button"
-            className="btn-secondary px-3 py-1.5 text-xs"
+            className="btn-secondary px-3 py-1.5 text-[13px]"
             disabled={allUnselected.length === 0}
             onClick={() => onSelectMany(allUnselected.map((config) => config.index))}
           >
@@ -92,7 +92,7 @@ export function SubscriptionConfigs({
           </button>
           <button
             type="button"
-            className="btn-secondary px-3 py-1.5 text-xs"
+            className="btn-secondary px-3 py-1.5 text-[13px]"
             disabled={bsUnselected.length === 0}
             onClick={() => onSelectMany(bsUnselected.map((config) => config.index))}
           >
@@ -100,7 +100,7 @@ export function SubscriptionConfigs({
           </button>
           <button
             type="button"
-            className="btn-secondary px-3 py-1.5 text-xs"
+            className="btn-secondary px-3 py-1.5 text-[13px]"
             disabled={selected.length === 0}
             onClick={onClear}
           >
@@ -109,7 +109,7 @@ export function SubscriptionConfigs({
         </span>
       </div>
       {note && (
-        <p role="status" className="mt-2 text-xs text-warning-400">
+        <p role="status" className="mt-2 text-[13px] text-warning-400">
           {note}
         </p>
       )}
@@ -130,7 +130,7 @@ export function SubscriptionConfigs({
             className="input min-w-0 flex-1 text-sm"
           />
           {needle && (
-            <span className="text-xs text-dark-400">
+            <span className="text-[13px] text-dark-400">
               {t('admin.reachability.subscription.filterShown', {
                 shown: visible.length,
                 total: configs.length,
@@ -170,7 +170,7 @@ export function SubscriptionConfigs({
                   <span className="block truncate text-sm font-medium text-dark-100">
                     {config.label}
                   </span>
-                  <span className="block truncate font-mono text-xs text-dark-400">
+                  <span className="block truncate font-mono text-[13px] text-dark-400">
                     {config.protocol ? `${config.protocol} · ` : ''}
                     {config.target_key}
                     {config.sni && config.sni !== config.address ? ` · sni ${config.sni}` : ''}

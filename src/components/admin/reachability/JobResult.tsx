@@ -16,7 +16,7 @@ export function JobResult({ job }: { job: Job }) {
   return (
     <div className="space-y-3">
       <JobHeadline job={job} />
-      <p className="text-xs text-dark-400">
+      <p className="text-[13px] text-dark-400">
         {t('admin.reachability.result.cost')}:{' '}
         <span className="text-dark-200">{formatMoney(job.cost_kopeks)}</span>
         {refunded}

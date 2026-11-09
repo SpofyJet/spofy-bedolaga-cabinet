@@ -51,7 +51,7 @@ export function LocaleTabs({
               onClick={() => onChange(locale)}
               dir={isRtl ? 'rtl' : 'ltr'}
               className={cn(
-                'relative flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-all',
+                'relative flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-[13px] font-medium transition-all',
                 isActive
                   ? 'bg-accent-500/15 text-accent-400 ring-1 ring-accent-500/30'
                   : 'bg-dark-800/50 text-dark-400 hover:bg-dark-700/50 hover:text-dark-300',
@@ -68,7 +68,7 @@ export function LocaleTabs({
           );
         })}
       </div>
-      <p className="text-xs text-dark-500">{t('admin.landings.localeHint')}</p>
+      <p className="text-[13px] text-dark-500">{t('admin.landings.localeHint')}</p>
     </div>
   );
 }

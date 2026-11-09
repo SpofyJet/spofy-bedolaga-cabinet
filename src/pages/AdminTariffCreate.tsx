@@ -321,8 +321,10 @@ export default function AdminTariffCreate() {
         <div className="flex items-center gap-3">
           <AdminBackButton to="/admin/tariffs" />
           <div>
-            <h1 className="text-xl font-bold text-dark-100">{t('admin.tariffs.selectType')}</h1>
-            <p className="text-sm text-dark-400">{t('admin.tariffs.selectTypeDesc')}</p>
+            <h1 className="text-xl font-bold tracking-tight text-dark-50 sm:text-2xl">
+              {t('admin.tariffs.selectType')}
+            </h1>
+            <p className="mt-0.5 text-[13px] text-dark-400">{t('admin.tariffs.selectTypeDesc')}</p>
           </div>
         </div>
 
@@ -376,14 +378,14 @@ export default function AdminTariffCreate() {
             {isDaily ? <SunIcon className="h-6 w-6" /> : <CalendarIcon className="h-6 w-6" />}
           </div>
           <div>
-            <h1 className="text-xl font-bold text-dark-100">
+            <h1 className="text-xl font-bold tracking-tight text-dark-50 sm:text-2xl">
               {isEdit
                 ? t('admin.tariffs.editTitle')
                 : isDaily
                   ? t('admin.tariffs.newDailyTitle')
                   : t('admin.tariffs.newPeriodTitle')}
             </h1>
-            <p className="text-sm text-dark-400">
+            <p className="mt-0.5 text-[13px] text-dark-400">
               {isDaily ? t('admin.tariffs.dailyDeduction') : t('admin.tariffs.periodPayment')}
             </p>
           </div>
@@ -438,9 +440,9 @@ export default function AdminTariffCreate() {
               }
               maxLength={50}
             />
-            <p className="mt-1 text-xs text-dark-500">{t('admin.tariffs.nameHint')}</p>
+            <p className="mt-1 text-[13px] text-dark-500">{t('admin.tariffs.nameHint')}</p>
             {name.length > 0 && (name.length < 2 || name.length > 50) && (
-              <p className="mt-1 text-xs text-error-400">
+              <p className="mt-1 text-[13px] text-error-400">
                 {t('admin.tariffs.validation.nameLength')}
               </p>
             )}
@@ -494,7 +496,9 @@ export default function AdminTariffCreate() {
                 />
                 <span className="text-dark-400">{t('admin.tariffs.currencyPerDay')}</span>
               </div>
-              <p className="mt-2 text-xs text-dark-500">{t('admin.tariffs.dailyDeductionDesc')}</p>
+              <p className="mt-2 text-[13px] text-dark-500">
+                {t('admin.tariffs.dailyDeductionDesc')}
+              </p>
             </div>
           )}
 
@@ -515,7 +519,7 @@ export default function AdminTariffCreate() {
               maxLength={16}
               placeholder="PAID_PRO"
             />
-            <p className="mt-2 text-xs text-dark-500">{t('admin.tariffs.panelTagDesc')}</p>
+            <p className="mt-2 text-[13px] text-dark-500">{t('admin.tariffs.panelTagDesc')}</p>
           </div>
 
           {/* Trial days on this tariff */}
@@ -536,7 +540,7 @@ export default function AdminTariffCreate() {
               }
               className="input w-full"
             />
-            <p className="mt-2 text-xs text-dark-500">{t('admin.tariffs.trialDaysDesc')}</p>
+            <p className="mt-2 text-[13px] text-dark-500">{t('admin.tariffs.trialDaysDesc')}</p>
           </div>
 
           {/* Traffic Limit */}
@@ -565,7 +569,7 @@ export default function AdminTariffCreate() {
                 </span>
               )}
             </div>
-            <p className="mt-1 text-xs text-dark-500">{t('admin.tariffs.trafficLimitHint')}</p>
+            <p className="mt-1 text-[13px] text-dark-500">{t('admin.tariffs.trafficLimitHint')}</p>
           </div>
 
           {/* Device Limit */}
@@ -607,7 +611,7 @@ export default function AdminTariffCreate() {
               max={10}
               placeholder="1"
             />
-            <p className="mt-1 text-xs text-dark-500">{t('admin.tariffs.tierLevelHint')}</p>
+            <p className="mt-1 text-[13px] text-dark-500">{t('admin.tariffs.tierLevelHint')}</p>
           </div>
         </div>
       )}
@@ -617,13 +621,13 @@ export default function AdminTariffCreate() {
           <p className="text-sm text-dark-400">{t('admin.tariffs.periodsTabHint')}</p>
 
           {/* Add new period */}
-          <div className="rounded-lg border-dashed bg-dark-800/50 p-4">
+          <div className="rounded-2xl border-dashed bg-dark-800/50 p-4">
             <h4 className="mb-3 text-sm font-medium text-dark-300">
               {t('admin.tariffs.addPeriodTitle')}
             </h4>
             <div className="flex flex-wrap items-end gap-3">
               <div>
-                <label className="mb-1 block text-xs text-dark-500">
+                <label className="mb-1 block text-[13px] text-dark-500">
                   {t('admin.tariffs.daysLabel')}
                 </label>
                 <input
@@ -635,7 +639,7 @@ export default function AdminTariffCreate() {
                 />
               </div>
               <div>
-                <label className="mb-1 block text-xs text-dark-500">
+                <label className="mb-1 block text-[13px] text-dark-500">
                   {t('admin.tariffs.priceLabel')}
                 </label>
                 {/* Минимум 0, а не 1: бесплатный тариф — штатная настройка,
@@ -667,7 +671,7 @@ export default function AdminTariffCreate() {
               {periodPrices.map((period) => (
                 <div
                   key={period.days}
-                  className="flex items-center gap-3 rounded-lg bg-dark-800 p-3"
+                  className="flex items-center gap-3 rounded-2xl bg-dark-800 p-3"
                 >
                   <div className="w-16 shrink-0 whitespace-nowrap font-medium text-dark-300">
                     {period.days}
@@ -760,7 +764,7 @@ export default function AdminTariffCreate() {
                       !selectedExternalSquad
                         ? isDaily
                           ? 'bg-warning-500 text-white'
-                          : 'bg-accent-500 text-on-accent'
+                          : 'bg-accent-500/15 text-accent-400'
                         : 'bg-dark-600'
                     }`}
                   >
@@ -790,7 +794,7 @@ export default function AdminTariffCreate() {
                           isSelected
                             ? isDaily
                               ? 'bg-warning-500 text-white'
-                              : 'bg-accent-500 text-on-accent'
+                              : 'bg-accent-500/15 text-accent-400'
                             : 'bg-dark-600'
                         }`}
                       >
@@ -802,7 +806,7 @@ export default function AdminTariffCreate() {
                         <span className="text-sm font-medium [overflow-wrap:anywhere]">
                           {squad.name}
                         </span>
-                        <span className="text-xs text-dark-500">
+                        <span className="text-[13px] text-dark-500">
                           {squad.members_count} {t('admin.tariffs.externalSquadUsers')}
                         </span>
                       </span>
@@ -843,7 +847,7 @@ export default function AdminTariffCreate() {
                           isSelected
                             ? isDaily
                               ? 'bg-warning-500 text-white'
-                              : 'bg-accent-500 text-on-accent'
+                              : 'bg-accent-500/15 text-accent-400'
                             : 'bg-dark-600'
                         }`}
                       >
@@ -858,7 +862,7 @@ export default function AdminTariffCreate() {
                         </Twemoji>
                       </span>
                       {server.country_code && (
-                        <span className="text-xs text-dark-500">{server.country_code}</span>
+                        <span className="text-[13px] text-dark-500">{server.country_code}</span>
                       )}
                     </button>
                   );
@@ -898,7 +902,7 @@ export default function AdminTariffCreate() {
               />
               <span className="text-dark-400">₽</span>
             </div>
-            <p className="text-xs text-dark-500">{t('admin.tariffs.devicePriceHint')}</p>
+            <p className="text-[13px] text-dark-500">{t('admin.tariffs.devicePriceHint')}</p>
             <div className="flex items-center gap-3">
               <span className="w-48 text-sm text-dark-400">
                 {t('admin.tariffs.maxDeviceLabel')}
@@ -912,7 +916,7 @@ export default function AdminTariffCreate() {
                 placeholder="0"
               />
             </div>
-            <p className="text-xs text-dark-500">{t('admin.tariffs.noLimitHint')}</p>
+            <p className="text-[13px] text-dark-500">{t('admin.tariffs.noLimitHint')}</p>
           </div>
 
           {/* Traffic topup */}
@@ -955,13 +959,13 @@ export default function AdminTariffCreate() {
                   <span className="text-dark-400">{t('admin.tariffs.gbUnit')}</span>
                 </div>
                 {/* Add new package */}
-                <div className="rounded-lg border-dashed bg-dark-800/50 p-3">
-                  <h5 className="mb-2 text-xs font-medium text-dark-400">
+                <div className="rounded-2xl border-dashed bg-dark-800/50 p-3">
+                  <h5 className="mb-2 text-[13px] font-medium text-dark-400">
                     {t('admin.tariffs.addPackageTitle')}
                   </h5>
                   <div className="flex flex-wrap items-end gap-2">
                     <div>
-                      <label className="mb-1 block text-xs text-dark-500">
+                      <label className="mb-1 block text-[13px] text-dark-500">
                         {t('admin.tariffs.gbUnit')}
                       </label>
                       <input
@@ -973,7 +977,7 @@ export default function AdminTariffCreate() {
                       />
                     </div>
                     <div>
-                      <label className="mb-1 block text-xs text-dark-500">
+                      <label className="mb-1 block text-[13px] text-dark-500">
                         {t('admin.tariffs.priceLabel')}
                       </label>
                       <input
@@ -1070,7 +1074,7 @@ export default function AdminTariffCreate() {
                               step={1}
                               placeholder="0"
                             />
-                            <span className="text-xs text-dark-400">₽</span>
+                            <span className="text-[13px] text-dark-400">₽</span>
                             <div className="flex-1" />
                             <button
                               type="button"
@@ -1099,7 +1103,7 @@ export default function AdminTariffCreate() {
             <h4 className="text-sm font-medium text-dark-200">
               {t('admin.tariffs.trafficResetModeTitle')}
             </h4>
-            <p className="text-xs text-dark-500">{t('admin.tariffs.trafficResetModeDesc')}</p>
+            <p className="text-[13px] text-dark-500">{t('admin.tariffs.trafficResetModeDesc')}</p>
             <div className="grid grid-cols-2 gap-2">
               {[
                 { value: null, labelKey: 'admin.tariffs.resetModeGlobal', emoji: '🌐' },
@@ -1161,7 +1165,7 @@ export default function AdminTariffCreate() {
                           isSelected
                             ? isDaily
                               ? 'bg-warning-500 text-white'
-                              : 'bg-accent-500 text-on-accent'
+                              : 'bg-accent-500/15 text-accent-400'
                             : 'bg-dark-600'
                         }`}
                       >
@@ -1181,12 +1185,12 @@ export default function AdminTariffCreate() {
           <div className="card space-y-3">
             <h4 className="text-sm font-medium text-dark-200">{t('admin.tariffs.statusTitle')}</h4>
             {/* Active toggle */}
-            <div className="flex items-center justify-between rounded-lg bg-dark-800 p-3">
+            <div className="flex items-center justify-between rounded-2xl bg-dark-800 p-3">
               <div>
                 <span className="text-sm font-medium text-dark-200">
                   {t('admin.tariffs.isActiveLabel')}
                 </span>
-                <p className="text-xs text-dark-500">{t('admin.tariffs.isActiveHint')}</p>
+                <p className="text-[13px] text-dark-500">{t('admin.tariffs.isActiveHint')}</p>
               </div>
               <button
                 type="button"
@@ -1206,12 +1210,12 @@ export default function AdminTariffCreate() {
               </button>
             </div>
             {/* Highlight tariff toggle */}
-            <div className="flex items-center justify-between rounded-lg bg-dark-800 p-3">
+            <div className="flex items-center justify-between rounded-2xl bg-dark-800 p-3">
               <div>
                 <span className="text-sm font-medium text-dark-200">
                   {t('admin.tariffs.highlightLabel')}
                 </span>
-                <p className="text-xs text-dark-500">{t('admin.tariffs.highlightHint')}</p>
+                <p className="text-[13px] text-dark-500">{t('admin.tariffs.highlightHint')}</p>
               </div>
               <button
                 type="button"
@@ -1231,12 +1235,12 @@ export default function AdminTariffCreate() {
               </button>
             </div>
             {/* Show in gift toggle */}
-            <div className="flex items-center justify-between rounded-lg bg-dark-800 p-3">
+            <div className="flex items-center justify-between rounded-2xl bg-dark-800 p-3">
               <div>
                 <span className="text-sm font-medium text-dark-200">
                   {t('admin.tariffs.showInGiftLabel')}
                 </span>
-                <p className="text-xs text-dark-500">{t('admin.tariffs.showInGiftHint')}</p>
+                <p className="text-[13px] text-dark-500">{t('admin.tariffs.showInGiftHint')}</p>
               </div>
               <button
                 type="button"
@@ -1266,7 +1270,7 @@ export default function AdminTariffCreate() {
             <p className="mb-1 text-sm font-medium text-error-400">
               {t('admin.tariffs.cannotSave')}
             </p>
-            <ul className="list-inside list-disc space-y-1 text-xs text-error-300">
+            <ul className="list-inside list-disc space-y-1 text-[13px] text-error-300">
               {validationErrors.map((error) => (
                 <li key={error}>{t(`admin.tariffs.validation.${error}`)}</li>
               ))}

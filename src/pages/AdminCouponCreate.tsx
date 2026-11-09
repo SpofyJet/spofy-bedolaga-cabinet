@@ -94,14 +94,16 @@ export default function AdminCouponCreate() {
     return (
       <div className="mx-auto max-w-2xl animate-fade-in">
         <div className="mb-6">
-          <h1 className="text-xl font-bold text-dark-100">{t('admin.coupons.created.title')}</h1>
-          <p className="text-sm text-dark-400">
+          <h1 className="text-xl font-bold tracking-tight text-dark-50 sm:text-2xl">
+            {t('admin.coupons.created.title')}
+          </h1>
+          <p className="mt-0.5 text-[13px] text-dark-400">
             #{created.id} {created.name} · {created.tariff_name} · {created.period_days}{' '}
             {t('admin.coupons.days')}
           </p>
         </div>
 
-        <div className="mb-4 rounded-xl bg-dark-800 p-4">
+        <div className="mb-4 rounded-3xl bg-dark-900/70 p-4">
           <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
             <span className="text-sm font-medium text-dark-200">
               {t('admin.coupons.created.linksLabel', { count: created.links.length })}
@@ -127,7 +129,7 @@ export default function AdminCouponCreate() {
             readOnly
             value={created.links.join('\n')}
             rows={Math.min(12, created.links.length)}
-            className="input w-full resize-none font-mono text-xs"
+            className="input w-full resize-none font-mono text-[13px]"
           />
         </div>
 
@@ -153,14 +155,16 @@ export default function AdminCouponCreate() {
         {!capabilities.hasBackButton && (
           <button
             onClick={() => navigate('/admin/coupons')}
-            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-dark-800 transition-colors"
+            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-dark-900/70 transition-colors"
           >
             <BackIcon />
           </button>
         )}
         <div>
-          <h1 className="text-xl font-bold text-dark-100">{t('admin.coupons.form.title')}</h1>
-          <p className="text-sm text-dark-400">{t('admin.coupons.form.subtitle')}</p>
+          <h1 className="text-xl font-bold tracking-tight text-dark-50 sm:text-2xl">
+            {t('admin.coupons.form.title')}
+          </h1>
+          <p className="mt-0.5 text-[13px] text-dark-400">{t('admin.coupons.form.subtitle')}</p>
         </div>
       </div>
 
@@ -180,7 +184,7 @@ export default function AdminCouponCreate() {
         </div>
       )}
 
-      <div className="space-y-4 rounded-xl bg-dark-800 p-4 sm:p-6">
+      <div className="space-y-4 rounded-3xl bg-dark-900/70 p-4 sm:p-6">
         {/* Name */}
         <div>
           <label className="mb-1.5 block text-sm font-medium text-dark-300">
@@ -260,7 +264,7 @@ export default function AdminCouponCreate() {
               placeholder="0"
               className="input w-full"
             />
-            <p className="mt-1 text-xs text-dark-500">{t('admin.coupons.form.priceHint')}</p>
+            <p className="mt-1 text-[13px] text-dark-500">{t('admin.coupons.form.priceHint')}</p>
           </div>
           <div>
             <label className="mb-1.5 block text-sm font-medium text-dark-300">
@@ -275,7 +279,9 @@ export default function AdminCouponCreate() {
               placeholder="0"
               className="input w-full"
             />
-            <p className="mt-1 text-xs text-dark-500">{t('admin.coupons.form.validDaysHint')}</p>
+            <p className="mt-1 text-[13px] text-dark-500">
+              {t('admin.coupons.form.validDaysHint')}
+            </p>
           </div>
           <div>
             <label className="mb-1.5 block text-sm font-medium text-dark-300">
@@ -290,7 +296,9 @@ export default function AdminCouponCreate() {
               placeholder="0"
               className="input w-full"
             />
-            <p className="mt-1 text-xs text-dark-500">{t('admin.coupons.form.maxPerUserHint')}</p>
+            <p className="mt-1 text-[13px] text-dark-500">
+              {t('admin.coupons.form.maxPerUserHint')}
+            </p>
           </div>
         </div>
 

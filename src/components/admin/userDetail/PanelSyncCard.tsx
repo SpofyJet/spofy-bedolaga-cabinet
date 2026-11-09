@@ -107,7 +107,7 @@ export function PanelSyncCard({ status, loading, busy, onPull, onPush }: PanelSy
         <div className="overflow-x-auto rounded-xl bg-dark-800/40">
           <table className="w-full whitespace-nowrap text-left text-[13px] sm:text-sm">
             <thead>
-              <tr className="text-xs text-dark-500">
+              <tr className="text-[13px] text-dark-500">
                 <th scope="col" className="w-2/5 px-2.5 py-2.5 font-medium sm:px-3">
                   <span className="sr-only">{t(`${ns}.title`)}</span>
                 </th>
@@ -162,13 +162,13 @@ export function PanelSyncCard({ status, loading, busy, onPull, onPush }: PanelSy
       )}
 
       {onGrace && (
-        <p className="text-xs text-warning-400/90">
+        <p className="text-[13px] text-warning-400/90">
           {t(`${ns}.graceNote`, { date: formatShortDate(status?.grace_until ?? null) })}
         </p>
       )}
 
       {status?.last_sync && (
-        <p className="text-xs text-dark-500">
+        <p className="text-[13px] text-dark-500">
           {t(`${ns}.checked`)}: {relativeLabel(relativeTimeParts(status.last_sync), t)}
         </p>
       )}

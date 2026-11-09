@@ -66,7 +66,7 @@ function ServerSelector({
       <label className="mb-2 block text-sm font-medium text-dark-300">
         {t('admin.campaigns.form.servers')}
       </label>
-      <div className="max-h-48 space-y-2 overflow-y-auto rounded-lg bg-dark-800 p-3">
+      <div className="max-h-48 space-y-2 overflow-y-auto rounded-3xl bg-dark-900/70 p-3">
         {servers.map((server) => (
           <button
             key={server.id}
@@ -81,7 +81,7 @@ function ServerSelector({
             <div
               className={`flex h-5 w-5 shrink-0 items-center justify-center rounded ${
                 selected.includes(server.squad_uuid)
-                  ? 'bg-accent-500 text-on-accent'
+                  ? 'bg-accent-500/15 text-accent-400'
                   : 'bg-dark-600'
               }`}
             >
@@ -263,10 +263,10 @@ export default function AdminCampaignCreate() {
             <CampaignIcon className="h-6 w-6" />
           </div>
           <div>
-            <h1 className="text-xl font-bold text-dark-100">
+            <h1 className="text-xl font-bold tracking-tight text-dark-50 sm:text-2xl">
               {t('admin.campaigns.modal.createTitle')}
             </h1>
-            <p className="text-sm text-dark-400">{t('admin.campaigns.subtitle')}</p>
+            <p className="mt-0.5 text-[13px] text-dark-400">{t('admin.campaigns.subtitle')}</p>
           </div>
         </div>
       </div>
@@ -303,7 +303,7 @@ export default function AdminCampaignCreate() {
             maxLength={255}
           />
           {name.length > 0 && !isNameValid && (
-            <p className="mt-1 text-xs text-error-400">
+            <p className="mt-1 text-[13px] text-error-400">
               {t('admin.campaigns.validation.nameRequired')}
             </p>
           )}
@@ -327,13 +327,13 @@ export default function AdminCampaignCreate() {
             placeholder="instagram_jan2024"
             maxLength={100}
           />
-          <p className="mt-1 text-xs text-dark-500">
+          <p className="mt-1 text-[13px] text-dark-500">
             {t('admin.campaigns.form.startParameterHint')}
           </p>
         </div>
 
         {/* Active toggle */}
-        <div className="flex items-center justify-between rounded-lg bg-dark-800 p-4">
+        <div className="flex items-center justify-between rounded-2xl bg-dark-800 p-4">
           <span className="text-sm font-medium text-dark-300">
             {t('admin.campaigns.form.active')}
           </span>
@@ -374,7 +374,7 @@ export default function AdminCampaignCreate() {
               role="radio"
               aria-checked={bonusType === type}
               onClick={() => setBonusType(type)}
-              className={`rounded-lg border p-4 text-left transition-all ${
+              className={`rounded-2xl border p-4 text-left transition-all ${
                 bonusType === type
                   ? `${bonusTypeConfig[type].bgColor} ${bonusTypeConfig[type].borderColor} ${bonusTypeConfig[type].color}`
                   : 'border-dark-700 bg-dark-800 text-dark-300 hover:border-dark-600'

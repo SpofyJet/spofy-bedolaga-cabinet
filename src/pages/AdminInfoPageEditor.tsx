@@ -45,9 +45,9 @@ const AVAILABLE_LOCALES = ['ru', 'en', 'zh', 'fa'] as const;
 type LocaleCode = (typeof AVAILABLE_LOCALES)[number];
 
 // --- Icons ---
-const H1Icon = () => <span className="text-xs font-bold">H1</span>;
-const H2Icon = () => <span className="text-xs font-bold">H2</span>;
-const H3Icon = () => <span className="text-xs font-bold">H3</span>;
+const H1Icon = () => <span className="text-[13px] font-bold">H1</span>;
+const H2Icon = () => <span className="text-[13px] font-bold">H2</span>;
+const H3Icon = () => <span className="text-[13px] font-bold">H3</span>;
 
 // --- Toolbar Button ---
 interface ToolbarButtonProps {
@@ -266,12 +266,14 @@ function FaqAnswerEditor({ value, onChange }: { value: string; onChange: (html: 
       {isUploading && (
         <div className="flex items-center justify-center gap-2 bg-dark-900/60 px-3 py-2">
           <div className="h-4 w-4 animate-spin rounded-full border-2 border-accent-400 border-t-transparent" />
-          <span className="text-xs text-dark-300">{t('news.admin.uploading')}</span>
+          <span className="text-[13px] text-dark-300">{t('news.admin.uploading')}</span>
         </div>
       )}
       {isDragging && !isUploading && (
         <div className="flex items-center justify-center border-b border-dashed border-accent-400 bg-accent-400/10 px-3 py-2">
-          <span className="text-xs font-medium text-accent-400">{t('news.admin.dropMedia')}</span>
+          <span className="text-[13px] font-medium text-accent-400">
+            {t('news.admin.dropMedia')}
+          </span>
         </div>
       )}
 
@@ -499,13 +501,13 @@ function FaqBuilder({ items, onChange, locale, localeLabel }: FaqBuilderProps) {
         <label className="label">
           {t('admin.infoPages.faq.questions')} ({localeLabel})
         </label>
-        <span className="text-xs text-dark-500">
+        <span className="text-[13px] text-dark-500">
           {items.length} {t('admin.infoPages.faq.questionsCount')}
         </span>
       </div>
 
       {items.length === 0 && (
-        <div className="rounded-xl border-dashed bg-dark-800/30 p-6 text-center text-sm text-dark-500">
+        <div className="rounded-3xl border-dashed bg-dark-900/70 p-6 text-center text-sm text-dark-500">
           {t('admin.infoPages.faq.noQuestions')}
         </div>
       )}
@@ -513,10 +515,10 @@ function FaqBuilder({ items, onChange, locale, localeLabel }: FaqBuilderProps) {
       {items.map((item, index) => (
         <div
           key={itemKeys[index] ?? index}
-          className="rounded-xl bg-dark-800/50 p-4 transition-all"
+          className="rounded-3xl bg-dark-900/70 p-4 transition-all"
         >
           <div className="mb-3 flex items-center justify-between">
-            <span className="text-xs font-medium text-dark-400">
+            <span className="text-[13px] font-medium text-dark-400">
               {t('admin.infoPages.faq.questionNumber', { n: index + 1 })}
             </span>
             <div className="flex items-center gap-1">
@@ -551,7 +553,7 @@ function FaqBuilder({ items, onChange, locale, localeLabel }: FaqBuilderProps) {
 
           <div className="space-y-3">
             <div>
-              <label className="mb-1 block text-xs font-medium text-dark-400">
+              <label className="mb-1 block text-[13px] font-medium text-dark-400">
                 {t('admin.infoPages.faq.question')}
               </label>
               <input
@@ -563,7 +565,7 @@ function FaqBuilder({ items, onChange, locale, localeLabel }: FaqBuilderProps) {
               />
             </div>
             <div>
-              <label className="mb-1 block text-xs font-medium text-dark-400">
+              <label className="mb-1 block text-[13px] font-medium text-dark-400">
                 {t('admin.infoPages.faq.answer')}
               </label>
               <FaqAnswerEditor
@@ -983,14 +985,14 @@ export default function AdminInfoPageEditor() {
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex min-w-0 flex-1 basis-48 items-center gap-3">
           <AdminBackButton to="/admin/info-pages" />
-          <h1 className="text-xl font-bold text-dark-100">
+          <h1 className="text-xl font-bold tracking-tight text-dark-50 sm:text-2xl">
             {isEdit ? t('admin.infoPages.edit') : t('admin.infoPages.create')}
           </h1>
         </div>
         <button
           onClick={handleSave}
           disabled={saveMutation.isPending || !slug.trim()}
-          className="min-h-[44px] rounded-lg bg-accent-500 px-6 py-2.5 text-sm font-medium text-on-accent transition-colors hover:bg-accent-600 disabled:cursor-not-allowed disabled:opacity-50"
+          className="min-h-[44px] rounded-2xl bg-cta-500 px-6 py-2.5 text-sm font-medium text-on-cta transition-colors hover:bg-cta-600 disabled:cursor-not-allowed disabled:opacity-50"
         >
           {saveMutation.isPending ? t('admin.infoPages.saving') : t('admin.infoPages.save')}
         </button>
@@ -1071,7 +1073,7 @@ export default function AdminInfoPageEditor() {
                 className={cn(
                   'min-h-[44px] rounded-lg px-4 py-2.5 text-sm font-medium transition-colors',
                   displayMode === mode
-                    ? 'bg-accent-500 text-on-accent'
+                    ? 'bg-accent-500/15 text-accent-400'
                     : 'bg-dark-700 text-dark-300 hover:bg-dark-600 hover:text-dark-100',
                 )}
               >
@@ -1099,7 +1101,7 @@ export default function AdminInfoPageEditor() {
                   pageType === pt
                     ? pt === 'faq'
                       ? 'bg-warning-500 text-white'
-                      : 'bg-accent-500 text-on-accent'
+                      : 'bg-accent-500/15 text-accent-400'
                     : 'bg-dark-700 text-dark-300 hover:bg-dark-600 hover:text-dark-100',
                 )}
               >
@@ -1135,7 +1137,7 @@ export default function AdminInfoPageEditor() {
           </select>
           {replacesTab &&
             allAdminPages?.some((p) => p.replaces_tab === replacesTab && p.id !== pageId) && (
-              <p className="mt-1 text-xs text-warning-400">
+              <p className="mt-1 text-[13px] text-warning-400">
                 {t('admin.infoPages.replacesTabWarning')}
               </p>
             )}
@@ -1157,7 +1159,7 @@ export default function AdminInfoPageEditor() {
                 className={cn(
                   'min-h-[44px] rounded-lg px-4 py-2.5 text-sm font-medium transition-colors',
                   activeLocale === loc
-                    ? 'bg-accent-500 text-on-accent'
+                    ? 'bg-accent-500/15 text-accent-400'
                     : 'bg-dark-700 text-dark-300 hover:bg-dark-600 hover:text-dark-100',
                 )}
               >
@@ -1378,7 +1380,7 @@ export default function AdminInfoPageEditor() {
         <button
           onClick={handleSave}
           disabled={saveMutation.isPending || !slug.trim()}
-          className="min-h-[44px] w-full rounded-lg bg-accent-500 py-3 text-sm font-medium text-on-accent transition-colors hover:bg-accent-600 disabled:cursor-not-allowed disabled:opacity-50"
+          className="min-h-[44px] w-full rounded-2xl bg-cta-500 py-3 text-sm font-medium text-on-cta transition-colors hover:bg-cta-600 disabled:cursor-not-allowed disabled:opacity-50"
         >
           {saveMutation.isPending ? t('admin.infoPages.saving') : t('admin.infoPages.save')}
         </button>

@@ -46,12 +46,12 @@ export default function AdminPartnerCommission() {
       {/* Header */}
       <div className="mb-6 flex items-center gap-3">
         <AdminBackButton to={`/admin/partners/${userId}`} />
-        <h1 className="text-xl font-semibold text-dark-100">
+        <h1 className="text-xl font-bold tracking-tight text-dark-50 sm:text-2xl">
           {t('admin.partnerDetail.commissionDialog.title')}
         </h1>
       </div>
 
-      <div className="rounded-xl bg-dark-800 p-6">
+      <div className="rounded-3xl bg-dark-900/70 p-6">
         <p className="mb-4 text-sm text-dark-400">
           {t('admin.partnerDetail.commissionDialog.description')}
         </p>
@@ -90,7 +90,7 @@ export default function AdminPartnerCommission() {
               Number(commissionValue) < 1 ||
               Number(commissionValue) > 100
             }
-            className="flex-1 rounded-lg bg-accent-500 px-4 py-3 font-medium text-on-accent transition-colors hover:bg-accent-600 disabled:opacity-50"
+            className="flex-1 rounded-2xl bg-cta-500 px-4 py-3 font-medium text-on-cta transition-colors hover:bg-cta-600 disabled:opacity-50"
           >
             {updateMutation.isPending ? t('common.saving') : t('common.save')}
           </button>

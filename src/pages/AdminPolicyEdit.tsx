@@ -387,7 +387,7 @@ export default function AdminPolicyEdit() {
       <div className="flex items-center gap-3">
         <AdminBackButton to="/admin/policies" />
         <div>
-          <h1 className="text-xl font-semibold text-dark-100">
+          <h1 className="text-xl font-bold tracking-tight text-dark-50 sm:text-2xl">
             {isEdit ? t('admin.policies.modal.editTitle') : t('admin.policies.modal.createTitle')}
           </h1>
         </div>
@@ -396,7 +396,7 @@ export default function AdminPolicyEdit() {
       {/* Form */}
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Basic info */}
-        <div className="rounded-xl bg-dark-800 p-4 sm:p-6">
+        <div className="rounded-3xl bg-dark-900/70 p-4 sm:p-6">
           <div className="space-y-4">
             {/* Name */}
             <div>
@@ -466,7 +466,7 @@ export default function AdminPolicyEdit() {
         </div>
 
         {/* Resource & Actions */}
-        <div className="rounded-xl bg-dark-800 p-4 sm:p-6">
+        <div className="rounded-3xl bg-dark-900/70 p-4 sm:p-6">
           <div className="space-y-4">
             {/* Resource dropdown */}
             <div>
@@ -497,7 +497,7 @@ export default function AdminPolicyEdit() {
                 <label className="mb-1 block text-sm font-medium text-dark-200">
                   {t('admin.policies.form.actions')}
                 </label>
-                <div className="flex flex-wrap gap-2 rounded-lg bg-dark-900/50 p-3">
+                <div className="flex flex-wrap gap-2 rounded-2xl bg-dark-900/50 p-3">
                   {selectedResourceActions.map((action) => {
                     const selected = formData.actions.includes(action);
                     return (
@@ -505,7 +505,7 @@ export default function AdminPolicyEdit() {
                         key={action}
                         type="button"
                         onClick={() => handleToggleAction(action)}
-                        className={`rounded-md px-2.5 py-1 text-xs font-medium transition-colors ${
+                        className={`rounded-md px-2.5 py-1 text-[13px] font-medium transition-colors ${
                           selected
                             ? 'bg-accent-500/20 text-accent-400'
                             : 'bg-dark-700/50 text-dark-400 hover:bg-dark-700 hover:text-dark-300'
@@ -543,7 +543,7 @@ export default function AdminPolicyEdit() {
                   </option>
                 ))}
               </select>
-              <p className="mt-1 text-xs text-dark-500">{t('admin.policies.form.roleHint')}</p>
+              <p className="mt-1 text-[13px] text-dark-500">{t('admin.policies.form.roleHint')}</p>
             </div>
 
             {/* Priority */}
@@ -568,13 +568,15 @@ export default function AdminPolicyEdit() {
                 }
                 className="w-full rounded-lg border border-dark-600 bg-dark-900 px-3 py-2 text-dark-100 outline-none transition-colors focus:border-accent-500"
               />
-              <p className="mt-1 text-xs text-dark-500">{t('admin.policies.form.priorityHint')}</p>
+              <p className="mt-1 text-[13px] text-dark-500">
+                {t('admin.policies.form.priorityHint')}
+              </p>
             </div>
           </div>
         </div>
 
         {/* Conditions */}
-        <div className="rounded-xl bg-dark-800 p-4 sm:p-6">
+        <div className="rounded-3xl bg-dark-900/70 p-4 sm:p-6">
           <label className="mb-3 block text-sm font-medium text-dark-200">
             {t('admin.policies.form.conditions')}
           </label>
@@ -694,7 +696,7 @@ export default function AdminPolicyEdit() {
                   className="w-24 rounded-lg border border-dark-600 bg-dark-900 px-2 py-1.5 text-sm text-dark-100 outline-none focus:border-accent-500"
                   aria-label={t('admin.policies.conditions.rateLimitValue')}
                 />
-                <span className="text-xs text-dark-500">
+                <span className="text-[13px] text-dark-500">
                   {t('admin.policies.conditions.perHour')}
                 </span>
               </div>
@@ -733,7 +735,7 @@ export default function AdminPolicyEdit() {
                           };
                         })
                       }
-                      className={`rounded-lg px-3 py-1.5 text-xs font-medium transition-colors ${
+                      className={`rounded-lg px-3 py-1.5 text-[13px] font-medium transition-colors ${
                         selected
                           ? 'bg-accent-500/20 text-accent-400'
                           : 'bg-dark-700/50 text-dark-400 hover:bg-dark-700 hover:text-dark-300'
@@ -750,7 +752,7 @@ export default function AdminPolicyEdit() {
         </div>
 
         {/* Error & Submit */}
-        <div className="rounded-xl bg-dark-800 p-4 sm:p-6">
+        <div className="rounded-3xl bg-dark-900/70 p-4 sm:p-6">
           {formError && <p className="mb-4 text-sm text-error-400">{formError}</p>}
           <div className="flex justify-end gap-3">
             <button
@@ -763,7 +765,7 @@ export default function AdminPolicyEdit() {
             <button
               type="submit"
               disabled={isSaving}
-              className="rounded-lg bg-accent-500 px-4 py-2 text-on-accent transition-colors hover:bg-accent-600 disabled:opacity-50"
+              className="rounded-2xl bg-cta-500 px-4 py-2 text-on-cta transition-colors hover:bg-cta-600 disabled:opacity-50"
             >
               {isSaving ? t('admin.policies.form.saving') : t('admin.policies.form.save')}
             </button>

@@ -157,7 +157,7 @@ export function BrandingTab({ accentColor = '#3b82f6' }: BrandingTabProps) {
   return (
     <div className="space-y-6">
       {/* Logo & Name */}
-      <div className="rounded-2xl bg-dark-800/50 p-6">
+      <div className="rounded-3xl bg-dark-900/70 p-6">
         <h3 className="mb-4 text-lg font-semibold text-dark-100">
           {t('admin.settings.logoAndName')}
         </h3>
@@ -228,7 +228,7 @@ export function BrandingTab({ accentColor = '#3b82f6' }: BrandingTabProps) {
                 <button
                   onClick={() => updateBrandingMutation.mutate(newName)}
                   disabled={updateBrandingMutation.isPending}
-                  className="shrink-0 rounded-xl bg-accent-500 px-4 py-2 text-on-accent transition-colors hover:bg-accent-600 disabled:opacity-50"
+                  className="shrink-0 rounded-2xl bg-cta-500 px-4 py-2 text-on-cta transition-colors hover:bg-cta-600 disabled:opacity-50"
                 >
                   <CheckIcon />
                 </button>
@@ -260,7 +260,7 @@ export function BrandingTab({ accentColor = '#3b82f6' }: BrandingTabProps) {
       </div>
 
       {/* Видео стартового меню бота */}
-      <div className="rounded-2xl bg-dark-800/50 p-6">
+      <div className="rounded-3xl bg-dark-900/70 p-6">
         <h3 className="mb-1 text-lg font-semibold text-dark-100">
           {t('admin.settings.botStartVideo')}
         </h3>
@@ -311,12 +311,12 @@ export function BrandingTab({ accentColor = '#3b82f6' }: BrandingTabProps) {
       </div>
 
       {/* Animated Background Editor */}
-      <div className="rounded-2xl bg-dark-800/50 p-6">
+      <div className="rounded-3xl bg-dark-900/70 p-6">
         <BackgroundEditor />
       </div>
 
       {/* Fullscreen & Email toggles */}
-      <div className="rounded-2xl bg-dark-800/50 p-6">
+      <div className="rounded-3xl bg-dark-900/70 p-6">
         <h3 className="mb-4 text-lg font-semibold text-dark-100">
           {t('admin.settings.interfaceOptions')}
         </h3>

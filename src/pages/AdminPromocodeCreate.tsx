@@ -260,18 +260,18 @@ export default function AdminPromocodeCreate() {
         {!capabilities.hasBackButton && (
           <button
             onClick={() => navigate('/admin/promocodes')}
-            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-dark-800 transition-colors"
+            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-dark-900/70 transition-colors"
           >
             <BackIcon />
           </button>
         )}
         <div>
-          <h1 className="text-xl font-bold text-dark-100">
+          <h1 className="text-xl font-bold tracking-tight text-dark-50 sm:text-2xl">
             {isEdit
               ? t('admin.promocodes.modal.editPromocode')
               : t('admin.promocodes.modal.newPromocode')}
           </h1>
-          <p className="text-sm text-dark-400">{t('admin.promocodes.subtitle')}</p>
+          <p className="mt-0.5 text-[13px] text-dark-400">{t('admin.promocodes.subtitle')}</p>
         </div>
       </div>
 
@@ -447,7 +447,7 @@ export default function AdminPromocodeCreate() {
               ))}
             </select>
             {!tariffId && !trialTariff && (
-              <div className="mt-1 text-xs text-warning-400">
+              <div className="mt-1 text-[13px] text-warning-400">
                 {t(
                   'admin.promocodes.form.noTrialTariffHint',
                   'Выберите тариф или отметьте тариф как «доступен для триала» в настройках.',
@@ -514,7 +514,7 @@ export default function AdminPromocodeCreate() {
                 />
                 <span className="text-dark-400">%</span>
               </div>
-              <p className="mt-1 text-xs text-dark-500">
+              <p className="mt-1 text-[13px] text-dark-500">
                 {t('admin.promocodes.form.discountHint')}
               </p>
             </div>
@@ -545,7 +545,7 @@ export default function AdminPromocodeCreate() {
                 />
                 <span className="text-dark-400">{t('admin.promocodes.form.hours')}</span>
               </div>
-              <p className="mt-1 text-xs text-dark-500">
+              <p className="mt-1 text-[13px] text-dark-500">
                 {t('admin.promocodes.form.validityHint')}
               </p>
             </div>
@@ -567,7 +567,7 @@ export default function AdminPromocodeCreate() {
               min={0}
               placeholder="0"
             />
-            <span className="text-xs text-dark-500">
+            <span className="text-[13px] text-dark-500">
               {t('admin.promocodes.form.unlimitedHint')}
             </span>
           </div>
@@ -583,7 +583,9 @@ export default function AdminPromocodeCreate() {
             onChange={setValidUntil}
             className="flex w-full items-center gap-2 rounded-xl border border-dark-700/50 bg-dark-800/50 px-4 py-3 text-sm text-dark-100 transition-colors hover:border-accent-500/50"
           />
-          <p className="mt-1 text-xs text-dark-500">{t('admin.promocodes.form.validUntilHint')}</p>
+          <p className="mt-1 text-[13px] text-dark-500">
+            {t('admin.promocodes.form.validUntilHint')}
+          </p>
         </div>
 
         {/* Options */}
@@ -639,7 +641,7 @@ export default function AdminPromocodeCreate() {
             <p className="mb-1 text-sm font-medium text-error-400">
               {t('admin.promocodes.cannotSave')}
             </p>
-            <ul className="list-inside list-disc space-y-1 text-xs text-error-300">
+            <ul className="list-inside list-disc space-y-1 text-[13px] text-error-300">
               {validationErrors.map((error) => (
                 <li key={error}>{t(`admin.promocodes.validation.${error}`)}</li>
               ))}

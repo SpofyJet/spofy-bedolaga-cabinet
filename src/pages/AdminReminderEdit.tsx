@@ -233,7 +233,7 @@ export default function AdminReminderEdit() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-xl font-bold text-dark-50">
+      <h1 className="text-xl font-bold tracking-tight text-dark-50 sm:text-2xl">
         {t(editId !== null ? 'admin.reminders.editTitle' : 'admin.reminders.createTitle')}
       </h1>
 
@@ -403,7 +403,7 @@ export default function AdminReminderEdit() {
               key={code}
               type="button"
               onClick={() => setLang(code)}
-              className={`rounded-lg px-3 py-1 text-sm ${lang === code ? 'bg-accent-500 text-white' : 'bg-dark-800 text-dark-300'}`}
+              className={`rounded-lg px-3 py-1 text-sm ${lang === code ? 'bg-accent-500/15 text-accent-400' : 'bg-dark-800 text-dark-300'}`}
             >
               {code.toUpperCase()}
               {code === 'ru' ? ' *' : ''}
@@ -478,7 +478,7 @@ export default function AdminReminderEdit() {
       </section>
 
       <section className="rounded-2xl border border-accent-500/30 bg-accent-500/5 p-4">
-        <div className="text-xs text-dark-400">{t('admin.reminders.form.preview')}</div>
+        <div className="text-[13px] text-dark-400">{t('admin.reminders.form.preview')}</div>
         <div className="mt-1 font-semibold text-dark-50">{preview.title}</div>
         <div className="whitespace-pre-line text-sm text-dark-300">{preview.body}</div>
       </section>
@@ -493,7 +493,7 @@ export default function AdminReminderEdit() {
           type="button"
           onClick={submit}
           disabled={save.isPending}
-          className="rounded-xl bg-accent-500 px-4 py-2 text-sm font-medium text-white"
+          className="rounded-2xl bg-cta-500 px-4 py-2 text-sm font-medium text-on-cta"
         >
           {t('admin.reminders.form.save')}
         </button>
@@ -507,7 +507,7 @@ export default function AdminReminderEdit() {
             >
               {t('admin.reminders.form.sendTest')}
             </button>
-            <span className="text-xs text-dark-400">{t('admin.reminders.form.testHint')}</span>
+            <span className="text-[13px] text-dark-400">{t('admin.reminders.form.testHint')}</span>
           </PermissionGate>
         )}
         {test.isSuccess && (

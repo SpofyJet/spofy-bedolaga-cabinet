@@ -465,7 +465,9 @@ export default function AdminPanel() {
   return (
     <Page>
       <header className="px-1">
-        <h1 className="text-2xl font-bold tracking-tight text-dark-50">{t('admin.panel.title')}</h1>
+        <h1 className="text-xl font-bold tracking-tight text-dark-50 sm:text-2xl">
+          {t('admin.panel.title')}
+        </h1>
         {versions ? (
           <p className="mt-1 truncate text-[13px] text-dark-400">{versions.join(' · ')}</p>
         ) : (

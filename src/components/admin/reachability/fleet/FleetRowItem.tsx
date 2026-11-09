@@ -131,9 +131,9 @@ export function FleetRowItem({
             <span className="truncate text-sm font-medium text-dark-100">{row.label}</span>
             {row.purpose === 'bs' && <PurposeChip purpose="bs" compact />}
           </span>
-          <span className="block truncate font-mono text-xs text-dark-500">{row.address}</span>
+          <span className="block truncate font-mono text-[13px] text-dark-500">{row.address}</span>
           {(cells.units || cells.when) && (
-            <span className="mt-1 flex items-center gap-1.5 text-xs md:hidden">
+            <span className="mt-1 flex items-center gap-1.5 text-[13px] md:hidden">
               {cells.dot && <Dot className={cells.dot} />}
               {cells.units && <span className="text-dark-300">{cells.units}</span>}
               {cells.units && cells.when && <span className="text-dark-500">·</span>}
@@ -141,11 +141,15 @@ export function FleetRowItem({
             </span>
           )}
         </span>
-        <span className={cn('hidden items-center gap-2 text-xs text-dark-300 md:flex', COL_UNITS)}>
+        <span
+          className={cn('hidden items-center gap-2 text-[13px] text-dark-300 md:flex', COL_UNITS)}
+        >
           {cells.dot && <Dot className={cells.dot} />}
           {cells.units}
         </span>
-        <span className={cn('hidden text-xs md:block', COL_AGE, cells.whenTone)}>{cells.when}</span>
+        <span className={cn('hidden text-[13px] md:block', COL_AGE, cells.whenTone)}>
+          {cells.when}
+        </span>
       </button>
       <button
         type="button"

@@ -114,7 +114,7 @@ export function ServerDetails({ row, summaryRow, units, status, onCheck }: Serve
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
-        <span className="font-mono text-xs text-dark-300">{row.address}</span>
+        <span className="font-mono text-[13px] text-dark-300">{row.address}</span>
         <PurposeChip
           purpose={row.purpose}
           disabled={row.ref === null || setPurpose.isPending}
@@ -155,9 +155,9 @@ export function ServerDetails({ row, summaryRow, units, status, onCheck }: Serve
                   <OperatorIcon operator={item.operator} className="h-5 w-5 rounded" />
                   <span className="min-w-0 flex-1">
                     <span className="block truncate text-sm text-dark-100">{item.name}</span>
-                    <span className={cn('block text-xs', words.tone)}>{words.text}</span>
+                    <span className={cn('block text-[13px]', words.tone)}>{words.text}</span>
                   </span>
-                  <span className="text-xs tabular-nums text-dark-400">
+                  <span className="text-[13px] tabular-nums text-dark-400">
                     {t(`${base}.server.ofUnits`, { ok: item.ok, total: item.total })}
                   </span>
                 </li>

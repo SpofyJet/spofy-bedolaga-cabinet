@@ -153,7 +153,7 @@ function MethodBadge({ method }: MethodBadgeProps) {
 
   return (
     <span
-      className={`inline-flex items-center rounded-md px-2 py-0.5 font-mono text-xs font-medium ${colorMap[method] || 'bg-dark-600 text-dark-300'}`}
+      className={`inline-flex items-center rounded-md px-2 py-0.5 text-xs font-medium ${colorMap[method] || 'bg-dark-600 text-dark-300'}`}
     >
       {method}
     </span>
@@ -214,7 +214,7 @@ function LogEntryCard({ entry, isExpanded, onToggle }: LogEntryCardProps) {
               : null}
           </span>
           {entry.resource_id && (
-            <span className="rounded bg-dark-700 px-1.5 py-0.5 font-mono text-xs text-dark-300">
+            <span className="rounded bg-dark-700 px-1.5 py-0.5 text-xs text-dark-300">
               #{entry.resource_id}
             </span>
           )}
@@ -229,7 +229,7 @@ function LogEntryCard({ entry, isExpanded, onToggle }: LogEntryCardProps) {
 
         {/* IP */}
         {entry.ip_address && (
-          <div className="shrink-0 font-mono text-xs text-dark-500">{entry.ip_address}</div>
+          <div className="shrink-0 font-mono text-[13px] text-dark-500">{entry.ip_address}</div>
         )}
 
         {/* Expand indicator */}
@@ -286,7 +286,7 @@ function LogEntryCard({ entry, isExpanded, onToggle }: LogEntryCardProps) {
                 <p className="mb-1 text-xs font-medium uppercase text-dark-500">
                   {t('admin.auditLog.details.before')}
                 </p>
-                <pre className="max-h-40 overflow-auto rounded-lg bg-dark-900 p-2 text-xs text-dark-300">
+                <pre className="max-h-40 overflow-auto rounded-lg bg-dark-900 p-2 text-[13px] text-dark-300">
                   {JSON.stringify(entry.details.before, null, 2)}
                 </pre>
               </div>
@@ -297,7 +297,7 @@ function LogEntryCard({ entry, isExpanded, onToggle }: LogEntryCardProps) {
                 <p className="mb-1 text-xs font-medium uppercase text-dark-500">
                   {t('admin.auditLog.details.after')}
                 </p>
-                <pre className="max-h-40 overflow-auto rounded-lg bg-dark-900 p-2 text-xs text-dark-300">
+                <pre className="max-h-40 overflow-auto rounded-lg bg-dark-900 p-2 text-[13px] text-dark-300">
                   {JSON.stringify(entry.details.after, null, 2)}
                 </pre>
               </div>
@@ -311,7 +311,7 @@ function LogEntryCard({ entry, isExpanded, onToggle }: LogEntryCardProps) {
                   <p className="mb-1 text-xs font-medium uppercase text-dark-500">
                     {t('admin.auditLog.details.queryParams')}
                   </p>
-                  <pre className="max-h-40 overflow-auto rounded-lg bg-dark-900 p-2 text-xs text-dark-300">
+                  <pre className="max-h-40 overflow-auto rounded-lg bg-dark-900 p-2 text-[13px] text-dark-300">
                     {JSON.stringify(entry.details.query_params, null, 2)}
                   </pre>
                 </div>
@@ -325,7 +325,7 @@ function LogEntryCard({ entry, isExpanded, onToggle }: LogEntryCardProps) {
                   <p className="mb-1 text-xs font-medium uppercase text-dark-500">
                     {t('admin.auditLog.details.requestBody')}
                   </p>
-                  <pre className="max-h-60 overflow-auto rounded-lg bg-dark-900 p-2 text-xs text-dark-300">
+                  <pre className="max-h-60 overflow-auto rounded-lg bg-dark-900 p-2 text-[13px] text-dark-300">
                     {JSON.stringify(entry.details.request_body, null, 2)}
                   </pre>
                 </div>
@@ -338,7 +338,7 @@ function LogEntryCard({ entry, isExpanded, onToggle }: LogEntryCardProps) {
               <p className="mb-1 text-xs font-medium uppercase text-dark-500">
                 {t('admin.auditLog.details.fullDetails')}
               </p>
-              <pre className="max-h-60 overflow-auto rounded-lg bg-dark-900 p-3 text-xs text-dark-300">
+              <pre className="max-h-60 overflow-auto rounded-lg bg-dark-900 p-3 text-[13px] text-dark-300">
                 {JSON.stringify(entry.details, null, 2)}
               </pre>
             </div>
@@ -500,15 +500,17 @@ export default function AdminAuditLog() {
           {!capabilities.hasBackButton && (
             <button
               onClick={() => navigate('/admin')}
-              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-dark-800 transition-colors"
+              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-dark-900/70 transition-colors"
               aria-label={t('admin.auditLog.back')}
             >
               <BackIcon />
             </button>
           )}
           <div>
-            <h1 className="text-xl font-semibold text-dark-100">{t('admin.auditLog.title')}</h1>
-            <p className="text-sm text-dark-400">{t('admin.auditLog.subtitle')}</p>
+            <h1 className="text-xl font-bold tracking-tight text-dark-50 sm:text-2xl">
+              {t('admin.auditLog.title')}
+            </h1>
+            <p className="mt-0.5 text-[13px] text-dark-400">{t('admin.auditLog.subtitle')}</p>
           </div>
         </div>
 
@@ -548,7 +550,7 @@ export default function AdminAuditLog() {
                   handleExport();
                 }}
                 disabled={exporting}
-                className="flex items-center gap-2 rounded-lg bg-accent-500 px-4 py-2 text-on-accent transition-colors hover:bg-accent-600 disabled:opacity-50"
+                className="flex items-center gap-2 rounded-2xl bg-cta-500 px-4 py-2 text-on-cta transition-colors hover:bg-cta-600 disabled:opacity-50"
               >
                 <DownloadIcon />
                 <span className="hidden sm:inline">
@@ -615,7 +617,7 @@ export default function AdminAuditLog() {
                           }`}
                         >
                           <span
-                            className={`flex h-4 w-4 items-center justify-center rounded border text-xs ${
+                            className={`flex h-4 w-4 items-center justify-center rounded border text-[13px] ${
                               isSelected
                                 ? 'border-accent-500 bg-accent-500 text-on-accent'
                                 : 'border-dark-500 bg-dark-800'
@@ -737,7 +739,7 @@ export default function AdminAuditLog() {
             <div className="mt-4 flex items-center gap-3">
               <button
                 onClick={handleApplyFilters}
-                className="rounded-lg bg-accent-500 px-4 py-2 text-sm font-medium text-on-accent transition-colors hover:bg-accent-600"
+                className="rounded-2xl bg-cta-500 px-4 py-2 text-sm font-medium text-on-cta transition-colors hover:bg-cta-600"
               >
                 {t('admin.auditLog.filters.apply')}
               </button>

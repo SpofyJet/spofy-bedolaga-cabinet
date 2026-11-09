@@ -35,7 +35,7 @@ const PageRow = memo(function PageRow({
   const resolvedTitle = page.title[locale] || page.title.ru || page.title.en || '';
 
   return (
-    <div className="rounded-xl bg-dark-800/50 p-4 transition-all">
+    <div className="rounded-3xl bg-dark-900/70 p-4 transition-all">
       {/* На телефоне кнопки — отдельной строкой: рядом с ними заголовку оставалось 72 px. */}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:gap-4">
         <div className="min-w-0 flex-1">
@@ -67,12 +67,12 @@ const PageRow = memo(function PageRow({
                 {t(`admin.infoPages.replacesTabOptions.${page.replaces_tab}`)}
               </span>
             )}
-            <span className="text-xs text-dark-500">#{page.id}</span>
+            <span className="text-[13px] text-dark-500">#{page.id}</span>
           </div>
 
           <p className="truncate text-sm font-medium text-dark-100">{resolvedTitle}</p>
 
-          <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-dark-500">
+          <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-[13px] text-dark-500">
             <span className="whitespace-nowrap">
               {t('admin.infoPages.fields.sortOrder')}: {page.sort_order}
             </span>
@@ -218,7 +218,9 @@ export default function AdminInfoPages() {
         <div className="flex min-w-0 flex-1 basis-48 items-center gap-3">
           <AdminBackButton />
           <div className="flex items-center gap-2">
-            <h1 className="text-xl font-bold text-dark-100">{t('admin.infoPages.title')}</h1>
+            <h1 className="text-xl font-bold tracking-tight text-dark-50 sm:text-2xl">
+              {t('admin.infoPages.title')}
+            </h1>
             {items.length + legacyPages.length > 0 && (
               <span className="rounded-full bg-dark-700 px-2 py-0.5 text-xs font-medium text-dark-300">
                 {items.length + legacyPages.length}
@@ -264,7 +266,7 @@ export default function AdminInfoPages() {
               haptic.buttonPress();
               navigate('/admin/info-pages/create');
             }}
-            className="flex min-h-[44px] items-center gap-2 rounded-lg bg-accent-500 px-4 py-2.5 text-on-accent transition-colors hover:bg-accent-600"
+            className="flex min-h-[44px] items-center gap-2 rounded-2xl bg-cta-500 px-4 py-2.5 text-on-cta transition-colors hover:bg-cta-600"
             aria-label={t('admin.infoPages.create')}
           >
             <PlusIcon />
@@ -283,7 +285,7 @@ export default function AdminInfoPages() {
             className={cn(
               'min-h-[44px] rounded-lg px-4 py-2.5 text-sm font-medium transition-colors',
               activeFilter === tab
-                ? 'bg-accent-500 text-on-accent'
+                ? 'bg-accent-500/15 text-accent-400'
                 : 'bg-dark-700 text-dark-300 hover:bg-dark-600 hover:text-dark-100',
             )}
           >
@@ -309,7 +311,7 @@ export default function AdminInfoPages() {
       ) : items.length === 0 &&
         legacyPages.length === 0 &&
         (activeFilter === 'page' || (!legacy.isLoading && !legacy.isError)) ? (
-        <div className="flex flex-col items-center rounded-xl bg-dark-800/50 p-8 text-center text-dark-400">
+        <div className="flex flex-col items-center rounded-3xl bg-dark-900/70 p-8 text-center text-dark-400">
           <FileTextIcon className="h-6 w-6" />
           <p className="mt-2">{t('admin.infoPages.noPages')}</p>
         </div>

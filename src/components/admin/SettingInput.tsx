@@ -112,7 +112,7 @@ export function SettingInput({ setting, onUpdate, disabled }: SettingInputProps)
           className="min-h-[100px] w-full resize-none rounded-xl border border-accent-500 bg-dark-700 px-4 py-3 font-mono text-sm text-dark-100 focus:outline-none focus:ring-2 focus:ring-accent-500/30"
         />
         <div className="flex flex-wrap items-center justify-between gap-2">
-          <span className="text-xs text-dark-500">{t('admin.settings.ctrlEnterHint')}</span>
+          <span className="text-[13px] text-dark-500">{t('admin.settings.ctrlEnterHint')}</span>
           <div className="ml-auto flex items-center gap-2">
             <button
               onClick={handleCancel}
@@ -122,7 +122,7 @@ export function SettingInput({ setting, onUpdate, disabled }: SettingInputProps)
             </button>
             <button
               onClick={handleSave}
-              className="flex items-center gap-1.5 rounded-lg bg-accent-500 px-3 py-1.5 text-sm text-on-accent transition-colors hover:bg-accent-600"
+              className="flex items-center gap-1.5 rounded-2xl bg-cta-500 px-3 py-1.5 text-sm text-on-cta transition-colors hover:bg-cta-600"
             >
               <CheckIcon />
               {t('admin.settings.saveButton')}
@@ -159,7 +159,7 @@ export function SettingInput({ setting, onUpdate, disabled }: SettingInputProps)
         />
         <button
           onClick={handleSave}
-          className="shrink-0 rounded-lg bg-accent-500 p-2 text-on-accent transition-colors hover:bg-accent-600"
+          className="shrink-0 rounded-2xl bg-cta-500 p-2 text-on-cta transition-colors hover:bg-cta-600"
           title={t('admin.settings.saveHint')}
         >
           <CheckIcon />

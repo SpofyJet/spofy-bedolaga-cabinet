@@ -120,7 +120,9 @@ export default function AdminUserDetail() {
       <div className="animate-fade-in">
         <div className="mb-4 flex items-center gap-3">
           <AdminBackButton to="/admin/users" />
-          <h1 className="text-xl font-bold text-dark-100">{t('admin.users.notFound')}</h1>
+          <h1 className="text-xl font-bold tracking-tight text-dark-50 sm:text-2xl">
+            {t('admin.users.notFound')}
+          </h1>
         </div>
         <p className="mb-4 text-sm text-dark-400">
           {getApiErrorMessage(userQuery.error, t('admin.users.detail.loadError'))}

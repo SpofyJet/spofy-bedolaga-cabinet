@@ -150,10 +150,10 @@ export default function AdminPromoGroupCreate() {
       <div className="flex items-center gap-3">
         <AdminBackButton to="/admin/promo-groups" />
         <div>
-          <h1 className="text-xl font-bold text-dark-100">
+          <h1 className="text-xl font-bold tracking-tight text-dark-50 sm:text-2xl">
             {isEdit ? t('admin.promoGroups.editTitle') : t('admin.promoGroups.createTitle')}
           </h1>
-          <p className="text-sm text-dark-400">{t('admin.promoGroups.subtitle')}</p>
+          <p className="mt-0.5 text-[13px] text-dark-400">{t('admin.promoGroups.subtitle')}</p>
         </div>
       </div>
 
@@ -174,7 +174,7 @@ export default function AdminPromoGroupCreate() {
             placeholder={t('admin.promoGroups.form.namePlaceholder')}
           />
           {name.length > 0 && name.trim().length === 0 && (
-            <p className="mt-1 text-xs text-error-400">
+            <p className="mt-1 text-[13px] text-error-400">
               {t('admin.promoGroups.form.nameRequired')}
             </p>
           )}
@@ -259,13 +259,13 @@ export default function AdminPromoGroupCreate() {
             <button
               type="button"
               onClick={addPeriodDiscount}
-              className="flex items-center gap-1 rounded bg-accent-500/20 px-2 py-1 text-xs text-accent-400 transition-colors hover:bg-accent-500/30"
+              className="flex items-center gap-1 rounded bg-accent-500/20 px-2 py-1 text-[13px] text-accent-400 transition-colors hover:bg-accent-500/30"
             >
               <PlusIcon />
               {t('admin.promoGroups.form.add')}
             </button>
           </div>
-          <p className="mb-3 text-xs text-dark-500">{t('admin.promoGroups.form.periodHint')}</p>
+          <p className="mb-3 text-[13px] text-dark-500">{t('admin.promoGroups.form.periodHint')}</p>
 
           {periodDiscounts.length === 0 ? (
             <p className="py-2 text-center text-sm text-dark-500">
@@ -288,7 +288,7 @@ export default function AdminPromoGroupCreate() {
                     min={1}
                     placeholder={t('admin.promoGroups.form.daysPlaceholder')}
                   />
-                  <span className="shrink-0 whitespace-nowrap text-xs text-dark-400">
+                  <span className="shrink-0 whitespace-nowrap text-[13px] text-dark-400">
                     {t('admin.promoGroups.form.arrow')}
                   </span>
                   <input
@@ -343,7 +343,9 @@ export default function AdminPromoGroupCreate() {
             />
             <span className="text-dark-400">{t('admin.promoGroups.form.rub')}</span>
           </div>
-          <p className="mt-1 text-xs text-dark-500">{t('admin.promoGroups.form.autoAssignHint')}</p>
+          <p className="mt-1 text-[13px] text-dark-500">
+            {t('admin.promoGroups.form.autoAssignHint')}
+          </p>
         </div>
 
         {/* Apply to addons */}

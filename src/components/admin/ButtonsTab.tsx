@@ -200,7 +200,7 @@ export function ButtonsTab() {
           return (
             <div
               key={section}
-              className={`overflow-hidden rounded-2xl border bg-dark-800/50 p-4 transition-colors sm:p-5 ${
+              className={`overflow-hidden rounded-3xl border bg-dark-900/70 p-4 transition-colors sm:p-5 ${
                 cfg.enabled ? 'border-dark-700/50' : 'border-dark-700/30 opacity-60'
               }`}
             >
@@ -217,14 +217,14 @@ export function ButtonsTab() {
                       </span>
                     )}
                   </div>
-                  <p className="mt-0.5 truncate text-xs text-dark-400">
+                  <p className="mt-0.5 truncate text-[13px] text-dark-400">
                     {t(`admin.buttons.descriptions.${section}`)}
                   </p>
                 </div>
                 <div className="flex shrink-0 items-center gap-2">
                   {/* Live preview chip */}
                   <div
-                    className={`whitespace-nowrap rounded-lg px-2.5 py-1.5 text-xs font-medium ${
+                    className={`whitespace-nowrap rounded-lg px-2.5 py-1.5 text-[13px] font-medium ${
                       cfg.style === 'default'
                         ? 'bg-dark-600 text-dark-300'
                         : cfg.style === 'success'
@@ -243,7 +243,7 @@ export function ButtonsTab() {
 
               {/* Color selector chips */}
               <div className="mb-3">
-                <label className="mb-1.5 block text-xs font-medium text-dark-300">
+                <label className="mb-1.5 block text-[13px] font-medium text-dark-300">
                   {t('admin.buttons.color')}
                 </label>
                 <div className="flex flex-wrap gap-1.5">
@@ -251,7 +251,7 @@ export function ButtonsTab() {
                     <button
                       key={opt.value}
                       onClick={() => updateSection(section, 'style', opt.value)}
-                      className={`flex h-7 items-center gap-1.5 rounded-lg border px-2.5 text-xs font-medium transition-all ${
+                      className={`flex h-7 items-center gap-1.5 rounded-lg border px-2.5 text-[13px] font-medium transition-all ${
                         cfg.style === opt.value
                           ? 'border-accent-500 bg-accent-500/10 text-accent-400'
                           : 'border-dark-600 bg-dark-700/50 text-dark-300 hover:border-dark-500'
@@ -266,7 +266,7 @@ export function ButtonsTab() {
 
               {/* Emoji ID input */}
               <div className="mb-3">
-                <label className="mb-1.5 block text-xs font-medium text-dark-300">
+                <label className="mb-1.5 block text-[13px] font-medium text-dark-300">
                   {t('admin.buttons.emojiId')}
                 </label>
                 <input
@@ -282,7 +282,7 @@ export function ButtonsTab() {
               <div>
                 <button
                   onClick={() => toggleLabelsExpanded(section)}
-                  className="flex w-full items-center justify-between text-xs font-medium text-dark-300 transition-colors hover:text-dark-200"
+                  className="flex w-full items-center justify-between text-[13px] font-medium text-dark-300 transition-colors hover:text-dark-200"
                 >
                   <span className="flex items-center gap-1.5">
                     {t('admin.buttons.customLabels')}
@@ -324,7 +324,7 @@ export function ButtonsTab() {
           <button
             onClick={handleSave}
             disabled={updateMutation.isPending}
-            className="rounded-xl bg-accent-500 px-4 py-2 text-sm font-medium text-on-accent transition-colors hover:bg-accent-600 disabled:opacity-50"
+            className="rounded-2xl bg-cta-500 px-4 py-2 text-sm font-medium text-on-cta transition-colors hover:bg-cta-600 disabled:opacity-50"
           >
             {updateMutation.isPending ? t('common.saving') : t('common.save')}
           </button>

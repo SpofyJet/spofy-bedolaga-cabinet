@@ -42,7 +42,7 @@ export function CreateSubscriptionForm({
       title={noSubscriptions ? t(`${ns}.noActive`) : t(`${ns}.createNew`)}
     >
       <div className="grid gap-3 sm:grid-cols-[minmax(0,1fr)_8rem_auto] sm:items-end">
-        <label className="flex flex-col gap-1 text-xs text-dark-500" htmlFor={tariffId}>
+        <label className="flex flex-col gap-1 text-[13px] text-dark-500" htmlFor={tariffId}>
           {t(`${ns}.tariff`)}
           <DropdownSelect
             id={tariffId}
@@ -57,7 +57,7 @@ export function CreateSubscriptionForm({
             ]}
           />
         </label>
-        <label className="flex flex-col gap-1 text-xs text-dark-500" htmlFor={daysId}>
+        <label className="flex flex-col gap-1 text-[13px] text-dark-500" htmlFor={daysId}>
           {t(`${ns}.days`)}
           <input
             id={daysId}

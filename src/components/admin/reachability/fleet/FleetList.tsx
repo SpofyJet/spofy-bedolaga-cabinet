@@ -73,7 +73,7 @@ export function FleetList({
 
   return (
     <div className="divide-y divide-dark-700/40 overflow-hidden rounded-2xl border border-dark-700/60">
-      <div className="flex items-center gap-3 bg-dark-900/40 py-1 pe-3 ps-1 text-xs text-dark-400">
+      <div className="flex items-center gap-3 bg-dark-900/40 py-1 pe-3 ps-1 text-[13px] text-dark-400">
         <button
           type="button"
           role="checkbox"
@@ -94,7 +94,7 @@ export function FleetList({
             onChange={(event) => onQuery(event.target.value)}
             aria-label={t(`${base}.search`)}
             placeholder={t(`${base}.search`)}
-            className="h-8 w-full rounded-lg border border-dark-700/50 bg-dark-800/50 pe-2 ps-8 text-xs text-dark-100 placeholder:text-dark-500 focus:border-accent-500/50 focus:outline-none focus:ring-2 focus:ring-accent-500/20"
+            className="h-8 w-full rounded-lg border border-dark-700/50 bg-dark-800/50 pe-2 ps-8 text-[13px] text-dark-100 placeholder:text-dark-500 focus:border-accent-500/50 focus:outline-none focus:ring-2 focus:ring-accent-500/20"
           />
         </label>
         <span className="hidden flex-1 md:block" />

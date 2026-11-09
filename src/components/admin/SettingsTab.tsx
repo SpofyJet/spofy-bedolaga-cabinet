@@ -96,7 +96,7 @@ export function SettingsTab({
             {categories.length > 1 && (
               <div className="mb-2 flex items-center gap-2">
                 <h3 className="text-sm font-semibold text-dark-200">{category.label}</h3>
-                <span className="text-xs text-dark-500">{category.settings.length}</span>
+                <span className="text-[13px] text-dark-500">{category.settings.length}</span>
               </div>
             )}
             <div className="overflow-hidden rounded-xl border border-dark-700/40">

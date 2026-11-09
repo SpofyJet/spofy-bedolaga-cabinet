@@ -53,7 +53,7 @@ export function ProbeResult({ job }: { job: Job }) {
         listLabel={t('admin.reachability.result.list')}
       />
       {job.sni_hosts.length > 0 && (
-        <p className="break-all text-xs text-dark-400">
+        <p className="break-all text-[13px] text-dark-400">
           {t('admin.reachability.result.sniList', {
             names: job.sni_hosts.map((name, index) => `${index + 1} ${name}`).join(' · '),
           })}

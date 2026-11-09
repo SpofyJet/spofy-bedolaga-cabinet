@@ -52,7 +52,7 @@ export function SettingRow({
   })();
 
   return (
-    <div className="group rounded-2xl bg-dark-800/40 p-4 transition-all hover:bg-dark-800/60 sm:p-5">
+    <div className="group rounded-3xl bg-dark-900/70 p-4 transition-all hover:bg-dark-800/60 sm:p-5">
       {/* Header row - name, badges, favorite */}
       <div className="mb-3 flex items-start justify-between gap-3">
         <div className="min-w-0 flex-1">
@@ -104,7 +104,7 @@ export function SettingRow({
 
       {/* Setting key (muted) */}
       <div className="mb-3">
-        <code className="rounded bg-dark-900/50 px-2 py-1 font-mono text-xs text-dark-500">
+        <code className="rounded bg-dark-900/50 px-2 py-1 font-mono text-[13px] text-dark-500">
           {setting.key}
         </code>
       </div>
@@ -120,7 +120,7 @@ export function SettingRow({
               <span className="break-all font-mono text-sm">{String(setting.current ?? '-')}</span>
             </div>
             {setting.env_locked && !setting.read_only && (
-              <p className="text-xs leading-relaxed text-dark-500">
+              <p className="text-[13px] leading-relaxed text-dark-500">
                 {t('admin.settings.envLockedHint')}
               </p>
             )}

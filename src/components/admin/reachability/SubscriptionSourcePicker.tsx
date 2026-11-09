@@ -79,13 +79,13 @@ export function SubscriptionSourcePicker({
               <span className="whitespace-nowrap">
                 {t(`${base}.reference`)}
                 {reference.configs !== null && (
-                  <span className="text-xs font-normal text-dark-400">
+                  <span className="text-[13px] font-normal text-dark-400">
                     {' '}
                     · {t(`${base}.configs`, { count: reference.configs })}
                   </span>
                 )}
               </span>
-              <span className="truncate font-mono text-xs font-normal text-dark-400">
+              <span className="truncate font-mono text-[13px] font-normal text-dark-400">
                 {reference.short_uuid}
               </span>
             </span>
@@ -95,7 +95,7 @@ export function SubscriptionSourcePicker({
           <span className={cn(CHIP, CHIP_ON)}>{t(`${base}.userLabel`, { id: userId })}</span>
         )}
         {shortUuid !== null && userId === null && (
-          <span className={cn(CHIP, CHIP_ON, 'font-mono text-xs')}>{shortUuid}</span>
+          <span className={cn(CHIP, CHIP_ON, 'font-mono text-[13px]')}>{shortUuid}</span>
         )}
         <div className="relative w-full sm:ms-auto sm:w-64">
           <input
@@ -122,7 +122,7 @@ export function SubscriptionSourcePicker({
                     <span className="truncate">
                       {user.full_name || user.username || `#${user.id}`}
                     </span>
-                    <span className="shrink-0 font-mono text-xs text-dark-400">#{user.id}</span>
+                    <span className="shrink-0 font-mono text-[13px] text-dark-400">#{user.id}</span>
                   </button>
                 </li>
               ))}
@@ -136,16 +136,16 @@ export function SubscriptionSourcePicker({
           className="rounded-xl border border-warning-500/30 bg-warning-500/10 p-3 text-sm text-dark-100"
         >
           <p className="font-medium">{t(`${base}.noReference`)}</p>
-          <p className="mt-1 text-xs text-dark-300">{t(`${base}.noReferenceHint`)}</p>
+          <p className="mt-1 text-[13px] text-dark-300">{t(`${base}.noReferenceHint`)}</p>
           <Link
             to={settingsPath}
-            className="mt-2 inline-block text-xs text-accent-400 hover:underline"
+            className="mt-2 inline-block text-[13px] text-accent-400 hover:underline"
           >
             {t('admin.reachability.status.openSettings')}
           </Link>
         </div>
       )}
-      {referenceBroken && <p className="text-xs text-warning-400">{reference?.error}</p>}
+      {referenceBroken && <p className="text-[13px] text-warning-400">{reference?.error}</p>}
     </div>
   );
 }

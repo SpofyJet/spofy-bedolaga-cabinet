@@ -43,7 +43,7 @@ export function ActivityRows({ items, compact = false }: ActivityRowsProps) {
         const stamp = stampParts(item.timestamp);
         const body = (
           <>
-            <span className="w-11 shrink-0 font-mono text-xs leading-5 tabular-nums text-dark-500">
+            <span className="w-11 shrink-0 font-mono text-[13px] leading-5 tabular-nums text-dark-500">
               {stamp.day}
               <span className={cn('block', compact && 'hidden sm:block')}>{stamp.time}</span>
             </span>
@@ -52,7 +52,7 @@ export function ActivityRows({ items, compact = false }: ActivityRowsProps) {
               {line.detail && (
                 <span
                   className={cn(
-                    'block truncate text-xs text-dark-500',
+                    'block truncate text-[13px] text-dark-500',
                     compact && 'hidden sm:block',
                   )}
                 >

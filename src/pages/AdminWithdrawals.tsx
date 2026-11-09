@@ -50,8 +50,10 @@ export default function AdminWithdrawals() {
         <div className="flex items-center gap-3">
           <AdminBackButton to="/admin" />
           <div>
-            <h1 className="text-xl font-semibold text-dark-100">{t('admin.withdrawals.title')}</h1>
-            <p className="text-sm text-dark-400">{t('admin.withdrawals.subtitle')}</p>
+            <h1 className="text-xl font-bold tracking-tight text-dark-50 sm:text-2xl">
+              {t('admin.withdrawals.title')}
+            </h1>
+            <p className="mt-0.5 text-[13px] text-dark-400">{t('admin.withdrawals.subtitle')}</p>
           </div>
         </div>
       </div>
@@ -82,7 +84,7 @@ export default function AdminWithdrawals() {
             onClick={() => setStatusFilter(filter)}
             className={`whitespace-nowrap rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
               statusFilter === filter
-                ? 'bg-accent-500 text-on-accent'
+                ? 'bg-accent-500/15 text-accent-400'
                 : 'bg-dark-800/40 text-dark-400 hover:bg-dark-700/50 hover:text-dark-200'
             }`}
           >
@@ -110,7 +112,7 @@ export default function AdminWithdrawals() {
               <button
                 key={item.id}
                 onClick={() => navigate(`/admin/withdrawals/${item.id}`)}
-                className="w-full rounded-xl bg-dark-800/40 p-4 text-left transition-colors hover:bg-dark-800/60"
+                className="w-full rounded-3xl bg-dark-900/70 p-4 text-left transition-colors hover:bg-dark-800/60"
               >
                 <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0 flex-1">
@@ -142,11 +144,13 @@ export default function AdminWithdrawals() {
                       </span>
 
                       {/* Risk level */}
-                      <span className="text-xs text-dark-500">
+                      <span className="text-[13px] text-dark-500">
                         {t(`admin.withdrawals.detail.riskLevel.${item.risk_level}`)}
                       </span>
 
-                      <span className="text-xs text-dark-500">{formatDate(item.created_at)}</span>
+                      <span className="text-[13px] text-dark-500">
+                        {formatDate(item.created_at)}
+                      </span>
                     </div>
                   </div>
 

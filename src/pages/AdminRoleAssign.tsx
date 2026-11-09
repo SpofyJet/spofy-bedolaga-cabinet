@@ -67,7 +67,7 @@ function UserSearchDropdown({
         <div className="min-w-0 flex-1">
           <span className="text-sm text-dark-100">{selectedUser.full_name}</span>
           {selectedUser.username && (
-            <span className="ml-1.5 text-xs text-dark-500">@{selectedUser.username}</span>
+            <span className="ml-1.5 text-[13px] text-dark-500">@{selectedUser.username}</span>
           )}
         </div>
         <button
@@ -131,7 +131,7 @@ function UserSearchDropdown({
                     <div className="truncate text-sm font-medium text-dark-100">
                       {user.full_name}
                     </div>
-                    <div className="flex flex-wrap items-center gap-x-2 text-xs text-dark-400">
+                    <div className="flex flex-wrap items-center gap-x-2 text-[13px] text-dark-400">
                       {user.username && (
                         <span className="min-w-0 [overflow-wrap:anywhere]">@{user.username}</span>
                       )}
@@ -343,20 +343,22 @@ export default function AdminRoleAssign() {
         {!capabilities.hasBackButton && (
           <button
             onClick={() => navigate('/admin')}
-            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-dark-800 transition-colors"
+            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-dark-900/70 transition-colors"
           >
             <BackIcon />
           </button>
         )}
         <div>
-          <h1 className="text-xl font-semibold text-dark-100">{t('admin.roleAssign.title')}</h1>
-          <p className="text-sm text-dark-400">{t('admin.roleAssign.subtitle')}</p>
+          <h1 className="text-xl font-bold tracking-tight text-dark-50 sm:text-2xl">
+            {t('admin.roleAssign.title')}
+          </h1>
+          <p className="mt-0.5 text-[13px] text-dark-400">{t('admin.roleAssign.subtitle')}</p>
         </div>
       </div>
 
       {/* Assign Section */}
       <PermissionGate permission="roles:assign">
-        <div className="mb-6 rounded-xl bg-dark-800 p-4 sm:p-5">
+        <div className="mb-6 rounded-3xl bg-dark-900/70 p-4 sm:p-5">
           <h2 className="mb-4 flex items-center gap-2 text-base font-semibold text-dark-100">
             <UserPlusIcon />
             {t('admin.roleAssign.assignSection')}
@@ -422,7 +424,9 @@ export default function AdminRoleAssign() {
                   onChange={(e) => setExpiresAt(e.target.value)}
                   className="w-full rounded-lg border border-dark-600 bg-dark-900 px-3 py-2 text-dark-100 outline-none transition-colors [color-scheme:dark] focus:border-accent-500"
                 />
-                <p className="mt-1 text-xs text-dark-500">{t('admin.roleAssign.expiresHint')}</p>
+                <p className="mt-1 text-[13px] text-dark-500">
+                  {t('admin.roleAssign.expiresHint')}
+                </p>
               </div>
             </div>
 
@@ -435,7 +439,7 @@ export default function AdminRoleAssign() {
               <button
                 type="submit"
                 disabled={assignMutation.isPending || !selectedUser || !selectedRoleId}
-                className="flex items-center gap-2 rounded-lg bg-accent-500 px-5 py-2 text-on-accent transition-colors hover:bg-accent-600 disabled:cursor-not-allowed disabled:opacity-50"
+                className="flex items-center gap-2 rounded-2xl bg-cta-500 px-5 py-2 text-on-cta transition-colors hover:bg-cta-600 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 {assignMutation.isPending
                   ? t('admin.roleAssign.assigning')
@@ -453,7 +457,7 @@ export default function AdminRoleAssign() {
             {t('admin.roleAssign.currentAssignments')}
           </h2>
           {sortedAssignments.length > 0 && (
-            <p className="text-xs text-dark-400">
+            <p className="text-[13px] text-dark-400">
               {t('admin.roleAssign.totalAssignments', { count: sortedAssignments.length })}
             </p>
           )}
@@ -514,7 +518,7 @@ export default function AdminRoleAssign() {
                         <div className="truncate text-sm font-medium text-dark-100">
                           {assignment.user_first_name || t('admin.roleAssign.unknownUser')}
                         </div>
-                        <div className="truncate text-xs text-dark-500">
+                        <div className="truncate text-[13px] text-dark-500">
                           {assignment.user_email ||
                             (assignment.user_telegram_id
                               ? `TG: ${assignment.user_telegram_id}`
@@ -525,7 +529,7 @@ export default function AdminRoleAssign() {
 
                     {/* Role */}
                     <div className="col-span-2 mb-2 sm:mb-0">
-                      <span className="mr-1.5 text-xs text-dark-500 sm:hidden">
+                      <span className="mr-1.5 text-[13px] text-dark-500 sm:hidden">
                         {t('admin.roleAssign.table.role')}:
                       </span>
                       <RoleBadge name={assignment.role_name} color={assignment.role_color} />
@@ -533,7 +537,7 @@ export default function AdminRoleAssign() {
 
                     {/* Assigned by */}
                     <div className="col-span-2 mb-2 text-sm text-dark-400 sm:mb-0">
-                      <span className="mr-1.5 text-xs text-dark-500 sm:hidden">
+                      <span className="mr-1.5 text-[13px] text-dark-500 sm:hidden">
                         {t('admin.roleAssign.table.assignedBy')}:
                       </span>
                       {assignment.assigned_by
@@ -543,7 +547,7 @@ export default function AdminRoleAssign() {
 
                     {/* Assigned at */}
                     <div className="col-span-2 mb-2 text-sm text-dark-400 sm:mb-0">
-                      <span className="mr-1.5 text-xs text-dark-500 sm:hidden">
+                      <span className="mr-1.5 text-[13px] text-dark-500 sm:hidden">
                         {t('admin.roleAssign.table.assignedAt')}:
                       </span>
                       {formatDate(assignment.assigned_at)}
@@ -551,7 +555,7 @@ export default function AdminRoleAssign() {
 
                     {/* Expires */}
                     <div className="col-span-2 mb-2 sm:mb-0">
-                      <span className="mr-1.5 text-xs text-dark-500 sm:hidden">
+                      <span className="mr-1.5 text-[13px] text-dark-500 sm:hidden">
                         {t('admin.roleAssign.table.expires')}:
                       </span>
                       {assignment.expires_at ? (
@@ -560,7 +564,9 @@ export default function AdminRoleAssign() {
                         >
                           {formatDate(assignment.expires_at)}
                           {expired && (
-                            <span className="ml-1 text-xs">({t('admin.roleAssign.expired')})</span>
+                            <span className="ml-1 text-[13px]">
+                              ({t('admin.roleAssign.expired')})
+                            </span>
                           )}
                         </span>
                       ) : (

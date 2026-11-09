@@ -92,7 +92,7 @@ export function TicketsTab({ userId }: { userId: number }) {
               </span>
               <StatusChip status={ticket.status} />
             </span>
-            <span className="truncate text-xs text-dark-500">
+            <span className="truncate text-[13px] text-dark-500">
               #{ticket.id} · {dayTimeLabel(ticket.updated_at, t)} ·{' '}
               {t('admin.users.detail.messages', { count: ticket.messages_count })}
             </span>
@@ -179,13 +179,13 @@ function TicketChat({
           type="button"
           onClick={onBack}
           aria-label={t('common.back')}
-          className="btn-secondary h-10 w-10 shrink-0 p-0"
+          className="btn-secondary h-11 w-11 shrink-0 p-0"
         >
           <BackIcon className="h-4 w-4" />
         </button>
         <div className="min-w-0 flex-1">
           <div className="truncate font-medium text-dark-100">{ticket.title}</div>
-          <div className="text-xs text-dark-500">
+          <div className="text-[13px] text-dark-500">
             #{ticket.id} · {dayTimeLabel(ticket.created_at, t)}
           </div>
         </div>
@@ -207,19 +207,19 @@ function TicketChat({
               })
             }
             disabled={busy}
-            className="btn-secondary px-3 py-1.5 text-xs"
+            className="btn-secondary px-3 py-1.5 text-[13px]"
           >
             {statusLabel(status)}
           </button>
         ))}
       </div>
 
-      <div className="scrollbar-hide max-h-[60vh] space-y-3 overflow-y-auto rounded-xl bg-dark-800/30 p-3">
+      <div className="scrollbar-hide max-h-[60vh] space-y-3 overflow-y-auto rounded-3xl bg-dark-900/70 p-3">
         {ticket.messages.map((msg) => (
           <div
             key={msg.id}
             className={cn(
-              'rounded-xl p-3',
+              'rounded-2xl p-3',
               msg.is_from_admin
                 ? 'ml-6 border border-accent-500/20 bg-accent-500/10'
                 : 'mr-6 bg-dark-800/50',
@@ -228,13 +228,13 @@ function TicketChat({
             <div className="mb-1 flex items-center justify-between gap-2">
               <span
                 className={cn(
-                  'text-xs font-medium',
+                  'text-[13px] font-medium',
                   msg.is_from_admin ? 'text-accent-400' : 'text-dark-400',
                 )}
               >
                 {msg.is_from_admin ? t('admin.tickets.adminLabel') : t('admin.tickets.userLabel')}
               </span>
-              <span className="text-xs text-dark-500">{dayTimeLabel(msg.created_at, t)}</span>
+              <span className="text-[13px] text-dark-500">{dayTimeLabel(msg.created_at, t)}</span>
             </div>
             {msg.message_text && (
               <p

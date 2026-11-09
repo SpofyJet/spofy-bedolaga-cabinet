@@ -76,7 +76,7 @@ function HeaderStats({
         </span>
       )}
       {showNoisy && (
-        <span className="text-xs text-dark-400">
+        <span className="text-[13px] text-dark-400">
           {t(short ? 'admin.dpichecker.header.noisyShort' : 'admin.dpichecker.header.noisyLeft', {
             left: noisy.remaining ?? 0,
             limit: noisy.limit,
@@ -140,8 +140,8 @@ export default function AdminDpiChecker() {
           <WallIcon className="h-5 w-5" />
         </div>
         <div className="min-w-0 flex-1">
-          <h1 className="text-xl font-bold text-dark-100">{DPI_BRAND}</h1>
-          <p className="text-xs text-dark-400">{t('admin.dpichecker.subtitle')}</p>
+          <h1 className="text-xl font-bold tracking-tight text-dark-50 sm:text-2xl">{DPI_BRAND}</h1>
+          <p className="text-[13px] text-dark-400">{t('admin.dpichecker.subtitle')}</p>
           {/* Телефон: баланс и Соседи — строкой под подзаголовком, в колонке названия. */}
           <HeaderStats
             className="mt-1.5 flex flex-wrap items-baseline gap-x-3 gap-y-0.5 sm:hidden"

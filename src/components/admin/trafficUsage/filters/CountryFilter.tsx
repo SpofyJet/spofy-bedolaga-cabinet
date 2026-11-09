@@ -44,7 +44,7 @@ export function CountryFilter({
     <div className="sm:relative" ref={ref}>
       <button
         onClick={() => setOpen(!open)}
-        className={`flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium transition-colors ${
+        className={`flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-[13px] font-medium transition-colors ${
           activeCount > 0
             ? 'border-accent-500/50 bg-accent-500/10 text-accent-400'
             : 'border-dark-700 bg-dark-800 text-dark-200 hover:border-dark-600 hover:bg-dark-700'
@@ -63,7 +63,7 @@ export function CountryFilter({
         <div className="absolute inset-x-0 top-full z-30 mt-1 rounded-xl bg-dark-800 py-1 shadow-xl sm:inset-x-auto sm:left-0 sm:w-48">
           <button
             onClick={selectAll}
-            className={`flex w-full items-center gap-2 px-3 py-2 text-left text-xs transition-colors hover:bg-dark-700 ${
+            className={`flex w-full items-center gap-2 px-3 py-2 text-left text-[13px] transition-colors hover:bg-dark-700 ${
               allSelected ? 'text-accent-400' : 'text-dark-300'
             }`}
           >
@@ -86,7 +86,7 @@ export function CountryFilter({
                 <button
                   key={code}
                   onClick={() => toggle(code)}
-                  className="flex w-full items-center gap-2 px-3 py-2 text-left text-xs text-dark-300 transition-colors hover:bg-dark-700"
+                  className="flex w-full items-center gap-2 px-3 py-2 text-left text-[13px] text-dark-300 transition-colors hover:bg-dark-700"
                 >
                   <span
                     className={`flex h-4 w-4 shrink-0 items-center justify-center rounded border ${

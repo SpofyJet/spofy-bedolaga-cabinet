@@ -31,9 +31,9 @@ export function AddressTargets({ value, onChange }: AddressTargetsProps) {
           placeholder={t('admin.reachability.addresses.placeholder')}
           className="input mt-1.5 w-full font-mono text-sm"
         />
-        <p className="mt-1.5 text-xs text-dark-400">{t('admin.reachability.addresses.hint')}</p>
+        <p className="mt-1.5 text-[13px] text-dark-400">{t('admin.reachability.addresses.hint')}</p>
         {parsed.overLimit > 0 && (
-          <p className="mt-1 text-xs text-warning-400">
+          <p className="mt-1 text-[13px] text-warning-400">
             {t('admin.reachability.addresses.overLimit', { count: parsed.overLimit })}
           </p>
         )}

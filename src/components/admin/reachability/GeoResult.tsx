@@ -38,7 +38,7 @@ export function GeoResult({ job }: { job: Job }) {
         <p className="text-sm font-medium text-dark-100">{summary.conclusion}</p>
       )}
       {summary.progress && running && (
-        <p className="text-xs text-dark-400">{t(`${KEY}.result.progress`, summary.progress)}</p>
+        <p className="text-[13px] text-dark-400">{t(`${KEY}.result.progress`, summary.progress)}</p>
       )}
       <div className="flex flex-wrap gap-1.5">
         {GEO_VERDICTS.filter((item) => counts[item]).map((item) => (
@@ -62,7 +62,7 @@ export function GeoResult({ job }: { job: Job }) {
           </button>
         ))}
         {summary.noiseRows > 0 && (
-          <span className="self-center text-xs text-dark-400">
+          <span className="self-center text-[13px] text-dark-400">
             {t(`${KEY}.result.noise`, { count: summary.noiseRows })}
           </span>
         )}

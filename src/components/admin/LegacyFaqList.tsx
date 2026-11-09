@@ -23,7 +23,7 @@ export function LegacyFaqList({ pages }: { pages: LegacyFaqPage[] }) {
     <section className="space-y-3" aria-label={t('admin.infoPages.botFaq')}>
       <h2 className="text-lg font-semibold text-dark-100">{t('admin.infoPages.botFaq')}</h2>
       {pages.map((page) => (
-        <div key={page.id} className="rounded-xl bg-dark-800/50 p-4">
+        <div key={page.id} className="rounded-3xl bg-dark-900/70 p-4">
           {draft?.id === page.id ? (
             <form
               className="space-y-4"
@@ -98,7 +98,7 @@ export function LegacyFaqList({ pages }: { pages: LegacyFaqPage[] }) {
             <div className="flex items-start justify-between gap-3">
               <div className="min-w-0">
                 <p className="break-words text-sm font-medium text-dark-100">{page.title}</p>
-                <p className="mt-2 text-xs text-dark-400">
+                <p className="mt-2 text-[13px] text-dark-400">
                   {page.language.toUpperCase()} ·{' '}
                   {t(
                     page.is_active && page.is_enabled

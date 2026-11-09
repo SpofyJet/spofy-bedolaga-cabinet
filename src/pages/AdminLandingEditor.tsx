@@ -569,12 +569,12 @@ export default function AdminLandingEditor() {
           {!capabilities.hasBackButton && (
             <button
               onClick={() => navigate('/admin/landings')}
-              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-dark-800 transition-colors"
+              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-dark-900/70 transition-colors"
             >
               <BackIcon />
             </button>
           )}
-          <h1 className="text-xl font-semibold text-dark-100">
+          <h1 className="text-xl font-bold tracking-tight text-dark-50 sm:text-2xl">
             {isEdit ? t('admin.landings.edit') : t('admin.landings.create')}
           </h1>
         </div>
@@ -588,7 +588,7 @@ export default function AdminLandingEditor() {
           <button
             onClick={handleSubmit}
             disabled={isPending || !slug || !Object.values(title).some((v) => v.trim())}
-            className="flex items-center gap-2 rounded-lg bg-accent-500 px-4 py-2 text-sm text-on-accent transition-colors hover:bg-accent-600 disabled:opacity-50"
+            className="flex items-center gap-2 rounded-2xl bg-cta-500 px-4 py-2 text-sm text-on-cta transition-colors hover:bg-cta-600 disabled:opacity-50"
           >
             {isPending && (
               <div className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
@@ -635,7 +635,7 @@ export default function AdminLandingEditor() {
                 placeholder="my-landing"
                 className="w-full rounded-lg border border-dark-700 bg-dark-800 px-3 py-2 text-sm text-dark-100 outline-none focus:border-accent-500 disabled:opacity-50"
               />
-              <p className="mt-1 text-xs text-dark-500">{t('admin.landings.slugHint')}</p>
+              <p className="mt-1 text-[13px] text-dark-500">{t('admin.landings.slugHint')}</p>
             </div>
 
             <div>
@@ -741,7 +741,7 @@ export default function AdminLandingEditor() {
           <div className="space-y-3">
             <p className="text-sm text-dark-500">{t('admin.landings.selectTariffs')}</p>
             {allTariffs.map((tariff: TariffListItem) => (
-              <div key={tariff.id} className="rounded-lg bg-dark-800/50 p-3">
+              <div key={tariff.id} className="rounded-3xl bg-dark-900/70 p-3">
                 <label className="flex items-center gap-3">
                   <input
                     type="checkbox"
@@ -759,7 +759,9 @@ export default function AdminLandingEditor() {
                 {/* Period checkboxes from tariff detail */}
                 {selectedTariffIds.includes(tariff.id) && !tariff.is_daily && (
                   <div className="ml-7 mt-2">
-                    <span className="text-xs text-dark-500">{t('admin.landings.periods')}:</span>
+                    <span className="text-[13px] text-dark-500">
+                      {t('admin.landings.periods')}:
+                    </span>
                     {tariffPeriodsMap[tariff.id] ? (
                       <div className="mt-1 flex flex-wrap gap-2">
                         {tariffPeriodsMap[tariff.id].map((period) => {
@@ -790,7 +792,7 @@ export default function AdminLandingEditor() {
                         })}
                       </div>
                     ) : (
-                      <span className="ml-2 text-xs text-dark-600">
+                      <span className="ml-2 text-[13px] text-dark-600">
                         {t('admin.landings.loadingPeriods')}
                       </span>
                     )}
@@ -907,7 +909,7 @@ export default function AdminLandingEditor() {
                     <label className="mb-2 block text-sm text-dark-400">
                       {t('admin.landings.discountOverrides', 'Per-tariff overrides')}
                     </label>
-                    <p className="mb-2 text-xs text-dark-500">
+                    <p className="mb-2 text-[13px] text-dark-500">
                       {t(
                         'admin.landings.discountOverridesHint',
                         'Leave empty to use global discount',
@@ -927,7 +929,7 @@ export default function AdminLandingEditor() {
                             <span className="min-w-0 flex-1 truncate text-sm text-dark-200">
                               {tariff.name}
                             </span>
-                            <span className="text-xs text-dark-500">
+                            <span className="text-[13px] text-dark-500">
                               {hasOverride ? `${override}%` : `${discountPercent}%`}
                             </span>
                             <input
@@ -960,7 +962,7 @@ export default function AdminLandingEditor() {
 
                 {/* Preview */}
                 {selectedTariffIds.length > 0 && (
-                  <div className="rounded-lg bg-dark-800/30 p-3">
+                  <div className="rounded-3xl bg-dark-900/70 p-3">
                     <p className="mb-2 text-xs font-medium uppercase tracking-wider text-dark-500">
                       {t('admin.landings.discountPreview', 'Preview')}
                     </p>
@@ -985,7 +987,7 @@ export default function AdminLandingEditor() {
                           <span className="min-w-0 text-sm text-dark-300 [overflow-wrap:anywhere]">
                             {tariff.name}:
                           </span>
-                          <span className="text-xs text-dark-500 line-through">
+                          <span className="text-[13px] text-dark-500 line-through">
                             {formatPrice(firstPeriod.price_kopeks)}
                           </span>
                           <span className="text-sm font-semibold text-accent-400">
@@ -1155,7 +1157,7 @@ export default function AdminLandingEditor() {
                 <p className="text-sm text-dark-300">
                   {t('admin.landings.stickyPayButton', 'Sticky pay button (mobile)')}
                 </p>
-                <p className="text-xs text-dark-500">
+                <p className="text-[13px] text-dark-500">
                   {t(
                     'admin.landings.stickyPayButtonHint',
                     'Button pinned to bottom of screen on mobile',

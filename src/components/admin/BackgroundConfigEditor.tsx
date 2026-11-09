@@ -37,7 +37,9 @@ function SettingField({
             onChange={(e) => onChange(parseFloat(e.target.value))}
             className="w-24 accent-accent-500"
           />
-          <span className="w-16 text-right text-xs tabular-nums text-dark-400">{displayVal}</span>
+          <span className="w-16 text-right text-[13px] tabular-nums text-dark-400">
+            {displayVal}
+          </span>
         </div>
       </div>
     );
@@ -56,7 +58,7 @@ function SettingField({
             onChange={(e) => onChange(e.target.value)}
             className="h-7 w-10 cursor-pointer rounded bg-transparent"
           />
-          <span className="w-16 text-right text-xs text-dark-400">{colorVal}</span>
+          <span className="w-16 text-right text-[13px] text-dark-400">{colorVal}</span>
         </div>
       </div>
     );
@@ -186,7 +188,9 @@ export function BackgroundConfigEditor({ value: config, onChange }: BackgroundCo
               <span className="text-sm font-medium text-dark-200">
                 {t('admin.backgrounds.none')}
               </span>
-              <span className="ml-2 text-xs text-dark-400">{t('admin.backgrounds.noneDesc')}</span>
+              <span className="ml-2 text-[13px] text-dark-400">
+                {t('admin.backgrounds.noneDesc')}
+              </span>
             </button>
 
             {/* Background types by category */}
@@ -211,7 +215,9 @@ export function BackgroundConfigEditor({ value: config, onChange }: BackgroundCo
                         <span className="block text-sm font-medium text-dark-200">
                           {t(def.labelKey)}
                         </span>
-                        <span className="block text-xs text-dark-400">{t(def.descriptionKey)}</span>
+                        <span className="block text-[13px] text-dark-400">
+                          {t(def.descriptionKey)}
+                        </span>
                       </button>
                     ))}
                   </div>
@@ -222,7 +228,7 @@ export function BackgroundConfigEditor({ value: config, onChange }: BackgroundCo
 
           {/* Per-type settings */}
           {currentDef && currentDef.settings.length > 0 && (
-            <div className="rounded-xl bg-dark-800/30 p-4">
+            <div className="rounded-3xl bg-dark-900/70 p-4">
               <h4 className="mb-3 text-sm font-medium text-dark-200">
                 {t('admin.backgrounds.settings')}
               </h4>
@@ -241,7 +247,7 @@ export function BackgroundConfigEditor({ value: config, onChange }: BackgroundCo
           )}
 
           {/* Global settings */}
-          <div className="rounded-xl bg-dark-800/30 p-4">
+          <div className="rounded-3xl bg-dark-900/70 p-4">
             <div className="space-y-3">
               <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
                 <label className="min-w-0 text-sm text-dark-300">
@@ -257,7 +263,7 @@ export function BackgroundConfigEditor({ value: config, onChange }: BackgroundCo
                     onChange={(e) => updateConfig({ opacity: parseFloat(e.target.value) })}
                     className="w-24 accent-accent-500"
                   />
-                  <span className="w-14 text-right text-xs tabular-nums text-dark-400">
+                  <span className="w-14 text-right text-[13px] tabular-nums text-dark-400">
                     {config.opacity}
                   </span>
                 </div>
@@ -277,7 +283,7 @@ export function BackgroundConfigEditor({ value: config, onChange }: BackgroundCo
                     onChange={(e) => updateConfig({ blur: Number(e.target.value) })}
                     className="w-24 accent-accent-500"
                   />
-                  <span className="w-14 text-right text-xs tabular-nums text-dark-400">
+                  <span className="w-14 text-right text-[13px] tabular-nums text-dark-400">
                     {config.blur}px
                   </span>
                 </div>
@@ -288,7 +294,7 @@ export function BackgroundConfigEditor({ value: config, onChange }: BackgroundCo
                   <label className="text-sm text-dark-300">
                     {t('admin.backgrounds.reducedOnMobile')}
                   </label>
-                  <p className="text-xs text-dark-500">
+                  <p className="text-[13px] text-dark-500">
                     {t('admin.backgrounds.reducedOnMobileDesc')}
                   </p>
                 </div>

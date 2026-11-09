@@ -22,10 +22,10 @@ export function FleetActionBar({ title, subtitle, action }: FleetActionBarProps)
         keyboardOpen && HIDDEN_UNDER_KEYBOARD,
       )}
     >
-      <div className="mx-auto flex max-w-2xl items-center gap-3 rounded-2xl bg-dark-900 p-3 shadow-2xl">
+      <div className="mx-auto flex max-w-2xl items-center gap-3 rounded-3xl bg-dark-900/70 p-3 shadow-2xl">
         <div className="min-w-0 flex-1">
           <p className="truncate text-sm font-semibold text-dark-100">{title}</p>
-          {subtitle && <p className="truncate text-xs text-dark-400">{subtitle}</p>}
+          {subtitle && <p className="truncate text-[13px] text-dark-400">{subtitle}</p>}
         </div>
         <div className="shrink-0">{action}</div>
       </div>

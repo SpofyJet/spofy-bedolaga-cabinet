@@ -52,8 +52,10 @@ export default function AdminPartners() {
       <div className="mb-6 flex items-center gap-3">
         <AdminBackButton to="/admin" />
         <div className="min-w-0 flex-1">
-          <h1 className="text-xl font-semibold text-dark-100">{t('admin.partners.title')}</h1>
-          <p className="text-sm text-dark-400">{t('admin.partners.subtitle')}</p>
+          <h1 className="text-xl font-bold tracking-tight text-dark-50 sm:text-2xl">
+            {t('admin.partners.title')}
+          </h1>
+          <p className="mt-0.5 text-[13px] text-dark-400">{t('admin.partners.subtitle')}</p>
         </div>
         <button
           onClick={() => navigate('/admin/partners/settings')}
@@ -139,7 +141,7 @@ export default function AdminPartners() {
               <button
                 key={partner.user_id}
                 onClick={() => navigate(`/admin/partners/${partner.user_id}`)}
-                className="w-full rounded-xl bg-dark-800 p-4 text-left transition-colors"
+                className="w-full rounded-3xl bg-dark-900/70 p-4 text-left transition-colors"
               >
                 <div className="flex items-start justify-between gap-4">
                   <div className="min-w-0 flex-1">
@@ -187,7 +189,7 @@ export default function AdminPartners() {
         ) : (
           <div className="space-y-3">
             {applications.map((app: AdminPartnerApplicationItem) => (
-              <div key={app.id} className="rounded-xl bg-dark-800 p-4">
+              <div key={app.id} className="rounded-3xl bg-dark-900/70 p-4">
                 <div className="mb-3 flex items-start justify-between gap-4">
                   <div className="min-w-0 flex-1">
                     <div className="mb-1 flex min-w-0 flex-wrap items-baseline gap-x-2">

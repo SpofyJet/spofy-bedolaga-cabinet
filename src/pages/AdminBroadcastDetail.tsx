@@ -123,7 +123,7 @@ export default function AdminBroadcastDetail() {
         <p className="text-dark-400">{t('admin.broadcasts.notFound')}</p>
         <button
           onClick={() => navigate('/admin/broadcasts')}
-          className="rounded-lg bg-accent-500 px-4 py-2 text-on-accent transition-colors hover:bg-accent-600"
+          className="rounded-2xl bg-cta-500 px-4 py-2 text-on-cta transition-colors hover:bg-cta-600"
         >
           {t('common.back')}
         </button>
@@ -139,7 +139,7 @@ export default function AdminBroadcastDetail() {
           <AdminBackButton to="/admin/broadcasts" />
           <div className="min-w-0">
             <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-              <h1 className="text-xl font-bold text-dark-100">
+              <h1 className="text-xl font-bold tracking-tight text-dark-50 sm:text-2xl">
                 {t('admin.broadcasts.detail')} #{broadcast.id}
               </h1>
               <BroadcastStatusBadge status={broadcast.status} />
@@ -169,7 +169,7 @@ export default function AdminBroadcastDetail() {
       />
 
       {/* Target */}
-      <div className="rounded-xl bg-dark-800/50 p-4">
+      <div className="rounded-3xl bg-dark-900/70 p-4">
         <p className="mb-1 text-sm text-dark-400">{t('admin.broadcasts.filter')}</p>
         {broadcast.audience ? (
           <div className="space-y-2 text-sm text-dark-100">
@@ -296,7 +296,7 @@ export default function AdminBroadcastDetail() {
 
       {/* Telegram Message */}
       {broadcast.message_text && (
-        <div className="rounded-xl bg-dark-800/50 p-4">
+        <div className="rounded-3xl bg-dark-900/70 p-4">
           <p className="mb-2 flex items-center gap-2 text-sm text-dark-400">
             <TelegramIcon />
             {t('admin.broadcasts.message')}
@@ -309,7 +309,7 @@ export default function AdminBroadcastDetail() {
 
       {/* Email Subject */}
       {broadcast.email_subject && (
-        <div className="rounded-xl bg-dark-800/50 p-4">
+        <div className="rounded-3xl bg-dark-900/70 p-4">
           <p className="mb-2 flex items-center gap-2 text-sm text-dark-400">
             <EmailIcon />
             {t('admin.broadcasts.emailSubject')}
@@ -322,9 +322,9 @@ export default function AdminBroadcastDetail() {
 
       {/* Email Content */}
       {broadcast.email_html_content && (
-        <div className="rounded-xl bg-dark-800/50 p-4">
+        <div className="rounded-3xl bg-dark-900/70 p-4">
           <p className="mb-2 text-sm text-dark-400">{t('admin.broadcasts.emailContent')}</p>
-          <div className="max-h-60 overflow-y-auto whitespace-pre-wrap rounded-lg bg-dark-700/50 p-4 font-mono text-xs text-dark-100">
+          <div className="max-h-60 overflow-y-auto whitespace-pre-wrap rounded-lg bg-dark-700/50 p-4 font-mono text-[13px] text-dark-100">
             {broadcast.email_html_content}
           </div>
         </div>
@@ -332,7 +332,7 @@ export default function AdminBroadcastDetail() {
 
       {/* Media */}
       {broadcast.has_media && (
-        <div className="rounded-xl bg-dark-800/50 p-4">
+        <div className="rounded-3xl bg-dark-900/70 p-4">
           <p className="mb-2 text-sm text-dark-400">{t('admin.broadcasts.media')}</p>
           <div className="flex items-center gap-3 text-dark-100">
             {broadcast.media_type === 'photo' && <PhotoIcon />}
@@ -344,7 +344,7 @@ export default function AdminBroadcastDetail() {
       )}
 
       {/* Admin info */}
-      <div className="flex flex-wrap justify-between gap-x-4 gap-y-1 rounded-xl bg-dark-800/50 p-4 text-sm">
+      <div className="flex flex-wrap justify-between gap-x-4 gap-y-1 rounded-3xl bg-dark-900/70 p-4 text-sm">
         <span className="min-w-0 text-dark-400 [overflow-wrap:anywhere]">
           {t('admin.broadcasts.createdBy')}:{' '}
           <span className="text-dark-100">

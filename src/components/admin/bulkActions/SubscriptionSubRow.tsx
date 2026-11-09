@@ -81,14 +81,14 @@ export function SubscriptionSubRow({
             <span className="text-[10px] text-dark-500" aria-hidden="true">
               <ArchiveIcon className="h-3.5 w-3.5" />
             </span>
-            <span className="min-w-0 flex-1 truncate text-xs font-semibold text-dark-200">
+            <span className="min-w-0 flex-1 truncate text-[13px] font-semibold text-dark-200">
               {subscription.tariff_name || '—'}
             </span>
           </div>
 
           <StatusBadge status={subscription.status} />
 
-          <span className={cn('text-xs font-medium tabular-nums', daysColor)}>
+          <span className={cn('text-[13px] font-medium tabular-nums', daysColor)}>
             {days}
             <span className="ml-0.5 text-[10px] font-normal text-dark-500">
               {t('admin.bulkActions.daysUnit')}
@@ -108,7 +108,7 @@ export function SubscriptionSubRow({
             </div>
           </div>
 
-          <span className="flex items-center gap-1 text-xs text-dark-400">
+          <span className="flex items-center gap-1 text-[13px] text-dark-400">
             <PhoneIcon className="h-3 w-3" />
             {subscription.device_limit}
           </span>

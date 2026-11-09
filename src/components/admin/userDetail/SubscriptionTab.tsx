@@ -248,7 +248,7 @@ function SubscriptionList({
           key={sub.id}
           type="button"
           onClick={() => onOpen(sub.id)}
-          className="flex w-full items-center gap-3 rounded-2xl bg-dark-900/40 p-4 text-left transition-colors hover:bg-dark-800/60"
+          className="flex w-full items-center gap-3 rounded-3xl bg-dark-900/70 p-4 text-left transition-colors hover:bg-dark-800/60"
         >
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap items-center gap-2">
@@ -256,7 +256,7 @@ function SubscriptionList({
               <SubscriptionStateChip status={sub.status} />
               <GraceAccessChip until={sub.grace_until} />
             </div>
-            <div className="mt-1 flex flex-wrap gap-x-3 text-xs tabular-nums text-dark-400">
+            <div className="mt-1 flex flex-wrap gap-x-3 text-[13px] tabular-nums text-dark-400">
               <span>{t('admin.users.until', { date: formatShortDate(sub.end_date) })}</span>
               <span>{trafficLabel(sub.traffic_used_gb, sub.traffic_limit_gb)}</span>
               <span>

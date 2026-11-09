@@ -41,18 +41,18 @@ export function GeoMethod(props: GeoMethodProps) {
         ]}
         onChange={(probeMode) => patch({ probeMode })}
       />
-      <p className="text-xs text-dark-400">
+      <p className="text-[13px] text-dark-400">
         {t(tcp ? 'admin.reachability.geo.method.tcpHint' : 'admin.reachability.geo.method.tlsHint')}
       </p>
       {props.hostsSelected && (
-        <p className="text-xs text-dark-400">{t('admin.reachability.geo.method.hostsHint')}</p>
+        <p className="text-[13px] text-dark-400">{t('admin.reachability.geo.method.hostsHint')}</p>
       )}
       <div className="flex items-center justify-between gap-4">
         <span className="min-w-0">
           <span className="block text-sm text-dark-100">
             {t('admin.reachability.geo.method.heavy')}
           </span>
-          <span className="block text-xs text-dark-400">
+          <span className="block text-[13px] text-dark-400">
             {t('admin.reachability.geo.method.heavyHint')}
           </span>
         </span>

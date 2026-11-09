@@ -136,7 +136,7 @@ export function TargetsStep({ checkType, value, onChange, prefill }: TargetsStep
         <div className="space-y-2">
           <p className="text-sm text-dark-300">{t(`admin.dpichecker.form.hint.${checkType}`)}</p>
           <textarea
-            className="input min-h-[120px] w-full font-mono text-xs"
+            className="input min-h-[120px] w-full font-mono text-[13px]"
             value={text}
             onChange={(event) => setText(event.target.value)}
             placeholder={t(`admin.dpichecker.form.placeholder.${checkType}`)}
@@ -225,7 +225,7 @@ export function TargetsStep({ checkType, value, onChange, prefill }: TargetsStep
                     {resource.name}
                   </span>
                   {resource.disabledReason && (
-                    <span className="text-xs text-dark-400">
+                    <span className="text-[13px] text-dark-400">
                       {t('admin.dpichecker.form.udpOnly')}
                     </span>
                   )}

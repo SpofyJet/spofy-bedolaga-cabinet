@@ -44,7 +44,7 @@ export function CheremshaTab() {
       <section className="bento-card space-y-3 p-4 sm:p-5">
         <p className="text-sm text-dark-300">{t('admin.dpichecker.cheremsha.intro')}</p>
         <textarea
-          className="input min-h-[96px] w-full font-mono text-xs"
+          className="input min-h-[96px] w-full font-mono text-[13px]"
           value={text}
           onChange={(event) => setText(event.target.value)}
           placeholder={t('admin.dpichecker.cheremsha.placeholder')}
@@ -80,26 +80,26 @@ export function CheremshaTab() {
                   </span>
                 </div>
                 {item.domain_hit && (
-                  <p className="text-xs text-dark-300">
+                  <p className="text-[13px] text-dark-300">
                     {t('admin.dpichecker.cheremsha.domainHit')}
                   </p>
                 )}
                 {(item.rkn_subnet_hit || item.cdn_hit) && (
-                  <p className="text-xs text-dark-300">
+                  <p className="text-[13px] text-dark-300">
                     {t('admin.dpichecker.cheremsha.subnet', {
                       value: item.rkn_subnet_hit ?? item.cdn_hit,
                     })}
                   </p>
                 )}
                 {item.resolved_ips.length > 0 && (
-                  <p className="text-xs text-dark-400">
+                  <p className="text-[13px] text-dark-400">
                     {t('admin.dpichecker.cheremsha.resolved', {
                       value: item.resolved_ips.join(', '),
                     })}
                   </p>
                 )}
                 {(item.asn_org || item.country) && (
-                  <p className="text-xs text-dark-400">
+                  <p className="text-[13px] text-dark-400">
                     {[item.asn && `AS${item.asn}`, item.asn_org, item.country]
                       .filter(Boolean)
                       .join(' · ')}
@@ -109,12 +109,12 @@ export function CheremshaTab() {
             );
           })}
           {data.invalid.length > 0 && (
-            <p className="text-xs text-dark-400">
+            <p className="text-[13px] text-dark-400">
               {t('admin.dpichecker.cheremsha.invalid', { items: data.invalid.join(', ') })}
             </p>
           )}
           {data.last_refresh && (
-            <p className="text-xs text-dark-500">
+            <p className="text-[13px] text-dark-500">
               {t('admin.dpichecker.cheremsha.refreshed', {
                 value: new Date(data.last_refresh).toLocaleString('ru-RU', {
                   dateStyle: 'short',

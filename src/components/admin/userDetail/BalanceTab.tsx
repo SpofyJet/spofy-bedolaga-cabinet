@@ -97,7 +97,7 @@ export function BalanceTab({ user, userId, can, onUserRefresh }: BalanceTabProps
               className="self-start"
             />
             <div className="grid gap-3 sm:grid-cols-[10rem_minmax(0,1fr)]">
-              <label htmlFor={amountId} className="flex flex-col gap-1 text-xs text-dark-500">
+              <label htmlFor={amountId} className="flex flex-col gap-1 text-[13px] text-dark-500">
                 {t(`${ns}.amountLabel`)}
                 <input
                   id={amountId}
@@ -110,7 +110,7 @@ export function BalanceTab({ user, userId, can, onUserRefresh }: BalanceTabProps
                   className="input py-2.5"
                 />
               </label>
-              <label htmlFor={commentId} className="flex flex-col gap-1 text-xs text-dark-500">
+              <label htmlFor={commentId} className="flex flex-col gap-1 text-[13px] text-dark-500">
                 {t(`${ns}.commentLabel`)}
                 <input
                   id={commentId}
@@ -234,9 +234,9 @@ function DiscountCard({
 
       {canSend &&
         (formOpen ? (
-          <div className="flex flex-col gap-3 rounded-xl bg-dark-800/60 p-3">
+          <div className="flex flex-col gap-3 rounded-3xl bg-dark-900/70 p-3">
             <div className="grid grid-cols-2 gap-3">
-              <label htmlFor={percentId} className="flex flex-col gap-1 text-xs text-dark-500">
+              <label htmlFor={percentId} className="flex flex-col gap-1 text-[13px] text-dark-500">
                 {t(`${ns}.discountPercent`)}
                 <input
                   id={percentId}
@@ -249,7 +249,7 @@ function DiscountCard({
                   max={100}
                 />
               </label>
-              <label htmlFor={hoursId} className="flex flex-col gap-1 text-xs text-dark-500">
+              <label htmlFor={hoursId} className="flex flex-col gap-1 text-[13px] text-dark-500">
                 {t(`${ns}.validHours`)}
                 <input
                   id={hoursId}

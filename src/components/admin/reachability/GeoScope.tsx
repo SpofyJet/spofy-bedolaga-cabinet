@@ -55,7 +55,7 @@ function CityPicker({
                 className="w-full rounded-lg px-2 py-1.5 text-left text-sm text-dark-100 hover:bg-dark-800"
               >
                 {city.city_ru}{' '}
-                <span className="text-xs text-dark-400">
+                <span className="text-[13px] text-dark-400">
                   · {city.region_ru} · {t(`${KEY}.scope.isps`, { count: city.isps.length })}
                 </span>
               </button>
@@ -64,7 +64,7 @@ function CityPicker({
         </ul>
       )}
       {search.data?.cities_truncated && (
-        <p className="text-xs text-dark-400">
+        <p className="text-[13px] text-dark-400">
           {t(`${KEY}.scope.cityTruncated`, { total: search.data.cities_total ?? 0 })}
         </p>
       )}
@@ -175,7 +175,7 @@ export function GeoScope({ value, onChange }: GeoScopeProps) {
 
       <div className="space-y-2">
         <label className="block">
-          <span className="mb-1 block text-xs text-dark-400">{t(`${KEY}.isp.label`)}</span>
+          <span className="mb-1 block text-[13px] text-dark-400">{t(`${KEY}.isp.label`)}</span>
           <DropdownSelect
             value={everyIsp ? '' : (value.isp ?? '')}
             onChange={(isp) => patch({ isp: isp || null })}
@@ -194,7 +194,7 @@ export function GeoScope({ value, onChange }: GeoScopeProps) {
           aria-pressed={everyIsp}
           disabled={!allIspsAllowed}
           onClick={() => patch({ isp: everyIsp ? null : ALL_ISPS })}
-          className="btn-secondary px-3 py-1.5 text-xs disabled:opacity-50"
+          className="btn-secondary px-3 py-1.5 text-[13px] disabled:opacity-50"
           title={allIspsAllowed ? undefined : t(`${KEY}.isp.allNeedsScope`)}
         >
           {t(`${KEY}.isp.all`)}

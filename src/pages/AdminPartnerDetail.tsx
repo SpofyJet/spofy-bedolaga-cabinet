@@ -93,7 +93,9 @@ export default function AdminPartnerDetail() {
       <div className="animate-fade-in">
         <div className="mb-6 flex items-center gap-3">
           <AdminBackButton to="/admin/partners" />
-          <h1 className="text-xl font-semibold text-dark-100">{t('admin.partnerDetail.title')}</h1>
+          <h1 className="text-xl font-bold tracking-tight text-dark-50 sm:text-2xl">
+            {t('admin.partnerDetail.title')}
+          </h1>
         </div>
         <div className="rounded-xl border border-error-500/30 bg-error-500/10 p-6 text-center">
           <p className="text-error-400">{t('admin.partnerDetail.loadError')}</p>
@@ -117,7 +119,7 @@ export default function AdminPartnerDetail() {
         <AdminBackButton to="/admin/partners" />
         <div>
           <div className="flex items-center gap-2">
-            <h1 className="text-xl font-semibold text-dark-100">
+            <h1 className="text-xl font-bold tracking-tight text-dark-50 sm:text-2xl">
               {partner.first_name || partner.username || `#${partner.user_id}`}
             </h1>
             <span className={`rounded px-2 py-0.5 text-xs ${badge.bgColor} ${badge.color}`}>
@@ -158,7 +160,7 @@ export default function AdminPartnerDetail() {
         </div>
 
         {/* Earnings */}
-        <div className="rounded-xl bg-dark-800 p-4">
+        <div className="rounded-3xl bg-dark-900/70 p-4">
           <h3 className="mb-4 font-medium text-dark-200">
             {t('admin.partnerDetail.earnings.title')}
           </h3>
@@ -191,7 +193,7 @@ export default function AdminPartnerDetail() {
         </div>
 
         {/* Commission */}
-        <div className="rounded-xl bg-dark-800 p-4">
+        <div className="rounded-3xl bg-dark-900/70 p-4">
           <div className="flex items-center justify-between">
             <div>
               <h3 className="font-medium text-dark-200">
@@ -215,7 +217,7 @@ export default function AdminPartnerDetail() {
         </div>
 
         {/* Campaigns */}
-        <div className="rounded-xl bg-dark-800 p-4">
+        <div className="rounded-3xl bg-dark-900/70 p-4">
           <div className="mb-4 flex items-center justify-between">
             <h3 className="font-medium text-dark-200">
               {t('admin.partnerDetail.campaigns.title')}
@@ -223,7 +225,7 @@ export default function AdminPartnerDetail() {
             <div className="flex gap-2">
               <button
                 onClick={() => navigate(`/admin/partners/${userId}/campaigns/assign`)}
-                className="rounded-lg bg-dark-700 px-3 py-1.5 text-xs text-dark-300 transition-colors hover:bg-dark-600 hover:text-dark-100"
+                className="rounded-lg bg-dark-700 px-3 py-1.5 text-[13px] text-dark-300 transition-colors hover:bg-dark-600 hover:text-dark-100"
               >
                 {t('admin.partnerDetail.campaigns.assign')}
               </button>
@@ -231,7 +233,7 @@ export default function AdminPartnerDetail() {
                 onClick={() =>
                   navigate(`/admin/campaigns/create?partnerId=${userId}`, backTo(location))
                 }
-                className="rounded-lg bg-accent-500/20 px-3 py-1.5 text-xs font-medium text-accent-400 transition-colors hover:bg-accent-500/30"
+                className="rounded-lg bg-accent-500/20 px-3 py-1.5 text-[13px] font-medium text-accent-400 transition-colors hover:bg-accent-500/30"
               >
                 {t('admin.partnerDetail.campaigns.createNew')}
               </button>
@@ -255,7 +257,7 @@ export default function AdminPartnerDetail() {
                       <div className="font-medium text-dark-100 [overflow-wrap:anywhere]">
                         {campaign.name}
                       </div>
-                      <div className="font-mono text-xs text-dark-500 break-all">
+                      <div className="font-mono text-[13px] text-dark-500 break-all">
                         ?start={campaign.start_parameter}
                       </div>
                     </div>
@@ -314,7 +316,7 @@ export default function AdminPartnerDetail() {
         </div>
 
         {/* Actions */}
-        <div className="rounded-xl bg-dark-800 p-4">
+        <div className="rounded-3xl bg-dark-900/70 p-4">
           <h3 className="mb-4 font-medium text-dark-200">
             {t('admin.partnerDetail.dangerZone.title')}
           </h3>

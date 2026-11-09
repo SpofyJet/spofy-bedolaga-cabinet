@@ -262,7 +262,7 @@ export default function AdminPromoOfferSend() {
           <div className="flex justify-center gap-3">
             <button
               onClick={() => navigate('/admin/promo-offers')}
-              className="rounded-lg bg-accent-500 px-6 py-2 text-on-accent transition-colors hover:bg-accent-600"
+              className="rounded-2xl bg-cta-500 px-6 py-2 text-on-cta transition-colors hover:bg-cta-600"
             >
               {t('admin.promoOffers.backToList')}
             </button>
@@ -289,7 +289,7 @@ export default function AdminPromoOfferSend() {
           <div className="rounded-lg bg-accent-500/20 p-2">
             <SendIcon />
           </div>
-          <h1 className="text-xl font-semibold text-dark-100">
+          <h1 className="text-xl font-bold tracking-tight text-dark-50 sm:text-2xl">
             {t('admin.promoOffers.send.title')}
           </h1>
         </div>
@@ -302,7 +302,7 @@ export default function AdminPromoOfferSend() {
       ) : (
         <div className="mx-auto max-w-2xl space-y-6">
           {/* Template Selection */}
-          <div className="rounded-xl bg-dark-800 p-6">
+          <div className="rounded-3xl bg-dark-900/70 p-6">
             <label id="po-template-label" className="mb-2 block text-sm font-medium text-dark-300">
               {t('admin.promoOffers.send.offerTemplate')}
               <span className="text-error-400">*</span>
@@ -350,7 +350,7 @@ export default function AdminPromoOfferSend() {
           </div>
 
           {/* Send Mode */}
-          <div className="rounded-xl bg-dark-800 p-6">
+          <div className="rounded-3xl bg-dark-900/70 p-6">
             <label id="po-sendmode-label" className="mb-2 block text-sm font-medium text-dark-300">
               {t('admin.promoOffers.send.sendTo')}
               <span className="text-error-400">*</span>
@@ -426,7 +426,7 @@ export default function AdminPromoOfferSend() {
                             selectedUser.username ||
                             `ID: ${selectedUser.telegram_id}`}
                         </div>
-                        <div className="truncate text-xs text-dark-400">
+                        <div className="truncate text-[13px] text-dark-400">
                           {selectedUser.username && `@${selectedUser.username} · `}
                           Telegram: {selectedUser.telegram_id}
                         </div>
@@ -481,7 +481,7 @@ export default function AdminPromoOfferSend() {
                                 <div className="truncate text-sm font-medium text-dark-100">
                                   {user.full_name || user.username || `User #${user.id}`}
                                 </div>
-                                <div className="truncate text-xs text-dark-400">
+                                <div className="truncate text-[13px] text-dark-400">
                                   {user.username && `@${user.username} · `}
                                   Telegram: {user.telegram_id}
                                 </div>
@@ -508,7 +508,7 @@ export default function AdminPromoOfferSend() {
 
           {/* Preview */}
           {selectedTemplate && (
-            <div className="rounded-xl bg-dark-800 p-6">
+            <div className="rounded-3xl bg-dark-900/70 p-6">
               <h4 className="mb-2 text-sm font-medium text-dark-300">
                 {t('admin.promoOffers.send.preview')}
               </h4>

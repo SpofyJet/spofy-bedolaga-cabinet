@@ -79,7 +79,7 @@ export function RestrictionsEditor({ user, busy, onSave, onClose }: Restrictions
   const ns = 'admin.users.detail.overview';
 
   return (
-    <div className="flex flex-col gap-3 rounded-xl bg-dark-800/60 p-3 text-sm">
+    <div className="flex flex-col gap-3 rounded-3xl bg-dark-900/70 p-3 text-sm">
       <div className="flex items-center justify-between gap-3">
         <span className="text-dark-200">{t(`${ns}.restrictTopupFull`)}</span>
         <Toggle
@@ -99,7 +99,7 @@ export function RestrictionsEditor({ user, busy, onSave, onClose }: Restrictions
         />
       </div>
       <label htmlFor={reasonId} className="flex flex-col gap-1">
-        <span className="text-xs text-dark-500">{t(`${ns}.restrictionReason`)}</span>
+        <span className="text-[13px] text-dark-500">{t(`${ns}.restrictionReason`)}</span>
         <input
           id={reasonId}
           type="text"

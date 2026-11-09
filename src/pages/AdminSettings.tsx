@@ -260,13 +260,15 @@ export default function AdminSettings() {
               {!capabilities.hasBackButton && (
                 <button
                   onClick={() => navigate('/admin')}
-                  className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-dark-800 transition-colors"
+                  className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-dark-900/70 transition-colors"
                   aria-label={t('admin.settings.backToAdmin')}
                 >
                   <BackIcon />
                 </button>
               )}
-              <h1 className="text-xl font-bold text-dark-100">{t('admin.settings.title')}</h1>
+              <h1 className="text-xl font-bold tracking-tight text-dark-50 sm:text-2xl">
+                {t('admin.settings.title')}
+              </h1>
             </div>
           </div>
           <SettingsTreeSidebar
@@ -284,7 +286,7 @@ export default function AdminSettings() {
         <div className="min-w-0 flex-1 overflow-y-auto p-6">
           {/* Breadcrumb for tree sub-items */}
           {activeTreeInfo && !searchQuery.trim() && (
-            <div className="mb-2 flex items-center gap-1.5 text-xs">
+            <div className="mb-2 flex items-center gap-1.5 text-[13px]">
               <button
                 onClick={() => setActiveSection(activeTreeInfo.group.children[0].id)}
                 className="text-dark-500 transition-colors hover:text-dark-300"
