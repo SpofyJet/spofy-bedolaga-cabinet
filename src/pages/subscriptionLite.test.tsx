@@ -114,7 +114,7 @@ function renderScreen() {
 beforeEach(() => {
   getSubscription.mockResolvedValue({ has_subscription: true, subscription });
   getDevices.mockResolvedValue({ total: 2, devices: [] });
-  getPurchaseOptions.mockResolvedValue({ sales_mode: 'classic' });
+  getPurchaseOptions.mockResolvedValue({});
   getConnectionLink.mockResolvedValue({
     subscription_url: 'https://sub.example/abc',
     hide_link: false,
@@ -128,7 +128,7 @@ afterEach(() => {
 
 describe('SubscriptionLite', () => {
   it('смена доступна прямо на странице выбранной оплаченной подписки', async () => {
-    getPurchaseOptions.mockResolvedValue({ sales_mode: 'tariffs' });
+    getPurchaseOptions.mockResolvedValue({});
     getSubscription.mockResolvedValue({ subscription: { ...subscription, tariff_id: 3 } });
     renderScreen();
     expect(
@@ -139,7 +139,7 @@ describe('SubscriptionLite', () => {
   });
 
   it('у суточного тарифа есть смена без ручного продления', async () => {
-    getPurchaseOptions.mockResolvedValue({ sales_mode: 'tariffs' });
+    getPurchaseOptions.mockResolvedValue({});
     getSubscription.mockResolvedValue({
       subscription: { ...subscription, tariff_id: 3, is_daily: true },
     });
@@ -209,7 +209,7 @@ describe('SubscriptionLite', () => {
   });
 
   it('в режиме тарифов серверами не управляют', async () => {
-    getPurchaseOptions.mockResolvedValue({ sales_mode: 'tariffs' });
+    getPurchaseOptions.mockResolvedValue({});
     renderScreen();
 
     await screen.findByRole('button', { name: /Докупить трафик/ });

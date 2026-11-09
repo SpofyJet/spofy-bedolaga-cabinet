@@ -36,7 +36,6 @@ import { RecurringPanels } from '../components/subscription/manage/RecurringPane
 import { DeviceTopupSheet } from '../components/subscription/sheets/DeviceTopupSheet';
 import { DeviceReductionSheet } from '../components/subscription/sheets/DeviceReductionSheet';
 import { TrafficTopupSheet } from '../components/subscription/sheets/TrafficTopupSheet';
-import { ServerManagementSheet } from '../components/subscription/sheets/ServerManagementSheet';
 import { DeleteSubscriptionSheet } from '../components/subscription/sheets/DeleteSubscriptionSheet';
 import { PageSkeleton, Skeleton } from '@/components/ui/skeleton';
 import { PageHeader } from '@/components/layout/PageHeader';
@@ -114,8 +113,6 @@ export default function Subscription() {
   );
   const [selectedTrafficPackage, setSelectedTrafficPackage] = useState<number | null>(null);
   const trafficTopupRef = useRef<HTMLDivElement>(null);
-  const [showServerManagement, setShowServerManagement] = useState(false);
-  const [selectedServersToUpdate, setSelectedServersToUpdate] = useState<string[]>([]);
 
   // Traffic refresh state
   const [trafficRefreshCooldown, setTrafficRefreshCooldown] = useState(0);
@@ -188,8 +185,6 @@ export default function Subscription() {
   });
   const purchaseOptions = purchaseOptionsQuery.data;
 
-  const isTariffsMode = purchaseOptions?.sales_mode === 'tariffs';
-
   // Счётчик подключённых устройств в шапке. Сам список живёт в <DevicesPanel>
   // и ходит по тому же ключу, так что второго запроса не возникает.
   const { data: devicesData } = useQuery({
@@ -203,7 +198,6 @@ export default function Subscription() {
     setShowDeviceTopup(false);
     setShowDeviceReduction(false);
     setShowTrafficTopup(false);
-    setShowServerManagement(false);
   }, []);
   useCloseOnSuccessNotification(handleCloseAllModals);
 
@@ -347,11 +341,7 @@ export default function Subscription() {
       <Page>
         <PageHeader title={t('subscription.title')} backTo={backTo} />
         <EmptyState icon={<PiHourglassDuotone />} title={t('subscription.noSubscription')} />
-        <PurchaseCTAButton
-          subscription={null}
-          isMultiTariff={isMultiTariff}
-          isTariffsMode={isTariffsMode}
-        />
+        <PurchaseCTAButton subscription={null} isMultiTariff={isMultiTariff} />
       </Page>
     );
   }
@@ -559,11 +549,7 @@ export default function Subscription() {
       )}
 
       {/* ─── Продлить / сменить тариф ─── */}
-      <PurchaseCTAButton
-        subscription={subscription}
-        isMultiTariff={isMultiTariff}
-        isTariffsMode={isTariffsMode}
-      />
+      <PurchaseCTAButton subscription={subscription} isMultiTariff={isMultiTariff} />
 
       {/* ─── Ссылка подписки ─── */}
       {((displayedConnectionUrl && !shouldHideConnectionLink) || canReissueLink(subscription)) && (
@@ -649,19 +635,6 @@ export default function Subscription() {
                 isDark={isDark}
               />
             </div>
-          )}
-          {!isTariffsMode && (
-            <ServerManagementSheet
-              open={showServerManagement}
-              onOpen={() => setShowServerManagement(true)}
-              onClose={() => setShowServerManagement(false)}
-              subscription={subscription}
-              subscriptionId={subscriptionId}
-              selectedServers={selectedServersToUpdate}
-              onSelectedServersChange={setSelectedServersToUpdate}
-              purchaseOptions={purchaseOptions}
-              isDark={isDark}
-            />
           )}
         </Group>
       )}

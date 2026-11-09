@@ -7,7 +7,6 @@ import { PiPlusBold, PiStackDuotone } from 'react-icons/pi';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { Button, EmptyState, Page } from '@/components/spofy/ui';
 import { subscriptionApi } from '../api/subscription';
-import { balanceApi } from '../api/balance';
 import { useAuthStore } from '../store/auth';
 import { getApiErrorMessage } from '../utils/api-error';
 import SubscriptionListCard from '../components/subscription/SubscriptionListCard';
@@ -46,13 +45,6 @@ export default function Subscriptions() {
     queryKey: ['trial-info'],
     queryFn: () => subscriptionApi.getTrialInfo(),
     enabled: hasNoSubscriptions,
-    staleTime: 30_000,
-  });
-
-  const { data: balanceData } = useQuery({
-    queryKey: ['balance'],
-    queryFn: balanceApi.getBalance,
-    enabled: hasNoSubscriptions && !!trialInfo?.is_available,
     staleTime: 30_000,
   });
 
@@ -115,8 +107,6 @@ export default function Subscriptions() {
         <div className="space-y-4">
           <TrialOfferCard
             trialInfo={trialInfo}
-            balanceKopeks={balanceData?.balance_kopeks ?? 0}
-            balanceRubles={balanceData?.balance_rubles ?? 0}
             activateTrialMutation={activateTrialMutation}
             trialError={trialError}
           />

@@ -124,17 +124,17 @@ describe('SubscriptionListCard: вечная подписка', () => {
 });
 
 describe('PurchaseCTAButton: вечная подписка', () => {
-  async function renderCta(sub: Subscription, isMultiTariff: boolean, isTariffsMode: boolean) {
+  async function renderCta(sub: Subscription, isMultiTariff: boolean) {
     const Cta = (await import('./PurchaseCTAButton')).default;
     render(
       <MemoryRouter>
-        <Cta subscription={sub} isMultiTariff={isMultiTariff} isTariffsMode={isTariffsMode} />
+        <Cta subscription={sub} isMultiTariff={isMultiTariff} />
       </MemoryRouter>,
     );
   }
 
   it('в тарифах — только смена тарифа, без «Продлить»', async () => {
-    await renderCta(subscription(), true, true);
+    await renderCta(subscription(), true);
 
     expect(screen.queryByText('subscription.extend')).toBeNull();
     expect(
@@ -142,20 +142,9 @@ describe('PurchaseCTAButton: вечная подписка', () => {
     ).toBe('/subscription/purchase?subscriptionId=42');
   });
 
-  it.each([
-    [false, false],
-    [true, false],
-  ])('без смены тарифа (мульти=%s) кнопки продления нет вовсе', async (multi, tariffs) => {
-    await renderCta(subscription(), multi, tariffs);
-
-    expect(screen.queryByText('subscription.extend')).toBeNull();
-    expect(screen.queryByRole('link')).toBeNull();
-  });
-
   it('обычная подписка с тарифом по-прежнему предлагает продление', async () => {
     await renderCta(
       subscription({ end_date: '2026-12-07T00:00:00Z', days_left: 34, is_lifetime: false }),
-      true,
       true,
     );
     expect(screen.getByRole('link', { name: 'subscription.extend' })).toBeTruthy();

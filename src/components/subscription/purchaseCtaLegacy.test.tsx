@@ -66,11 +66,11 @@ afterEach(() => {
   cleanup();
 });
 
-async function renderCta(sub: Subscription, isMultiTariff: boolean, isTariffsMode = true) {
+async function renderCta(sub: Subscription, isMultiTariff: boolean) {
   const Cta = (await import('./PurchaseCTAButton')).default;
   render(
     <MemoryRouter>
-      <Cta subscription={sub} isMultiTariff={isMultiTariff} isTariffsMode={isTariffsMode} />
+      <Cta subscription={sub} isMultiTariff={isMultiTariff} />
     </MemoryRouter>,
   );
 }
@@ -107,12 +107,6 @@ describe('старая подписка (нужен тариф)', () => {
 });
 
 describe('подписка с тарифом', () => {
-  it('в классическом режиме не добавляет смену тарифа', async () => {
-    await renderCta(subscription({ tariff_id: 7 }), false, false);
-    expect(href()).toBe('/subscription/purchase');
-    expect(screen.queryByRole('link', { name: 'subscription.switchTariff.title' })).toBeNull();
-  });
-
   it('в мультитарифе по-прежнему ведёт на продление', async () => {
     await renderCta(subscription({ tariff_id: 7, requires_tariff_selection: false }), true);
 

@@ -91,7 +91,7 @@ beforeEach(() => {
   getSubscriptions.mockResolvedValue({ subscriptions: [], multi_tariff_enabled: false });
   getSubscription.mockResolvedValue({ has_subscription: true, subscription: baseSubscription });
   getDevices.mockResolvedValue({ total: 2, devices: [] });
-  getTrialInfo.mockResolvedValue({ is_available: false, requires_payment: false, price_rubles: 0 });
+  getTrialInfo.mockResolvedValue({ is_available: false, price_rubles: 0 });
   activateTrial.mockResolvedValue({});
 });
 
@@ -263,7 +263,6 @@ describe('DashboardLite', () => {
     getSubscription.mockResolvedValue({ has_subscription: false, subscription: null });
     getTrialInfo.mockResolvedValue({
       is_available: true,
-      requires_payment: false,
       price_rubles: 0,
     });
     renderScreen();
@@ -279,7 +278,6 @@ describe('DashboardLite', () => {
     getSubscription.mockResolvedValue({ has_subscription: false, subscription: null });
     getTrialInfo.mockResolvedValue({
       is_available: true,
-      requires_payment: false,
       price_rubles: 0,
     });
     renderScreen();
@@ -288,20 +286,6 @@ describe('DashboardLite', () => {
     expect(screen.getByText('Посмотреть тарифы').closest('a')?.getAttribute('href')).toBe(
       '/subscription/purchase',
     );
-  });
-
-  it('платный триал называет цену, а не притворяется бесплатным', async () => {
-    getSubscription.mockResolvedValue({ has_subscription: false, subscription: null });
-    getTrialInfo.mockResolvedValue({
-      is_available: true,
-      requires_payment: true,
-      price_rubles: 99,
-    });
-    renderScreen();
-
-    const action = await screen.findByRole('button', { name: /lite\.action\.tryPaid/ });
-    expect(action.textContent).toContain('lite.action.tryPaid');
-    expect(screen.queryByRole('button', { name: 'lite.action.tryFree' })).toBeNull();
   });
 
   it('без подписки не показывает ни шкалы трафика, ни строки устройств', async () => {
@@ -405,43 +389,5 @@ describe('DashboardLite: отказ сети', () => {
 
     const action = await primaryAction();
     expect(action.textContent).toContain('lite.action.connect');
-  });
-
-  it('платный триал не по карману ведёт пополнять, а не в тупик с ошибкой', async () => {
-    // Полный вид при нехватке денег подменяет кнопку ссылкой на пополнение и
-    // не отправляет запрос вовсе. Простой экран обязан вести себя так же:
-    // иначе человек жмёт «Попробовать», получает ошибку и остаётся без выхода.
-    getSubscription.mockResolvedValue({ has_subscription: false, subscription: null });
-    getTrialInfo.mockResolvedValue({
-      is_available: true,
-      requires_payment: true,
-      price_kopeks: 99000,
-      price_rubles: 990,
-    });
-    renderScreen();
-
-    // У этого ключа есть настоящие переводы во всех локалях, инлайн-дефолта
-    // нет — поэтому мок t отдаёт сам ключ.
-    const action = await screen.findByRole('link', {
-      name: 'subscription.trial.topUpToActivate',
-    });
-    expect(action.getAttribute('href')).toBe('/balance');
-    expect(screen.queryByRole('button', { name: /lite\.action\.tryPaid/ })).toBeNull();
-    expect(activateTrial).not.toHaveBeenCalled();
-  });
-
-  it('платный триал по карману остаётся кнопкой оплаты', async () => {
-    getSubscription.mockResolvedValue({ has_subscription: false, subscription: null });
-    getTrialInfo.mockResolvedValue({
-      is_available: true,
-      requires_payment: true,
-      price_kopeks: 9900,
-      price_rubles: 99,
-    });
-    renderScreen();
-
-    const action = await screen.findByRole('button', { name: /lite\.action\.tryPaid/ });
-    action.click();
-    await waitFor(() => expect(activateTrial).toHaveBeenCalled());
   });
 });

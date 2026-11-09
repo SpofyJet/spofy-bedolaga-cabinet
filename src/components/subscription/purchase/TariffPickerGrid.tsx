@@ -44,7 +44,6 @@ export interface TariffPickerGridProps {
   tariffs: Tariff[];
   subscription: Subscription | null;
   purchaseOptions: PurchaseOptions | undefined;
-  isTariffsMode: boolean;
   isMultiTariff: boolean;
   subscriptionId?: number;
   switchSelection?: boolean;
@@ -56,7 +55,6 @@ export function TariffPickerGrid({
   tariffs,
   subscription,
   purchaseOptions,
-  isTariffsMode,
   isMultiTariff,
   subscriptionId,
   switchSelection = false,
@@ -121,7 +119,6 @@ export function TariffPickerGrid({
               tariff,
               subscription,
               purchaseOptions,
-              isTariffsMode,
               isMultiTariff,
               subscriptionId,
             });

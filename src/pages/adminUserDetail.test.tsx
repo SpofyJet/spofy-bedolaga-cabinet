@@ -363,7 +363,6 @@ describe('AdminUserDetail', () => {
     getUser.mockResolvedValue({
       ...detail,
       multi_tariff_enabled: true,
-      sales_mode: 'tariffs',
       subscriptions: [detail.subscription, second],
     });
     await renderDetail();
@@ -375,22 +374,12 @@ describe('AdminUserDetail', () => {
   });
 
   it('мультитариф с одной подпиской: карточка сразу и можно выдать ещё одну', async () => {
-    getUser.mockResolvedValue({ ...detail, multi_tariff_enabled: true, sales_mode: 'tariffs' });
+    getUser.mockResolvedValue({ ...detail, multi_tariff_enabled: true });
     await renderDetail('/admin/users/42?tab=subscription');
     await screen.findByText('admin.users.detail.panel.title');
     expect(screen.getByText('admin.users.detail.subscription.createNew')).toBeTruthy();
     const headings = screen.getAllByRole('heading', { level: 2 }).map((h) => h.textContent ?? '');
     expect(headings[headings.length - 1]).toBe('admin.users.detail.subscription.dangerZone.title');
-  });
-
-  it('классика: без «Сменить тариф» и без названия тарифа в плитке', async () => {
-    getUser.mockResolvedValue({ ...detail, sales_mode: 'classic', multi_tariff_enabled: false });
-    await renderDetail('/admin/users/42?tab=subscription');
-    await screen.findByText('admin.users.detail.panel.title');
-    expect(
-      screen.queryByRole('button', { name: 'admin.users.detail.subscription.changeTariff' }),
-    ).toBeNull();
-    expect(screen.queryByText(/Командный/)).toBeNull();
   });
 
   it('в «⋯» только действия с аккаунтом: промогруппа, ограничения и подписка — на своих местах', async () => {

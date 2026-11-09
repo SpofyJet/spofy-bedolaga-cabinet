@@ -48,7 +48,6 @@ export function render(
           tariffs={tariffs.map(base)}
           subscription={(options.subscription ?? null) as never}
           purchaseOptions={options.purchaseOptions as never}
-          isTariffsMode
           isMultiTariff={options.isMultiTariff ?? false}
           onSelectTariff={options.onSelectTariff ?? (() => {})}
           onSwitchTariff={options.onSwitchTariff ?? (() => {})}

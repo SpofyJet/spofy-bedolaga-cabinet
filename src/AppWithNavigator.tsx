@@ -182,8 +182,7 @@ const START_PARAM_ROUTES: Array<{ re: RegExp; to: (match: RegExpExecArray) => st
   // «Продлить» links for expired subscriptions in the bot's rich main menu.
   { re: /^renew_(\d+)$/, to: (match) => `/subscriptions/${match[1]}/renew` },
   { re: /^subscriptions$/, to: () => '/subscriptions' },
-  // Paid-trial «Активировать триал» link in the bot's rich main menu — the
-  // dashboard renders TrialOfferCard with the pay-and-activate flow.
+  // «Активировать триал» link in the bot's rich main menu.
   { re: /^trial$/, to: () => '/' },
   // Ссылка на спин из канала: колесо открывается сразу, код применяется сам.
   { re: /^spin_([A-Za-z0-9]+)$/, to: (match) => `/wheel?promo=${match[1]}` },

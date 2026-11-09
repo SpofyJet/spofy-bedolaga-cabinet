@@ -48,7 +48,6 @@ vi.mock('../api/subscription', () => ({
       subscriptions: [{ id: 11, tariff_id: state.switched ? 2 : 1 }],
     }),
     getPurchaseOptions: async () => ({
-      sales_mode: 'tariffs',
       balance_kopeks: 10000,
       subscription_is_expired: false,
       tariffs: [

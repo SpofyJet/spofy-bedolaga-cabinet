@@ -27,7 +27,6 @@ import { BackIcon, ChevronRightIcon } from '@/components/icons';
 import { required } from '@/utils/required';
 
 // Settings that require SALES_MODE=tariffs to be visible
-const TARIFF_MODE_SETTINGS = ['MULTI_TARIFF_ENABLED', 'MAX_ACTIVE_SUBSCRIPTIONS'];
 
 export default function AdminSettings() {
   const { t } = useTranslation();
@@ -75,13 +74,6 @@ export default function AdminSettings() {
     }
   }
 
-  // Check if tariffs mode is active
-  const isTariffsMode = useMemo(() => {
-    if (!allSettings || !Array.isArray(allSettings)) return false;
-    const salesMode = allSettings.find((s: SettingDefinition) => s.key === 'SALES_MODE');
-    return salesMode?.current === 'tariffs';
-  }, [allSettings]);
-
   // Get categories for current sub-item
   // biome-ignore lint/correctness/useExhaustiveDependencies: activeTreeInfo вычисляется из activeSection при каждом рендере
   const currentCategories = useMemo(() => {
@@ -100,7 +92,6 @@ export default function AdminSettings() {
         : categoryKeys.includes(setting.category.key);
       if (belongsHere) {
         // Hide tariff-dependent settings when not in tariffs mode
-        if (!isTariffsMode && TARIFF_MODE_SETTINGS.includes(setting.key)) continue;
 
         if (!categoryMap.has(setting.category.key)) {
           categoryMap.set(setting.category.key, []);
@@ -114,7 +105,7 @@ export default function AdminSettings() {
       label: t(`admin.settings.categories.${key}`, key),
       settings,
     }));
-  }, [activeSection, allSettings, isTariffsMode, t]);
+  }, [activeSection, allSettings, t]);
 
   // Filter settings for search - GLOBAL search across all settings
   const filteredSettings = useMemo(() => {
@@ -125,7 +116,6 @@ export default function AdminSettings() {
 
     return allSettings.filter((s: SettingDefinition) => {
       // Hide tariff-dependent settings when not in tariffs mode
-      if (!isTariffsMode && TARIFF_MODE_SETTINGS.includes(s.key)) return false;
 
       if (s.key.toLowerCase().includes(q)) return true;
       if (s.name?.toLowerCase().includes(q)) return true;
@@ -137,7 +127,7 @@ export default function AdminSettings() {
       if (categoryLabel.toLowerCase().includes(q)) return true;
       return false;
     });
-  }, [allSettings, searchQuery, isTariffsMode, t]);
+  }, [allSettings, searchQuery, t]);
 
   // Favorite settings
   const favoriteSettings = useMemo(() => {

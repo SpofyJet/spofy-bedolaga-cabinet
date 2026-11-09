@@ -156,7 +156,6 @@ export function SubscriptionTab(props: SubscriptionTabProps) {
             openPanel={openPanel}
             onOpenPanel={setOpenPanel}
             actions={actions}
-            classic={mode === 'classic'}
           />
 
           <div className="grid gap-4 lg:grid-cols-2">

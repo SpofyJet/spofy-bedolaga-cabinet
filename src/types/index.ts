@@ -193,9 +193,6 @@ export interface TrialInfo {
   duration_days: number;
   traffic_limit_gb: number;
   device_limit: number;
-  requires_payment: boolean;
-  price_kopeks: number;
-  price_rubles: number;
   reason_unavailable: string | null;
 }
 
@@ -359,7 +356,6 @@ export interface Tariff {
 }
 
 export interface TariffsPurchaseOptions {
-  sales_mode: 'tariffs';
   tariffs: Tariff[];
   current_tariff_id: number | null;
   balance_kopeks: number;
@@ -378,26 +374,7 @@ export interface TariffsPurchaseOptions {
   platega_recurrent_enabled?: boolean;
 }
 
-export interface ClassicPurchaseOptions {
-  sales_mode: 'classic';
-  currency: string;
-  balance_kopeks: number;
-  balance_label: string;
-  subscription_id: number | null;
-  periods: PeriodOption[];
-  traffic: TrafficConfig;
-  servers: ServersConfig;
-  devices: DevicesConfig;
-  selection: {
-    period_id: string;
-    period_days: number;
-    traffic_value: number;
-    servers: string[];
-    devices: number;
-  };
-}
-
-export type PurchaseOptions = TariffsPurchaseOptions | ClassicPurchaseOptions;
+export type PurchaseOptions = TariffsPurchaseOptions;
 
 export interface PurchaseSelection {
   period_id?: string;

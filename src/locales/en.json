@@ -394,9 +394,7 @@
     },
     "trialOffer": {
       "freeTitle": "Free Trial Available",
-      "paidTitle": "Trial Subscription",
-      "freeDesc": "Try our VPN for free, no commitment required",
-      "paidDesc": "Get started with a trial subscription"
+      "freeDesc": "Try our VPN for free, no commitment required"
     },
     "stats": {
       "balance": "Balance",
@@ -585,9 +583,6 @@
       "devices_other": "{{count}} devices",
       "price": "Price",
       "activate": "Activate Free",
-      "payAndActivate": "Pay & Activate",
-      "topUpToActivate": "Top Up Balance",
-      "insufficientBalance": "Top up your balance to activate",
       "unavailable": "Trial is not available"
     },
     "trialBanner": {
@@ -7983,7 +7978,6 @@
       "buy": "Choose a plan",
       "manage": "Open settings",
       "tryFree": "Try it free",
-      "tryPaid": "Try it for {{price}}",
       "chooseTariff": "Choose a plan"
     },
     "traffic": {
@@ -8000,7 +7994,6 @@
       "buyTraffic": "Buy more traffic",
       "buyDevices": "Buy more devices",
       "reduceDevices": "Reduce device count",
-      "servers": "Servers",
       "myDevices": "My devices",
       "allSettings": "All subscription settings",
       "delete": "Delete subscription",

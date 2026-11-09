@@ -85,10 +85,7 @@ it.each([null, undefined])(
     expect(screen.queryByText('999')).toBeNull();
   },
 );
-it.each(['classic', 'tariffs'] as const)(
-  'keeps the legacy user identity fallback in %s mode',
-  (mode) => {
-    renderWithProviders(<Harness mode={mode} subs={[subscription(101)]} />);
-    expect(screen.getByText('999')).toBeTruthy();
-  },
-);
+it('keeps the legacy user identity fallback in tariffs mode', () => {
+  renderWithProviders(<Harness mode="tariffs" subs={[subscription(101)]} />);
+  expect(screen.getByText('999')).toBeTruthy();
+});

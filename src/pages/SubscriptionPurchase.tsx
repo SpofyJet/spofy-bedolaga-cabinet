@@ -8,7 +8,7 @@ import { Button, EmptyState, Page, RowIcon, Surface } from '@/components/spofy/u
 import { cn } from '@/lib/utils';
 import type { ReactNode } from 'react';
 import { PiInfoDuotone, PiSparkleDuotone, PiWarningDuotone } from 'react-icons/pi';
-import type { Tariff, ClassicPurchaseOptions } from '../types';
+import type { Tariff } from '../types';
 import { useCloseOnSuccessNotification } from '../store/successNotification';
 import { SwitchTariffSheet } from '../components/subscription/sheets/SwitchTariffSheet';
 import { TariffPurchaseForm } from '../components/subscription/purchase/TariffPurchaseForm';
@@ -18,7 +18,6 @@ import { TariffPickerLite } from '../components/subscription/purchase/TariffPick
 import { formatLiteDate } from '@/utils/liteDate';
 import { isLifetimeSubscription } from '@/utils/lifetime';
 import { useLiteMode } from '../hooks/useLiteMode';
-import { ClassicPurchaseWizard } from '../components/subscription/purchase/ClassicPurchaseWizard';
 import { PageSkeleton, Skeleton } from '@/components/ui/skeleton';
 import { plainTariffName } from '@/utils/plainTariffName';
 
@@ -56,11 +55,7 @@ export default function SubscriptionPurchase() {
     refetchOnMount: 'always',
   });
 
-  // Sales mode detection
-  const isTariffsMode = purchaseOptions?.sales_mode === 'tariffs';
-  const classicOptions = !isTariffsMode ? (purchaseOptions as ClassicPurchaseOptions) : null;
-  const tariffs =
-    isTariffsMode && purchaseOptions && 'tariffs' in purchaseOptions ? purchaseOptions.tariffs : [];
+  const tariffs = purchaseOptions?.tariffs ?? [];
 
   // Multi-tariff: check via subscriptions list query
   const { data: multiSubData } = useQuery({
@@ -72,8 +67,6 @@ export default function SubscriptionPurchase() {
 
   // (active promo discount + applyPromoDiscount live in usePromoDiscount;
   //  consumed directly by the sub-components, not threaded as props)
-
-  // (classic-mode state moved into <ClassicPurchaseWizard>)
 
   // Tariffs mode state
   const [selectedTariff, setSelectedTariff] = useState<Tariff | null>(null);
@@ -90,7 +83,6 @@ export default function SubscriptionPurchase() {
 
   // Auto-close all modals on success notification
   const handleCloseAllModals = () => {
-    // setShowPurchaseForm moved into <ClassicPurchaseWizard>'s own useCloseOnSuccessNotification
     setShowTariffPurchase(false);
     setSwitchTariffId(null);
 
@@ -104,8 +96,6 @@ export default function SubscriptionPurchase() {
   // (tariffPurchaseMutation moved into <TariffPurchaseForm>)
   // (auto-scroll effects: switch-modal into <SwitchTariffSheet>,
   //  tariff-purchase into <TariffPurchaseForm>)
-
-  // (classic-mode helpers moved into <ClassicPurchaseWizard>)
 
   const backTo = subscriptionId ? `/subscriptions/${subscriptionId}` : '/subscriptions';
 
@@ -132,7 +122,6 @@ export default function SubscriptionPurchase() {
   }
 
   const isScopedSwitch =
-    isTariffsMode &&
     subscriptionId === subscription?.id &&
     canOpenTariffSwitch(subscription) &&
     !(
@@ -180,7 +169,6 @@ export default function SubscriptionPurchase() {
                   )}
                   subscription={subscription}
                   purchaseOptions={purchaseOptions}
-                  isTariffsMode={isTariffsMode}
                   isMultiTariff={isMultiTariff}
                   subscriptionId={subscriptionId}
                   switchSelection
@@ -217,7 +205,7 @@ export default function SubscriptionPurchase() {
         title={
           needsTariff(subscription)
             ? t('subscription.cta.moveToTariff')
-            : isTariffsMode && subscriptionId && canOpenTariffSwitch(subscription)
+            : subscriptionId && canOpenTariffSwitch(subscription)
               ? t('subscription.switchTariff.title')
               : isMultiTariff && !subscriptionId
                 ? t('subscription.newTariff', 'Новый тариф')
@@ -232,12 +220,11 @@ export default function SubscriptionPurchase() {
       />
 
       {/* Tariffs Section */}
-      {isTariffsMode && tariffs.length > 0 && (
+      {tariffs.length > 0 && (
         <div className="space-y-6">
           {/* Trial upgrade prompt — hidden when expired banner is active */}
           {subscription?.is_trial &&
             !(
-              isTariffsMode &&
               purchaseOptions &&
               'subscription_is_expired' in purchaseOptions &&
               purchaseOptions.subscription_is_expired
@@ -251,8 +238,7 @@ export default function SubscriptionPurchase() {
             )}
 
           {/* Expired subscription notice */}
-          {isTariffsMode &&
-            purchaseOptions &&
+          {purchaseOptions &&
             'subscription_is_expired' in purchaseOptions &&
             purchaseOptions.subscription_is_expired && (
               <Notice
@@ -291,7 +277,6 @@ export default function SubscriptionPurchase() {
               tariffs={tariffs}
               subscription={subscription}
               purchaseOptions={purchaseOptions}
-              isTariffsMode={isTariffsMode}
               isMultiTariff={isMultiTariff}
               subscriptionId={subscriptionId}
               onSelectTariff={(tariff) => {
@@ -309,7 +294,6 @@ export default function SubscriptionPurchase() {
                 subscriptionId={subscriptionId}
                 balanceKopeks={purchaseOptions?.balance_kopeks}
                 sbpPurchaseEnabled={
-                  isTariffsMode &&
                   purchaseOptions !== undefined &&
                   'platega_recurrent_enabled' in purchaseOptions &&
                   purchaseOptions.platega_recurrent_enabled === true
@@ -324,25 +308,13 @@ export default function SubscriptionPurchase() {
         </div>
       )}
 
-      {/* Purchase/Extend Section - Classic Mode */}
-      {classicOptions && classicOptions.periods.length > 0 && (
-        <ClassicPurchaseWizard
-          classicOptions={classicOptions}
-          subscription={subscription}
-          subscriptionId={subscriptionId}
+      {/* No options available fallback */}
+      {purchaseOptions && !optionsLoading && tariffs.length === 0 && (
+        <EmptyState
+          title={t('subscription.noOptionsAvailable', 'Нет доступных вариантов подписки')}
+          action={<Button onClick={() => refetchOptions()}>{t('common.retry')}</Button>}
         />
       )}
-
-      {/* No options available fallback */}
-      {purchaseOptions &&
-        !optionsLoading &&
-        !(isTariffsMode && tariffs.length > 0) &&
-        !(classicOptions && classicOptions.periods.length > 0) && (
-          <EmptyState
-            title={t('subscription.noOptionsAvailable', 'Нет доступных вариантов подписки')}
-            action={<Button onClick={() => refetchOptions()}>{t('common.retry')}</Button>}
-          />
-        )}
     </Page>
   );
 }

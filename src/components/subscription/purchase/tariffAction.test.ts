@@ -24,8 +24,7 @@ function ask(over: Partial<TariffActionInput> = {}) {
   return tariffAction({
     tariff: { id: 99, is_current: false } as Pick<Tariff, 'id' | 'is_current'>,
     subscription: activeSub,
-    purchaseOptions: { sales_mode: 'tariffs' } as unknown as PurchaseOptions,
-    isTariffsMode: true,
+    purchaseOptions: {} as unknown as PurchaseOptions,
     isMultiTariff: false,
     ...over,
   });
@@ -91,7 +90,6 @@ describe('tariffAction', () => {
     expect(
       ask({
         purchaseOptions: {
-          sales_mode: 'tariffs',
           subscription_is_expired: true,
         } as unknown as PurchaseOptions,
       }),
@@ -102,7 +100,6 @@ describe('tariffAction', () => {
     expect(
       ask({
         purchaseOptions: {
-          sales_mode: 'tariffs',
           subscription_on_free_tariff: true,
         } as unknown as PurchaseOptions,
       }),
@@ -116,20 +113,6 @@ describe('tariffAction', () => {
   it('в мультитарифе меняют тариф явно выбранной подписки', () => {
     expect(ask({ isMultiTariff: true, subscriptionId: 1 })).toBe('switch');
     expect(ask({ isMultiTariff: true, subscriptionId: 2 })).toBe('purchase');
-  });
-
-  it('вне режима тарифов флаги истечения не учитываются', () => {
-    // subscription_is_expired приходит только в режиме тарифов; в классике
-    // тот же ключ не должен превращать смену в покупку.
-    expect(
-      ask({
-        isTariffsMode: false,
-        purchaseOptions: {
-          sales_mode: 'classic',
-          subscription_is_expired: true,
-        } as unknown as PurchaseOptions,
-      }),
-    ).toBe('switch');
   });
 
   it('без тарифа у подписки менять нечего', () => {

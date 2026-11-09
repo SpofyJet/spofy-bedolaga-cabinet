@@ -367,11 +367,8 @@ export default function Dashboard() {
       {hasNoSubscription && !trialLoading && trialInfo?.is_available && (
         <TrialOfferCard
           trialInfo={trialInfo}
-          balanceKopeks={balanceData?.balance_kopeks || 0}
-          balanceRubles={balanceData?.balance_rubles || 0}
           activateTrialMutation={activateTrialMutation}
           trialError={trialError}
-          showBalance={false}
         />
       )}
 

@@ -109,7 +109,6 @@ if (!window.matchMedia) {
 beforeEach(() => {
   calls.sbp = [];
   state.purchaseOptions = {
-    sales_mode: 'tariffs',
     tariffs: [],
     balance_kopeks: 0,
     platega_recurrent_enabled: false,

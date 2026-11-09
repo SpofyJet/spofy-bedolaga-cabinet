@@ -27,23 +27,17 @@ vi.mock('../api/subscription', () => ({
     getSubscriptions: async () => ({ subscriptions: [], multi_tariff_enabled: state.multi }),
     getTrialInfo: async () => ({
       is_available: true,
-      requires_payment: true,
-      price_kopeks: 100,
-      price_rubles: 1,
       duration_days: 3,
       traffic_limit_gb: 10,
       device_limit: 1,
     }),
   },
 }));
-vi.mock('../api/balance', () => ({
-  balanceApi: { getBalance: async () => ({ balance_kopeks: 500, balance_rubles: 5 }) },
-}));
 
 afterEach(cleanup);
 
 it.each([false, true])(
-  'shows a paid-trial offer after returning without payment (multi=%s)',
+  'shows the trial offer when there is no subscription (multi=%s)',
   async (multi) => {
     state.multi = multi;
     const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
@@ -55,11 +49,9 @@ it.each([false, true])(
       </QueryClientProvider>,
     );
     expect(
-      await screen.findByRole('heading', { name: 'dashboard.trialOffer.paidTitle' }),
+      await screen.findByRole('heading', { name: 'dashboard.trialOffer.freeTitle' }),
     ).toBeTruthy();
-    expect(
-      await screen.findByRole('button', { name: 'subscription.trial.payAndActivate' }),
-    ).toBeTruthy();
+    expect(await screen.findByRole('button', { name: 'subscription.trial.activate' })).toBeTruthy();
     expect(screen.queryByText('Тестовая')).toBeNull();
     expect(screen.queryByRole('link', { name: /Подключиться/ })).toBeNull();
     client.clear();

@@ -28,7 +28,6 @@ export interface TariffActionInput {
   tariff: Pick<Tariff, 'id' | 'is_current'>;
   subscription: Subscription | null;
   purchaseOptions: PurchaseOptions | undefined;
-  isTariffsMode: boolean;
   isMultiTariff: boolean;
   subscriptionId?: number;
 }
@@ -43,7 +42,6 @@ export function tariffAction({
   tariff,
   subscription,
   purchaseOptions,
-  isTariffsMode,
   isMultiTariff,
   subscriptionId,
 }: TariffActionInput): TariffActionKind {
@@ -59,10 +57,10 @@ export function tariffAction({
     return 'moveToTariff';
   }
 
-  const expired = isTariffsMode && flag(purchaseOptions, 'subscription_is_expired');
+  const expired = flag(purchaseOptions, 'subscription_is_expired');
   // Бесплатный (0 ₽) исходный тариф: бэкенд запрещает пересчёт при смене
   // (free_tariff_cannot_switch), поэтому ведём обычной покупкой.
-  const onFreeTariff = isTariffsMode && flag(purchaseOptions, 'subscription_on_free_tariff');
+  const onFreeTariff = flag(purchaseOptions, 'subscription_on_free_tariff');
 
   const canSwitch =
     (!isMultiTariff || (subscriptionId !== undefined && subscriptionId === subscription?.id)) &&

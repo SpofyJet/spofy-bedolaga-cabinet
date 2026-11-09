@@ -25,7 +25,6 @@ export function TariffPickerLite({
   tariffs,
   subscription,
   purchaseOptions,
-  isTariffsMode,
   isMultiTariff,
   subscriptionId,
   onSelectTariff,
@@ -75,7 +74,6 @@ export function TariffPickerLite({
           tariff,
           subscription,
           purchaseOptions,
-          isTariffsMode,
           isMultiTariff,
           subscriptionId,
         });

@@ -17,7 +17,6 @@ import {
 import { DeleteSubscriptionSheet } from '@/components/subscription/sheets/DeleteSubscriptionSheet';
 import { DeviceReductionSheet } from '@/components/subscription/sheets/DeviceReductionSheet';
 import { DeviceTopupSheet } from '@/components/subscription/sheets/DeviceTopupSheet';
-import { ServerManagementSheet } from '@/components/subscription/sheets/ServerManagementSheet';
 import { TrafficTopupSheet } from '@/components/subscription/sheets/TrafficTopupSheet';
 import { Skeleton, SkeletonGroup } from '@/components/ui/skeleton';
 import { useTheme } from '@/hooks/useTheme';
@@ -33,7 +32,7 @@ import { formatLiteDate } from '@/utils/liteDate';
 import { isLifetimeSubscription } from '@/utils/lifetime';
 import { plainTariffName } from '@/utils/plainTariffName';
 
-type OpenPanel = 'traffic' | 'devices' | 'reduce' | 'servers' | 'devicesList' | 'delete' | null;
+type OpenPanel = 'traffic' | 'devices' | 'reduce' | 'devicesList' | 'delete' | null;
 
 /**
  * Простой вид управления подпиской.
@@ -66,7 +65,6 @@ export default function SubscriptionLite() {
   const [devicesToAdd, setDevicesToAdd] = useState(1);
   const [targetDeviceLimit, setTargetDeviceLimit] = useState(1);
   const [trafficPackage, setTrafficPackage] = useState<number | null>(null);
-  const [servers, setServers] = useState<string[]>([]);
 
   const {
     data: response,
@@ -167,9 +165,6 @@ export default function SubscriptionLite() {
   const showsAddons = showsAddonOptions(subscription);
   // Вечная подписка: срок «Навсегда», строки «Продлить» нет.
   const lifetime = isLifetimeSubscription(subscription);
-  // Пока режим продаж неизвестен, строку «Серверы» не рисуем вовсе: иначе она
-  // успевает появиться и тут же исчезнуть, когда приходит ответ о тарифах.
-  const managesServers = Boolean(purchaseOptions) && purchaseOptions?.sales_mode !== 'tariffs';
   const sheetProps = {
     open: true,
     onOpen: () => {},
@@ -229,7 +224,7 @@ export default function SubscriptionLite() {
             />
           ) : null}
 
-          {purchaseOptions?.sales_mode === 'tariffs' && canOpenTariffSwitch(subscription) && (
+          {canOpenTariffSwitch(subscription) && (
             <LiteRow
               to={tariffSelectionPath(subscription.id)}
               label={t('subscription.switchTariff.title')}
@@ -307,24 +302,6 @@ export default function SubscriptionLite() {
               <LiteRow
                 label={t('lite.rows.reduceDevices', 'Уменьшить число устройств')}
                 onClick={() => setPanel('reduce')}
-              />
-            )
-          )}
-
-          {panel === 'servers' ? (
-            <div className="py-4">
-              <ServerManagementSheet
-                {...sheetProps}
-                selectedServers={servers}
-                onSelectedServersChange={setServers}
-              />
-            </div>
-          ) : (
-            showsAddons &&
-            managesServers && (
-              <LiteRow
-                label={t('lite.rows.servers', 'Серверы')}
-                onClick={() => setPanel('servers')}
               />
             )
           )}

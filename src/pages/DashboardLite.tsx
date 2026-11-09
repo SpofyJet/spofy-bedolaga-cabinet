@@ -120,15 +120,6 @@ export default function DashboardLite() {
         subscription.subscription_crypto_link),
   );
   const offersTrial = status.action === 'buy' && Boolean(trialInfo?.is_available);
-  // Платный пробный период списывается с баланса. Если денег не хватает,
-  // активация падает на стороне сервера, и кнопка «Попробовать» превращается
-  // в тупик: ошибка без выхода. Поэтому в этом случае зовём пополнить —
-  // ровно так же, как это делает полный вид.
-  const trialNeedsTopUp =
-    offersTrial &&
-    Boolean(trialInfo?.requires_payment) &&
-    (balance?.balance_kopeks ?? 0) < (trialInfo?.price_kopeks ?? 0);
-
   const actionPath: Record<LiteAction, string> = {
     connect: subscriptionId ? `/connection?sub=${subscriptionId}` : '/connection',
     renew: subscriptionId ? `/subscriptions/${subscriptionId}/renew` : '/subscription/purchase',
@@ -227,22 +218,14 @@ export default function DashboardLite() {
       )}
 
       {!hasMany &&
-        (trialNeedsTopUp ? (
-          <Link to="/balance" className={PRIMARY_ACTION_CLASS}>
-            {t('subscription.trial.topUpToActivate')}
-          </Link>
-        ) : offersTrial ? (
+        (offersTrial ? (
           <button
             type="button"
             onClick={() => activateTrial.mutate()}
             disabled={activateTrial.isPending}
             className={`${PRIMARY_ACTION_CLASS} disabled:opacity-60`}
           >
-            {trialInfo?.requires_payment
-              ? t('lite.action.tryPaid', {
-                  price: `${formatAmount(trialInfo.price_rubles)} ${currencySymbol}`,
-                })
-              : t('lite.action.tryFree')}
+            {t('lite.action.tryFree')}
           </button>
         ) : (
           <Link to={actionPath[status.action]} className={PRIMARY_ACTION_CLASS}>

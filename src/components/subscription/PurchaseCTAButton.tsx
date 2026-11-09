@@ -24,13 +24,11 @@ interface PurchaseCTAButtonProps {
   subscription: Subscription | null;
   /** In multi-tariff mode, link to /subscriptions/:id/renew instead of /subscription/purchase */
   isMultiTariff?: boolean;
-  isTariffsMode?: boolean;
 }
 
 export default function PurchaseCTAButton({
   subscription,
   isMultiTariff = false,
-  isTariffsMode = false,
 }: PurchaseCTAButtonProps) {
   const { t } = useTranslation();
 
@@ -44,7 +42,7 @@ export default function PurchaseCTAButton({
   // Вечная подписка (ULTIMA) не кончается: «Продлить» ей не предлагаем.
   const isLifetime = isLifetimeSubscription(subscription);
 
-  if (isTariffsMode && subscription && canOpenTariffSwitch(subscription)) {
+  if (subscription && canOpenTariffSwitch(subscription)) {
     const showRenew = !isDaily && !isLifetime;
     // Два синих блока подряд («Подключить устройство» в карточке и «Продлить»)
     // спорили за внимание. Пока до конца больше недели, продление — спокойная

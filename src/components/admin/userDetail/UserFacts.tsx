@@ -55,8 +55,8 @@ function stateLabel(status: string, t: Translate): string {
   return t(`admin.users.subscriptionState.${status in SUBSCRIPTION_STATE_TONE ? status : 'other'}`);
 }
 
-/** «Подписка до»: одна подписка — классика или тариф. В классике тарифа нет, подпись без него. */
-function untilTile(subscription: UserSubscriptionInfo | null, mode: SalesMode, t: Translate): Tile {
+/** «Подписка до» для одной подписки. */
+function untilTile(subscription: UserSubscriptionInfo | null, t: Translate): Tile {
   // Сначала то, что важнее: сколько осталось (или что с подпиской), потом тариф —
   // на телефоне плитка узкая, и обрезается хвост, а не дни.
   const state =
@@ -64,7 +64,7 @@ function untilTile(subscription: UserSubscriptionInfo | null, mode: SalesMode, t
     (subscription.status === 'active' && subscription.days_remaining > 0
       ? t(`${ns}.days`, { count: subscription.days_remaining })
       : stateLabel(subscription.status, t));
-  const tariff = mode === 'classic' ? null : subscription?.tariff_name;
+  const tariff = subscription?.tariff_name;
   return {
     key: 'until',
     label: t(`${ns}.until`),
@@ -152,7 +152,7 @@ export function UserFacts({ user, mode, subscription, devicesTotal }: UserFactsP
         ]
       : [
           balance,
-          untilTile(subscription, mode, t),
+          untilTile(subscription, t),
           {
             key: 'traffic',
             label: t(`${ns}.traffic`),

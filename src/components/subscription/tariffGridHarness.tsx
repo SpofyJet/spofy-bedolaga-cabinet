@@ -45,7 +45,6 @@ export function render(
                 : null
           }
           purchaseOptions={undefined}
-          isTariffsMode
           isMultiTariff={false}
           onSelectTariff={() => {}}
           onSwitchTariff={() => {}}

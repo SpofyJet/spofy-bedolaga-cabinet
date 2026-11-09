@@ -365,9 +365,7 @@
     "trafficUsageTitle": "流量使用",
     "trialOffer": {
       "freeDesc": "免费试用我们的 VPN：无需任何承诺",
-      "freeTitle": "免费试用",
-      "paidDesc": "从试用订阅开始吧",
-      "paidTitle": "付费试用"
+      "freeTitle": "免费试用"
     },
     "unlimited": "无限",
     "usageLast14Days": "近 14 天使用情况",
@@ -516,10 +514,7 @@
       "devices_other": "{{count}} 个设备",
       "price": "激活费用",
       "activate": "激活免费试用",
-      "unavailable": "试用不可用",
-      "insufficientBalance": "余额不足以激活试用",
-      "payAndActivate": "付费并激活",
-      "topUpToActivate": "充值以激活试用"
+      "unavailable": "试用不可用"
     },
     "connection": {
       "title": "连接VPN",
@@ -7442,7 +7437,6 @@
       "buy": "选择套餐",
       "manage": "打开管理",
       "tryFree": "免费试用",
-      "tryPaid": "以 {{price}} 试用",
       "chooseTariff": "选择套餐"
     },
     "traffic": {
@@ -7459,7 +7453,6 @@
       "buyTraffic": "购买更多流量",
       "buyDevices": "增加设备数",
       "reduceDevices": "减少设备数",
-      "servers": "服务器",
       "myDevices": "我的设备",
       "allSettings": "全部订阅设置",
       "delete": "删除订阅",
