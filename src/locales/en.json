@@ -485,7 +485,8 @@
       "DAY": "Resets daily",
       "WEEK": "Resets weekly",
       "MONTH": "Resets monthly",
-      "MONTH_ROLLING": "Resets monthly from the connection date"
+      "MONTH_ROLLING": "Resets monthly from the connection date",
+      "SUBSCRIPTION_MONTH": "Resets monthly on the purchase day"
     },
     "traffic": "Traffic",
     "unlimited": "Unlimited",
