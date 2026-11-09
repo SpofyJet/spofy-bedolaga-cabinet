@@ -24,6 +24,7 @@ export function PermissionRoute({
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const isLoading = useAuthStore((state) => state.isLoading);
   const isAdmin = useAuthStore((state) => state.isAdmin);
+  const isAdminVerified = useAuthStore((state) => state.isAdminVerified);
   const location = useLocation();
 
   const permissionsLoaded = usePermissionStore((state) => state.isLoaded);
@@ -31,9 +32,11 @@ export function PermissionRoute({
   const hasAnyPermission = usePermissionStore((state) => state.hasAnyPermission);
   const hasAllPermissions = usePermissionStore((state) => state.hasAllPermissions);
 
-  // Still loading auth state, or admin but permissions not fetched yet
-  if (isLoading || (isAdmin && !permissionsLoaded)) {
-    return <PageLoader variant="light" />;
+  // Админ из прошлого визита проходит сразу. Остальных не выгоняем, пока сервер не ответил:
+  // это может быть новый админ, у которого ещё нет сохранённой роли.
+  const roleUnknown = isAuthenticated && !isAdmin && !isAdminVerified;
+  if (isLoading || roleUnknown || (isAdmin && !permissionsLoaded)) {
+    return <PageLoader />;
   }
 
   if (!isAuthenticated) {

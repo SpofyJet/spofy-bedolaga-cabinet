@@ -26,6 +26,7 @@ export const UI = {
   DESKTOP_HEADER_HEIGHT_PX: 56,
   /** Сколько ждать палитру оператора перед первой отрисовкой, когда подсказки ещё нет. */
   THEME_COLORS_FIRST_PAINT_TIMEOUT_MS: 1500,
+  APP_READY_FALLBACK_MS: 2500,
 } as const;
 
 // API

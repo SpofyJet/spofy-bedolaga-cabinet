@@ -1,5 +1,5 @@
 import { safeSession } from './utils/safeStorage';
-import { lazy, Suspense, type ComponentType } from 'react';
+import { lazy, Suspense, useEffect, type ComponentType } from 'react';
 import { Routes, Route, Navigate, useLocation, useParams } from 'react-router';
 import { useAuthStore } from './store/auth';
 
@@ -8,8 +8,16 @@ import { useAuthStore } from './store/auth';
  * (e.g. after a new deploy with different chunk hashes).
  */
 function lazyWithRetry<T extends ComponentType<unknown>>(factory: () => Promise<{ default: T }>) {
-  return lazy(() =>
-    factory().catch(() => {
+  let loading: Promise<{ default: T }> | undefined;
+  const preload = () => {
+    loading ??= factory().catch((error) => {
+      loading = undefined;
+      throw error;
+    });
+    return loading;
+  };
+  const Page = lazy(() =>
+    preload().catch(() => {
       const key = 'chunk_reload_ts';
       const last = Number(safeSession.getItem(key) || '0');
       // Метка обязана пережить сам reload — в этом её единственный смысл. Если
@@ -23,10 +31,12 @@ function lazyWithRetry<T extends ComponentType<unknown>>(factory: () => Promise<
       return factory();
     }),
   );
+  return Object.assign(Page, { preload });
 }
 import { useBlockingStore } from './store/blocking';
 import Layout from './components/layout/Layout';
 import PageLoader from './components/common/PageLoader';
+import { AppReadySignal } from './components/common/AppReadySignal';
 import {
   MaintenanceScreen,
   ChannelSubscriptionScreen,
@@ -194,7 +204,7 @@ function ProtectedRoute({
   const location = useLocation();
 
   if (isLoading) {
-    return <PageLoader variant="dark" />;
+    return <PageLoader />;
   }
 
   if (!isAuthenticated) {
@@ -223,7 +233,7 @@ function AdminRoute({ children }: { children: React.ReactNode }) {
   const location = useLocation();
 
   if (isLoading) {
-    return <PageLoader variant="light" />;
+    return <PageLoader />;
   }
 
   if (!isAuthenticated) {
@@ -242,10 +252,43 @@ function AdminRoute({ children }: { children: React.ReactNode }) {
 // OUTSIDE Suspense so chunk-load failures (caught by lazyWithRetry's reload
 // path) and render-time exceptions both surface in the page-level fallback
 // instead of crashing the entire shell via the top-level boundary.
+const COMMON_PAGES = [
+  Subscriptions,
+  SubscriptionScreen,
+  Balance,
+  Referral,
+  Support,
+  Profile,
+  Wheel,
+  Connection,
+  TopUpMethodSelect,
+  TopUpAmount,
+  SubscriptionPurchase,
+];
+
+/** Подгружает частые экраны в простое, чтобы переход на них не ждал сеть. */
+function preloadCommonPages(extra: { preload: () => Promise<unknown> }[]): () => void {
+  const connection = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection;
+  if (connection?.saveData) return () => {};
+  const pages = [...COMMON_PAGES, ...extra];
+  let timer: ReturnType<typeof setTimeout>;
+  const next = () => {
+    const page = pages.shift();
+    if (!page) return;
+    void page.preload().catch(() => {});
+    timer = setTimeout(next, 150);
+  };
+  timer = setTimeout(next, 1200);
+  return () => clearTimeout(timer);
+}
+
 function LazyPage({ children }: { children: React.ReactNode }) {
   return (
     <ErrorBoundary level="page">
-      <Suspense fallback={<PageLoader variant="dark" />}>{children}</Suspense>
+      <Suspense fallback={<PageLoader />}>
+        {children}
+        <AppReadySignal />
+      </Suspense>
     </ErrorBoundary>
   );
 }
@@ -284,6 +327,13 @@ function LegacySubscriptionRedirect() {
 
 function App() {
   useAnalyticsCounters();
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  const isAdmin = useAuthStore((state) => state.isAdmin);
+
+  useEffect(() => {
+    if (isAuthenticated) return preloadCommonPages(isAdmin ? [AdminPanel] : []);
+  }, [isAuthenticated, isAdmin]);
+
   // Клавиша «Готово» на экранной клавиатуре для всех полей, включая экран входа.
   useDoneKey();
 

@@ -70,7 +70,6 @@
               if (!tg || !tg.isVersionAtLeast || !tg.isVersionAtLeast('8.0')) return;
               if (tg.platform !== 'ios' && tg.platform !== 'android') return;
               if (localStorage.getItem('cabinet_fullscreen_enabled') === 'false') return;
-              tg.ready();
               tg.expand();
               if (!tg.isFullscreen) tg.requestFullscreen();
             } catch (e) {}

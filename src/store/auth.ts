@@ -41,6 +41,8 @@ interface AuthState {
   isAuthenticated: boolean;
   isLoading: boolean;
   isAdmin: boolean;
+  /** Сервер подтвердил роль в этом запуске; до этого isAdmin взят из прошлого визита. */
+  isAdminVerified: boolean;
   pendingCampaignBonus: CampaignBonusInfo | null;
 
   setTokens: (accessToken: string, refreshToken: string) => void;
@@ -89,6 +91,7 @@ export const useAuthStore = create<AuthState>()(
       isAuthenticated: false,
       isLoading: true,
       isAdmin: false,
+      isAdminVerified: false,
       pendingCampaignBonus: null,
 
       clearCampaignBonus: () => set({ pendingCampaignBonus: null }),
@@ -126,6 +129,7 @@ export const useAuthStore = create<AuthState>()(
           user: null,
           isAuthenticated: false,
           isAdmin: false,
+          isAdminVerified: false,
         });
       },
 
@@ -133,19 +137,19 @@ export const useAuthStore = create<AuthState>()(
         try {
           const token = tokenStorage.getAccessToken();
           if (!token || !isTokenValid(token)) {
-            set({ isAdmin: false });
+            set({ isAdmin: false, isAdminVerified: true });
             usePermissionStore.getState().reset();
             return;
           }
           const response = await apiClient.get<{ is_admin: boolean }>('/cabinet/auth/me/is-admin');
-          set({ isAdmin: response.data.is_admin });
           if (response.data.is_admin) {
             await usePermissionStore.getState().fetchPermissions();
           } else {
             usePermissionStore.getState().reset();
           }
+          set({ isAdmin: response.data.is_admin, isAdminVerified: true });
         } catch {
-          set({ isAdmin: false });
+          set({ isAdmin: false, isAdminVerified: true });
           usePermissionStore.getState().reset();
         }
       },
@@ -189,12 +193,15 @@ export const useAuthStore = create<AuthState>()(
         };
         const clearSession = (): void => {
           tokenStorage.clearTokens();
+          usePermissionStore.getState().reset();
           set({
             accessToken: null,
             refreshToken: null,
             user: null,
             isAuthenticated: false,
             isLoading: false,
+            isAdmin: false,
+            isAdminVerified: true,
           });
         };
 
@@ -222,6 +229,12 @@ export const useAuthStore = create<AuthState>()(
                 set({ isLoading: false, isAuthenticated: false });
                 return;
               }
+            }
+
+            // Сессия уже есть: показываем экран сразу, а проверяем её в фоне.
+            // Отозванный токен попадёт в clearSession и уведёт на вход как раньше.
+            if (get().user) {
+              set({ accessToken, refreshToken, isAuthenticated: true, isLoading: false });
             }
 
             if (!isTokenValid(accessToken)) {
@@ -448,6 +461,7 @@ export const useAuthStore = create<AuthState>()(
       })),
       partialize: (state) => ({
         user: state.user,
+        isAdmin: state.isAdmin,
       }),
     },
   ),

@@ -1,5 +1,7 @@
 import { create } from 'zustand';
+import { createJSONStorage, persist } from 'zustand/middleware';
 import apiClient from '../api/client';
+import { safeLocal } from '../utils/safeStorage';
 
 interface PermissionsResponse {
   permissions: string[];
@@ -43,57 +45,83 @@ interface PermissionState {
   reset: () => void;
 }
 
-export const usePermissionStore = create<PermissionState>((set, get) => ({
-  permissions: [],
-  roles: [],
-  roleLevel: 0,
-  isLoaded: false,
-
-  fetchPermissions: async () => {
-    try {
-      const response = await apiClient.get<PermissionsResponse>('/cabinet/auth/me/permissions');
-      set({
-        permissions: response.data.permissions,
-        roles: response.data.roles,
-        roleLevel: response.data.role_level,
-        isLoaded: true,
-      });
-    } catch {
-      set({
-        permissions: [],
-        roles: [],
-        roleLevel: 0,
-        isLoaded: true,
-      });
-    }
-  },
-
-  hasPermission: (permission: string): boolean => {
-    const { permissions } = get();
-    return permissions.some((userPerm) => permissionMatches(userPerm, permission));
-  },
-
-  hasAnyPermission: (...permissions: string[]): boolean => {
-    const { hasPermission } = get();
-    return permissions.some((perm) => hasPermission(perm));
-  },
-
-  hasAllPermissions: (...permissions: string[]): boolean => {
-    const { hasPermission } = get();
-    return permissions.every((perm) => hasPermission(perm));
-  },
-
-  canManageRole: (level: number): boolean => {
-    const { roleLevel } = get();
-    return roleLevel > level;
-  },
-
-  reset: () => {
-    set({
+export const usePermissionStore = create<PermissionState>()(
+  persist(
+    (set, get) => ({
       permissions: [],
       roles: [],
       roleLevel: 0,
       isLoaded: false,
-    });
-  },
-}));
+
+      fetchPermissions: async () => {
+        try {
+          const response = await apiClient.get<PermissionsResponse>('/cabinet/auth/me/permissions');
+          set({
+            permissions: response.data.permissions,
+            roles: response.data.roles,
+            roleLevel: response.data.role_level,
+            isLoaded: true,
+          });
+        } catch {
+          set({
+            permissions: [],
+            roles: [],
+            roleLevel: 0,
+            isLoaded: true,
+          });
+        }
+      },
+
+      hasPermission: (permission: string): boolean => {
+        const { permissions } = get();
+        return permissions.some((userPerm) => permissionMatches(userPerm, permission));
+      },
+
+      hasAnyPermission: (...permissions: string[]): boolean => {
+        const { hasPermission } = get();
+        return permissions.some((perm) => hasPermission(perm));
+      },
+
+      hasAllPermissions: (...permissions: string[]): boolean => {
+        const { hasPermission } = get();
+        return permissions.every((perm) => hasPermission(perm));
+      },
+
+      canManageRole: (level: number): boolean => {
+        const { roleLevel } = get();
+        return roleLevel > level;
+      },
+
+      reset: () => {
+        set({
+          permissions: [],
+          roles: [],
+          roleLevel: 0,
+          isLoaded: false,
+        });
+      },
+    }),
+    {
+      // Только для мгновенной отрисовки админки: каждое действие проверяет сервер.
+      name: 'cabinet-permissions',
+      storage: createJSONStorage(() => ({
+        getItem: (name) => safeLocal.getItem(name),
+        setItem: (name, value) => {
+          safeLocal.setItem(name, value);
+        },
+        removeItem: (name) => {
+          safeLocal.removeItem(name);
+        },
+      })),
+      partialize: (state) => ({
+        permissions: state.permissions,
+        roles: state.roles,
+        roleLevel: state.roleLevel,
+      }),
+      merge: (persisted, current) => {
+        const saved = persisted as Partial<PermissionState> | undefined;
+        return { ...current, ...saved, isLoaded: Boolean(saved?.permissions?.length) };
+      },
+    },
+  ),
+);

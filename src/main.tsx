@@ -6,7 +6,6 @@ import {
   init,
   restoreInitData,
   mountMiniApp,
-  miniAppReady,
   mountViewport,
   expandViewport,
   mountSwipeBehavior,
@@ -24,6 +23,8 @@ import { installEncodingSurrogateGuard } from './utils/installEncodingSurrogateG
 import { getTelegramInitData } from './utils/telegramInitData';
 import { useAuthStore } from './store/auth';
 import { AppWithNavigator } from './AppWithNavigator';
+import { persistQueryCache } from './lib/queryPersist';
+import { signalAppReady } from './utils/appReady';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { brandingApi, initLogoPreload } from './api/branding';
 import { checkBackendOnStartup } from './api/health';
@@ -130,7 +131,9 @@ if (isTelegramEnv && !alreadyInitialized) {
       })
       .catch(() => {});
 
-    miniAppReady();
+    // Заставку снимает первый готовый экран (AppReadySignal). Таймер страхует
+    // экраны без него: логин, блокировки, ошибки.
+    setTimeout(signalAppReady, UI.APP_READY_FALLBACK_MS);
   } catch {}
 } else if (!isTelegramEnv) {
   // Outside Telegram — still clear stale session tokens if any
@@ -173,6 +176,8 @@ const queryClient = new QueryClient({
     },
   },
 });
+
+persistQueryCache(queryClient);
 
 // Палитра оператора для самого первого визита: подсказки в localStorage ещё нет,
 // и без ожидания первый кадр ушёл бы в цветах по умолчанию (повторные визиты

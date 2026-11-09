@@ -1,3 +1,4 @@
+import { AppReadySignal } from '../components/common/AppReadySignal';
 import { useLiteMode } from '@/hooks/useLiteMode';
 
 import Dashboard from './Dashboard';
@@ -15,5 +16,10 @@ import DashboardLite from './DashboardLite';
 export default function HomeScreen() {
   const { lite } = useLiteMode();
 
-  return lite ? <DashboardLite /> : <Dashboard />;
+  return (
+    <>
+      {lite ? <DashboardLite /> : <Dashboard />}
+      <AppReadySignal />
+    </>
+  );
 }

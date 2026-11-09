@@ -21,6 +21,9 @@ interface TelegramWebAppGlobal {
   offEvent?: (event: string, callback: () => void) => void;
   /** Closes the Mini App (injected by telegram-web-app.js). */
   close?: () => void;
+  ready?: () => void;
+  isFullscreen?: boolean;
+  requestFullscreen?: () => void;
   /**
    * Raw init data, snapshotted by Telegram's own bridge script at page load.
    * Independent of the @telegram-apps/sdk launch-params cache, which can go
