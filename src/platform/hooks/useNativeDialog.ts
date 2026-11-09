@@ -1,6 +1,7 @@
 import { useCallback } from 'react';
 import { usePlatform } from '@/platform/hooks/usePlatform';
 import type { PopupOptions, PopupButton } from '@/platform/types';
+import { useConfirmStore } from '@/store/confirmDialog';
 
 interface DialogMethods {
   /**
@@ -94,7 +95,8 @@ export const PopupButtons = {
 
 /**
  * Show a destructive action confirmation
- * Red "Delete" button style in Telegram
+ * Red "Delete" button style in Telegram; own bottom sheet elsewhere
+ * (ConfirmSheetHost), never the browser's window.confirm.
  */
 export function useDestructiveConfirm() {
   const dialog = useNativeDialog();
@@ -109,7 +111,7 @@ export function useDestructiveConfirm() {
         });
         return result === 'confirm';
       }
-      return dialog.confirm(message, title);
+      return useConfirmStore.getState().confirm({ message, title, actionLabel: actionText });
     },
     [dialog],
   );
