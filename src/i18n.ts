@@ -4,10 +4,17 @@ import LanguageDetector from 'i18next-browser-languagedetector';
 import { getTelegramLanguageCode } from './hooks/useTelegramSDK';
 
 const localeLoaders: Record<string, () => Promise<{ default: ResourceLanguage }>> = {
-  ru: () => import('./locales/ru.json'),
-  en: () => import('./locales/en.json'),
-  zh: () => import('./locales/zh.json'),
-  fa: () => import('./locales/fa.json'),
+  ru: () => import('./locales/ru.json?user'),
+  en: () => import('./locales/en.json?user'),
+  zh: () => import('./locales/zh.json?user'),
+  fa: () => import('./locales/fa.json?user'),
+};
+
+const adminLocaleLoaders: typeof localeLoaders = {
+  ru: () => import('./locales/ru.json?admin'),
+  en: () => import('./locales/en.json?admin'),
+  zh: () => import('./locales/zh.json?admin'),
+  fa: () => import('./locales/fa.json?admin'),
 };
 
 const SUPPORTED_LANGS = Object.keys(localeLoaders);
@@ -15,6 +22,8 @@ const FALLBACK_LNG = 'ru';
 const LANGUAGE_STORAGE_KEY = 'cabinet_language';
 
 const loadedLanguages = new Set<string>();
+const loadedAdminLanguages = new Set<string>();
+let adminLocaleRequested = false;
 
 async function loadLanguage(lng: string): Promise<void> {
   if (loadedLanguages.has(lng)) return;
@@ -25,6 +34,17 @@ async function loadLanguage(lng: string): Promise<void> {
   const mod = await loader();
   i18n.addResourceBundle(lng, 'translation', mod.default, true, true);
   loadedLanguages.add(lng);
+}
+
+async function loadAdminLanguage(lng: string): Promise<void> {
+  if (loadedAdminLanguages.has(lng)) return;
+
+  const loader = adminLocaleLoaders[lng];
+  if (!loader) return;
+
+  const mod = await loader();
+  i18n.addResourceBundle(lng, 'translation', mod.default, true, true);
+  loadedAdminLanguages.add(lng);
 }
 
 i18n
@@ -75,6 +95,21 @@ export const i18nReady: Promise<void> = Promise.race([
   new Promise<void>((resolve) => setTimeout(resolve, READY_TIMEOUT_MS)),
 ]).catch(() => undefined);
 
+/**
+ * Подгружает строки админки для активного языка и запасного. Не реджектится
+ * и не висит дольше READY_TIMEOUT_MS: без словаря страница покажет ключи,
+ * но откроется.
+ */
+export function loadAdminLocale(): Promise<void> {
+  adminLocaleRequested = true;
+  const active = i18n.language?.split('-')[0] || FALLBACK_LNG;
+  const languages = [...new Set([FALLBACK_LNG, active])];
+  return Promise.race([
+    Promise.all(languages.map(loadAdminLanguage)).then(() => undefined),
+    new Promise<void>((resolve) => setTimeout(resolve, READY_TIMEOUT_MS)),
+  ]).catch(() => undefined);
+}
+
 // Keep <html lang> + dir in sync with i18n so screen readers pronounce
 // content correctly, browsers don't offer to translate it, and RTL
 // languages (fa) flip layout direction. index.html ships with lang="ru"
@@ -97,6 +132,7 @@ syncHtmlLang(detectedLng);
 i18n.on('languageChanged', (lng: string) => {
   const code = lng.split('-')[0];
   loadLanguage(code);
+  if (adminLocaleRequested) void loadAdminLanguage(code);
   syncHtmlLang(code);
 });
 

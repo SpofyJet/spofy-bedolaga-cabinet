@@ -2,6 +2,16 @@
 
 declare const __APP_VERSION__: string;
 
+declare module '*.json?user' {
+  const dictionary: import('i18next').ResourceLanguage;
+  export default dictionary;
+}
+
+declare module '*.json?admin' {
+  const dictionary: import('i18next').ResourceLanguage;
+  export default dictionary;
+}
+
 interface ImportMetaEnv {
   readonly VITE_API_URL: string;
   readonly VITE_TELEGRAM_BOT_USERNAME?: string;

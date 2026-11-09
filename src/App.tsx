@@ -2,6 +2,7 @@ import { safeSession } from './utils/safeStorage';
 import { lazy, Suspense, useEffect, type ComponentType } from 'react';
 import { Routes, Route, Navigate, useLocation, useParams } from 'react-router';
 import { useAuthStore } from './store/auth';
+import { useAdminLocaleReady } from './hooks/useAdminLocaleReady';
 
 /**
  * Wrapper around React.lazy that auto-reloads the page when a chunk fails to load
@@ -231,6 +232,7 @@ function AdminRoute({ children }: { children: React.ReactNode }) {
   const isLoading = useAuthStore((state) => state.isLoading);
   const isAdmin = useAuthStore((state) => state.isAdmin);
   const location = useLocation();
+  const adminLocaleReady = useAdminLocaleReady();
 
   if (isLoading) {
     return <PageLoader />;
@@ -243,6 +245,10 @@ function AdminRoute({ children }: { children: React.ReactNode }) {
 
   if (!isAdmin) {
     return <Navigate to="/" replace />;
+  }
+
+  if (!adminLocaleReady) {
+    return <PageLoader />;
   }
 
   return <Layout>{children}</Layout>;

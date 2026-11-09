@@ -4,6 +4,7 @@ import { usePermissionStore } from '../../store/permissions';
 import { saveReturnUrl } from '../../utils/token';
 import PageLoader from '../common/PageLoader';
 import Layout from '../layout/Layout';
+import { useAdminLocaleReady } from '@/hooks/useAdminLocaleReady';
 
 interface PermissionRouteProps {
   children: React.ReactNode;
@@ -30,6 +31,7 @@ export function PermissionRoute({
   const isAdmin = useAuthStore((state) => state.isAdmin);
   const isAdminVerified = useAuthStore((state) => state.isAdminVerified);
   const location = useLocation();
+  const adminLocaleReady = useAdminLocaleReady();
 
   const permissionsLoaded = usePermissionStore((state) => state.isLoaded);
   const hasPermission = usePermissionStore((state) => state.hasPermission);
@@ -39,7 +41,7 @@ export function PermissionRoute({
   // Админ из прошлого визита проходит сразу. Остальных не выгоняем, пока сервер не ответил:
   // это может быть новый админ, у которого ещё нет сохранённой роли.
   const roleUnknown = isAuthenticated && !isAdmin && !isAdminVerified;
-  if (isLoading || roleUnknown || (isAdmin && !permissionsLoaded)) {
+  if (isLoading || roleUnknown || !adminLocaleReady || (isAdmin && !permissionsLoaded)) {
     return <PageLoader />;
   }
 
