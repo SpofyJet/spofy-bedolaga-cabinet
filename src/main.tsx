@@ -23,7 +23,8 @@ import { installEncodingSurrogateGuard } from './utils/installEncodingSurrogateG
 import { getTelegramInitData } from './utils/telegramInitData';
 import { useAuthStore } from './store/auth';
 import { AppWithNavigator } from './AppWithNavigator';
-import { persistQueryCache } from './lib/queryPersist';
+import { clearPersistedQueryCache, persistQueryCache } from './lib/queryPersist';
+import { usePermissionStore } from './store/permissions';
 import { signalAppReady } from './utils/appReady';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { brandingApi, initLogoPreload } from './api/branding';
@@ -79,7 +80,19 @@ if (isTelegramEnv && !alreadyInitialized) {
     init();
     restoreInitData();
 
-    clearStaleSessionIfNeeded(getTelegramInitData());
+    if (clearStaleSessionIfNeeded(getTelegramInitData())) {
+      // Zustand уже поднял прошлого пользователя из localStorage при импорте.
+      useAuthStore.setState({
+        user: null,
+        accessToken: null,
+        refreshToken: null,
+        isAuthenticated: false,
+        isAdmin: false,
+        isAdminVerified: false,
+      });
+      usePermissionStore.getState().reset();
+      clearPersistedQueryCache();
+    }
 
     // Adopt the user's Telegram client language on first run (no explicit choice yet).
     telegramLanguageReady = applyTelegramLanguage();

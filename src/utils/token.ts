@@ -178,8 +178,10 @@ function extractTelegramUserId(initData: string): string | null {
 
 const TG_USER_ID_KEY = 'tg_user_id';
 
-export function clearStaleSessionIfNeeded(freshInitData: string | null): void {
-  if (!freshInitData) return;
+/** @returns true, если в приложение вошёл другой Telegram-аккаунт и сессия сброшена. */
+export function clearStaleSessionIfNeeded(freshInitData: string | null): boolean {
+  if (!freshInitData) return false;
+  let cleared = false;
 
   try {
     const currentTgUserId = extractTelegramUserId(freshInitData);
@@ -191,6 +193,7 @@ export function clearStaleSessionIfNeeded(freshInitData: string | null): void {
       sessionStorage.removeItem(TOKEN_KEYS.USER);
       localStorage.removeItem(TOKEN_KEYS.REFRESH);
       safeLocal.removeItem('cabinet-auth');
+      cleared = true;
     }
 
     if (currentTgUserId) {
@@ -200,6 +203,7 @@ export function clearStaleSessionIfNeeded(freshInitData: string | null): void {
     sessionStorage.setItem(TOKEN_KEYS.TELEGRAM_INIT, freshInitData);
     localStorage.removeItem(TOKEN_KEYS.TELEGRAM_INIT);
   } catch {}
+  return cleared;
 }
 
 class TokenRefreshManager {

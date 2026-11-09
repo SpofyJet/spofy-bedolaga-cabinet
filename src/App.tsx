@@ -231,10 +231,12 @@ function AdminRoute({ children }: { children: React.ReactNode }) {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const isLoading = useAuthStore((state) => state.isLoading);
   const isAdmin = useAuthStore((state) => state.isAdmin);
+  const isAdminVerified = useAuthStore((state) => state.isAdminVerified);
   const location = useLocation();
   const adminLocaleReady = useAdminLocaleReady();
 
-  if (isLoading) {
+  // Роль ещё не подтверждена сервером: нового админа нельзя уводить с /admin.
+  if (isLoading || (isAuthenticated && !isAdmin && !isAdminVerified)) {
     return <PageLoader />;
   }
 

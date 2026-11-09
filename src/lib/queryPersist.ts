@@ -19,13 +19,16 @@ const PERSISTED_ROOTS = new Set([
   'subscriptions-list',
   'trial-info',
   'user-avatar',
-  'wheel-config',
 ]);
 
 interface StoredCache {
   userId: number;
   savedAt: number;
   state: DehydratedState;
+}
+
+export function clearPersistedQueryCache(): void {
+  safeLocal.removeItem(STORAGE_KEY);
 }
 
 function currentUserId(): number | null {
@@ -80,6 +83,7 @@ export function persistQueryCache(queryClient: QueryClient): void {
     if (previous.user?.id !== undefined && state.user?.id !== previous.user.id) {
       clearTimeout(timer);
       safeLocal.removeItem(STORAGE_KEY);
+      queryClient.clear();
     }
   });
 }
