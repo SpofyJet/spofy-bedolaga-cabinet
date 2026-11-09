@@ -23,7 +23,7 @@ const showcases = tsxFiles(SRC)
 
 describe('плашка «Выгодно» на витринах', () => {
   it('витрины найдены', () => {
-    expect(showcases.length).toBeGreaterThanOrEqual(5);
+    expect(showcases.length).toBeGreaterThanOrEqual(4);
   });
 
   it.each(showcases.map((s) => [s.path, s.code]))(

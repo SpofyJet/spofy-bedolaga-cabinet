@@ -1252,7 +1252,7 @@ export default function GiftSubscription() {
   const { t } = useTranslation();
   const [searchParams] = useSearchParams();
 
-  // Прогреваем кэш курсов валют для formatPrice (см. QuickPurchase).
+  // Прогреваем кэш курсов валют для formatPrice.
   useCurrency();
 
   // URL params: ?tab=activate&code=TOKEN for auto-activation

@@ -157,12 +157,6 @@ const sections: AdminSection[] = [
         to: '/admin/tickets',
         permission: 'tickets:read',
       },
-      {
-        name: 'admin.nav.banSystem',
-        icon: 'shield-alert',
-        to: '/admin/ban-system',
-        permission: 'ban_system:read',
-      },
     ],
   },
   {
@@ -199,12 +193,6 @@ const sections: AdminSection[] = [
         icon: 'wallet',
         to: '/admin/payment-methods',
         permission: 'payment_methods:read',
-      },
-      {
-        name: 'admin.nav.landings',
-        icon: 'layout',
-        to: '/admin/landings',
-        permission: 'landings:read',
       },
     ],
   },

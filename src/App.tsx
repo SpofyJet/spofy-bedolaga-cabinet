@@ -85,7 +85,6 @@ const GiftSubscription = lazyWithRetry(() => import('./pages/GiftSubscription'))
 const GiftResult = lazyWithRetry(() => import('./pages/GiftResult'));
 const Connection = lazyWithRetry(() => import('./pages/Connection'));
 const ConnectionQR = lazyWithRetry(() => import('./pages/ConnectionQR'));
-const QuickPurchase = lazyWithRetry(() => import('./pages/QuickPurchase'));
 const PurchaseSuccess = lazyWithRetry(() => import('./pages/PurchaseSuccess'));
 const GiftClaim = lazyWithRetry(() => import('./pages/GiftClaim'));
 const RenewSubscription = lazyWithRetry(() => import('./pages/RenewSubscription'));
@@ -110,7 +109,6 @@ const AdminTariffCreate = lazyWithRetry(() => import('./pages/AdminTariffCreate'
 const AdminServers = lazyWithRetry(() => import('./pages/AdminServers'));
 const AdminServerEdit = lazyWithRetry(() => import('./pages/AdminServerEdit'));
 const AdminDashboard = lazyWithRetry(() => import('./pages/AdminDashboard'));
-const AdminBanSystem = lazyWithRetry(() => import('./pages/AdminBanSystem'));
 const AdminBroadcasts = lazyWithRetry(() => import('./pages/AdminBroadcasts'));
 const AdminBroadcastCreate = lazyWithRetry(() => import('./pages/AdminBroadcastCreate'));
 const AdminPromocodes = lazyWithRetry(() => import('./pages/AdminPromocodes'));
@@ -175,9 +173,6 @@ const AdminPolicies = lazyWithRetry(() => import('./pages/AdminPolicies'));
 const AdminPolicyEdit = lazyWithRetry(() => import('./pages/AdminPolicyEdit'));
 const AdminAuditLog = lazyWithRetry(() => import('./pages/AdminAuditLog'));
 const AdminSystemErrors = lazyWithRetry(() => import('./pages/AdminSystemErrors'));
-const AdminLandings = lazyWithRetry(() => import('./pages/AdminLandings'));
-const AdminLandingEditor = lazyWithRetry(() => import('./pages/AdminLandingEditor'));
-const AdminLandingStats = lazyWithRetry(() => import('./pages/AdminLandingStats'));
 const AdminReferralNetwork = lazyWithRetry(() => import('./pages/ReferralNetwork'));
 
 // News pages
@@ -391,14 +386,6 @@ function App() {
           element={
             <LazyPage>
               <CouponStatus />
-            </LazyPage>
-          }
-        />
-        <Route
-          path="/buy/:slug"
-          element={
-            <LazyPage>
-              <QuickPurchase />
             </LazyPage>
           }
         />
@@ -820,46 +807,6 @@ function App() {
           }
         />
         <Route
-          path="/admin/landings"
-          element={
-            <PermissionRoute permission="landings:read">
-              <LazyPage>
-                <AdminLandings />
-              </LazyPage>
-            </PermissionRoute>
-          }
-        />
-        <Route
-          path="/admin/landings/create"
-          element={
-            <PermissionRoute permission="landings:create">
-              <LazyPage>
-                <AdminLandingEditor />
-              </LazyPage>
-            </PermissionRoute>
-          }
-        />
-        <Route
-          path="/admin/landings/:id/edit"
-          element={
-            <PermissionRoute permission="landings:edit">
-              <LazyPage>
-                <AdminLandingEditor />
-              </LazyPage>
-            </PermissionRoute>
-          }
-        />
-        <Route
-          path="/admin/landings/:id/stats"
-          element={
-            <PermissionRoute permission="landings:read">
-              <LazyPage>
-                <AdminLandingStats />
-              </LazyPage>
-            </PermissionRoute>
-          }
-        />
-        <Route
           path="/admin/servers"
           element={
             <PermissionRoute permission="servers:read">
@@ -885,16 +832,6 @@ function App() {
             <PermissionRoute permission="stats:read">
               <LazyPage>
                 <AdminDashboard />
-              </LazyPage>
-            </PermissionRoute>
-          }
-        />
-        <Route
-          path="/admin/ban-system"
-          element={
-            <PermissionRoute permission="ban_system:read">
-              <LazyPage>
-                <AdminBanSystem />
               </LazyPage>
             </PermissionRoute>
           }

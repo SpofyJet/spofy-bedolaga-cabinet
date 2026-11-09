@@ -16,8 +16,6 @@ export * from './SettingsMobileTabs';
 export * from './SettingsSearch';
 export * from './SettingsTreeSidebar';
 export * from './QuickToggles';
-export * from './LocaleTabs';
-export * from './LocalizedInput';
 
 // Constants and utils
 export * from './constants';

@@ -46,7 +46,6 @@ const RESOURCE_TYPES = [
   'apps',
   'email_templates',
   'pinned_messages',
-  'landings',
   'updates',
 ] as const;
 

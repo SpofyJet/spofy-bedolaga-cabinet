@@ -12,8 +12,7 @@ import { BackgroundRenderer } from './BackgroundRenderer';
  * Вместо этого AppShell лишь регистрирует своё присутствие через
  * useBackgroundConsumer(), а BackgroundHost живёт в App (над <Routes>, не
  * перемонтируется) и держит один экземпляр BackgroundRenderer, пока есть хоть
- * один потребитель. Страницы без AppShell (логин, QuickPurchase со своим
- * экземпляром) фон, как и раньше, не получают.
+ * один потребитель. Страницы без AppShell (логин) фон не получают.
  */
 const useBackgroundConsumers = create<{ count: number }>(() => ({ count: 0 }));
 

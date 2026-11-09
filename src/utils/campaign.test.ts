@@ -1,4 +1,3 @@
-import { readFileSync } from 'node:fs';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { consumeCampaignSlug, getPendingCampaignSlug } from './campaign';
@@ -71,21 +70,5 @@ describe('consumeCampaignSlug', () => {
 
     expect(consumeCampaignSlug()).toBe('summer_sale');
     expect(consumeCampaignSlug()).toBeNull();
-  });
-});
-
-// Компоненты в этом репозитории не рендерятся в тестах (vitest на node, без
-// jsdom), поэтому отправку слага фиксируем по исходнику: без неё покупка
-// гостем не попадает в статистику кампании и не даёт её бонус.
-describe('QuickPurchase source', () => {
-  const source = readFileSync(new URL('../pages/QuickPurchase.tsx', import.meta.url), 'utf8');
-
-  it('puts the campaign slug into the purchase payload', () => {
-    expect(source).toContain('data.campaign_slug = campaignSlug');
-  });
-
-  it('reads the slug without consuming it', () => {
-    expect(source).toContain('getPendingCampaignSlug()');
-    expect(source).not.toContain('consumeCampaignSlug');
   });
 });

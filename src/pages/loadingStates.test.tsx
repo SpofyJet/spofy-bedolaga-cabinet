@@ -116,12 +116,6 @@ const PAGES: PageCase[] = [
     entry: '/p/1',
   },
   {
-    name: 'AdminLandingStats',
-    load: () => import('./AdminLandingStats'),
-    path: '/l/:id',
-    entry: '/l/1',
-  },
-  {
     name: 'AdminPartnerDetail',
     load: () => import('./AdminPartnerDetail'),
     path: '/pt/:userId',
@@ -145,7 +139,6 @@ const PAGES: PageCase[] = [
   { name: 'AdminEmailTemplates', load: () => import('./AdminEmailTemplates') },
   { name: 'AdminUpdates', load: () => import('./AdminUpdates') },
   { name: 'AdminDashboard', load: () => import('./AdminDashboard') },
-  { name: 'AdminBanSystem', load: () => import('./AdminBanSystem') },
   { name: 'AdminChannelSubscriptions', load: () => import('./AdminChannelSubscriptions') },
   { name: 'AdminWheel', load: () => import('./AdminWheel') },
   { name: 'AdminLegalPages', load: () => import('./AdminLegalPages') },
