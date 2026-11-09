@@ -43,7 +43,7 @@ const getTypeColor = (type: PromoCodeType): string => {
 
 const formatDate = (date: string | null): string => {
   if (!date) return '-';
-  const localeMap: Record<string, string> = { ru: 'ru-RU', en: 'en-US', zh: 'zh-CN', fa: 'fa-IR' };
+  const localeMap: Record<string, string> = { ru: 'ru-RU', en: 'en-US' };
   const locale = localeMap[i18n.language] || 'ru-RU';
   return new Date(date).toLocaleDateString(locale, {
     day: '2-digit',
@@ -54,7 +54,7 @@ const formatDate = (date: string | null): string => {
 
 const formatDateTime = (date: string | null): string => {
   if (!date) return '-';
-  const localeMap: Record<string, string> = { ru: 'ru-RU', en: 'en-US', zh: 'zh-CN', fa: 'fa-IR' };
+  const localeMap: Record<string, string> = { ru: 'ru-RU', en: 'en-US' };
   const locale = localeMap[i18n.language] || 'ru-RU';
   return new Date(date).toLocaleString(locale, {
     day: '2-digit',

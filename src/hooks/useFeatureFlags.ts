@@ -4,8 +4,6 @@ import { useAuthStore } from '@/store/auth';
 import { brandingApi } from '@/api/branding';
 import { referralApi } from '@/api/referral';
 import { wheelApi } from '@/api/wheel';
-import { contestsApi } from '@/api/contests';
-import { pollsApi } from '@/api/polls';
 
 // Последние известные значения флагов. Пока запросы в полёте, флаги были
 // undefined -> табы «Рефералы»/«Колесо» появлялись с задержкой и нижняя
@@ -16,8 +14,6 @@ const FLAGS_CACHE_KEY = 'cabinet-feature-flags';
 type CachedFlags = {
   referralEnabled?: boolean;
   wheelEnabled?: boolean;
-  hasContests?: boolean;
-  hasPolls?: boolean;
   giftEnabled?: boolean;
 };
 
@@ -49,22 +45,6 @@ export function useFeatureFlags() {
     retry: false,
   });
 
-  const { data: contestsCount } = useQuery({
-    queryKey: ['contests-count'],
-    queryFn: contestsApi.getCount,
-    enabled: isAuthenticated,
-    staleTime: 60000,
-    retry: false,
-  });
-
-  const { data: pollsCount } = useQuery({
-    queryKey: ['polls-count'],
-    queryFn: pollsApi.getCount,
-    enabled: isAuthenticated,
-    staleTime: 60000,
-    retry: false,
-  });
-
   const { data: giftConfig } = useQuery({
     queryKey: ['gift-enabled'],
     queryFn: brandingApi.getGiftEnabled,
@@ -76,26 +56,18 @@ export function useFeatureFlags() {
   const flags = {
     referralEnabled: referralTerms ? referralTerms.is_enabled : cached.referralEnabled,
     wheelEnabled: wheelConfig ? wheelConfig.is_enabled : cached.wheelEnabled,
-    hasContests: contestsCount ? contestsCount.count > 0 : cached.hasContests,
-    hasPolls: pollsCount ? pollsCount.count > 0 : cached.hasPolls,
     giftEnabled: giftConfig ? giftConfig.enabled : cached.giftEnabled,
   };
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: объект flags новый на каждый рендер, зависимости это его значения
   useEffect(() => {
-    if (!referralTerms && !wheelConfig && !contestsCount && !pollsCount && !giftConfig) return;
+    if (!referralTerms && !wheelConfig && !giftConfig) return;
     try {
       localStorage.setItem(FLAGS_CACHE_KEY, JSON.stringify(flags));
     } catch {
       // квоты/приватный режим — некритично
     }
-  }, [
-    flags.referralEnabled,
-    flags.wheelEnabled,
-    flags.hasContests,
-    flags.hasPolls,
-    flags.giftEnabled,
-  ]);
+  }, [flags.referralEnabled, flags.wheelEnabled, flags.giftEnabled]);
 
   return flags;
 }

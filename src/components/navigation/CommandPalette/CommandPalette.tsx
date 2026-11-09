@@ -31,8 +31,6 @@ import {
   UsersIcon,
   ChatIcon,
   UserIcon,
-  GamepadIcon,
-  ClipboardIcon,
   InfoIcon,
   CogIcon,
   WheelIcon,
@@ -47,8 +45,6 @@ interface CommandPaletteProps {
   onOpenChange: (open: boolean) => void;
   wheelEnabled?: boolean;
   referralEnabled?: boolean;
-  hasContests?: boolean;
-  hasPolls?: boolean;
 }
 
 export function CommandPalette({
@@ -56,8 +52,6 @@ export function CommandPalette({
   onOpenChange,
   wheelEnabled,
   referralEnabled,
-  hasContests,
-  hasPolls,
 }: CommandPaletteProps) {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -82,8 +76,6 @@ export function CommandPalette({
     { label: t('nav.balance'), icon: WalletIcon, path: '/balance' },
     ...(referralEnabled ? [{ label: t('nav.referral'), icon: UsersIcon, path: '/referral' }] : []),
     { label: t('nav.support'), icon: ChatIcon, path: '/support' },
-    ...(hasContests ? [{ label: t('nav.contests'), icon: GamepadIcon, path: '/contests' }] : []),
-    ...(hasPolls ? [{ label: t('nav.polls'), icon: ClipboardIcon, path: '/polls' }] : []),
     ...(wheelEnabled ? [{ label: t('nav.wheel'), icon: WheelIcon, path: '/wheel' }] : []),
     { label: t('nav.info'), icon: InfoIcon, path: '/info' },
     { label: t('nav.profile'), icon: UserIcon, path: '/profile' },

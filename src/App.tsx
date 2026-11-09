@@ -79,8 +79,6 @@ const SupportChat = lazyWithRetry(() => import('./pages/SupportChat'));
 const Profile = lazyWithRetry(() => import('./pages/Profile'));
 const ProfileNotifications = lazyWithRetry(() => import('./pages/ProfileNotifications'));
 const ProfileEmail = lazyWithRetry(() => import('./pages/ProfileEmail'));
-const Contests = lazyWithRetry(() => import('./pages/Contests'));
-const Polls = lazyWithRetry(() => import('./pages/Polls'));
 const Info = lazyWithRetry(() => import('./pages/Info'));
 const Wheel = lazyWithRetry(() => import('./pages/Wheel'));
 const GiftSubscription = lazyWithRetry(() => import('./pages/GiftSubscription'));
@@ -622,26 +620,6 @@ function App() {
             <ProtectedRoute>
               <LazyPage>
                 <LinkTelegramCallback />
-              </LazyPage>
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/contests"
-          element={
-            <ProtectedRoute>
-              <LazyPage>
-                <Contests />
-              </LazyPage>
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/polls"
-          element={
-            <ProtectedRoute>
-              <LazyPage>
-                <Polls />
               </LazyPage>
             </ProtectedRoute>
           }

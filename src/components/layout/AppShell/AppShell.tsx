@@ -74,7 +74,7 @@ export function AppShell({ children }: AppShellProps) {
   const [loadedLogoUrl, setLoadedLogoUrl] = useState<string | null>(null);
   const [failedLogoUrl, setFailedLogoUrl] = useState<string | null>(null);
   const logoShown = !!logoUrl && loadedLogoUrl === logoUrl && failedLogoUrl !== logoUrl;
-  const { referralEnabled, wheelEnabled, hasContests, hasPolls, giftEnabled } = useFeatureFlags();
+  const { referralEnabled, wheelEnabled, giftEnabled } = useFeatureFlags();
   const { lite } = useLiteMode();
   useScrollRestoration();
   // Анимированный фон рендерит BackgroundHost в App (не перемонтируется при
@@ -332,8 +332,6 @@ export function AppShell({ children }: AppShellProps) {
           telegramPlatform={platform}
           wheelEnabled={wheelEnabled}
           referralEnabled={referralEnabled}
-          hasContests={hasContests}
-          hasPolls={hasPolls}
           giftEnabled={giftEnabled}
         />
       )}

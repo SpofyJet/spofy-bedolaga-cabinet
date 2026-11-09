@@ -3,7 +3,7 @@ import { readFileSync } from 'node:fs';
 
 // Структурные проверки страницы «Баланс»: ключи переводов, которыми она пользуется,
 // есть во всех языках (пустой ключ в UI выглядит как сырая строка «balance.renew.title»).
-const LANGS = ['ru', 'en', 'zh', 'fa'];
+const LANGS = ['ru', 'en'];
 const KEYS = [
   ['balance', 'renew', 'title'],
   ['balance', 'renew', 'until'],

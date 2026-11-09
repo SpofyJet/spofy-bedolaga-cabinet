@@ -14,7 +14,7 @@ import {
   type SubscriptionSegment,
 } from '@/api/adminReminders';
 
-const LANGS = ['ru', 'en', 'ua', 'zh', 'fa'] as const;
+const LANGS = ['ru', 'en'] as const;
 const CABINET_PRESETS = ['/profile/accounts', '/subscriptions', '/balance'];
 const inputClass = 'w-full rounded-xl bg-dark-800 px-3 py-2 text-sm text-dark-50';
 
@@ -135,7 +135,9 @@ export default function AdminReminderEdit() {
 
   const payload = (): ReminderPayload => {
     const cleaned: Record<string, ReminderText> = {};
-    for (const [code, text] of Object.entries(texts)) {
+    for (const code of LANGS) {
+      const text = texts[code];
+      if (!text) continue;
       if (!text.title.trim() && !text.body.trim()) continue;
       cleaned[code] = {
         title: text.title.trim(),

@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 import { currencyApi, type ExchangeRates } from '../api/currency';
-import { FALLBACK_RATES, RIALS_PER_TOMAN } from '../utils/currencyUnits';
+import { FALLBACK_RATES } from '../utils/currencyUnits';
 import { setExchangeRates as setGlobalExchangeRates } from '../utils/format';
 import { formatDecimal } from '../utils/formatNumber';
 import { uiLocale } from '../utils/uiLocale';
@@ -11,8 +11,6 @@ import { uiLocale } from '../utils/uiLocale';
 const LANGUAGE_CURRENCY_MAP: Record<string, keyof ExchangeRates | 'RUB'> = {
   ru: 'RUB',
   en: 'USD',
-  zh: 'CNY',
-  fa: 'IRR',
 };
 
 // Default rates for fallback
@@ -61,11 +59,6 @@ export function useCurrency() {
         exchangeRates,
       );
 
-      // API returns rials; the Persian UI displays whole tomans.
-      if (targetCurrency === 'IRR') {
-        return Math.round(convertedAmount / RIALS_PER_TOMAN).toLocaleString('fa-IR');
-      }
-
       return formatDecimal(convertedAmount, decimals, uiLocale());
     },
     [isRussian, targetCurrency, exchangeRates],
@@ -98,7 +91,7 @@ export function useCurrency() {
         targetCurrency as keyof ExchangeRates,
         exchangeRates,
       );
-      return targetCurrency === 'IRR' ? converted / RIALS_PER_TOMAN : converted;
+      return converted;
     },
     [isRussian, targetCurrency, exchangeRates],
   );
@@ -109,11 +102,7 @@ export function useCurrency() {
       if (isRussian) {
         return amount;
       }
-      return currencyApi.convertToRub(
-        targetCurrency === 'IRR' ? amount * RIALS_PER_TOMAN : amount,
-        targetCurrency as keyof ExchangeRates,
-        exchangeRates,
-      );
+      return currencyApi.convertToRub(amount, targetCurrency as keyof ExchangeRates, exchangeRates);
     },
     [isRussian, targetCurrency, exchangeRates],
   );

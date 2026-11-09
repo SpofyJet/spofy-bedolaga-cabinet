@@ -166,14 +166,12 @@ export interface GiftClaimResult {
 export type LocaleDict = Record<string, string>;
 
 /** Supported locales for the admin editor */
-export const SUPPORTED_LOCALES = ['ru', 'en', 'zh', 'fa'] as const;
+export const SUPPORTED_LOCALES = ['ru', 'en'] as const;
 export type SupportedLocale = (typeof SUPPORTED_LOCALES)[number];
 
-export const LOCALE_META: Record<SupportedLocale, { flag: string; name: string; rtl: boolean }> = {
-  ru: { flag: '\u{1F1F7}\u{1F1FA}', name: 'RU', rtl: false },
-  en: { flag: '\u{1F1EC}\u{1F1E7}', name: 'EN', rtl: false },
-  zh: { flag: '\u{1F1E8}\u{1F1F3}', name: 'ZH', rtl: false },
-  fa: { flag: '\u{1F1EE}\u{1F1F7}', name: 'FA', rtl: true },
+export const LOCALE_META: Record<SupportedLocale, { flag: string; name: string }> = {
+  ru: { flag: '\u{1F1F7}\u{1F1FA}', name: 'RU' },
+  en: { flag: '\u{1F1EC}\u{1F1E7}', name: 'EN' },
 };
 
 /** Admin feature type with localized title/description */

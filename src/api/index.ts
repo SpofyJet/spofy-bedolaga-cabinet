@@ -4,8 +4,6 @@ export { subscriptionApi } from './subscription';
 export { balanceApi } from './balance';
 export { referralApi } from './referral';
 export { ticketsApi } from './tickets';
-export { contestsApi } from './contests';
-export { pollsApi } from './polls';
 export { promoApi } from './promo';
 export { notificationsApi } from './notifications';
 export { infoApi } from './info';

@@ -21,17 +21,11 @@ import { required } from '@/utils/required';
 const LANG_LABELS: Record<string, string> = {
   ru: 'RU',
   en: 'EN',
-  zh: 'ZH',
-  ua: 'UA',
-  fa: 'FA',
 };
 
 const LANG_FULL_LABELS: Record<string, string> = {
   ru: 'Русский',
   en: 'English',
-  zh: '中文',
-  ua: 'Українська',
-  fa: 'فارسی',
 };
 
 // ============ Template List View ============

@@ -16,7 +16,7 @@ import { Skeleton, SkeletonGroup } from '@/components/ui/skeleton';
 // Helper functions
 const formatDateTime = (date: string | null): string => {
   if (!date) return '-';
-  const localeMap: Record<string, string> = { ru: 'ru-RU', en: 'en-US', zh: 'zh-CN', fa: 'fa-IR' };
+  const localeMap: Record<string, string> = { ru: 'ru-RU', en: 'en-US' };
   const locale = localeMap[i18n.language] || 'ru-RU';
   return new Date(date).toLocaleString(locale, {
     day: '2-digit',

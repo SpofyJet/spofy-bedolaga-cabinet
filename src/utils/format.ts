@@ -11,7 +11,6 @@ export function formatUptime(seconds: number): string {
 
 import i18next from 'i18next';
 import { currencyApi, type ExchangeRates } from '../api/currency';
-import { FALLBACK_RATES, RIALS_PER_TOMAN } from '../utils/currencyUnits';
 import { uiLocale } from './uiLocale';
 
 const LANG_CURRENCY_MAP: Record<
@@ -20,8 +19,6 @@ const LANG_CURRENCY_MAP: Record<
 > = {
   ru: { currency: 'RUB', locale: 'ru-RU', symbol: '₽' },
   en: { currency: 'USD', locale: 'en-US', symbol: '$', key: 'USD' },
-  zh: { currency: 'CNY', locale: 'zh-CN', symbol: '¥', key: 'CNY' },
-  fa: { currency: 'IRR', locale: 'fa-IR', symbol: 'تومان', key: 'IRR' },
 };
 
 const DEFAULT_CURRENCY = { currency: 'RUB', locale: 'ru-RU', symbol: '₽' };
@@ -40,29 +37,20 @@ export function formatPrice(kopeks: number, lang?: string): string {
   const config = LANG_CURRENCY_MAP[resolvedLang] || DEFAULT_CURRENCY;
   let amount = kopeks / 100;
 
-  if (config.currency === 'IRR') {
-    const rials = currencyApi.convertFromRub(amount, 'IRR', cachedExchangeRates ?? FALLBACK_RATES);
-    return `${Math.round(rials / RIALS_PER_TOMAN).toLocaleString('fa-IR')}\u00a0${config.symbol}`;
-  }
-
   // Конвертация по курсу для не-рублёвых локалей. Без rates fallback на сырую сумму
   // (поведение до фикса), чтобы первый рендер до загрузки курсов не отдавал NaN.
   if (config.key && cachedExchangeRates) {
     amount = currencyApi.convertFromRub(amount, config.key, cachedExchangeRates);
   }
 
-  // Для IRR суммы большие — без дробной части.
-  const maximumFractionDigits = config.currency === 'IRR' ? 0 : 2;
-
   try {
     return new Intl.NumberFormat(config.locale, {
       style: 'currency',
       currency: config.currency,
-      maximumFractionDigits,
+      maximumFractionDigits: 2,
     }).format(amount);
   } catch {
-    const rounded =
-      maximumFractionDigits === 0 ? Math.round(amount) : Math.round(amount * 100) / 100;
+    const rounded = Math.round(amount * 100) / 100;
     return `${rounded} ${config.symbol}`;
   }
 }

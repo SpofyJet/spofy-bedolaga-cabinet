@@ -1,5 +1,5 @@
 import * as Popover from '@radix-ui/react-popover';
-import { enUS, faIR, ru, zhCN } from 'date-fns/locale';
+import { enUS, ru } from 'date-fns/locale';
 import { useState } from 'react';
 import { DayPicker, type Matcher } from 'react-day-picker';
 import { useTranslation } from 'react-i18next';
@@ -20,7 +20,7 @@ interface DateFieldProps {
   className?: string;
 }
 
-const LOCALES = { ru, en: enUS, zh: zhCN, fa: faIR } as const;
+const LOCALES = { ru, en: enUS } as const;
 
 const pad = (n: number) => String(n).padStart(2, '0');
 const toISO = (d: Date) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;

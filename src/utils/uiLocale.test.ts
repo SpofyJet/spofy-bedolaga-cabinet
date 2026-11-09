@@ -10,10 +10,6 @@ describe('uiLocale', () => {
   it('маппит язык интерфейса в BCP-47 тег', async () => {
     await i18next.changeLanguage('en');
     expect(uiLocale()).toBe('en-US');
-    await i18next.changeLanguage('zh');
-    expect(uiLocale()).toBe('zh-CN');
-    await i18next.changeLanguage('fa');
-    expect(uiLocale()).toBe('fa-IR');
   });
 
   it('режет региональный суффикс языка', async () => {

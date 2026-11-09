@@ -1,4 +1,4 @@
-import { LOCALE_META, type LocaleDict, type SupportedLocale } from '../../api/landings';
+import type { LocaleDict, SupportedLocale } from '../../api/landings';
 import { cn } from '../../lib/utils';
 
 interface LocalizedInputProps {
@@ -29,7 +29,6 @@ export function LocalizedInput({
   className,
 }: LocalizedInputProps) {
   const currentValue = value[locale] ?? '';
-  const isRtl = LOCALE_META[locale].rtl;
 
   const handleChange = (newText: string) => {
     onChange({ ...value, [locale]: newText });
@@ -44,7 +43,6 @@ export function LocalizedInput({
     return (
       <textarea
         id={id}
-        dir={isRtl ? 'rtl' : 'ltr'}
         value={currentValue}
         onChange={(e) => handleChange(e.target.value)}
         placeholder={placeholder}
@@ -59,7 +57,6 @@ export function LocalizedInput({
     <input
       id={id}
       type="text"
-      dir={isRtl ? 'rtl' : 'ltr'}
       value={currentValue}
       onChange={(e) => handleChange(e.target.value)}
       placeholder={placeholder}

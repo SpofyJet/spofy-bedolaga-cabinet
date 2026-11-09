@@ -6,8 +6,6 @@ const JUST_NOW_MS = 45_000;
 const JUST_NOW: Record<string, string> = {
   ru: 'только что',
   en: 'just now',
-  zh: '刚刚',
-  fa: 'همین حالا',
 };
 
 /** «5 мин. назад» через Intl: локаль — язык интерфейса, «сейчас» можно подменить в тестах. */

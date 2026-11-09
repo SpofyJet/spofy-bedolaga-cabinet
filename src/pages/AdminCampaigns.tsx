@@ -52,7 +52,7 @@ const bonusTypeConfig: Record<
 };
 
 // Locale mapping for formatting
-const localeMap: Record<string, string> = { ru: 'ru-RU', en: 'en-US', zh: 'zh-CN', fa: 'fa-IR' };
+const localeMap: Record<string, string> = { ru: 'ru-RU', en: 'en-US' };
 
 // Format number as rubles
 const formatRubles = (kopeks: number) => {

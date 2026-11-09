@@ -15,7 +15,7 @@ const BOT_TYPES = [
   'gift_payment',
 ];
 
-const LOCALES = ['ru', 'en', 'zh', 'fa'].map((lang) => ({
+const LOCALES = ['ru', 'en'].map((lang) => ({
   lang,
   dict: JSON.parse(readFileSync(join(__dirname, '..', 'locales', `${lang}.json`), 'utf8')),
 }));

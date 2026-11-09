@@ -41,7 +41,7 @@ import {
 import type { InfoPageType, FaqItem, ReplacesTab, InfoPageDisplayMode } from '../api/infoPages';
 import { Skeleton, SkeletonGroup } from '@/components/ui/skeleton';
 
-const AVAILABLE_LOCALES = ['ru', 'en', 'zh', 'fa'] as const;
+const AVAILABLE_LOCALES = ['ru', 'en'] as const;
 type LocaleCode = (typeof AVAILABLE_LOCALES)[number];
 
 // --- Icons ---

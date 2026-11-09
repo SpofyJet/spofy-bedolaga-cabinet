@@ -6,15 +6,11 @@ import { getTelegramLanguageCode } from './hooks/useTelegramSDK';
 const localeLoaders: Record<string, () => Promise<{ default: ResourceLanguage }>> = {
   ru: () => import('./locales/ru.json?user'),
   en: () => import('./locales/en.json?user'),
-  zh: () => import('./locales/zh.json?user'),
-  fa: () => import('./locales/fa.json?user'),
 };
 
 const adminLocaleLoaders: typeof localeLoaders = {
   ru: () => import('./locales/ru.json?admin'),
   en: () => import('./locales/en.json?admin'),
-  zh: () => import('./locales/zh.json?admin'),
-  fa: () => import('./locales/fa.json?admin'),
 };
 
 const SUPPORTED_LANGS = Object.keys(localeLoaders);
@@ -112,20 +108,14 @@ export function loadAdminLocale(): Promise<void> {
   ]).catch(() => undefined);
 }
 
-// Keep <html lang> + dir in sync with i18n so screen readers pronounce
-// content correctly, browsers don't offer to translate it, and RTL
-// languages (fa) flip layout direction. index.html ships with lang="ru"
-// for the first paint; runtime updates take over from there.
-const RTL_LANGS = new Set(['fa', 'ar', 'he', 'ur']);
+// Keep <html lang> in sync with i18n so screen readers pronounce content
+// correctly and browsers don't offer to translate it. index.html ships with
+// lang="ru" for the first paint; runtime updates take over from there.
 function syncHtmlLang(lng: string): void {
   const code = lng.split('-')[0];
   if (typeof document === 'undefined') return;
   if (document.documentElement.lang !== code) {
     document.documentElement.lang = code;
-  }
-  const dir = RTL_LANGS.has(code) ? 'rtl' : 'ltr';
-  if (document.documentElement.dir !== dir) {
-    document.documentElement.dir = dir;
   }
 }
 syncHtmlLang(detectedLng);

@@ -32,8 +32,6 @@ import {
   UsersIcon,
   ChatIcon,
   UserIcon,
-  GamepadIcon,
-  ClipboardIcon,
   InfoIcon,
   CogIcon,
   WheelIcon,
@@ -62,8 +60,6 @@ interface AppHeaderProps {
   telegramPlatform?: TelegramPlatform;
   wheelEnabled?: boolean;
   referralEnabled?: boolean;
-  hasContests?: boolean;
-  hasPolls?: boolean;
   giftEnabled?: boolean;
 }
 
@@ -78,8 +74,6 @@ export function AppHeader({
   telegramPlatform,
   wheelEnabled,
   referralEnabled,
-  hasContests,
-  hasPolls,
   giftEnabled,
 }: AppHeaderProps) {
   const { t } = useTranslation();
@@ -158,8 +152,6 @@ export function AppHeader({
     { path: '/balance', label: t('nav.balance'), icon: WalletIcon },
     ...(referralEnabled ? [{ path: '/referral', label: t('nav.referral'), icon: UsersIcon }] : []),
     { path: '/support', label: t('nav.support'), icon: ChatIcon },
-    ...(hasContests ? [{ path: '/contests', label: t('nav.contests'), icon: GamepadIcon }] : []),
-    ...(hasPolls ? [{ path: '/polls', label: t('nav.polls'), icon: ClipboardIcon }] : []),
     ...(wheelEnabled ? [{ path: '/wheel', label: t('nav.wheel'), icon: WheelIcon }] : []),
     ...(giftEnabled ? [{ path: '/gift', label: t('nav.gift'), icon: GiftIcon }] : []),
     { path: '/info', label: t('nav.info'), icon: InfoIcon },

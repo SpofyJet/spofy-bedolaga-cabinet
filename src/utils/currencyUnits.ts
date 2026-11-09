@@ -8,4 +8,3 @@ export const FALLBACK_RATES: ExchangeRates = {
 };
 
 // Persian UI uses tomans: one toman equals ten rials.
-export const RIALS_PER_TOMAN = 10;

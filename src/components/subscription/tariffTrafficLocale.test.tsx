@@ -6,9 +6,7 @@ import { I18nextProvider } from 'react-i18next';
 import { MemoryRouter } from 'react-router';
 import { afterEach, expect, it, vi } from 'vitest';
 import en from '../../locales/en.json';
-import fa from '../../locales/fa.json';
 import ru from '../../locales/ru.json';
-import zh from '../../locales/zh.json';
 import type { Tariff } from '../../types';
 import { TariffPickerGrid } from './purchase/TariffPickerGrid';
 import { TariffPickerLite } from './purchase/TariffPickerLite';
@@ -26,8 +24,6 @@ afterEach(cleanup);
 const resources = {
   ru: { translation: ru },
   en: { translation: en },
-  fa: { translation: fa },
-  zh: { translation: zh },
 };
 it.each(['grid', 'lite', 'form'] as const)(
   '%s follows UI language changes with cached Russian API labels',
@@ -85,8 +81,6 @@ it.each(['grid', 'lite', 'form'] as const)(
     const rendered = render(content(tariff));
     for (const [language, expected] of [
       ['en', '200 GB'],
-      ['fa', '200 GB'],
-      ['zh', '200 GB'],
       ['ru', '200 ГБ'],
     ]) {
       await i18n.changeLanguage(language);
@@ -102,8 +96,6 @@ it.each(['grid', 'lite', 'form'] as const)(
     };
     for (const [language, expected] of [
       ['en', 'Unlimited'],
-      ['fa', 'نامحدود'],
-      ['zh', '无限'],
       ['ru', 'Безлимит'],
     ]) {
       await i18n.changeLanguage(language);

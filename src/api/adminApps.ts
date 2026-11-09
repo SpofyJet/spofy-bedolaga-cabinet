@@ -3,8 +3,6 @@ import apiClient from './client';
 export interface LocalizedText {
   en: string;
   ru: string;
-  zh?: string;
-  fa?: string;
   fr?: string;
 }
 

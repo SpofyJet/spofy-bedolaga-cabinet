@@ -42,14 +42,12 @@ export function LocaleTabs({
           const meta = LOCALE_META[locale];
           const isActive = locale === activeLocale;
           const filled = hasContent(locale);
-          const isRtl = meta.rtl;
 
           return (
             <button
               key={locale}
               type="button"
               onClick={() => onChange(locale)}
-              dir={isRtl ? 'rtl' : 'ltr'}
               className={cn(
                 'relative flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-[13px] font-medium transition-all',
                 isActive

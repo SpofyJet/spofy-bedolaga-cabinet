@@ -4,8 +4,6 @@ import { describe, expect, it } from 'vitest';
 
 import ru from '@/locales/ru.json';
 import en from '@/locales/en.json';
-import fa from '@/locales/fa.json';
-import zh from '@/locales/zh.json';
 import { STORY_CTA_ROUTES, STORY_SERIES } from './registry';
 import { tapZone } from './StoryViewer';
 
@@ -15,7 +13,7 @@ type LocaleTree = {
   };
 };
 
-const LOCALES: Record<string, LocaleTree> = { ru, en, fa, zh };
+const LOCALES: Record<string, LocaleTree> = { ru, en };
 
 function slidesOf(lng: string, seriesId: string) {
   const raw = LOCALES[lng]?.stories?.series?.[seriesId]?.slides;
@@ -69,7 +67,7 @@ describe('реестр серий сторис', () => {
   it('все четыре локали полны: те же серии и те же слайды', () => {
     for (const meta of STORY_SERIES) {
       const ruSlides = slidesOf('ru', meta.id)!;
-      for (const lng of ['en', 'fa', 'zh']) {
+      for (const lng of ['en']) {
         const slides = slidesOf(lng, meta.id);
         expect(slides, `${lng}: серия ${meta.id}`).not.toBeNull();
         expect(slides!.length).toBe(ruSlides.length);

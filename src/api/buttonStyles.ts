@@ -33,8 +33,7 @@ export const BUTTON_SECTIONS = [
 
 export type ButtonSection = (typeof BUTTON_SECTIONS)[number];
 
-// Bot-side locales (includes 'ua' for Ukrainian, mapped from ISO 'uk' internally).
-export const BOT_LOCALES = ['ru', 'en', 'ua', 'zh', 'fa'] as const;
+export const BOT_LOCALES = ['ru', 'en'] as const;
 
 export type BotLocale = (typeof BOT_LOCALES)[number];
 

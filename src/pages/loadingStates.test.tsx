@@ -88,8 +88,6 @@ type PageCase = {
  */
 const PAGES: PageCase[] = [
   { name: 'Referral', load: () => import('./Referral') },
-  { name: 'Contests', load: () => import('./Contests') },
-  { name: 'Polls', load: () => import('./Polls') },
   { name: 'AdminPartnerSettings', load: () => import('./AdminPartnerSettings') },
   { name: 'AdminReferralLevels', load: () => import('./AdminReferralLevels') },
   { name: 'AdminTicketSettings', load: () => import('./AdminTicketSettings') },

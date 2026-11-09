@@ -21,9 +21,7 @@ import type {
  */
 
 import enLocale from '@/locales/en.json';
-import faLocale from '@/locales/fa.json';
 import ruLocale from '@/locales/ru.json';
-import zhLocale from '@/locales/zh.json';
 
 function resolveRu(key: string): string | undefined {
   const value = key
@@ -589,10 +587,6 @@ describe('раздел grace-доступа', () => {
 type LocaleTree = { admin: { graceAccess: unknown; nav: { graceAccess: unknown } } };
 
 describe('переводы раздела', () => {
-  /**
-   * locales.test.ts сверяет только en и ru, поэтому ключ, добавленный в русскую
-   * локаль и забытый в zh/fa, доезжает до прода: экран рисует сам ключ.
-   */
   const flatten = (node: unknown, prefix = ''): string[] =>
     typeof node === 'object' && node !== null
       ? Object.entries(node).flatMap(([key, value]) =>
@@ -602,16 +596,12 @@ describe('переводы раздела', () => {
 
   const russian = flatten((ruLocale as LocaleTree).admin.graceAccess).sort();
 
-  it.each([
-    ['en', enLocale],
-    ['zh', zhLocale],
-    ['fa', faLocale],
-  ])('%s содержит те же ключи, что и ru', (_language, locale) => {
+  it.each([['en', enLocale]])('%s содержит те же ключи, что и ru', (_language, locale) => {
     expect(flatten((locale as LocaleTree).admin.graceAccess).sort()).toEqual(russian);
   });
 
   it('пункт меню переведён везде', () => {
-    for (const locale of [ruLocale, enLocale, zhLocale, faLocale]) {
+    for (const locale of [ruLocale, enLocale]) {
       expect(typeof (locale as LocaleTree).admin.nav.graceAccess).toBe('string');
     }
   });

@@ -3,8 +3,6 @@ import i18n from '../i18n';
 export const localeMap: Record<string, string> = {
   ru: 'ru-RU',
   en: 'en-US',
-  zh: 'zh-CN',
-  fa: 'fa-IR',
 };
 
 export const formatDate = (date: string | null): string => {

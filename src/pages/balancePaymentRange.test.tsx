@@ -7,8 +7,6 @@ import { createInstance } from 'i18next';
 import { PlatformProvider } from '@/platform/PlatformProvider';
 import ru from '@/locales/ru.json';
 import en from '@/locales/en.json';
-import zh from '@/locales/zh.json';
-import fa from '@/locales/fa.json';
 import TopUpMethodSelect from './TopUpMethodSelect';
 
 const translations = createInstance();
@@ -16,8 +14,6 @@ await translations.init({
   resources: {
     ru: { translation: ru },
     en: { translation: en },
-    zh: { translation: zh },
-    fa: { translation: fa },
   },
   lng: 'ru',
   initAsync: false,

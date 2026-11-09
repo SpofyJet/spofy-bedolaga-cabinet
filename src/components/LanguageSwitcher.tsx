@@ -33,8 +33,6 @@ export default function LanguageSwitcher() {
   }, []);
 
   const changeLanguage = (code: string) => {
-    // i18n.ts subscribes to languageChanged and syncs <html lang> + dir
-    // centrally — no need to set documentElement.dir here.
     i18n.changeLanguage(code);
     setIsOpen(false);
   };
