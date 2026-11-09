@@ -394,7 +394,7 @@
       "dismiss": "Dismiss"
     },
     "trialOffer": {
-      "freeTitle": "Try it free"
+      "freeTitle": "Free trial"
     },
     "stats": {
       "balance": "Balance",
@@ -453,7 +453,7 @@
       "buyTraffic": "Buy GB",
       "manage": "My devices",
       "noLimit": "No limit",
-      "addSlotShort": "Add"
+      "addSlotShort": "Device"
     },
     "loadFailed": "Couldn't load"
   },
@@ -584,7 +584,7 @@
       "devices_one": "{{count}} device",
       "devices_other": "{{count}} devices",
       "price": "Price",
-      "activate": "Activate Free",
+      "activate": "Connect for free",
       "unavailable": "Trial is not available"
     },
     "trialBanner": {
@@ -746,8 +746,8 @@
       "devicesUnavailable": "Device purchase is not available",
       "devicesUnit": "devices",
       "buy": "Buy",
-      "reduceDevices": "Remove spare slots",
-      "reduceDevicesTitle": "Remove spare slots",
+      "reduceDevices": "Reduce the number of devices",
+      "reduceDevicesTitle": "Reduce the number of devices",
       "reduceDevicesDescription": "You can reduce the number of devices to the tariff minimum",
       "minDeviceLimit_one": "Tariff minimum: {{count}} device",
       "minDeviceLimit_other": "Tariff minimum: {{count}} devices",

@@ -103,7 +103,7 @@ export function DeviceTopupSheet({
             <>
               <Stepper
                 value={devicesToAdd}
-                unit={t('subscription.additionalOptions.devicesUnit')}
+                unit={t('subscription.trial.devicesWord', { count: devicesToAdd })}
                 onDecrement={() => onDevicesToAddChange(Math.max(1, devicesToAdd - 1))}
                 onIncrement={() => onDevicesToAddChange(devicesToAdd + 1)}
                 decrementDisabled={devicesToAdd <= 1}

@@ -184,12 +184,12 @@ export default function DevicesTrafficCard({
           <span className="flex-1" aria-hidden />
           <Link to={devicesTo} className={cn(ACTION, atLimit ? ACTION_HOT : ACTION_QUIET)}>
             <PiPlusBold className="hidden h-3.5 w-3.5 shrink-0 min-[360px]:block" />
-            {/* на узком экране — короткая подпись: панель и так про устройства */}
+            {/* на узком экране — «+ Устройство»: плюс говорит «добавить», слово — что именно */}
             <span className="hidden min-[400px]:inline">
               {t('dashboard.devicesTraffic.addSlot', 'Добавить устройство')}
             </span>
             <span className="min-[400px]:hidden">
-              {t('dashboard.devicesTraffic.addSlotShort', 'Добавить')}
+              {t('dashboard.devicesTraffic.addSlotShort', 'Устройство')}
             </span>
           </Link>
         </div>

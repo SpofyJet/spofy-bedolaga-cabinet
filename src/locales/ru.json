@@ -402,7 +402,7 @@
       "dismiss": "Закрыть"
     },
     "trialOffer": {
-      "freeTitle": "Попробовать бесплатно"
+      "freeTitle": "Пробный период"
     },
     "stats": {
       "balance": "Баланс",
@@ -463,7 +463,7 @@
       "buyTraffic": "Докупить ГБ",
       "manage": "Мои устройства",
       "noLimit": "Без лимита",
-      "addSlotShort": "Добавить"
+      "addSlotShort": "Устройство"
     },
     "loadFailed": "Не удалось загрузить"
   },
@@ -610,7 +610,7 @@
       "devices_few": "{{count}} устройства",
       "devices_many": "{{count}} устройств",
       "price": "Стоимость",
-      "activate": "Активировать бесплатно",
+      "activate": "Подключить бесплатно",
       "unavailable": "Пробный период недоступен"
     },
     "trialBanner": {
@@ -773,8 +773,8 @@
       "devicesUnavailable": "Докупка устройств недоступна",
       "devicesUnit": "устройств",
       "buy": "Купить",
-      "reduceDevices": "Убрать лишние места",
-      "reduceDevicesTitle": "Убрать лишние места",
+      "reduceDevices": "Уменьшить число устройств",
+      "reduceDevicesTitle": "Уменьшить число устройств",
       "reduceDevicesDescription": "Вы можете уменьшить количество устройств до минимального на тарифе",
       "minDeviceLimit_one": "Минимум на тарифе: {{count}} устройство",
       "minDeviceLimit_few": "Минимум на тарифе: {{count}} устройства",
@@ -782,9 +782,9 @@
       "connectedDevices_one": "Подключено устройств: {{count}}",
       "connectedDevices_few": "Подключено устройств: {{count}}",
       "connectedDevices_many": "Подключено устройств: {{count}}",
-      "disconnectDevicesFirst_one": "Подключено {{count}} устройство. Чтобы убрать больше мест, сначала отключите лишние",
-      "disconnectDevicesFirst_few": "Подключено {{count}} устройства. Чтобы убрать больше мест, сначала отключите лишние",
-      "disconnectDevicesFirst_many": "Подключено {{count}} устройств. Чтобы убрать больше мест, сначала отключите лишние",
+      "disconnectDevicesFirst_one": "Подключено {{count}} устройство. Чтобы уменьшить сильнее, сначала отключите лишние",
+      "disconnectDevicesFirst_few": "Подключено {{count}} устройства. Чтобы уменьшить сильнее, сначала отключите лишние",
+      "disconnectDevicesFirst_many": "Подключено {{count}} устройств. Чтобы уменьшить сильнее, сначала отключите лишние",
       "reduceUnavailable": "Уменьшение устройств недоступно",
       "alreadyAtMinDeviceLimit": "Меньше устройств на вашем тарифе не бывает",
       "reasons": {
@@ -794,7 +794,7 @@
         "canAddLimited_one": "Можно добавить максимум {{count}} устройство",
         "canAddLimited_few": "Можно добавить максимум {{count}} устройства",
         "canAddLimited_many": "Можно добавить максимум {{count}} устройств",
-        "trialNotAllowed": "На пробной подписке убрать места нельзя"
+        "trialNotAllowed": "На пробной подписке число устройств не меняется"
       },
       "reduce": "Уменьшить",
       "reducing": "Уменьшение…",

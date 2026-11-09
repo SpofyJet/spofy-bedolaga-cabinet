@@ -120,7 +120,7 @@ export function DeviceReductionSheet({
             <>
               <Stepper
                 value={targetDeviceLimit}
-                unit={t('subscription.additionalOptions.devicesUnit')}
+                unit={t('subscription.trial.devicesWord', { count: targetDeviceLimit })}
                 onDecrement={() =>
                   onTargetDeviceLimitChange(Math.max(floor, targetDeviceLimit - 1))
                 }
@@ -148,11 +148,21 @@ export function DeviceReductionSheet({
                   t('subscription.additionalOptions.connectedDevices', {
                     count: deviceReductionInfo.connected_devices_count,
                   }),
-                ].map((line) => (
-                  <p key={line} className="px-4 py-2.5 text-dark-300">
-                    {line}
-                  </p>
-                ))}
+                ].map((line) => {
+                  // «Сейчас: 3 устройства» → подпись слева, значение справа: три строки
+                  // подряд читаются таблицей, а не сплошным текстом.
+                  const cut = line.indexOf(': ');
+                  return (
+                    <p key={line} className="flex items-baseline justify-between gap-3 px-4 py-2.5">
+                      <span className="text-dark-400">{cut > 0 ? line.slice(0, cut) : line}</span>
+                      {cut > 0 && (
+                        <span className="shrink-0 font-semibold tabular-nums text-dark-100">
+                          {line.slice(cut + 2)}
+                        </span>
+                      )}
+                    </p>
+                  );
+                })}
               </div>
 
               {deviceReductionInfo.connected_devices_count >
@@ -163,10 +173,6 @@ export function DeviceReductionSheet({
                   })}
                 </SheetNote>
               )}
-
-              <p className="text-center text-[13px] text-dark-400">
-                {t('subscription.additionalOptions.newDeviceLimit', { count: targetDeviceLimit })}
-              </p>
 
               <Button
                 className="w-full"
