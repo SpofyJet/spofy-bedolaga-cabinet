@@ -16,7 +16,7 @@ const FALLBACK_LOGO = import.meta.env.VITE_APP_LOGO || 'S';
 
 export function useBranding() {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
-  const { isTelegramWebApp, requestFullscreen, isMobile } = useTelegramSDK();
+  const { isTelegramWebApp, requestFullscreen } = useTelegramSDK();
 
   // Branding data
   const { data: branding } = useQuery({
@@ -54,11 +54,11 @@ export function useBranding() {
   useEffect(() => {
     if (!fullscreenSetting || !isTelegramWebApp) return;
     setCachedFullscreenEnabled(fullscreenSetting.enabled);
-    if (fullscreenSetting.enabled && isMobile && !fullscreenRequestedRef.current) {
+    if (fullscreenSetting.enabled && !fullscreenRequestedRef.current) {
       fullscreenRequestedRef.current = true;
       requestFullscreen();
     }
-  }, [fullscreenSetting, isTelegramWebApp, requestFullscreen, isMobile]);
+  }, [fullscreenSetting, isTelegramWebApp, requestFullscreen]);
 
   return {
     appName,

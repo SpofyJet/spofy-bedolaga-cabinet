@@ -1,6 +1,5 @@
 import { miniAppReady } from '@telegram-apps/sdk-react';
-import { getCachedFullscreenEnabled } from '../hooks/useTelegramSDK';
-import { isTelegramMobile } from './qrScanner';
+import { isFullscreenSwitchedOff } from '../hooks/useTelegramSDK';
 
 // rAF не срабатывает, пока WebView скрыт за заставкой Telegram, поэтому кадр ждём с потолком.
 const PAINT_WAIT_MS = 200;
@@ -16,7 +15,7 @@ function tellTelegram(): void {
   // Часть клиентов принимает запрос на весь экран только после ready.
   try {
     const webApp = window.Telegram?.WebApp;
-    if (webApp && !webApp.isFullscreen && isTelegramMobile() && getCachedFullscreenEnabled()) {
+    if (webApp?.isVersionAtLeast?.('8.0') && !webApp.isFullscreen && !isFullscreenSwitchedOff()) {
       webApp.requestFullscreen?.();
     }
   } catch {

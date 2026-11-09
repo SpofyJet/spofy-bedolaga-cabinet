@@ -29,6 +29,15 @@ export const getCachedFullscreenEnabled = (): boolean => {
   }
 };
 
+/** Полный экран выключен админом. Пустой кэш (частый случай на iPhone) выключением не считается. */
+export const isFullscreenSwitchedOff = (): boolean => {
+  try {
+    return localStorage.getItem(FULLSCREEN_CACHE_KEY) === 'false';
+  } catch {
+    return false;
+  }
+};
+
 export const setCachedFullscreenEnabled = (enabled: boolean) => {
   try {
     localStorage.setItem(FULLSCREEN_CACHE_KEY, String(enabled));
@@ -187,7 +196,7 @@ export function useTelegramSDK() {
   const requestFullscreen = useCallback(() => {
     if (!inTelegram) return;
     try {
-      sdkRequestFullscreen();
+      void Promise.resolve(sdkRequestFullscreen()).catch(() => {});
     } catch {}
   }, [inTelegram]);
 

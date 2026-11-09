@@ -30,7 +30,6 @@ import { ErrorBoundary } from './components/ErrorBoundary';
 import { brandingApi, initLogoPreload } from './api/branding';
 import { checkBackendOnStartup } from './api/health';
 import { getCachedFullscreenEnabled, setCachedFullscreenEnabled } from './hooks/useTelegramSDK';
-import { isTelegramMobile } from './utils/qrScanner';
 import { applyTelegramLanguage, i18nReady } from './i18n';
 import { themeColorsQueryOptions } from './api/themeColors';
 import { applyThemeColors } from './hooks/useThemeColors';
@@ -123,10 +122,9 @@ if (isTelegramEnv && !alreadyInitialized) {
         bindViewportCssVars();
         expandViewport();
 
-        // На весь экран сразу при открытии (только телефон). Кэш в localStorage Telegram
+        // На весь экран сразу при открытии. Кэш в localStorage Telegram
         // на iPhone часто пуст, поэтому без кэша спрашиваем сервер здесь же: запрос из
         // useBranding может прийти до того, как окно смонтировано, и тихо пропасть.
-        if (!isTelegramMobile()) return;
         const enter = () => {
           if (isFullscreen()) return;
           try {

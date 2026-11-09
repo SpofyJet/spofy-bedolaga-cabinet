@@ -34,6 +34,7 @@ interface TelegramWebAppGlobal {
   ready?: () => void;
   isFullscreen?: boolean;
   requestFullscreen?: () => void;
+  isVersionAtLeast?: (version: string) => boolean;
   /**
    * Raw init data, snapshotted by Telegram's own bridge script at page load.
    * Independent of the @telegram-apps/sdk launch-params cache, which can go
