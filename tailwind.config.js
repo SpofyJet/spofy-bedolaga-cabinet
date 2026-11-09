@@ -176,15 +176,12 @@ export default {
         xs: ['0.8125rem', { lineHeight: '1.125rem' }],
       },
       boxShadow: {
-        glow: '0 0 20px rgba(var(--color-accent-500), 0.15)',
-        'glow-lg': '0 0 40px rgba(var(--color-accent-500), 0.2)',
         soft: '0 2px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -4px rgba(0, 0, 0, 0.2)',
         card: '0 4px 24px -4px rgba(0, 0, 0, 0.4)',
         // Linear design tokens
         'linear-sm': '0 1px 2px rgba(0, 0, 0, 0.05)',
         linear: '0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06)',
         'linear-lg': '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
-        'linear-glow': '0 0 0 1px rgba(var(--color-accent-500), 0.3)',
       },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
@@ -201,7 +198,6 @@ export default {
         'scale-in-bounce': 'scaleInBounce 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)',
         'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
         float: 'float 3s ease-in-out infinite',
-        'glow-pulse': 'glowPulse 2s ease-in-out infinite',
         spotlight: 'spotlight 2s ease-in-out infinite',
         // Aceternity UI background animations
         aurora: 'aurora 60s linear infinite',
@@ -216,7 +212,6 @@ export default {
         'traffic-shimmer': 'trafficShimmer 2s ease-in-out infinite',
         'unlimited-flow': 'unlimitedFlow 3s ease-in-out infinite',
         'unlimited-pulse': 'unlimitedPulse 2s ease-in-out infinite',
-        'trial-glow': 'trialGlow 3s ease-in-out infinite',
       },
       keyframes: {
         fadeIn: {
@@ -251,10 +246,6 @@ export default {
         float: {
           '0%, 100%': { transform: 'translateY(0)' },
           '50%': { transform: 'translateY(-5px)' },
-        },
-        glowPulse: {
-          '0%, 100%': { boxShadow: '0 0 20px rgba(var(--color-accent-500), 0.3)' },
-          '50%': { boxShadow: '0 0 40px rgba(var(--color-accent-500), 0.6)' },
         },
         spotlight: {
           '0%, 100%': {
@@ -308,10 +299,6 @@ export default {
         unlimitedPulse: {
           '0%, 100%': { opacity: '1', transform: 'scale(1)' },
           '50%': { opacity: '0.5', transform: 'scale(0.7)' },
-        },
-        trialGlow: {
-          '0%, 100%': { boxShadow: '0 0 15px rgba(var(--color-accent-400), 0.06)' },
-          '50%': { boxShadow: '0 0 30px rgba(var(--color-accent-400), 0.12)' },
         },
       },
       transitionTimingFunction: {

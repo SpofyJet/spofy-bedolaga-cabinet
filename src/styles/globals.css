@@ -35,55 +35,6 @@
   font-display: swap;
 }
 
-/* Animated gradient border — @property enables CSS-only angle animation */
-@property --border-angle {
-  syntax: "<angle>";
-  initial-value: 0deg;
-  inherits: false;
-}
-
-.hover-border-gradient {
-  --_bg: var(--border-inner-bg, rgb(var(--color-dark-900)));
-  --_accent: var(--accent-color, rgb(var(--color-accent-400)));
-  border: 1.5px solid transparent;
-  background:
-    linear-gradient(var(--_bg), var(--_bg)) padding-box,
-    conic-gradient(
-      from var(--border-angle),
-      var(--_accent) 0%,
-      transparent 25%,
-      transparent 75%,
-      var(--_accent) 100%
-    )
-    border-box;
-  animation: border-rotate var(--border-duration, 3s) linear infinite;
-}
-
-.hover-border-gradient {
-  transition: box-shadow 0.3s ease;
-}
-
-.hover-border-gradient:hover,
-.hover-border-gradient:active {
-  box-shadow: 0 0 20px var(--accent-glow, rgba(var(--color-accent-400), 0.25));
-}
-
-.hover-border-gradient:disabled,
-.hover-border-gradient[disabled] {
-  box-shadow: none;
-  pointer-events: auto;
-}
-
-.light .hover-border-gradient {
-  --_bg: var(--border-inner-bg, rgb(var(--color-champagne-100)));
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .hover-border-gradient {
-    animation-play-state: paused;
-  }
-}
-
 /* Global reduced-motion defence — collapses every animation and transition
    to ~0ms so users with vestibular disorders, motion sensitivity, or just
    the OS-level preference set get instant state changes. State-conveying
@@ -99,12 +50,6 @@
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
-  }
-}
-
-@keyframes border-rotate {
-  to {
-    --border-angle: 360deg;
   }
 }
 
@@ -614,23 +559,6 @@ img.twemoji {
     transition-duration: 0.15s;
   }
 
-  .bento-card-glow {
-    @apply bento-card cursor-pointer;
-    transition:
-      border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-      box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-      transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  .bento-card-glow:hover {
-    @apply bg-dark-800/60;
-  }
-
-  .bento-card-glow:active {
-    transform: scale(0.98) translateZ(0);
-    transition-duration: 0.15s;
-  }
-
   .bento-grid {
     display: grid;
     grid-template-columns: 1fr;
@@ -660,8 +588,7 @@ img.twemoji {
     }
   }
 
-  .light .bento-card-hover:hover,
-  .light .bento-card-glow:hover {
+  .light .bento-card-hover:hover {
     @apply bg-champagne-50;
   }
 
@@ -681,10 +608,6 @@ img.twemoji {
 
   .card-hover {
     @apply card cursor-pointer hover:bg-dark-800/60 active:scale-[0.98];
-  }
-
-  .card-glow {
-    @apply card cursor-pointer hover:bg-dark-800/60;
   }
 
   .card-animated {
@@ -861,10 +784,6 @@ img.twemoji {
   }
 
   .light .card-hover {
-    @apply hover:bg-champagne-50;
-  }
-
-  .light .card-glow {
     @apply hover:bg-champagne-50;
   }
 
@@ -1653,16 +1572,6 @@ input[type="checkbox"]:hover:not(:checked) {
   }
 }
 
-@keyframes wheel-glow {
-  0%,
-  100% {
-    filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.3));
-  }
-  50% {
-    filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.6));
-  }
-}
-
 @keyframes prize-reveal {
   0% {
     opacity: 0;
@@ -1694,10 +1603,6 @@ input[type="checkbox"]:hover:not(:checked) {
 
 .animate-prize-reveal {
   animation: prize-reveal 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-.animate-wheel-glow {
-  animation: wheel-glow 2s ease-in-out infinite;
 }
 
 /* Toast progress bar animation — use scaleX instead of width to avoid layout thrashing */
