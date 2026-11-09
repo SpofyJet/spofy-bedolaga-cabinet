@@ -146,13 +146,13 @@
       "confirmedTitle": "SBP payment confirmed",
       "confirmedMessage": "Payment of {{amount}} {{currency}} was charged successfully",
       "failedTitle": "SBP payment failed",
-      "failedMessage": "Failed to charge your SBP auto-payment",
+      "failedMessage": "Failed to charge your SBP auto-renewal",
       "pastDueTitle": "SBP payment overdue",
-      "pastDueMessage": "Your SBP auto-payment is overdue. Please check your banking app.",
-      "cancelledTitle": "SBP auto-payment disabled",
-      "cancelledMessage": "SBP auto-payment has been disabled",
-      "activatedTitle": "SBP auto-payment connected",
-      "activatedMessage": "SBP auto-payment has been successfully connected"
+      "pastDueMessage": "Your SBP auto-renewal is overdue. Please check your banking app.",
+      "cancelledTitle": "SBP auto-renewal disabled",
+      "cancelledMessage": "SBP auto-renewal has been disabled",
+      "activatedTitle": "SBP auto-renewal connected",
+      "activatedMessage": "SBP auto-renewal is connected"
     },
     "account": {
       "bannedTitle": "Account blocked",
@@ -851,10 +851,10 @@
       "connect": "Connect",
       "confirmInBank": "Confirm in your banking app",
       "cancel": "Disable",
-      "confirmCancel": "Disable SBP auto-payment? Your subscription will no longer renew automatically via SBP.",
-      "cancelled": "SBP auto-payment disabled",
-      "enableError": "Failed to connect SBP auto-payment",
-      "cancelError": "Failed to cancel SBP auto-payment",
+      "confirmCancel": "Disable SBP auto-renewal? Your subscription will no longer renew automatically via SBP.",
+      "cancelled": "SBP auto-renewal disabled",
+      "enableError": "Failed to connect SBP auto-renewal",
+      "cancelError": "Failed to cancel SBP auto-renewal",
       "statusPending": "Waiting for confirmation in your banking app",
       "statusActive": "Active",
       "statusPastDue": "Payment failed — please retry",
@@ -867,7 +867,7 @@
         "year": "yearly"
       },
       "autopayHint": "Your subscription will be charged automatically via SBP, no card required",
-      "purchaseButton": "⚡ Subscribe with SBP auto-payment",
+      "purchaseButton": "⚡ Subscribe with SBP auto-renewal",
       "purchaseHint": "First charge confirms the binding in your bank app; renewals are charged automatically per the tariff cadence."
     },
     "backToList": "Back to subscriptions",
