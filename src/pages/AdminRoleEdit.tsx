@@ -30,7 +30,7 @@ const ROLE_COLORS = [
 ];
 
 const PRESETS: Record<string, string[]> = {
-  moderator: ['users:read', 'users:edit', 'users:block', 'tickets:*', 'ban_system:*'],
+  moderator: ['users:read', 'users:edit', 'users:block', 'tickets:*'],
   marketer: [
     'campaigns:*',
     'broadcasts:*',

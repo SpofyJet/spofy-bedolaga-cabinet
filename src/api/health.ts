@@ -29,7 +29,7 @@ function resolveHealthUrl(): string {
   }
   // Caddy не проксирует /health/unified и отдаёт на него index.html с кодом 200, поэтому
   // мёртвый бот выглядел живым. Этот маршрут идёт через бота и не трогает базу.
-  return `${apiUrl.replace(/\/$/, '')}/cabinet/public/site-verification`;
+  return `${apiUrl.replace(/\/$/, '')}/cabinet/info/languages`;
 }
 
 export const HEALTH_URL = resolveHealthUrl();
