@@ -49,24 +49,8 @@ import {
   WarningCircleIcon,
   BanIcon,
 } from '@/components/icons';
+import { formatPeriodLabel } from '@/utils/periodLabel';
 import { plainTariffName } from '@/utils/plainTariffName';
-
-function formatPeriodLabel(
-  days: number,
-  t: (key: string, options?: Record<string, unknown>) => string,
-): string {
-  if (isLifetimePeriod(days)) return t('subscription.lifetime.forever');
-  const key = `landing.periodLabels.d${days}`;
-  const result = t(key);
-  if (result !== key) return result;
-
-  const months = Math.floor(days / 30);
-  const remainder = days % 30;
-  if (months > 0 && remainder === 0) {
-    return t('landing.periodLabels.nMonths', { count: months });
-  }
-  return t('landing.periodLabels.nDays', { count: days });
-}
 
 function getGiftStatusKey(status: string): string {
   const statusMap: Record<string, string> = {

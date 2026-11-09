@@ -45,6 +45,7 @@ import {
 import { Skeleton, SkeletonGroup } from '@/components/ui/skeleton';
 import { isPaidStatus, isFailedStatus } from '../utils/paymentStatus';
 import { transactionTypeLabelKey } from '../utils/transactionType';
+import { formatPeriodLabel } from '@/utils/periodLabel';
 import { plainTariffName } from '@/utils/plainTariffName';
 
 /** Иконка и цвет строки истории — по типу операции (типы бота, см. utils/transactionType). */
@@ -473,7 +474,7 @@ export default function Balance() {
             return (
               <Row
                 key={option.period_days}
-                label={t('balance.renew.days', { count: option.period_days })}
+                label={formatPeriodLabel(option.period_days, t)}
                 description={note}
                 onClick={() =>
                   navigate(

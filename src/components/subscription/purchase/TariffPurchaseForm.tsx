@@ -15,6 +15,7 @@ import { usePlatform } from '../../../platform';
 import { openPaymentUrl } from '../../../utils/openPaymentUrl';
 import { getMonthlyPriceKopeks } from '../../../utils/pricing';
 import { isLifetimePeriod } from '../../../utils/lifetime';
+import { formatPeriodLabel } from '../../../utils/periodLabel';
 import { pickBestValue } from '../../../utils/bestValue';
 import InsufficientBalancePrompt from '../../InsufficientBalancePrompt';
 import type { Tariff, TariffPeriod } from '../../../types';
@@ -56,9 +57,8 @@ export function TariffPurchaseForm({
   onBack,
 }: TariffPurchaseFormProps) {
   const { t } = useTranslation();
-  // Вечный период (ULTIMA, 2222 дня) — «Навсегда», даже если подпись с сервера иная.
-  const periodLabel = (period: { days: number; label: string }) =>
-    isLifetimePeriod(period.days) ? t('subscription.lifetime.forever') : period.label;
+  // Срок словами («3 месяца», «Навсегда»), а не подписью с сервера («90 дней»).
+  const periodLabel = (period: { days: number }) => formatPeriodLabel(period.days, t);
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { formatMoney } = useCurrency();

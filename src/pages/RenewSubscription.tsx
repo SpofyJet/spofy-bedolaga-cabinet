@@ -7,6 +7,7 @@ import { Link, Navigate, useNavigate, useParams, useSearchParams } from 'react-r
 import { subscriptionApi } from '../api/subscription';
 import { getMonthlyPriceKopeks } from '../utils/pricing';
 import { pickBestValue } from '../utils/bestValue';
+import { formatPeriodLabel } from '../utils/periodLabel';
 import { useCurrency } from '../hooks/useCurrency';
 import { useHaptic } from '../platform';
 import InsufficientBalancePrompt from '../components/InsufficientBalancePrompt';
@@ -59,7 +60,6 @@ export default function RenewSubscription() {
   });
 
   // Отмеченный оператором вариант выбираем сразу, как только приехал список.
-  // Без отметки выбор остаётся за человеком: сами выгоду не выдумываем.
   useEffect(() => {
     if (selectedPeriod !== null) return;
     const requested = requestedPeriod
@@ -69,8 +69,11 @@ export default function RenewSubscription() {
       setSelectedPeriod(requested.period_days);
       return;
     }
-    const best = pickBestValue(options);
-    if (best) setSelectedPeriod(best.period_days);
+    // Без отметки оператора — 3 месяца, если такой срок есть, иначе первый:
+    // кнопка оплаты не должна ждать лишнего нажатия.
+    const preselected =
+      pickBestValue(options) ?? options?.find((o) => o.period_days === 90) ?? options?.[0];
+    if (preselected) setSelectedPeriod(preselected.period_days);
   }, [options, selectedPeriod, requestedPeriod]);
 
   // Load balance
@@ -258,9 +261,7 @@ export default function RenewSubscription() {
                   <span className="min-w-0 flex-1">
                     <span className="flex flex-wrap items-center gap-2">
                       <span className="text-[15px] font-semibold text-dark-100">
-                        {isLifetimePeriod(option.period_days)
-                          ? t('subscription.lifetime.forever')
-                          : `${option.period_days} ${t('subscription.days', 'дней')}`}
+                        {formatPeriodLabel(option.period_days, t)}
                       </span>
                       {isBestValue && <BestValueBadge />}
                       {option.discount_percent > 0 && (
