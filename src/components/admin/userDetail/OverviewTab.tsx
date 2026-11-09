@@ -8,17 +8,27 @@ import type {
   UserActivityItem,
   UserDetailResponse,
   UserPanelInfo,
+  UserSubscriptionInfo,
 } from '@/api/adminUsers';
 import type { PromoGroup } from '@/api/promocodes';
 import { backTo } from '@/components/admin/AdminBackButton';
 import { dayTimeLabel, relativeLabel } from '@/components/admin/users';
-import { CampaignIcon, ClockIcon, GlobeIcon, ShieldIcon } from '@/components/icons';
+import {
+  CampaignIcon,
+  ClockIcon,
+  GlobeIcon,
+  ReceiptIcon,
+  ShieldIcon,
+  TrafficIcon,
+  WalletIcon,
+} from '@/components/icons';
 import { cn } from '@/lib/utils';
 import { formatShortDate } from '@/utils/format';
 import { formatGb } from '@/utils/formatNumber';
 import { isConnectedNow, relativeTimeParts } from '@/utils/relativeTime';
 import { ActivityRows } from './ActivityRows';
 import { type DeviceRow, deviceLongName } from './DevicesCard';
+import { MoneyFacts, ReferralFacts, SubscriptionFacts } from './OverviewFacts';
 import { PromoGroupEditor, RestrictionsEditor } from './OverviewEditors';
 import { KeyValues, LinkAction, Section } from './sectionParts';
 
@@ -26,6 +36,7 @@ export type DetailTab = 'overview' | 'subscription' | 'balance' | 'referrals' | 
 
 export interface OverviewTabProps {
   user: UserDetailResponse;
+  subscription: UserSubscriptionInfo | null;
   panelInfo: UserPanelInfo | null;
   devices: DeviceRow[] | null;
   promoGroups: PromoGroup[];
@@ -43,21 +54,44 @@ const BYTES_IN_GB = 1024 ** 3;
 type Editor = 'promo' | 'restrictions';
 
 /**
- * «Обзор» — первый экран карточки: подключение, откуда человек пришёл, ограничения с
+ * «Обзор» — первый экран карточки: подписка, деньги, подключение, откуда человек пришёл, ограничения с
  * обращениями и последние события. Всё, что поддержке нужно в первые десять секунд,
  * без прокрутки на десктопе.
  */
 export function OverviewTab(props: OverviewTabProps) {
   const { t } = useTranslation();
-  const { panelInfo, devices, onGoTo } = props;
+  const { user, subscription, panelInfo, devices, onGoTo } = props;
   const [editor, setEditor] = useState<Editor | null>(null);
   const ns = 'admin.users.detail.overview';
 
-  // Слева — факты о человеке, справа — лента последних событий. Подписки отдельной
-  // карточкой здесь нет: срок, трафик и устройства в плитках над вкладками, а кнопки
-  // управления — во вкладке «Подписка» и «Продлить» в шапке. Повторять их тут незачем.
+  // Всё о человеке на одном экране, блоками по смыслу. Вкладки — только для действий.
+  const others = user.subscriptions.filter((sub) => sub.id !== subscription?.id);
   return (
-    <div className="grid items-start gap-4 lg:grid-cols-2">
+    <div className="gap-4 lg:columns-2 [&>*]:mb-4 [&>*]:break-inside-avoid">
+      <Section
+        icon={<TrafficIcon className="h-5 w-5" />}
+        title={t(`${ns}.subscription`)}
+        action={
+          <LinkAction arrow onClick={() => onGoTo('subscription')}>
+            {t(`${ns}.manage`)}
+          </LinkAction>
+        }
+      >
+        <SubscriptionFacts subscription={subscription} others={others} panelInfo={panelInfo} />
+      </Section>
+
+      <Section
+        icon={<WalletIcon className="h-5 w-5" />}
+        title={t(`${ns}.money`)}
+        action={
+          <LinkAction arrow onClick={() => onGoTo('balance')}>
+            {t(`${ns}.manage`)}
+          </LinkAction>
+        }
+      >
+        <MoneyFacts user={user} />
+      </Section>
+
       <Section icon={<GlobeIcon className="h-5 w-5" />} title={t(`${ns}.connection`)}>
         {panelInfo?.found ? (
           <ConnectionFacts panelInfo={panelInfo} devices={devices} />
@@ -66,24 +100,27 @@ export function OverviewTab(props: OverviewTabProps) {
         )}
       </Section>
 
-      <Section
-        className="lg:col-start-1"
-        icon={<CampaignIcon className="h-5 w-5" />}
-        title={t(`${ns}.origin`)}
-      >
+      <Section icon={<CampaignIcon className="h-5 w-5" />} title={t(`${ns}.origin`)}>
         <OriginFacts {...props} editor={editor} onEditor={setEditor} />
       </Section>
 
       <Section
-        className="lg:col-start-1"
-        icon={<ShieldIcon className="h-5 w-5" />}
-        title={t(`${ns}.restrictionsAndSupport`)}
+        icon={<ReceiptIcon className="h-5 w-5" />}
+        title={t(`${ns}.referrals`)}
+        action={
+          <LinkAction arrow onClick={() => onGoTo('referrals')}>
+            {t(`${ns}.manage`)}
+          </LinkAction>
+        }
       >
+        <ReferralFacts user={user} />
+      </Section>
+
+      <Section icon={<ShieldIcon className="h-5 w-5" />} title={t(`${ns}.restrictionsAndSupport`)}>
         <SupportFacts {...props} editor={editor} onEditor={setEditor} />
       </Section>
 
       <Section
-        className="lg:col-start-2 lg:row-span-3 lg:row-start-1"
         icon={<ClockIcon className="h-5 w-5" />}
         title={t(`${ns}.recent`)}
         action={

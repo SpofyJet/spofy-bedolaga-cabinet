@@ -252,6 +252,7 @@ export default function AdminUserDetail() {
       {activeTab === 'overview' && (
         <OverviewTab
           user={user}
+          subscription={selectedSub}
           panelInfo={data.panelInfo}
           devices={devices}
           promoGroups={data.promoGroups}
