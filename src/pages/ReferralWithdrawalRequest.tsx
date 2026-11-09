@@ -116,12 +116,10 @@ export default function ReferralWithdrawalRequest() {
           </div>
         )}
 
-        <div className="grid grid-cols-2 gap-2">
-          <Button tone="secondary" onClick={() => navigate('/referral')}>
-            {t('common.cancel')}
-          </Button>
+        <div className="space-y-2">
           <Button
             type="submit"
+            className="w-full"
             disabled={
               withdrawMutation.isPending ||
               form.payment_details.length < 5 ||
@@ -131,6 +129,9 @@ export default function ReferralWithdrawalRequest() {
             {withdrawMutation.isPending
               ? t('referral.withdrawal.requesting')
               : t('referral.withdrawal.submitRequest')}
+          </Button>
+          <Button tone="secondary" className="w-full" onClick={() => navigate('/referral')}>
+            {t('common.cancel')}
           </Button>
         </div>
       </form>

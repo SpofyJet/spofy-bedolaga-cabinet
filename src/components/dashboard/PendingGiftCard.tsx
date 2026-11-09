@@ -55,15 +55,15 @@ export default function PendingGiftCard({ gifts, className }: PendingGiftCardPro
                 </p>
               )}
             </div>
-
-            {/* Activate button */}
-            <Link
-              to={`/gift?tab=activate&code=${gift.token}`}
-              className="shrink-0 rounded-xl bg-cta-500 px-4 py-2 text-sm font-medium text-on-cta transition-colors hover:bg-cta-400"
-            >
-              {t('gift.pending.activate')}
-            </Link>
           </div>
+
+          {/* Кнопка под текстом на всю ширину: рядом с ним она сжимала текст в столбик. */}
+          <Link
+            to={`/gift?tab=activate&code=${gift.token}`}
+            className="mt-4 flex h-12 w-full items-center justify-center rounded-2xl bg-cta-500 px-5 text-[15px] font-semibold text-on-cta transition-colors hover:bg-cta-600"
+          >
+            {t('gift.pending.activate')}
+          </Link>
         </motion.div>
       ))}
     </div>
