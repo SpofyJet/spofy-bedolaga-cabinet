@@ -5,6 +5,7 @@ import { createPortal } from 'react-dom';
 import { useNavigate, useSearchParams, Link } from 'react-router';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
+import { PiQrCodeBold } from 'react-icons/pi';
 import { motion, AnimatePresence } from 'framer-motion';
 import { giftApi } from '../api/gift';
 import {
@@ -550,7 +551,7 @@ function BuyTabContent({
 
       {/* Selected tariff description */}
       {selectedTariff?.description && (
-        <p className="-mt-3 px-1 text-[13px] leading-snug text-dark-400">
+        <p className="-mt-3 whitespace-pre-line px-1 text-[13px] leading-snug text-dark-400">
           {selectedTariff.description}
         </p>
       )}
@@ -863,8 +864,9 @@ function ActivateTabContent({ initialCode }: { initialCode?: string | null }) {
           type="button"
           onClick={handleScan}
           disabled={scanning}
-          className="mt-3 h-12 w-full rounded-2xl bg-dark-800/70 px-6 text-[15px] font-semibold text-dark-100 transition-colors hover:bg-dark-700/70 disabled:opacity-50"
+          className="mt-3 flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-dark-800/70 px-6 text-[15px] font-semibold text-dark-100 transition-colors hover:bg-dark-700/70 disabled:opacity-50"
         >
+          <PiQrCodeBold className="h-5 w-5 shrink-0" aria-hidden />
           {scanning ? t('gift.scanInProgress') : t('gift.scanButton')}
         </button>
 

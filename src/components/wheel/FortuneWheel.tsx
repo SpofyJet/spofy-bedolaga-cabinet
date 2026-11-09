@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, memo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { PiGiftBold } from 'react-icons/pi';
 import type { WheelPrize } from '../../api/wheel';
 import { prizeGlyph } from './PrizeGlyph';
 
@@ -336,17 +337,28 @@ const FortuneWheel = memo(function FortuneWheel({
             style={{ stroke: 'rgba(var(--color-accent-500), 0.8)' }}
             strokeWidth="2"
           />
-          <text
-            x={center}
-            y={center + 1}
-            textAnchor="middle"
-            dominantBaseline="middle"
-            fontSize={hubLabel ? 20 : 24}
-            fontWeight="800"
-            fill="#FFFFFF"
-          >
-            {isSpinning ? '…' : hubLabel || '🎁'}
-          </text>
+          {isSpinning || hubLabel ? (
+            <text
+              x={center}
+              y={center + 1}
+              textAnchor="middle"
+              dominantBaseline="middle"
+              fontSize={hubLabel ? 20 : 24}
+              fontWeight="800"
+              fill="#FFFFFF"
+            >
+              {isSpinning ? '…' : hubLabel}
+            </text>
+          ) : (
+            <PiGiftBold
+              x={center - 12}
+              y={center - 12}
+              width={24}
+              height={24}
+              color="#FFFFFF"
+              aria-hidden
+            />
+          )}
         </svg>
       </div>
     </div>

@@ -7412,7 +7412,7 @@
     "copyMessage": "Copy message",
     "shareToastCopied": "Message copied",
     "qrHint": "Scan to activate the gift",
-    "scanButton": "📷 Scan QR",
+    "scanButton": "Scan QR",
     "scanInProgress": "Scanning…",
     "scanCancel": "Stop scanning",
     "scanDescription": "Point the camera at the gift QR code",
