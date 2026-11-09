@@ -566,7 +566,7 @@ export default function Login() {
                   <button
                     type="button"
                     onClick={() => setShowEmailForm(!showEmailForm)}
-                    className="flex items-center gap-1.5 rounded-full bg-dark-800/60 px-3.5 py-1.5 text-xs font-medium text-dark-300 transition-all hover:bg-dark-700 hover:text-dark-200"
+                    className="relative flex items-center gap-1.5 rounded-full bg-dark-800/60 px-3.5 py-1.5 text-xs font-medium text-dark-300 transition-all before:absolute before:-inset-x-1 before:-inset-y-2 before:content-[''] hover:bg-dark-700 hover:text-dark-200"
                   >
                     <EmailIcon className="h-3.5 w-3.5 text-dark-400" />
                     <span>{t('auth.loginWithEmail')}</span>
@@ -826,7 +826,7 @@ export default function Login() {
                               <button
                                 type="button"
                                 onClick={() => setShowForgotPassword(true)}
-                                className="text-sm text-accent-400 transition-colors hover:text-accent-300"
+                                className="inline-flex min-h-11 items-center px-3 text-sm text-accent-400 transition-colors hover:text-accent-300"
                               >
                                 {t('auth.forgotPassword', 'Forgot password?')}
                               </button>
