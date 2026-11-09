@@ -358,14 +358,17 @@ export default function SupportChat() {
               ? ticket.title
               : t('support.chat.ticketNumber', { id: ticketIdNum })}
         </span>
-        <span className="mt-0.5 flex items-center gap-2 text-[13px] text-dark-400">
+        {/* Статус — одной строкой под заголовком: на узком экране не переносится. */}
+        <span className="mt-0.5 flex min-w-0 items-center gap-2 text-[13px] text-dark-400">
           {(isNew || ticketIsOpen) && <span className="support-head-online" aria-hidden />}
-          {!isNew && ticket && (
-            <span className="text-dark-500">
-              {t('support.chat.ticketNumber', { id: ticket.id })} ·
-            </span>
-          )}
-          {statusText}
+          <span className="min-w-0 truncate">
+            {!isNew && ticket && (
+              <span className="text-dark-500">
+                {t('support.chat.ticketNumber', { id: ticket.id })} ·{' '}
+              </span>
+            )}
+            {statusText}
+          </span>
         </span>
       </span>
       {!isNew && ticket && ticketIsOpen && (
