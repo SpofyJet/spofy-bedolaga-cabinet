@@ -269,10 +269,10 @@ export function Sheet({
 
     if (targetSnap === -1) {
       // Close the sheet
+      // Закрываем сразу: шит доезжает вниз уже закрытым и не держит экран лишние 300 мс.
       haptic.notification('warning');
-      setTranslateY(window.innerHeight);
+      onClose();
       setTimeout(() => {
-        onClose();
         setTranslateY(0);
         setIsAnimating(false);
       }, ANIMATION_DURATION);
@@ -344,8 +344,10 @@ export function Sheet({
 
   const sheet = (
     <div
+      // Пока шит уезжает или ещё не показан, он прозрачен для нажатий: тап сразу после
+      // закрытия попадает в кнопку под ним, а не в исчезающую подложку.
       className={`fixed inset-0 z-50 flex items-end justify-center ${
-        isVisible ? 'opacity-100' : 'opacity-0'
+        isVisible ? 'opacity-100' : 'pointer-events-none opacity-0'
       } transition-opacity duration-300`}
       onClick={handleBackdropClick}
     >

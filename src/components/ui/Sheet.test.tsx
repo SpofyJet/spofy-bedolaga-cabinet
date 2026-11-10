@@ -55,4 +55,24 @@ describe('Sheet', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Закрыть' }));
     expect(onClose).toHaveBeenCalled();
   });
+
+  it('закрывающийся шит не ловит нажатия: тап сразу после ✕ попадает в кнопку под ним', () => {
+    const { rerender } = render(
+      <PlatformProvider>
+        <Sheet isOpen onClose={vi.fn()} title="Сервер">
+          <p>тело</p>
+        </Sheet>
+      </PlatformProvider>,
+    );
+    rerender(
+      <PlatformProvider>
+        <Sheet isOpen={false} onClose={vi.fn()} title="Сервер">
+          <p>тело</p>
+        </Sheet>
+      </PlatformProvider>,
+    );
+    // Шит ещё на экране (анимация закрытия), но слой прозрачен для нажатий.
+    const layer = screen.getByRole('dialog').parentElement as HTMLElement;
+    expect(layer.className).toContain('pointer-events-none');
+  });
 });

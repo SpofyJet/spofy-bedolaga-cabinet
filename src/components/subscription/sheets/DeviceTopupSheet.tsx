@@ -194,13 +194,14 @@ export function DeviceTopupSheet({
 
               <Button
                 className="w-full"
-                onClick={() => {
-                  // Цена на экране ещё старая: покупка только по актуальной сумме.
-                  if (isPlaceholderData) return;
-                  devicePurchaseMutation.mutate();
-                }}
+                onClick={() => devicePurchaseMutation.mutate()}
+                // Пока цена пересчитывается, кнопка видно неактивна: покупка только по актуальной
+                // сумме, и нажатие не пропадает молча.
                 disabled={
-                  devicePurchaseMutation.isPending || !devicePriceData?.available || insufficient
+                  isPlaceholderData ||
+                  devicePurchaseMutation.isPending ||
+                  !devicePriceData?.available ||
+                  insufficient
                 }
               >
                 {devicePurchaseMutation.isPending ? (

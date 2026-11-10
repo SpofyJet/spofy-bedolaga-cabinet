@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { useLocation, useNavigate } from 'react-router';
+import { useNavigate } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import { PiCaretLeftBold } from 'react-icons/pi';
 
@@ -23,14 +23,17 @@ interface PageHeaderProps {
  */
 export function PageHeader({ title, backTo = '/', noBack, subtitle, right }: PageHeaderProps) {
   const navigate = useNavigate();
-  const location = useLocation();
   const haptic = useHaptic();
   const { t } = useTranslation();
 
   const goBack = () => {
     haptic.impact('light');
-    // location.key === 'default' — страницу открыли напрямую, истории нет.
-    if (location.key !== 'default' && window.history.length > 1) navigate(-1);
+    // Назад — только если внутри кабинета есть предыдущий экран. Роутер нумерует свои записи
+    // истории (idx, первый экран — 0). Ни location.key, ни history.length этого не говорят: после
+    // замены адреса (ссылка колеса ?promo=…) key уже не 'default', а length считает и записи
+    // впереди и до кабинета — navigate(-1) на первом экране ничего не делал, и человек застревал.
+    const idx = (window.history.state as { idx?: unknown } | null)?.idx;
+    if (typeof idx === 'number' && idx > 0) navigate(-1);
     else navigate(backTo, { replace: true });
   };
 
