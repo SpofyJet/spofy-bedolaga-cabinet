@@ -103,7 +103,6 @@ export default function Subscription() {
   const [showDeviceTopup, setShowDeviceTopup] = useState(
     () => searchParams.get('topup') === 'devices',
   );
-  const deviceTopupRef = useRef<HTMLDivElement>(null);
   const [devicesToAdd, setDevicesToAdd] = useState(1);
   const [showDeviceReduction, setShowDeviceReduction] = useState(false);
   const [targetDeviceLimit, setTargetDeviceLimit] = useState<number>(1);
@@ -112,7 +111,6 @@ export default function Subscription() {
     () => searchParams.get('topup') === 'traffic',
   );
   const [selectedTrafficPackage, setSelectedTrafficPackage] = useState<number | null>(null);
-  const trafficTopupRef = useRef<HTMLDivElement>(null);
 
   // Traffic refresh state
   const [trafficRefreshCooldown, setTrafficRefreshCooldown] = useState(0);
@@ -270,41 +268,12 @@ export default function Subscription() {
     }
   };
 
-  const hasTrafficSheet = (subscription?.traffic_limit_gb ?? 0) > 0;
-  useEffect(() => {
-    if (!showTrafficTopup || !hasTrafficSheet) return;
-    const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
-    trafficTopupRef.current?.scrollIntoView({
-      behavior: reduce ? 'auto' : 'smooth',
-      block: 'center',
-    });
-  }, [showTrafficTopup, hasTrafficSheet]);
-  const hasSubscriptionLoaded = !!subscription;
-  useEffect(() => {
-    if (!showDeviceTopup || !hasSubscriptionLoaded) return;
-    const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
-    deviceTopupRef.current?.scrollIntoView({
-      behavior: reduce ? 'auto' : 'smooth',
-      block: 'center',
-    });
-  }, [showDeviceTopup, hasSubscriptionLoaded]);
-
-  // ?section=devices («Мои устройства» на главной) — сразу к списку устройств.
+  // ?section=devices («Мои устройства»): на экране только устройства и управление ими.
   const openDevices = searchParams.get('section') === 'devices';
-  useEffect(() => {
-    if (!openDevices || !hasSubscriptionLoaded) return;
-    const id = window.setTimeout(() => {
-      const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
-      document
-        .getElementById('sp-devices')
-        ?.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
-    }, 120);
-    return () => window.clearTimeout(id);
-  }, [openDevices, hasSubscriptionLoaded]);
 
   // In multi-tariff mode without a specific subscription ID, redirect to list
   if (isMultiTariff && !subscriptionId && !isLoading) {
-    return <Navigate to="/subscriptions" replace />;
+    return <Navigate to={`/subscriptions?${searchParams.toString()}`} replace />;
   }
 
   const backTo = isMultiTariff ? '/subscriptions' : '/';
@@ -407,6 +376,53 @@ export default function Subscription() {
 
   const purchasedTraffic = subscription.traffic_purchases ?? [];
   const showAddons = showsAddonOptions(subscription);
+
+  const deviceTopup = (
+    <DeviceTopupSheet
+      open={showDeviceTopup}
+      onOpen={() => setShowDeviceTopup(true)}
+      onClose={() => setShowDeviceTopup(false)}
+      subscription={subscription}
+      subscriptionId={subscriptionId}
+      devicesToAdd={devicesToAdd}
+      onDevicesToAddChange={setDevicesToAdd}
+      purchaseOptions={purchaseOptions}
+      isDark={isDark}
+    />
+  );
+  // Уменьшить лимит — редкое действие: тихая ссылка у списка устройств,
+  // а не строка среди покупок в «Докупить».
+  const devicesFooter = showAddons ? (
+    <DeviceReductionSheet
+      trigger="link"
+      open={showDeviceReduction}
+      onOpen={() => setShowDeviceReduction(true)}
+      onClose={() => setShowDeviceReduction(false)}
+      subscriptionPresent={!!subscription}
+      subscriptionId={subscriptionId}
+      targetDeviceLimit={targetDeviceLimit}
+      onTargetDeviceLimitChange={setTargetDeviceLimit}
+      isDark={isDark}
+    />
+  ) : undefined;
+
+  if (openDevices) {
+    return (
+      <Page>
+        <PageHeader title={t('subscription.myDevices')} backTo={backTo} />
+        <DevicesPanel
+          subscription={subscription}
+          subscriptionId={subscriptionId}
+          footer={devicesFooter}
+          showCount
+        />
+        {showAddons && <Group>{deviceTopup}</Group>}
+        <Button className="w-full" onClick={() => navigate('/connection')}>
+          {t('dashboard.connectDevice')}
+        </Button>
+      </Page>
+    );
+  }
 
   return (
     <Page>
@@ -608,21 +624,9 @@ export default function Subscription() {
       {/* ─── Докупки ─── */}
       {showAddons && (
         <Group title={t('subscription.v10.addonsTitle', 'Докупить')}>
-          <div className="scroll-mt-20" ref={deviceTopupRef}>
-            <DeviceTopupSheet
-              open={showDeviceTopup}
-              onOpen={() => setShowDeviceTopup(true)}
-              onClose={() => setShowDeviceTopup(false)}
-              subscription={subscription}
-              subscriptionId={subscriptionId}
-              devicesToAdd={devicesToAdd}
-              onDevicesToAddChange={setDevicesToAdd}
-              purchaseOptions={purchaseOptions}
-              isDark={isDark}
-            />
-          </div>
+          {deviceTopup}
           {subscription.traffic_limit_gb > 0 && (
-            <div className="scroll-mt-20" ref={trafficTopupRef}>
+            <div>
               <TrafficTopupSheet
                 open={showTrafficTopup}
                 onOpen={() => setShowTrafficTopup(true)}
@@ -674,23 +678,7 @@ export default function Subscription() {
       <DevicesPanel
         subscription={subscription}
         subscriptionId={subscriptionId}
-        footer={
-          // Уменьшить лимит — редкое действие: тихая ссылка у списка
-          // устройств, а не строка среди покупок в «Докупить».
-          showAddons ? (
-            <DeviceReductionSheet
-              trigger="link"
-              open={showDeviceReduction}
-              onOpen={() => setShowDeviceReduction(true)}
-              onClose={() => setShowDeviceReduction(false)}
-              subscriptionPresent={!!subscription}
-              subscriptionId={subscriptionId}
-              targetDeviceLimit={targetDeviceLimit}
-              onTargetDeviceLimitChange={setTargetDeviceLimit}
-              isDark={isDark}
-            />
-          ) : undefined
-        }
+        footer={devicesFooter}
       />
 
       {/* ─── Удалить истёкшую (мультитариф) ─── */}

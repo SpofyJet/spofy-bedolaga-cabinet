@@ -8,7 +8,6 @@ import { brandingApi, type TelegramWidgetConfig, type EmailAuthEnabled } from '.
 import { useToast } from '../components/Toast';
 import { Card } from '@/components/data-display/Card';
 import { Button } from '@/components/primitives/Button';
-import { staggerContainer, staggerItem } from '@/components/motion/transitions';
 import ProviderIcon from '../components/ProviderIcon';
 import { getErrorDetail, saveLinkOAuthState } from '../utils/oauth';
 import { getApiErrorMessage } from '../utils/api-error';
@@ -290,7 +289,7 @@ export function TelegramLinkWidget() {
 function LoadingSkeleton() {
   return (
     <SkeletonGroup className="space-y-3">
-      {Array.from({ length: 4 }).map((_, i) => (
+      {Array.from({ length: 5 }).map((_, i) => (
         <Card key={i}>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
@@ -647,44 +646,27 @@ export default function ConnectedAccounts() {
   };
 
   return (
-    // key: remount the container when loading resolves — stagger orchestration
-    // runs once on mount, so provider cards arriving from the API later would
-    // otherwise stay stuck at their initial variant (opacity 0) after a hard refresh
-    <motion.div
-      key={isLoading ? 'loading' : 'ready'}
-      className="mx-auto w-full max-w-[600px] space-y-6"
-      variants={staggerContainer}
-      initial="initial"
-      animate="animate"
-    >
+    <div className="mx-auto w-full max-w-[600px] space-y-6">
       {/* Page title */}
-      <motion.div variants={staggerItem}>
-        <PageHeader
-          title={t('profile.accounts.title')}
-          subtitle={t('profile.accounts.subtitle')}
-          backTo="/profile"
-        />
-      </motion.div>
+      <PageHeader
+        title={t('profile.accounts.title')}
+        subtitle={t('profile.accounts.subtitle')}
+        backTo="/profile"
+      />
 
       {/* Loading state */}
-      {isLoading && (
-        <motion.div variants={staggerItem}>
-          <LoadingSkeleton />
-        </motion.div>
-      )}
+      {isLoading && <LoadingSkeleton />}
 
       {/* Error state */}
       {isError && (
-        <motion.div variants={staggerItem}>
-          <Card>
-            <p className="text-center text-dark-400">{t('common.error')}</p>
-          </Card>
-        </motion.div>
+        <Card>
+          <p className="text-center text-dark-400">{t('common.error')}</p>
+        </Card>
       )}
 
       {/* Provider cards */}
       {data?.providers.map((provider) => (
-        <motion.div key={provider.provider} variants={staggerItem}>
+        <div key={provider.provider}>
           <Card>
             <div className="flex items-center justify-between gap-3">
               <div className="flex min-w-0 items-center gap-3">
@@ -866,8 +848,8 @@ export default function ConnectedAccounts() {
               </AnimatePresence>
             )}
           </Card>
-        </motion.div>
+        </div>
       ))}
-    </motion.div>
+    </div>
   );
 }

@@ -114,7 +114,7 @@ export default function Profile() {
 
       <MenuGroup title={t('profile.menu.section.subscription')}>
         <MenuLink
-          to="/connection"
+          to="/subscription?section=devices"
           tone="devices"
           icon={<PiDevicesDuotone />}
           label={t('profile.menu.devices')}

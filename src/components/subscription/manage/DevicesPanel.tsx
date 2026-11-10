@@ -17,6 +17,8 @@ export interface DevicesPanelProps {
   subscriptionId: number | undefined;
   /** Под списком: редкие действия с лимитом устройств (уменьшить). */
   footer?: ReactNode;
+  /** Вместо заголовка «Мои устройства» — «Подключено N из M» (когда заголовок уже есть у страницы). */
+  showCount?: boolean;
 }
 
 /**
@@ -29,7 +31,12 @@ export interface DevicesPanelProps {
  * Одновременно редактируется одно устройство: `editingDeviceHwid` служит и
  * переключателем, и признаком того, какая строка сейчас правится.
  */
-export function DevicesPanel({ subscription, subscriptionId, footer }: DevicesPanelProps) {
+export function DevicesPanel({
+  subscription,
+  subscriptionId,
+  footer,
+  showCount,
+}: DevicesPanelProps) {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
   const haptic = useHaptic();
@@ -101,7 +108,12 @@ export function DevicesPanel({ subscription, subscriptionId, footer }: DevicesPa
           ) : undefined
         }
       >
-        {t('subscription.myDevices')}
+        {showCount
+          ? t('subscription.connectedOfLimit', {
+              used: devicesData?.devices.length ?? 0,
+              limit: subscription.device_limit,
+            })
+          : t('subscription.myDevices')}
       </SectionTitle>
 
       {devicesLoading ? (

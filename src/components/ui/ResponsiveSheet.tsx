@@ -59,15 +59,16 @@ export function ResponsiveSheet({
   // Ловушка нужна только своей ветке: у Sheet она уже своя.
   const dialogRef = useFocusTrap<HTMLDivElement>(isOpen && isDesktop, { onEscape: onClose });
 
-  if (!isOpen) return null;
-
+  // Шит сам держит себя на экране, пока идёт анимация закрытия.
   if (!isDesktop) {
     return (
-      <Sheet isOpen onClose={onClose} title={title}>
+      <Sheet isOpen={isOpen} onClose={onClose} title={title}>
         {children}
       </Sheet>
     );
   }
+
+  if (!isOpen) return null;
 
   return createPortal(
     <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">

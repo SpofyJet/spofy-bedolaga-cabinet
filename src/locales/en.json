@@ -651,6 +651,7 @@
       }
     },
     "myDevices": "My Devices",
+    "connectedOfLimit": "Connected {{used}} of {{limit}}",
     "noDevices": "No connected devices",
     "deleteDevice": "Delete device",
     "deleteAllDevices": "Delete all",

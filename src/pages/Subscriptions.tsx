@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { hasLegacySubscription } from '../utils/legacySubscription';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { Navigate, useNavigate } from 'react-router';
+import { Navigate, useLocation, useNavigate } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import { PiPlusBold, PiStackDuotone } from 'react-icons/pi';
 import { PageHeader } from '@/components/layout/PageHeader';
@@ -16,6 +16,7 @@ import { Skeleton, SkeletonGroup } from '@/components/ui/skeleton';
 export default function Subscriptions() {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const { search } = useLocation();
   const queryClient = useQueryClient();
   const refreshUser = useAuthStore((state) => state.refreshUser);
   const [trialError, setTrialError] = useState<string | null>(null);
@@ -66,7 +67,7 @@ export default function Subscriptions() {
 
   // Single-tariff mode with one subscription: skip list, go directly to detail
   if (data && !isMultiTariff && subscriptions.length === 1) {
-    return <Navigate to={`/subscriptions/${subscriptions[0].id}`} replace />;
+    return <Navigate to={`/subscriptions/${subscriptions[0].id}${search}`} replace />;
   }
 
   return (

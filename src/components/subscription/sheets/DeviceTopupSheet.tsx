@@ -51,10 +51,13 @@ export function DeviceTopupSheet({
   const { formatMoney } = useCurrency();
   const formatPrice = (kopeks: number) => formatMoney(kopeks / 100);
 
-  const { data: devicePriceData } = useQuery({
+  // Пока считается новая цена, на экране остаётся прошлая: блок цены не исчезает, и окно
+  // не меняет высоту при каждом нажатии «+».
+  const { data: devicePriceData, isPlaceholderData } = useQuery({
     queryKey: ['device-price', devicesToAdd, subscriptionId],
     queryFn: () => subscriptionApi.getDevicePrice(devicesToAdd, subscriptionId),
     enabled: open && !!subscription,
+    placeholderData: (previous) => previous,
   });
 
   const devicePurchaseMutation = useMutation({
@@ -191,7 +194,11 @@ export function DeviceTopupSheet({
 
               <Button
                 className="w-full"
-                onClick={() => devicePurchaseMutation.mutate()}
+                onClick={() => {
+                  // Цена на экране ещё старая: покупка только по актуальной сумме.
+                  if (isPlaceholderData) return;
+                  devicePurchaseMutation.mutate();
+                }}
                 disabled={
                   devicePurchaseMutation.isPending || !devicePriceData?.available || insufficient
                 }

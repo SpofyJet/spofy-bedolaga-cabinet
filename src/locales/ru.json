@@ -677,6 +677,7 @@
       }
     },
     "myDevices": "Мои устройства",
+    "connectedOfLimit": "Подключено {{used}} из {{limit}}",
     "noDevices": "Нет подключенных устройств",
     "deleteDevice": "Удалить устройство",
     "deleteAllDevices": "Удалить все",

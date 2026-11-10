@@ -326,6 +326,12 @@ function LegacySubscriptionRedirect() {
   return <Navigate to={`/subscriptions/${subscriptionId}`} replace />;
 }
 
+/** /subscription → /subscriptions with the query kept: ?section=devices and ?topup=… live in it. */
+function LegacySubscriptionsRedirect() {
+  const { search } = useLocation();
+  return <Navigate to={`/subscriptions${search}`} replace />;
+}
+
 function App() {
   useAnalyticsCounters();
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
@@ -445,7 +451,7 @@ function App() {
           path="/subscription"
           element={
             <ProtectedRoute>
-              <Navigate to="/subscriptions" replace />
+              <LegacySubscriptionsRedirect />
             </ProtectedRoute>
           }
         />

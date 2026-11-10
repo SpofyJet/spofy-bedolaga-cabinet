@@ -105,6 +105,9 @@ export function Sheet({
   const [isAnimating, setIsAnimating] = useState(false);
   const [translateY, setTranslateY] = useState(0);
   const [isVisible, setIsVisible] = useState(false);
+  // Шит остаётся на экране на время анимации закрытия.
+  const [isMounted, setIsMounted] = useState(isOpen);
+  const [isDragging, setIsDragging] = useState(false);
 
   const haptic = useHaptic();
   const { t } = useTranslation();
@@ -150,13 +153,20 @@ export function Sheet({
   // Animation on open/close
   useEffect(() => {
     if (isOpen) {
-      // Small delay to ensure portal is mounted
-      requestAnimationFrame(() => {
-        setIsVisible(true);
+      setIsMounted(true);
+      // Два кадра: первый рисует шит за нижним краем, иначе анимации подъёма не будет.
+      let inner = 0;
+      const outer = requestAnimationFrame(() => {
+        inner = requestAnimationFrame(() => setIsVisible(true));
       });
-    } else {
-      setIsVisible(false);
+      return () => {
+        cancelAnimationFrame(outer);
+        cancelAnimationFrame(inner);
+      };
     }
+    setIsVisible(false);
+    const timer = setTimeout(() => setIsMounted(false), ANIMATION_DURATION);
+    return () => clearTimeout(timer);
   }, [isOpen]);
 
   // Find closest snap point
@@ -215,6 +225,7 @@ export function Sheet({
       state.currentY = clientY;
       state.startHeight = sheetRef.current?.offsetHeight ?? 0;
       state.isDragging = true;
+      setIsDragging(true);
       state.velocity = 0;
       state.lastY = clientY;
       state.lastTime = Date.now();
@@ -251,6 +262,7 @@ export function Sheet({
     if (!state.isDragging) return;
 
     state.isDragging = false;
+    setIsDragging(false);
     setIsAnimating(true);
 
     const targetSnap = findClosestSnap(translateY, state.velocity);
@@ -328,7 +340,7 @@ export function Sheet({
     [closeOnBackdropClick, haptic, onClose],
   );
 
-  if (!isOpen) return null;
+  if (!isMounted) return null;
 
   const sheet = (
     <div
@@ -351,11 +363,11 @@ export function Sheet({
         aria-modal="true"
         aria-label={title}
         className={`relative flex w-full max-w-lg flex-col overflow-hidden rounded-t-3xl bg-dark-900 ${
-          isAnimating ? 'transition-transform duration-300 ease-out' : ''
-        } ${isVisible ? 'translate-y-0' : 'translate-y-full'} ${className}`}
+          isDragging ? '' : 'transition-transform duration-300 ease-out'
+        } ${className}`}
         style={{
           maxHeight: insets.maxHeight,
-          transform: `translateY(${isVisible ? translateY : '100%'}px)`,
+          transform: isVisible ? `translateY(${translateY}px)` : 'translateY(100%)',
           paddingBottom: insets.paddingBottom,
         }}
       >

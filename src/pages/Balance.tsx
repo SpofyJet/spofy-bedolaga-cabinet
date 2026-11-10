@@ -1,3 +1,5 @@
+import { useHeaderHeight } from '@/hooks/useHeaderHeight';
+import { scrollToSection } from '@/utils/scrollToSection';
 import { isLifetimePeriod, isLifetimeSubscription } from '@/utils/lifetime';
 import { uiLocale } from '@/utils/uiLocale';
 import { useState, useEffect, useRef } from 'react';
@@ -196,6 +198,7 @@ export default function Balance() {
   // ?section=promo | ?section=history — ссылки «Промокод» и «История платежей»
   // с главной и из профиля: нужный блок сразу раскрыт и подкручен в экран.
   const deepSection = searchParams.get('section');
+  const { topSafeArea } = useHeaderHeight();
   const [promoOpen, setPromoOpen] = useState(deepSection === 'promo');
   const promoRef = useRef<HTMLDivElement>(null);
   const promoInputRef = useRef<HTMLInputElement>(null);
@@ -209,13 +212,12 @@ export default function Balance() {
           ? historyRef.current
           : null;
     if (!target) return;
-    const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
     const timer = setTimeout(
-      () => target.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' }),
+      () => scrollToSection(target, topSafeArea, { onlyIfHidden: deepSection === 'promo' }),
       350,
     );
     return () => clearTimeout(timer);
-  }, [deepSection]);
+  }, [deepSection, topSafeArea]);
 
   const { data: transactions, isLoading } = useQuery<PaginatedResponse<Transaction>>({
     queryKey: ['transactions', transactionsPage],
