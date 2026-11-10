@@ -268,7 +268,7 @@ function ProviderRow({
             )}
           </div>
         </div>
-        <div className="flex shrink-0 flex-wrap items-center gap-2 pl-[52px] sm:pl-0">
+        <div className="flex shrink-0 flex-wrap items-center gap-2 pl-9 sm:pl-0">
           {state === 'off' ? (
             <button
               type="button"
