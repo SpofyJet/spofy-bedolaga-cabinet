@@ -931,7 +931,10 @@
       "addonsTitle": "Add more",
       "currentTariffLabel": "Current",
       "lifetimeNoRenew": "No need to renew it.",
-      "toSubscription": "To subscription"
+      "toSubscription": "To subscription",
+      "saving": "save {{amount}}",
+      "shortOnBalance": "{{missing}} short: top up, then tap «Renew»",
+      "payShort": "Pay {{amount}}"
     },
     "noRenewalChooseTariff": "Choose a plan to keep your access.",
     "chooseTariff": "Choose a plan",

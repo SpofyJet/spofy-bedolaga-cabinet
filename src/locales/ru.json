@@ -965,7 +965,10 @@
       "addonsTitle": "Докупить",
       "currentTariffLabel": "Сейчас",
       "lifetimeNoRenew": "Продлевать её не нужно.",
-      "toSubscription": "К подписке"
+      "toSubscription": "К подписке",
+      "saving": "выгода {{amount}}",
+      "shortOnBalance": "Не хватает {{missing}}: пополните баланс, затем нажмите «Продлить»",
+      "payShort": "Оплатить {{amount}}"
     },
     "noRenewalChooseTariff": "Выберите тариф — доступ продолжится.",
     "chooseTariff": "Выбрать тариф",

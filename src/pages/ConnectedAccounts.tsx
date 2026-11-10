@@ -320,7 +320,10 @@ export default function ConnectedAccounts() {
   const blurTimeoutRef = useRef<ReturnType<typeof setTimeout>>(undefined);
 
   // Email linking inline form state
-  const [emailFormOpen, setEmailFormOpen] = useState(false);
+  // ?link=email — пришли из «Профиль → Email» по «Привязать Email»: форма сразу открыта.
+  const [emailFormOpen, setEmailFormOpen] = useState(
+    () => new URLSearchParams(window.location.search).get('link') === 'email',
+  );
   const [emailValue, setEmailValue] = useState('');
   const [emailPassword, setEmailPassword] = useState('');
   const [emailConfirmPassword, setEmailConfirmPassword] = useState('');

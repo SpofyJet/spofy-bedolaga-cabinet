@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { AnimatePresence, motion } from 'framer-motion';
 import { PiCheckBold, PiPencilSimpleLine } from 'react-icons/pi';
@@ -20,6 +21,7 @@ import { brandingApi, type EmailAuthEnabled } from '../api/branding';
 /** Email — отдельная страница профиля: привязка, смена, верификация. */
 export default function ProfileEmail() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const user = useAuthStore((state) => state.user);
   const setUser = useAuthStore((state) => state.setUser);
   const queryClient = useQueryClient();
@@ -364,7 +366,10 @@ export default function ProfileEmail() {
         ) : (
           <div className="space-y-3">
             <p className="text-sm text-dark-400">{t('profile.linkEmailDescription')}</p>
-            <Button variant="primary" onClick={() => setChangeEmailStep('email')}>
+            {/* 11.11: раньше кнопка ставила шаг «email», но форма этого шага живёт
+                в ветке «почта уже есть» — без почты нажатие ничего не делало.
+                Привязка (почта + пароль) — в «Подключённых аккаунтах». */}
+            <Button variant="primary" onClick={() => navigate('/profile/accounts?link=email')}>
               {t('profile.linkEmail')}
             </Button>
           </div>

@@ -770,8 +770,9 @@ export default function Info() {
     <Page>
       <PageHeader title={t('info.title')} backTo="/profile" />
 
-      {/* Tabs */}
-      <div className="scrollbar-hide flex gap-2 overflow-x-auto pb-1 sm:flex-wrap sm:overflow-x-visible">
+      {/* Вкладки переносятся на вторую строку (11.11): в одну строку с прокруткой
+          «Оферта» уходила за край телефона, а «Конфиденциальность» резалась. */}
+      <div className="flex flex-wrap gap-2 pb-1">
         {tabs.map((tab) => (
           <button
             key={tab.id}
@@ -783,7 +784,7 @@ export default function Info() {
             }`}
           >
             {tab.emoji ? <span className="text-base">{tab.emoji}</span> : <tab.icon />}
-            <span className="max-w-[140px] truncate">{tab.label}</span>
+            <span className="max-w-[240px] truncate">{tab.label}</span>
           </button>
         ))}
       </div>

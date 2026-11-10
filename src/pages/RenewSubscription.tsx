@@ -155,6 +155,35 @@ export default function RenewSubscription() {
   const money = (kopeks: number, options?: { round?: boolean }) =>
     formatMoney(kopeks / 100, options);
   const selectedOption = options?.find((o) => o.period_days === selectedPeriod) ?? null;
+  // «Выгодно» — на отмеченном ботом сроке, иначе на 3 месяцах (решение владельца
+  // 23.10, как на странице подписки); 3 месяца подставляем, только когда есть из чего выбирать.
+  const recommendedDays = (
+    pickBestValue(options) ??
+    (options && options.length > 1 ? options.find((o) => o.period_days === 90) : undefined)
+  )?.period_days;
+  // Выгода против помесячной оплаты, целыми рублями вниз — не обещаем больше, чем есть.
+  const monthly = options?.find((o) => o.period_days === 30);
+  const savingKopeks = (o: { period_days: number; price_kopeks: number }) =>
+    monthly && o.period_days > 31 && !isLifetimePeriod(o.period_days)
+      ? Math.floor(
+          Math.max(0, monthly.price_kopeks * Math.round(o.period_days / 30) - o.price_kopeks) / 100,
+        ) * 100
+      : 0;
+  // Баланса не хватает: кнопка сразу ведёт на пополнение недостающей суммы и
+  // возвращает на этот же срок (раньше — красная ошибка до нажатия и лишний шаг).
+  const shortKopeks =
+    selectedOption && selectedOption.price_kopeks > 0
+      ? Math.max(0, selectedOption.price_kopeks - balanceKopeks)
+      : 0;
+  const shortRubles = Math.ceil(shortKopeks / 100);
+  const goTopUp = () => {
+    if (!selectedOption) return;
+    impact('medium');
+    const params = new URLSearchParams();
+    params.set('amount', String(shortRubles));
+    params.set('returnTo', `/subscriptions/${subId}/renew?period=${selectedOption.period_days}`);
+    navigate(`/balance/top-up?${params.toString()}`);
+  };
   const isDailyRenewal = Boolean(subscription?.is_daily && !subscription.is_trial);
   const isLifetime = Boolean(subscription && isLifetimeSubscription(subscription));
 
@@ -228,7 +257,8 @@ export default function RenewSubscription() {
                 : getMonthlyPriceKopeks(option.price_kopeks, option.period_days);
               // Выгодный вариант несёт жёлтую рамку и тогда, когда выбран: выбор
               // виден заливкой и внутренним кольцом, подсказка не пропадает.
-              const isBestValue = Boolean(option.is_highlighted);
+              const isBestValue = option.period_days === recommendedDays;
+              const saving = savingKopeks(option);
 
               return (
                 <button
@@ -271,6 +301,13 @@ export default function RenewSubscription() {
                     {perMonth !== null && (
                       <span className="mt-0.5 block text-[13px] text-dark-400">
                         {money(perMonth, { round: true })}/{t('subscription.month', 'мес')}
+                        {saving > 0 && (
+                          <span className="ml-2 font-semibold text-success-400">
+                            {t('subscription.v10.saving', 'выгода {{amount}}', {
+                              amount: money(saving, { round: true }),
+                            })}
+                          </span>
+                        )}
                       </span>
                     )}
                   </span>
@@ -312,12 +349,14 @@ export default function RenewSubscription() {
               </span>
             </div>
           )}
-          {selectedOption && balanceKopeks < selectedOption.price_kopeks && !missingAmount && (
-            <p className="text-[13px] text-error-400">
+          {shortKopeks > 0 && !missingAmount && (
+            <p className="text-[13px] text-dark-400">
               {t(
-                'subscription.insufficientBalanceAmount',
-                'Недостаточно средств. Не хватает {{missing}}',
-                { missing: money(selectedOption.price_kopeks - balanceKopeks) },
+                'subscription.v10.shortOnBalance',
+                'Не хватает {{missing}}: пополните баланс, затем нажмите «Продлить»',
+                {
+                  missing: money(shortRubles * 100, { round: true }),
+                },
               )}
             </p>
           )}
@@ -335,14 +374,20 @@ export default function RenewSubscription() {
 
           <Button
             className="w-full"
-            onClick={() => selectedPeriod && handleRenew(selectedPeriod)}
+            onClick={() =>
+              shortKopeks > 0 ? goTopUp() : selectedPeriod && handleRenew(selectedPeriod)
+            }
             disabled={!selectedPeriod || renewMutation.isPending}
           >
-            {renewMutation.isPending
-              ? t('common.processing', 'Обработка...')
-              : selectedPeriod
-                ? t('subscription.extend', 'Продлить подписку')
-                : t('subscription.selectPeriod', 'Выберите период')}
+            {shortKopeks > 0
+              ? t('subscription.v10.payShort', 'Оплатить {{amount}}', {
+                  amount: money(shortRubles * 100, { round: true }),
+                })
+              : renewMutation.isPending
+                ? t('common.processing', 'Обработка...')
+                : selectedPeriod
+                  ? t('subscription.extend', 'Продлить подписку')
+                  : t('subscription.selectPeriod', 'Выберите период')}
           </Button>
         </Surface>
       )}

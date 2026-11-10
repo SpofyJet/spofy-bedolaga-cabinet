@@ -646,7 +646,10 @@ function Steps({
               href={href}
               target="_blank"
               rel="noopener noreferrer"
-              className={cn(smallBtn, 'flex-1 basis-[140px]')}
+              // 11.11: на Android 412 px подпись резалась до «Google …»: стрелку «наружу»
+              // убрали (значок загрузки и так говорит, что уйдём из кабинета), а кнопки
+              // шире 150 px встают друг под другом, а не режут текст.
+              className={cn(smallBtn, 'flex-1 basis-[150px] px-3')}
               onClick={() => onDone(index)}
             >
               {icon && btn.svgIconKey !== 'ExternalLink' ? (
@@ -664,7 +667,6 @@ function Steps({
                   ? text
                   : t('subscription.connection.v10.download', 'Скачать')}
               </span>
-              <PiArrowSquareOutBold className="h-3.5 w-3.5 shrink-0 text-dark-400" />
             </a>
           );
         });

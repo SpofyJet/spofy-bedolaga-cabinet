@@ -19,6 +19,9 @@ import { cn } from '@/lib/utils';
  * на синем (spofy/tones.ts). Остальные спокойные, синие: рядом с каплей
  * не должно быть других ярких цветов, иначе она теряется:
  *   доступ есть   → Подключить · Продлить · Пополнить · Пригласить
+ *   ≤3 дней       → Продлить · Подключить · Пополнить · Пригласить (11.11: из закончившихся
+ *                   платных продлевают 54 %, главная кнопка в последние дни — продление;
+ *                   пробному не меняем: ему сначала нужно подключиться)
  *   закончилась   → Продлить · Тарифы · Пополнить · Пригласить
  * Вечной подписке продлевать нечего: вместо «Продлить» — «Тарифы».
  *
@@ -36,6 +39,8 @@ interface QuickActionsProps {
   connectTo: string;
   /** Вечная подписка (ULTIMA): «Продлить» не предлагаем. */
   lifetime?: boolean;
+  /** Платная подписка закончится через 3 дня или раньше: главной становится «Продлить». */
+  endingSoon?: boolean;
   /** Состояние доступа ещё не известно: четыре пустые плитки того же размера,
    *  а не набор кнопок для «закончилась», который через миг сменится. */
   loading?: boolean;
@@ -54,6 +59,7 @@ export default function QuickActions({
   connectTo,
   lifetime = false,
   trial = false,
+  endingSoon = false,
   loading = false,
 }: QuickActionsProps) {
   const { t } = useTranslation();
@@ -110,7 +116,9 @@ export default function QuickActions({
 
   const actions =
     state === 'active'
-      ? [connect, lifetime ? plans : renew, topup, invite]
+      ? endingSoon && !lifetime && !trial
+        ? [renew, connect, topup, invite]
+        : [connect, lifetime ? plans : renew, topup, invite]
       : state === 'expired'
         ? [renew, trial ? promo : plans, topup, invite]
         : [topup, promo, invite];

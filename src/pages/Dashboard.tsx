@@ -406,6 +406,7 @@ export default function Dashboard() {
         connectTo={firstSubId != null ? `/connection?sub=${firstSubId}` : '/connection'}
         lifetime={focusLifetime}
         trial={focusTrial}
+        endingSoon={status === 'active' && daysLeft != null && daysLeft <= 3}
       />
 
       {/* Подписка + Баланс */}

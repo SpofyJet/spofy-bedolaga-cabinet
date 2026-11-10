@@ -158,7 +158,7 @@ export default function InfoCards({
           <Skeleton className="mt-2 h-6 w-20 rounded-full" />
         ) : subChip ? (
           <span
-            className={`mt-2 inline-flex w-fit items-center rounded-full px-2.5 py-1 text-2xs font-semibold ${chipClass}`}
+            className={`mt-2 inline-flex w-fit items-center whitespace-nowrap rounded-full px-2 py-1 text-2xs min-[380px]:px-2.5 font-semibold ${chipClass}`}
           >
             {subChip.label}
           </span>
