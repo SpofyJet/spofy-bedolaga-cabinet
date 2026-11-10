@@ -112,7 +112,7 @@ export default function InfoCards({
           <Skeleton className="mt-1 h-8 w-16" />
         ) : status === 'active' && isLifetime ? (
           <span className="mt-1 block min-w-0">
-            <span className="block truncate text-[22px] font-bold leading-tight tracking-tight text-dark-50">
+            <span className="block truncate font-display text-[22px] font-bold leading-tight tracking-tight text-dark-50">
               {tariffName || t('subscription.lifetime.forever')}
             </span>
             {tariffName && (
@@ -123,7 +123,7 @@ export default function InfoCards({
           </span>
         ) : status === 'active' && daysLeft != null ? (
           <span className="mt-1 block">
-            <span className="block text-[26px] font-bold leading-none tracking-tight text-dark-50">
+            <span className="block font-display text-[26px] font-bold leading-none tracking-tight text-dark-50">
               {t('dashboard.info.subscription.daysCount', { count: daysLeft })}
             </span>
             {endDate && (
@@ -137,9 +137,9 @@ export default function InfoCards({
         ) : (
           <span className="mt-1 block">
             {/* «Закончилась» в узком окне Telegram (~340 px) не влезала в карточку
-                при 22 px: размер теперь следует за шириной экрана. */}
+                при 22 px: слово, а не число — 18 px по шкале (11.11), влезает от 320 px. */}
             <span
-              className={`block whitespace-nowrap text-[length:clamp(16px,5vw,22px)] font-bold leading-[26px] tracking-tight ${
+              className={`block whitespace-nowrap font-display text-lg font-bold leading-[26px] tracking-tight ${
                 status === 'expired' ? 'text-error-400' : 'text-dark-50'
               }`}
             >
@@ -179,7 +179,7 @@ export default function InfoCards({
           {balanceRubles === undefined ? (
             <Skeleton className="h-[26px] w-20" />
           ) : (
-            <span className="block text-[26px] font-bold leading-none tracking-tight text-dark-50">
+            <span className="block font-display text-[26px] font-bold leading-none tracking-tight text-dark-50">
               {Math.floor(balanceRubles).toLocaleString('ru-RU')}
               {'\u00A0'}₽
             </span>

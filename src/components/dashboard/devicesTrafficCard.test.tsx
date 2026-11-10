@@ -42,7 +42,8 @@ describe('DevicesTrafficCard', () => {
     renderCard();
     expect(screen.getByText('dashboard.devicesTraffic.bypassTraffic')).toBeTruthy();
     expect(linkTo('dashboard.devicesTraffic.buyTraffic')).toBe('/subscriptions/42?topup=traffic');
-    expect(linkTo('dashboard.devicesTraffic.addSlot')).toBe('/subscription?topup=devices');
+    // свободные места есть — кнопки места нет, её повторяла история «Добавить устройство»
+    expect(screen.queryByRole('link', { name: /addSlot/ })).toBeNull();
   });
 
   it('обходы выключены — подсказка, что обычные серверы работают', () => {
@@ -52,7 +53,7 @@ describe('DevicesTrafficCard', () => {
   });
 
   it('у пробного обе докупки ведут к выбору тарифа', () => {
-    renderCard({ isTrial: true });
+    renderCard({ isTrial: true, deviceLimit: 2, connectedDevices: 2 });
     expect(linkTo('dashboard.devicesTraffic.buyTraffic')).toBe('/subscription/purchase');
     expect(linkTo('dashboard.devicesTraffic.addSlot')).toBe('/subscription/purchase');
   });
@@ -63,6 +64,7 @@ describe('DevicesTrafficCard', () => {
       connectedDevices: 2,
     });
     expect(screen.getByText('dashboard.devicesTraffic.allSlotsBusy')).toBeTruthy();
+    expect(linkTo('dashboard.devicesTraffic.addSlot')).toBe('/subscription?topup=devices');
   });
 
   it('безлимит — вместо докупки ГБ ссылка на список устройств', () => {

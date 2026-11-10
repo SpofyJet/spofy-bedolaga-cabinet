@@ -1,17 +1,13 @@
 import { Link } from 'react-router';
-import { cn } from '@/lib/utils';
 import { useTranslation } from 'react-i18next';
-import {
-  PiBookOpenTextDuotone,
-  PiTelevisionSimpleDuotone,
-  PiTicketDuotone,
-  PiReceiptDuotone,
-} from 'react-icons/pi';
+import { PiTelevisionSimpleDuotone, PiTicketDuotone, PiReceiptDuotone } from 'react-icons/pi';
 
 /**
  * «Полезное» — то, чего нет в карточках выше. Баланс, устройства и докупка
  * трафика уже живут в «Подписке/Балансе» и «Устройствах и трафике»,
  * поддержка — в нижней панели: повторять их здесь — шум.
+ * «Инструкция» убрана (11.11): её дублирует история «Как подключить» наверху.
+ * Правила и политика — в профиле: «О сервисе» ведёт на вкладки правил, политики и оферты.
  */
 interface UsefulGridProps {
   /** Промокод уже стоит в быстрых действиях (экран без подписки) — второй раз не показываем. */
@@ -22,12 +18,6 @@ export default function UsefulGrid({ hidePromocode = false }: UsefulGridProps) {
   const { t } = useTranslation();
 
   const allItems = [
-    {
-      key: 'instructions',
-      label: t('dashboard.useful.instructions', 'Инструкция'),
-      to: '/info',
-      icon: PiBookOpenTextDuotone,
-    },
     {
       key: 'qrTv',
       label: t('dashboard.useful.qrTv', 'QR для ТВ'),
@@ -54,7 +44,8 @@ export default function UsefulGrid({ hidePromocode = false }: UsefulGridProps) {
       <h2 className="mb-2 px-1 text-[13px] font-semibold text-dark-400">
         {t('dashboard.useful.title', 'Полезное')}
       </h2>
-      <div className={cn('grid gap-2.5', items.length === 3 ? 'grid-cols-3' : 'grid-cols-4')}>
+      {/* Сетка на 4, как у быстрых действий выше: плитки стоят в тех же колонках. */}
+      <div className="grid grid-cols-4 gap-2.5">
         {items.map((item) => (
           <Link
             key={item.key}
@@ -69,21 +60,6 @@ export default function UsefulGrid({ hidePromocode = false }: UsefulGridProps) {
             </span>
           </Link>
         ))}
-      </div>
-      <div className="mt-4 flex flex-col items-center text-xs text-dark-500 min-[440px]:flex-row min-[440px]:justify-center min-[440px]:gap-4">
-        <Link
-          to="/offer"
-          className="inline-flex min-h-[44px] items-center transition-colors hover:text-dark-300"
-        >
-          {t('legal.serviceRules', 'Правила сервиса')}
-        </Link>
-        <span aria-hidden className="hidden h-3 w-px bg-dark-700 min-[440px]:block" />
-        <Link
-          to="/privacy"
-          className="inline-flex min-h-[44px] items-center text-center transition-colors hover:text-dark-300"
-        >
-          {t('legal.privacy', 'Политика конфиденциальности')}
-        </Link>
       </div>
     </section>
   );

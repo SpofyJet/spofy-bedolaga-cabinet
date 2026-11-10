@@ -345,7 +345,7 @@ export default function Dashboard() {
           ) : null}
         </Link>
         <div className="min-w-0 flex-1">
-          <span className="block truncate text-lg font-bold tracking-tight text-dark-50">
+          <span className="block truncate font-display text-lg font-bold tracking-tight text-dark-50">
             {userName || appName}
           </span>
           {user?.id != null && (
@@ -545,7 +545,7 @@ export default function Dashboard() {
           className="rounded-3xl bg-dark-900/70 cursor-pointer transition-colors hover:bg-dark-800/50 active:bg-dark-800/70 group flex items-center justify-between p-4"
         >
           <div className="flex items-center gap-3">
-            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-accent-500/10 text-accent-400 [&>svg]:h-[22px] [&>svg]:w-[22px]">
+            <span className="flex h-6 w-6 shrink-0 items-center justify-center text-accent-400 light:text-accent-500 [&>svg]:h-[22px] [&>svg]:w-[22px]">
               <WheelIcon />
             </span>
             <div className="min-w-0 flex-1">

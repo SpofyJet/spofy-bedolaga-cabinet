@@ -7,18 +7,20 @@ import { formatTraffic } from '@/utils/formatTraffic';
 import type { Device } from '@/types';
 import { platformIcon } from '@/components/subscription/platformIcon';
 
-const PANEL = 'flex min-w-0 flex-col rounded-2xl bg-dark-800/45 p-2.5 min-[360px]:p-3';
+// 11.11: без карточки в карточке — колонки делит линия, а не своя подложка.
+const PANEL = 'flex min-w-0 flex-col';
 /**
  * Обводка панели — её состояние, а не украшение: зелёная — всё в порядке,
  * жёлтая — места или трафик на исходе. Синий остаётся за кнопками.
  */
 const PANEL_OK = '';
 const PANEL_WARN = '';
-const TILE_OK = 'bg-success-500/15 text-success-400';
+// Зелёный — только у статуса «Активна»; подключённое устройство — синим.
+const TILE_OK = 'bg-accent-400/[0.14] text-accent-400 light:bg-accent-100 light:text-accent-500';
 const TILE =
   'flex aspect-square w-full max-w-[32px] items-center justify-center rounded-lg min-[360px]:rounded-[10px]';
 const VALUE =
-  'mt-3 truncate text-base font-bold leading-tight tracking-tight text-dark-50 min-[400px]:text-lg';
+  'mt-3 truncate font-display text-base font-bold leading-tight tracking-tight text-dark-50 min-[400px]:text-lg';
 const CAPTION = 'mt-0.5 text-xs leading-snug';
 const ACTION =
   'mt-3 flex h-11 items-center justify-center gap-1.5 whitespace-nowrap rounded-xl px-2 text-[13px] font-semibold transition-colors min-[360px]:text-sm';
@@ -127,18 +129,17 @@ export default function DevicesTrafficCard({
         to="/subscription"
         className="group -my-2.5 mb-1.5 flex min-h-[44px] items-center justify-between gap-2"
       >
-        <h2 className="text-base font-bold tracking-tight text-dark-50">
+        <h2 className="font-display text-base font-bold tracking-tight text-dark-50">
           {t('dashboard.devicesTraffic.title')}
         </h2>
         <PiCaretRightBold className="h-4 w-4 text-dark-500 transition-transform group-hover:translate-x-0.5 group-hover:text-dark-300" />
       </Link>
 
-      {/* Две панели вместо линии-разделителя: у каждой своя подложка и своя
-          кнопка внутри — видно, что к чему относится, и на узком экране
-          колонкам не нужно ничего делить. */}
-      <div className="grid grid-cols-2 gap-2">
+      {/* Две колонки через линию (11.11: раньше у каждой была своя подложка —
+          карточка в карточке). Кнопка стоит под своей колонкой. */}
+      <div className="grid grid-cols-2 divide-x divide-dark-800/70">
         {/* Устройства: верх панели ведёт в «Мои устройства», кнопка — докупить место */}
-        <div className={cn(PANEL, atLimit ? PANEL_WARN : PANEL_OK)}>
+        <div className={cn(PANEL, 'pr-3', atLimit ? PANEL_WARN : PANEL_OK)}>
           <Link
             to="/subscription?section=devices"
             aria-label={t('dashboard.devicesTraffic.manage', 'Мои устройства')}
@@ -181,17 +182,21 @@ export default function DevicesTrafficCard({
                 : t('dashboard.devicesTraffic.devices', 'устройств подключено')}
             </div>
           </Link>
-          <span className="flex-1" aria-hidden />
-          <Link to={devicesTo} className={cn(ACTION, atLimit ? ACTION_HOT : ACTION_QUIET)}>
-            <PiPlusBold className="hidden h-3.5 w-3.5 shrink-0 min-[360px]:block" />
-            {/* на узком экране — «+ Устройство»: плюс говорит «добавить», слово — что именно */}
-            <span className="hidden min-[400px]:inline">
-              {t('dashboard.devicesTraffic.addSlot', 'Добавить устройство')}
-            </span>
-            <span className="min-[400px]:hidden">
-              {t('dashboard.devicesTraffic.addSlotShort', 'Устройство')}
-            </span>
-          </Link>
+          {/* Место докупают, когда все заняты (11.11): в остальное время кнопка
+              повторяла историю «Добавить устройство» наверху главной. */}
+          {atLimit && <span className="flex-1" aria-hidden />}
+          {atLimit && (
+            <Link to={devicesTo} className={cn(ACTION, ACTION_HOT)}>
+              <PiPlusBold className="hidden h-3.5 w-3.5 shrink-0 min-[360px]:block" />
+              {/* на узком экране — «+ Устройство»: плюс говорит «добавить», слово — что именно */}
+              <span className="hidden min-[400px]:inline">
+                {t('dashboard.devicesTraffic.addSlot', 'Добавить устройство')}
+              </span>
+              <span className="min-[400px]:hidden">
+                {t('dashboard.devicesTraffic.addSlotShort', 'Устройство')}
+              </span>
+            </Link>
+          )}
         </div>
 
         {/* Трафик. Безлимиту докупать нечего — кнопки нет, и панель не тянет
@@ -199,6 +204,7 @@ export default function DevicesTrafficCard({
         <div
           className={cn(
             PANEL,
+            'pl-3',
             trafficLow ? PANEL_WARN : PANEL_OK,
             unlimitedTraffic && 'items-center justify-center text-center',
           )}
@@ -207,7 +213,7 @@ export default function DevicesTrafficCard({
             {unlimitedTraffic ? (
               // та же плитка, что у устройств: ряды двух панелей на одной высоте
               <span
-                className="flex h-8 w-8 items-center justify-center rounded-[10px] bg-success-500/15 text-lg font-bold leading-none text-success-400"
+                className="flex h-8 w-8 items-center justify-center rounded-[10px] bg-accent-400/[0.14] text-lg font-bold leading-none text-accent-400 light:bg-accent-100 light:text-accent-500"
                 aria-hidden
               >
                 ∞
@@ -223,7 +229,7 @@ export default function DevicesTrafficCard({
                 <div
                   className={cn(
                     'h-full rounded-full transition-[width] duration-700',
-                    trafficLow ? 'bg-warning-400' : 'bg-success-400',
+                    trafficLow ? 'bg-warning-400' : 'bg-accent-400',
                   )}
                   style={{ width: `${Math.max(percent, percent > 0 ? 4 : 0)}%` }}
                 />

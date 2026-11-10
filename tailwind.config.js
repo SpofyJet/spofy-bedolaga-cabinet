@@ -140,7 +140,8 @@ export default {
           'Roboto',
           'sans-serif',
         ],
-        display: ['Twemoji Country Flags', 'Manrope', 'system-ui', 'sans-serif'],
+        // Заголовки и крупные цифры (11.11): Geologica, запасной — Manrope.
+        display: ['Twemoji Country Flags', 'Geologica', 'Manrope', 'system-ui', 'sans-serif'],
         mono: [
           'Twemoji Country Flags',
           'ui-monospace',

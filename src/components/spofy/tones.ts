@@ -62,3 +62,14 @@ export const TONE_CHIP: Record<Tone, string> = {
   account: BLUE_CHIP,
   notify: BLUE_CHIP,
 };
+
+/** Иконка без плитки: только цвет (строки меню, списки). */
+export const TONE_ICON: Record<Tone, string> = Object.fromEntries(
+  Object.entries(TONE_TILE).map(([k, v]) => [
+    k,
+    v
+      .split(' ')
+      .filter((c) => !/(^|:)bg-/.test(c))
+      .join(' '),
+  ]),
+) as Record<Tone, string>;

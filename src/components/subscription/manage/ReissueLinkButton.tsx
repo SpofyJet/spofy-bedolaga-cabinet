@@ -111,7 +111,7 @@ export function ReissueLinkButton({ subscription, subscriptionId }: ReissueLinkB
         disabled={revokeMutation.isPending || cooldown > 0}
         className="flex min-h-[60px] w-full items-center gap-3 px-4 py-2.5 text-left transition-colors hover:bg-dark-800/40 active:bg-dark-800/60 disabled:opacity-50"
       >
-        <RowIcon tone="warning">
+        <RowIcon tone="accent">
           <PiArrowsCounterClockwiseDuotone
             className={revokeMutation.isPending ? 'animate-spin' : undefined}
           />

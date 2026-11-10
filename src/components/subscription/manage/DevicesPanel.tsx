@@ -101,7 +101,7 @@ export function DevicesPanel({
                 if (confirmed) deleteAllDevicesMutation.mutate();
               }}
               disabled={deleteAllDevicesMutation.isPending}
-              className="inline-flex min-h-[44px] items-center text-[13px] font-medium text-error-400 transition-colors hover:text-error-300 disabled:opacity-50"
+              className="inline-flex min-h-[44px] items-center text-[13px] font-medium text-dark-400 transition-colors hover:text-error-400 disabled:opacity-50"
             >
               {t('subscription.deleteAllDevices')}
             </button>

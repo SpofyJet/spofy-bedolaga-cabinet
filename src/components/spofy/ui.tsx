@@ -7,7 +7,9 @@
  * - поверхность: rounded-3xl bg-dark-900/70, без обводки, теней и свечения: карточку отделяет заливка;
  *   (с v11 dark-900 заметно светлее фона — карточки отделяются, а не сливаются);
  * - заголовки секций — 13px semibold dark-400, обычным регистром (без КАПСА и моно-шрифта);
- * - иконки — react-icons/pi Duotone в плитке 40×40, цвет по смыслу (tones.ts), синий — только действия;
+ * - иконки строк — react-icons/pi Duotone без плитки (11.11: плашка под каждой иконкой — шум),
+ *   цвет по смыслу (tones.ts); плитка 40×40 осталась только у пустого состояния (tile);
+ * - заголовки и крупные цифры — font-display (Geologica), текст — Manrope;
  * - основная кнопка — cta-500 (одна на экран), вторичная — dark-800/70; высота 48px;
  * - никаких нейро-картинок, градиентных «стеклянных» карточек и декоративных орбов.
  */
@@ -17,7 +19,7 @@ import { PiCaretRightBold } from 'react-icons/pi';
 
 import { cn } from '@/lib/utils';
 
-import { TONE_CHIP, TONE_TILE, type Tone } from './tones';
+import { TONE_CHIP, TONE_ICON, TONE_TILE, type Tone } from './tones';
 
 export type { Tone } from './tones';
 
@@ -66,12 +68,21 @@ export function Group({
   );
 }
 
-export function RowIcon({ children, tone = 'accent' }: { children: ReactNode; tone?: Tone }) {
+export function RowIcon({
+  children,
+  tone = 'accent',
+  tile = false,
+}: {
+  children: ReactNode;
+  tone?: Tone;
+  /** Плитка с фоном — только у главного (пустое состояние). В строках иконка без плашки. */
+  tile?: boolean;
+}) {
   return (
     <span
       className={cn(
-        'flex h-10 w-10 shrink-0 items-center justify-center rounded-xl [&>svg]:h-[22px] [&>svg]:w-[22px]',
-        TONE_TILE[tone],
+        'flex shrink-0 items-center justify-center [&>svg]:h-[22px] [&>svg]:w-[22px]',
+        tile ? cn('h-10 w-10 rounded-xl', TONE_TILE[tone]) : cn('h-6 w-6', TONE_ICON[tone]),
       )}
     >
       {children}
@@ -201,7 +212,7 @@ export function Stat({
   return (
     <div className="min-w-0">
       <span className="block text-sm font-medium text-dark-400">{label}</span>
-      <span className="mt-1 block truncate text-[26px] font-bold leading-tight tracking-tight text-dark-50">
+      <span className="mt-1 block truncate font-display text-[26px] font-bold leading-tight tracking-tight text-dark-50">
         {value}
       </span>
       {hint && <span className="mt-0.5 block text-xs text-dark-400">{hint}</span>}
@@ -223,7 +234,7 @@ export function EmptyState({
 }) {
   return (
     <Surface className="flex flex-col items-center px-6 py-10 text-center">
-      {icon && <RowIcon>{icon}</RowIcon>}
+      {icon && <RowIcon tile>{icon}</RowIcon>}
       <p className="mt-3 text-[15px] font-semibold text-dark-100">{title}</p>
       {text && <p className="mt-1 max-w-sm text-[13px] leading-snug text-dark-400">{text}</p>}
       {action && <div className="mt-5">{action}</div>}

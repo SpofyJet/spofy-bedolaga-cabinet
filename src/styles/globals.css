@@ -28,6 +28,37 @@
    scoped via unicode-range to ONLY flag codepoints, so adding it to the front
    of the font stacks fixes every flag everywhere without touching any markup
    and without affecting any other text. Root fix, not a per-component wrap. */
+/* Geologica (OFL) — заголовки и крупные цифры (font-display). Текст остаётся Manrope.
+   Знак ₽ лежит в latin-ext: отдельный файл грузится, только когда ₽ стоит в заголовке. */
+@font-face {
+  font-family: "Geologica";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 500 700;
+  src: url("/fonts/geologica-cyrillic.woff2") format("woff2");
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+
+@font-face {
+  font-family: "Geologica";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 500 700;
+  src: url("/fonts/geologica-latin.woff2") format("woff2");
+  unicode-range:
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308,
+    U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: "Geologica";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 500 700;
+  src: url("/fonts/geologica-latin-ext.woff2") format("woff2");
+  unicode-range: U+20BD;
+}
+
 @font-face {
   font-family: "Twemoji Country Flags";
   unicode-range: U+1F1E6-1F1FF, U+1F3F4, U+E0062-E007F;
@@ -326,6 +357,32 @@
     background-size: 200px 200px;
     background-repeat: repeat;
     opacity: 0.03;
+  }
+
+  /* Фон с глубиной (11.11, по мотивам «минимализм + фон»): одно мягкое свечение
+     снизу, синий → бирюза. Только фон: карточки и кнопки остаются плоскими (v13).
+     Статичный слой без анимации и картинок. */
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background:
+      radial-gradient(140% 70% at 110% 105%, rgb(34 211 238 / 0.22), transparent 60%),
+      radial-gradient(120% 75% at -15% 88%, rgb(37 99 235 / 0.45), transparent 64%),
+      radial-gradient(90% 45% at 60% -10%, rgb(30 64 175 / 0.25), transparent 70%);
+  }
+  .light body::after {
+    background:
+      radial-gradient(130% 55% at 105% 108%, rgb(34 211 238 / 0.16), transparent 62%),
+      radial-gradient(110% 60% at -10% 92%, rgb(96 165 250 / 0.24), transparent 66%);
+  }
+
+  /* Заголовки страниц — шрифтом заголовков. */
+  h1 {
+    font-family: theme("fontFamily.display");
+    letter-spacing: -0.01em;
   }
 
   /* Disable noise on mobile to save GPU */

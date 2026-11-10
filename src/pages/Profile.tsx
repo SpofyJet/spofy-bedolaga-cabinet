@@ -102,7 +102,7 @@ export default function Profile() {
           )}
         </span>
         <span className="min-w-0">
-          <span className="block truncate text-lg font-bold tracking-tight text-dark-50">
+          <span className="block truncate font-display text-lg font-bold tracking-tight text-dark-50">
             {displayName(user)}
           </span>
           <span className="mt-0.5 block truncate text-[13px] text-dark-400">

@@ -65,6 +65,8 @@ describe('главная без подписки: одна главная кно
       </MemoryRouter>,
     );
     expect(hrefs()).not.toContain('/balance?section=promo');
-    expect(screen.getByText('dashboard.useful.instructions')).toBeTruthy();
+    // «Инструкции» нет: её повторяет история «Как подключить»
+    expect(screen.queryByText('dashboard.useful.instructions')).toBeNull();
+    expect(screen.getByText('dashboard.useful.qrTv')).toBeTruthy();
   });
 });

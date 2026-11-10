@@ -72,10 +72,10 @@ function OptionalGroup({ title, children }: { title: string; children: React.Rea
   );
 }
 
-/** Полоса расхода трафика: цвет состояния, как на главной (синий — только кнопки). */
+/** Полоса расхода трафика: синяя, пока всё в порядке; жёлтая и красная — на исходе (зелёный — только статус «Активна»). */
 function TrafficBar({ percent }: { percent: number }) {
   const value = Math.max(0, Math.min(100, percent));
-  const tone = value >= 90 ? 'bg-error-400' : value >= 70 ? 'bg-warning-400' : 'bg-success-400';
+  const tone = value >= 90 ? 'bg-error-400' : value >= 70 ? 'bg-warning-400' : 'bg-accent-400';
   return (
     <div className="h-2 overflow-hidden rounded-full bg-dark-800">
       <div
@@ -435,7 +435,7 @@ export default function Subscription() {
             <p className="text-[13px] font-medium text-dark-400">
               {t('subscription.baseTariff', 'Тариф')}
             </p>
-            <h2 className="mt-0.5 truncate text-xl font-bold tracking-tight text-dark-50">
+            <h2 className="mt-0.5 truncate font-display text-xl font-bold tracking-tight text-dark-50">
               {planTitle(subscription, t)}
             </h2>
           </div>

@@ -46,7 +46,7 @@ export default function TrialOfferCard({
       </div>
 
       {/* Title */}
-      <h2 className="mb-5 text-[22px] font-bold tracking-tight text-dark-50">
+      <h2 className="mb-5 font-display text-[22px] font-bold tracking-tight text-dark-50">
         {t('dashboard.trialOffer.freeTitle')}
       </h2>
 
@@ -67,7 +67,7 @@ export default function TrialOfferCard({
           },
         ].map((stat, i) => (
           <div key={i} className="text-center">
-            <div className="text-4xl font-extrabold leading-none tracking-tight text-dark-50">
+            <div className="font-display text-4xl font-bold leading-none tracking-tight text-dark-50">
               {stat.value}
             </div>
             <div className="mt-1 text-xs font-medium text-dark-400">{stat.label}</div>
