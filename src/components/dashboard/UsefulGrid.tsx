@@ -46,13 +46,14 @@ export default function UsefulGrid({ hidePromocode = false }: UsefulGridProps) {
         {t('dashboard.useful.title', 'Полезное')}
       </h2>
       {/* Плитки делят ширину поровну и стоят на той же подложке, что карточки выше:
-          в сетке на 4 три плитки по 88px висели слева с дырой справа. */}
+          в сетке на 4 три плитки по 88px висели слева с дырой справа.
+          Уже 380px подпись не влезает рядом со значком — значок встаёт над ней. */}
       <div className={cn('grid gap-2.5', items.length === 2 ? 'grid-cols-2' : 'grid-cols-3')}>
         {items.map((item) => (
           <Link
             key={item.key}
             to={item.to}
-            className="group flex h-14 items-center justify-center gap-2 rounded-2xl bg-dark-900/70 px-2 transition-colors duration-200 hover:bg-dark-800/50 active:bg-dark-800/70"
+            className="group flex h-14 flex-col items-center justify-center gap-1 rounded-2xl bg-dark-900/70 px-2 transition-colors min-[380px]:flex-row min-[380px]:gap-2 duration-200 hover:bg-dark-800/50 active:bg-dark-800/70"
           >
             <item.icon className="h-5 w-5 shrink-0 text-accent-400 light:text-accent-500" />
             <span className="tile-label truncate text-[13px] font-semibold leading-none text-dark-200 group-hover:text-dark-50">
