@@ -1,5 +1,6 @@
 import { Link } from 'react-router';
 import { useTranslation } from 'react-i18next';
+import { cn } from '@/lib/utils';
 import { PiTelevisionSimpleDuotone, PiTicketDuotone, PiReceiptDuotone } from 'react-icons/pi';
 
 /**
@@ -44,18 +45,17 @@ export default function UsefulGrid({ hidePromocode = false }: UsefulGridProps) {
       <h2 className="mb-2 px-1 text-[13px] font-semibold text-dark-400">
         {t('dashboard.useful.title', 'Полезное')}
       </h2>
-      {/* Сетка на 4, как у быстрых действий выше: плитки стоят в тех же колонках. */}
-      <div className="grid grid-cols-4 gap-2.5">
+      {/* Плитки делят ширину поровну и стоят на той же подложке, что карточки выше:
+          в сетке на 4 три плитки по 88px висели слева с дырой справа. */}
+      <div className={cn('grid gap-2.5', items.length === 2 ? 'grid-cols-2' : 'grid-cols-3')}>
         {items.map((item) => (
           <Link
             key={item.key}
             to={item.to}
-            className="group flex flex-col items-center gap-1.5 transition-transform duration-150 active:scale-95"
+            className="group flex h-14 items-center justify-center gap-2 rounded-2xl bg-dark-900/70 px-2 transition-colors duration-200 hover:bg-dark-800/50 active:bg-dark-800/70"
           >
-            <span className="flex h-12 w-full max-w-[88px] items-center justify-center rounded-2xl bg-accent-500/[0.08] text-accent-300 transition-colors duration-200 group-hover:bg-accent-500/15 light:text-accent-600 sm:h-[52px]">
-              <item.icon className="h-5 w-5" />
-            </span>
-            <span className="tile-label text-center text-[13px] font-semibold leading-none text-dark-200 group-hover:text-dark-50">
+            <item.icon className="h-5 w-5 shrink-0 text-accent-400 light:text-accent-500" />
+            <span className="tile-label truncate text-[13px] font-semibold leading-none text-dark-200 group-hover:text-dark-50">
               {item.label}
             </span>
           </Link>
