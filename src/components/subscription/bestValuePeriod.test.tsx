@@ -272,5 +272,26 @@ describe('главная кнопка в списке тарифов', () => {
     expect(primaryCards()).toHaveLength(0);
     expect(tariffCard('ULTIMA').className).toContain('bg-accent-500/15');
     expect(tariffCard('С Обходами').className).not.toContain('bg-accent-500/15');
+    // Советовать владельцу вечной подписки другой тариф — совет шагнуть назад.
+    expect(screen.queryByText(ru('subscription.recommended'))).toBeNull();
+  });
+});
+
+describe('заголовок карточки тарифа', () => {
+  // На экране 360 px отметка, вклеенная в название, сжимала его до разрыва посреди
+  // слова («Стандартны / й»), а перенесённая на вторую строку уезжала вправо на свой
+  // отступ. Название и отметки — соседние элементы одной строки с переносом.
+  it('в названии только название: отметки стоят рядом, а не внутри', async () => {
+    const { render: renderGrid, cardFor: tariffCard } = await import('./tariffGridHarness');
+    renderGrid(CATALOG, { currentTariffId: 2 });
+    await screen.findByText('С Обходами');
+
+    for (const name of ['Стандартный', 'С Обходами']) {
+      const title = tariffCard(name).querySelector('[data-tariff-title]');
+      const heading = title?.querySelector('h3');
+      expect(heading?.textContent).toBe(name);
+      expect(title?.children.length).toBe(2);
+      expect(title?.className).toContain('flex-wrap');
+    }
   });
 });

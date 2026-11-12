@@ -12,6 +12,7 @@ import type { Tariff, Subscription, PurchaseOptions } from '../../../types';
 import { tariffAction, type TariffActionKind } from './tariffAction';
 import { plainTariffName } from '@/utils/plainTariffName';
 import { recommendedTariffId } from '@/utils/recommendedTariff';
+import { isLifetimeSubscription } from '@/utils/lifetime';
 
 /** Подпись кнопки для действий, которые ведут в один и тот же сценарий выбора. */
 const TARIFF_ACTION_LABEL: Record<Exclude<TariffActionKind, 'current-daily' | 'switch'>, string> = {
@@ -98,7 +99,10 @@ export function TariffPickerGrid({
         subscriptionId,
       }),
     }));
-  const recommendedId = recommendedTariffId(visible.map((item) => item.tariff));
+  // Владельцу вечной подписки советовать нечего: любой другой тариф для него шаг назад.
+  const recommendedId = isLifetimeSubscription(subscription)
+    ? null
+    : recommendedTariffId(visible.map((item) => item.tariff));
   // Залитая кнопка на экране одна. У кого тариф уже есть — на нём: за 30 дней
   // (на 12.11.2026) 1 087 оплат были продлением своего тарифа и 42 — сменой.
   // У кого тарифа ещё нет — на отмеченном «Советуем», иначе на первом в списке.
@@ -221,16 +225,21 @@ export function TariffPickerGrid({
               )}
             >
               <div className="flex items-baseline gap-2.5">
-                <h3 className="min-w-0 flex-1 font-display text-[19px] font-bold leading-tight tracking-tight text-dark-50">
-                  {plainTariffName(tariff.name)}
+                {/* Название и отметка — отдельные элементы строки с переносом: на
+                    экране 360 px отметка уходит под название целиком, а не сжимает
+                    его до разрыва посреди слова («Стандартны / й»). */}
+                <div
+                  data-tariff-title
+                  className="flex min-w-0 flex-1 flex-wrap items-center gap-x-2.5 gap-y-1.5"
+                >
+                  <h3 className="font-display text-[19px] font-bold leading-tight tracking-tight text-dark-50">
+                    {plainTariffName(tariff.name)}
+                  </h3>
                   {recommended && (
-                    <BestValueBadge
-                      className="ml-2.5 align-[2px] font-sans tracking-normal"
-                      label={t('subscription.recommended', 'Советуем')}
-                    />
+                    <BestValueBadge label={t('subscription.recommended', 'Советуем')} />
                   )}
-                </h3>
-                {isCurrentTariff && <Chip tone="success">{t('subscription.currentTariff')}</Chip>}
+                  {isCurrentTariff && <Chip tone="success">{t('subscription.currentTariff')}</Chip>}
+                </div>
                 {price && (
                   <span className="shrink-0 whitespace-nowrap font-display text-lg font-bold text-dark-50">
                     {price.prefix ? `${price.prefix} ` : ''}
