@@ -12,7 +12,7 @@ import { wheelApi } from '../api/wheel';
 import PromoOffersSection from '../components/PromoOffersSection';
 import DevicesTrafficCard from '../components/dashboard/DevicesTrafficCard';
 import SubscriptionCardExpired from '../components/dashboard/SubscriptionCardExpired';
-import { hasLegacySubscription } from '../utils/legacySubscription';
+import { hasLegacySubscription, needsTariff } from '../utils/legacySubscription';
 import { isLifetimeSubscription } from '../utils/lifetime';
 import TrialOfferCard from '../components/dashboard/TrialOfferCard';
 import ReminderCards from '../components/dashboard/ReminderCards';
@@ -23,6 +23,7 @@ import SubscriptionListCard from '../components/subscription/SubscriptionListCar
 import { DeviceLimitSheet } from '../components/subscription/DeviceLimitSheet';
 import QuickActions from '../components/dashboard/QuickActions';
 import InfoCards from '../components/dashboard/InfoCards';
+import StatusCard from '../components/dashboard/StatusCard';
 import UsefulGrid from '../components/dashboard/UsefulGrid';
 import { StoryRail } from '../components/stories';
 import { useBranding } from '../hooks/useBranding';
@@ -94,7 +95,7 @@ export default function Dashboard() {
     enabled: !subscription && !subLoading,
   });
 
-  const { data: devicesData } = useQuery({
+  const { data: devicesData, isLoading: devicesLoading } = useQuery({
     queryKey: ['devices'],
     queryFn: () => subscriptionApi.getDevices(),
     enabled: !!subscription && !isMultiTariff,
@@ -324,6 +325,10 @@ export default function Dashboard() {
     : firstSubId != null
       ? `/subscriptions/${firstSubId}/renew`
       : '/subscriptions';
+  const connectTo = firstSubId != null ? `/connection?sub=${firstSubId}` : '/connection';
+  // Главная одной карточкой (StatusCard) — для обычной подписки. Несколько подписок сразу
+  // и суточный тариф остаются на прежней раскладке: у них свои карточки и своё «продлить».
+  const legacyLayout = isMultiTariff || Boolean(subscription?.is_daily);
 
   return (
     <div className="mx-auto w-full max-w-[600px] space-y-5">
@@ -398,30 +403,67 @@ export default function Dashboard() {
         </Surface>
       )}
 
-      {/* Главное действие для состояния + три спокойных */}
-      <QuickActions
-        loading={!statusReady}
-        state={status}
-        renewTo={renewTo}
-        connectTo={firstSubId != null ? `/connection?sub=${firstSubId}` : '/connection'}
-        lifetime={focusLifetime}
-        trial={focusTrial}
-        endingSoon={status === 'active' && daysLeft != null && daysLeft <= 3}
-      />
+      {legacyLayout ? (
+        <>
+          {/* Главное действие для состояния + три спокойных */}
+          <QuickActions
+            loading={!statusReady}
+            state={status}
+            renewTo={renewTo}
+            connectTo={connectTo}
+            lifetime={focusLifetime}
+            trial={focusTrial}
+            endingSoon={status === 'active' && daysLeft != null && daysLeft <= 3}
+          />
 
-      {/* Подписка + Баланс */}
-      <InfoCards
-        status={status}
-        daysLeft={daysLeft}
-        endDate={focusSub?.end_date}
-        isTrial={Boolean(focusSub?.is_trial)}
-        isLifetime={focusLifetime}
-        tariffName={plainTariffName(focusSub?.tariff_name) ?? null}
-        balanceRubles={balanceData?.balance_rubles}
-        fromFriendsRubles={referralInfo?.available_balance_rubles ?? null}
-        loading={!statusReady}
-        renewTo={renewTo}
-      />
+          {/* Подписка + Баланс */}
+          <InfoCards
+            status={status}
+            daysLeft={daysLeft}
+            endDate={focusSub?.end_date}
+            isTrial={Boolean(focusSub?.is_trial)}
+            isLifetime={focusLifetime}
+            tariffName={plainTariffName(focusSub?.tariff_name) ?? null}
+            balanceRubles={balanceData?.balance_rubles}
+            fromFriendsRubles={referralInfo?.available_balance_rubles ?? null}
+            loading={!statusReady}
+            renewTo={renewTo}
+          />
+        </>
+      ) : (
+        // Одна карточка: статус, главная кнопка, строки с действиями (12.11).
+        // При сбое запросов статус неизвестен — выше уже стоит «Не удалось загрузить».
+        !statusUnknown && (
+          <StatusCard
+            loading={
+              !statusReady ||
+              (hasNoSubscription && trialLoading) ||
+              // Пробному кнопку выбираем по числу устройств — ждём его, а не меняем кнопку на глазах.
+              (status === 'active' && focusTrial && devicesLoading)
+            }
+            state={status}
+            subscriptionId={subscription?.id}
+            endDate={subscription?.end_date}
+            daysLeft={daysLeft}
+            trial={focusTrial}
+            lifetime={focusLifetime}
+            limited={Boolean(subscription?.is_limited)}
+            needsTariff={needsTariff(subscription)}
+            tariffName={plainTariffName(subscription?.tariff_name) ?? null}
+            connectTo={connectTo}
+            renewTo={renewTo}
+            connectedDevices={devicesData?.total}
+            deviceLimit={subscription?.device_limit}
+            trafficLimitGb={subscription?.traffic_limit_gb}
+            trafficUsedGb={trafficData?.traffic_used_gb ?? subscription?.traffic_used_gb}
+            bypassQuota={subscription?.bypass_quota}
+            bypassSuspended={subscription?.bypass_suspended}
+            balanceRubles={balanceData?.balance_rubles}
+            fromFriendsRubles={referralInfo?.available_balance_rubles ?? null}
+            quietAction={status === 'none' && Boolean(trialInfo?.is_available)}
+          />
+        )
+      )}
 
       {/* Pending Gift Activations */}
       {pendingGifts && pendingGifts.length > 0 && <PendingGiftCard gifts={pendingGifts} />}
@@ -478,8 +520,9 @@ export default function Dashboard() {
         </div>
       )}
 
-      {/* Subscription Status Card — hidden in multi-tariff (managed via /subscriptions) */}
-      {!isMultiTariff &&
+      {/* Subscription Status Card — только у суточного тарифа: остальным всё это показывает StatusCard */}
+      {legacyLayout &&
+        !isMultiTariff &&
         (subLoading ? (
           <SkeletonGroup className="rounded-3xl bg-dark-900/70 p-4">
             <Skeleton className="mb-4 h-5 w-40" />
@@ -519,7 +562,7 @@ export default function Dashboard() {
           при доступном триале это был единственный экран без кнопки покупки
           (Telegram-баг #605056/#605063). Единственная кнопка тут (вместо дубля
           с мульти-тариф блоком). */}
-      {hasNoSubscription && !trialLoading && (
+      {legacyLayout && hasNoSubscription && !trialLoading && (
         <div className="space-y-3">
           {/* Одна главная кнопка на экране: при доступном пробном периоде это
               «Активировать», покупка рядом — вторичная. */}
@@ -576,9 +619,11 @@ export default function Dashboard() {
       <ReminderCards />
 
       {/* Полезное: то, чего нет в карточках выше */}
-      {/* Промокод уже в быстрых действиях — без подписки и у истёкшего пробного периода. */}
+      {/* В старой раскладке промокод уже в быстрых действиях — без подписки и у истёкшего пробного периода. */}
       <UsefulGrid
-        hidePromocode={statusReady && (status === 'none' || (status === 'expired' && focusTrial))}
+        hidePromocode={
+          legacyLayout && statusReady && (status === 'none' || (status === 'expired' && focusTrial))
+        }
       />
 
       {deviceLimitSub && (

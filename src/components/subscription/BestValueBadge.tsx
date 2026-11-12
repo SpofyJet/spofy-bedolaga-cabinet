@@ -1,22 +1,21 @@
 import { useTranslation } from 'react-i18next';
-import { StarIcon } from '@/components/icons';
 
 /**
- * Отметка периода, выбранного оператором как самый выгодный.
+ * Отметка варианта, который оператор выбрал как самый выгодный.
  *
- * Палитра одноцветная, поэтому отметка отличается формой, а не оттенком: сплошная
- * плашка цвета главной кнопки. Выбор — тонкое кольцо, скидка — зелёный текст, и
- * рядом со скидкой «−25 %» отметка не читается как её продолжение.
+ * Спокойный чип цвета акцента (12.11): залитой на экране остаётся одна главная
+ * кнопка, отметка рядом с названием с ней не спорит. Выбор — заливка строки,
+ * скидка — зелёный текст, и рядом со скидкой «−25 %» отметка не читается как её
+ * продолжение.
  */
-export function BestValueBadge({ className }: { className?: string }) {
+export function BestValueBadge({ className, label }: { className?: string; label?: string }) {
   const { t } = useTranslation();
 
   return (
     <span
-      className={`inline-flex items-center gap-1 rounded-full bg-cta-500 px-2 py-0.5 text-2xs font-semibold text-on-cta ${className ?? ''}`}
+      className={`inline-flex h-[22px] items-center whitespace-nowrap rounded-full bg-accent-500/25 px-[9px] text-xs font-semibold text-accent-400 ${className ?? ''}`}
     >
-      <StarIcon filled className="h-3 w-3" />
-      {t('subscription.bestValue')}
+      {label ?? t('subscription.bestValue')}
     </span>
   );
 }
@@ -25,11 +24,9 @@ export function BestValueBadge({ className }: { className?: string }) {
 export const BEST_VALUE_BORDER = 'rgba(var(--color-cta-500), 0.25)';
 
 /**
- * Рамка отмеченного варианта — одна на все витрины: контур снаружи,
- * а у выбранного ещё и кольцо выбора внутри. Выбор не затирает контур, иначе
- * подсказка пропадала ровно у того варианта, к которому вела. Плашку при этом
- * ставить первой строкой карточки. Продление рисует то же самое через
- * BEST_VALUE_BORDER — там стили карточки инлайновые.
+ * Выделение отмеченного варианта — одно на все витрины: отметка рядом с
+ * названием, а у выбранного ещё и заливка выбора. Выбор отметку не затирает,
+ * иначе подсказка пропадала ровно у того варианта, к которому вела.
  */
 export function bestValueFrame(selected: boolean): string {
   return selected ? 'bg-accent-500/15' : '';

@@ -96,7 +96,7 @@ it.each(['legacy', 'exact75', 'free30'])(
     if (!total) throw new Error('Missing total row');
     expect(within(total).getByText(mode === 'exact75' ? /^10(\.00)?\s₽$/ : /12\.50/)).toBeTruthy();
     const button = screen.getByRole('button', {
-      name: /subscription\.purchase|subscription\.buy|subscription\.confirm/,
+      name: /subscription\.purchase|subscription\.buy|subscription\.confirm|Купить за/,
     });
     purchase.mockRejectedValue(new Error('Connection lost'));
     fireEvent.click(button);

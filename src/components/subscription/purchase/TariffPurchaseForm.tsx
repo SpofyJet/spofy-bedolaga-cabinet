@@ -19,7 +19,7 @@ import { formatPeriodLabel } from '../../../utils/periodLabel';
 import { pickBestValue } from '../../../utils/bestValue';
 import InsufficientBalancePrompt from '../../InsufficientBalancePrompt';
 import type { Tariff, TariffPeriod } from '../../../types';
-import { BestValueBadge, bestValueFrame } from '../BestValueBadge';
+import { PeriodList } from '../PeriodList';
 import { plainTariffName } from '@/utils/plainTariffName';
 
 // ──────────────────────────────────────────────────────────────────
@@ -183,11 +183,13 @@ export function TariffPurchaseForm({
     </>
   );
 
-  // Smooth scroll the form into view when first mounted.
+  // Smooth scroll the form into view when first mounted. К началу формы, а не к её
+  // середине: на маленьком экране середина прятала название тарифа за верхним краем,
+  // а кнопка оплаты теперь и так прижата к низу.
   useEffect(() => {
     if (ref.current) {
       const timer = setTimeout(() => {
-        ref.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        ref.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }, 100);
       return () => clearTimeout(timer);
     }
@@ -213,6 +215,11 @@ export function TariffPurchaseForm({
     percent != null && percent > 0 ? (
       <Chip tone={isPromoGroup ? 'success' : 'warning'}>-{percent}%</Chip>
     ) : null;
+  // Цена месяца с учётом скидки человека — от неё считаем выгоду длинных сроков.
+  const monthlyPeriod = tariff.periods.find((period) => period.days === 30);
+  const monthlyPriceKopeks = monthlyPeriod
+    ? applyPromoDiscount(monthlyPeriod.price_kopeks, monthlyPeriod.original_price_kopeks).price
+    : null;
   const switchClass = (on: boolean) =>
     cn(
       "relative h-7 w-12 shrink-0 rounded-full transition-colors duration-200 before:absolute before:-inset-2 before:content-['']",
@@ -227,27 +234,92 @@ export function TariffPurchaseForm({
   const numberInput =
     'w-20 rounded-xl bg-dark-800 px-3 py-2 text-center text-[15px] text-dark-100 outline-none focus:ring-accent-500';
 
+  // Итог выбранного срока: нужен и блоку «Итог», и прижатой к низу кнопке оплаты.
+  const quote = (() => {
+    if (isDailyTariff || !(selectedTariffPeriod || useCustomDays)) return null;
+    const customQuote = customDaysPrice(tariff, customDays);
+    const basePeriodPrice = useCustomDays
+      ? customQuote.price
+      : selectedTariffPeriod?.price_kopeks || 0;
+    const existingPeriodOriginal = useCustomDays
+      ? customQuote.original
+      : selectedTariffPeriod?.original_price_kopeks &&
+          selectedTariffPeriod.original_price_kopeks > selectedTariffPeriod.price_kopeks
+        ? selectedTariffPeriod.original_price_kopeks
+        : undefined;
+    const promoPeriod = applyPromoDiscount(basePeriodPrice, existingPeriodOriginal);
+    const customTraffic = useCustomTraffic && Boolean(tariff.custom_traffic_enabled);
+    const trafficPrice = customTraffic
+      ? customTrafficGb * (tariff.traffic_price_per_gb_kopeks ?? 0)
+      : 0;
+    const totalPrice = promoPeriod.price + trafficPrice;
+    // Баланса не хватает: кнопка сразу ведёт на оплату недостающей суммы и
+    // возвращает к этому тарифу и сроку — как на продлении. Раньше «Купить»
+    // сначала отвечала ошибкой, и только потом появлялась «Пополнить».
+    const shortKopeks =
+      balanceKopeks !== undefined && totalPrice > 0 ? Math.max(0, totalPrice - balanceKopeks) : 0;
+    const shortRubles = Math.ceil(shortKopeks / 100);
+    const extraDevices =
+      !useCustomDays &&
+      (selectedTariffPeriod?.extra_devices_count ?? 0) > 0 &&
+      Boolean(selectedTariffPeriod?.base_tariff_price_kopeks);
+    const discounted =
+      Boolean(promoPeriod.percent) ||
+      Boolean(promoPeriod.original && promoPeriod.original > promoPeriod.price);
+    return {
+      promoPeriod,
+      customTraffic,
+      trafficPrice,
+      totalPrice,
+      shortKopeks,
+      shortRubles,
+      originalTotal: promoPeriod.original ? promoPeriod.original + trafficPrice : null,
+      extraDevices,
+      // Состав суммы показываем, когда она из чего-то складывается или есть скидка.
+      // Один срок без добавок уже стоит в списке, а сумма — на кнопке.
+      detailed: useCustomDays || extraDevices || customTraffic || discounted,
+      // Если на балансе есть деньги, говорим, сколько из них уйдёт: на кнопке — только доплата.
+      balanceNote:
+        balanceKopeks === undefined || totalPrice === 0 || balanceKopeks < 100
+          ? null
+          : shortKopeks > 0
+            ? t('subscription.v10.fromBalancePart', '{{amount}} спишется с баланса', {
+                amount: formatMoney((totalPrice - shortRubles * 100) / 100, { round: true }),
+              })
+            : t('subscription.v10.fromBalanceFull', 'Спишется с баланса — на нём {{amount}}', {
+                amount: formatMoney(balanceKopeks / 100),
+              }),
+    };
+  })();
+  const goTopUp = () => {
+    if (!quote) return;
+    const params = new URLSearchParams();
+    params.set('amount', String(quote.shortRubles));
+    params.set('returnTo', topUpReturnTo);
+    navigate(`/balance/top-up?${params.toString()}`);
+  };
+
   return (
-    <div ref={ref} className="space-y-6">
+    <div ref={ref} className="scroll-mt-3 space-y-6">
       {/* Тариф: название, что входит, «другой тариф» */}
       <Surface>
-        <div className="flex items-start justify-between gap-3">
-          <div className="min-w-0">
-            <p className="text-[13px] font-medium text-dark-400">
-              {t('subscription.baseTariff', 'Тариф')}
-            </p>
-            <h3 className="mt-0.5 truncate text-xl font-bold tracking-tight text-dark-50">
-              {plainTariffName(tariff.name)}
-            </h3>
-          </div>
+        {/* «Другой тариф» стоит в строке подписи, а не рядом с названием: на телефоне
+            360 px ссылка съедала ширину, и название обрезалось до «Стандартн…». */}
+        <div className="flex items-center justify-between gap-3">
+          <p className="text-[13px] font-medium text-dark-400">
+            {t('subscription.baseTariff', 'Тариф')}
+          </p>
           <button
             type="button"
             onClick={onBack}
-            className="shrink-0 rounded-xl px-2 py-1 text-[13px] font-medium text-accent-400 transition-colors hover:bg-accent-500/10"
+            className="-my-1 -mr-2 shrink-0 rounded-xl px-2 py-1 text-[13px] font-medium text-accent-400 transition-colors hover:bg-accent-500/10"
           >
             {t('subscription.chooseDifferentTariff')}
           </button>
         </div>
+        <h3 className="mt-0.5 text-xl font-bold tracking-tight text-dark-50">
+          {plainTariffName(tariff.name)}
+        </h3>
         <div className="mt-3 flex flex-wrap gap-1.5 text-[13px] text-dark-300">
           <span className="rounded-full bg-dark-800/60 px-2.5 py-1">
             {t('subscription.traffic')}: {tariffTrafficLabel(tariff.traffic_limit_gb, t)}
@@ -342,76 +414,55 @@ export function TariffPurchaseForm({
             <SectionTitle>{t('subscription.selectPeriod')}</SectionTitle>
 
             {tariff.periods.length > 0 && !useCustomDays && (
-              <div className="space-y-2">
-                {tariff.periods.map((period) => {
+              <PeriodList
+                selectedDays={selectedTariffPeriod?.days ?? null}
+                onSelect={(days) => {
+                  const period = tariff.periods.find((item) => item.days === days);
+                  if (!period) return;
+                  setSelectedTariffPeriod(period);
+                  setUseCustomDays(false);
+                }}
+                items={tariff.periods.map((period) => {
                   const promoPeriod = applyPromoDiscount(
                     period.price_kopeks,
                     period.original_price_kopeks,
                   );
                   const displayOriginal = promoPeriod.original;
                   const displayPrice = promoPeriod.price;
-                  const displayPerMonth = isLifetimePeriod(period.days)
-                    ? null
-                    : getMonthlyPriceKopeks(displayPrice, period.days);
-                  const isSelectedPeriod =
-                    selectedTariffPeriod?.days === period.days && !useCustomDays;
-
-                  return (
-                    <button
-                      key={period.days}
-                      type="button"
-                      aria-pressed={isSelectedPeriod}
-                      onClick={() => {
-                        setSelectedTariffPeriod(period);
-                        setUseCustomDays(false);
-                      }}
-                      className={cn(
-                        'flex min-h-[64px] w-full items-center gap-3 rounded-3xl px-4 py-3 text-left transition-colors',
-                        period.is_highlighted
-                          ? `${bestValueFrame(isSelectedPeriod)} ${isSelectedPeriod ? 'bg-accent-500/15' : 'bg-dark-900/70'}`
-                          : isSelectedPeriod
-                            ? 'bg-accent-500/15'
-                            : 'bg-dark-900/70 hover:bg-dark-800/50',
-                      )}
-                    >
-                      <span
-                        className={cn(
-                          'flex h-5 w-5 shrink-0 items-center justify-center rounded-full',
-                          isSelectedPeriod ? 'bg-accent-500' : 'bg-dark-700',
-                        )}
-                        aria-hidden
-                      >
-                        {isSelectedPeriod && <span className="h-2 w-2 rounded-full bg-white" />}
-                      </span>
-                      <span className="min-w-0 flex-1">
-                        <span className="flex flex-wrap items-center gap-2">
-                          <span className="text-[15px] font-semibold text-dark-100">
-                            {periodLabel(period)}
-                          </span>
-                          {period.is_highlighted && <BestValueBadge />}
-                          {discountChip(promoPeriod.percent, promoPeriod.isPromoGroup)}
-                        </span>
-                        {displayPerMonth !== null && (
-                          <span className="mt-0.5 block text-[13px] text-dark-400">
-                            {formatPrice(displayPerMonth)}/{t('subscription.month')}
-                          </span>
-                        )}
-                      </span>
-                      {/* Цена не рвётся между числом и знаком валюты. */}
-                      <span className="flex shrink-0 flex-col items-end">
-                        <span className="whitespace-nowrap text-[15px] font-bold tabular-nums text-dark-50">
-                          {formatPrice(displayPrice)}
-                        </span>
-                        {displayOriginal && displayOriginal > displayPrice && (
-                          <span className="whitespace-nowrap text-[13px] text-dark-500 line-through">
-                            {formatPrice(displayOriginal)}
-                          </span>
-                        )}
-                      </span>
-                    </button>
-                  );
+                  // За месяц и короче «в месяц» повторяло бы саму цену.
+                  const displayPerMonth =
+                    isLifetimePeriod(period.days) || period.days <= 31
+                      ? null
+                      : getMonthlyPriceKopeks(displayPrice, period.days);
+                  // Выгода против помесячной оплаты, целыми рублями вниз — как на продлении.
+                  const saving =
+                    monthlyPriceKopeks !== null && displayPerMonth !== null
+                      ? Math.floor(
+                          Math.max(
+                            0,
+                            monthlyPriceKopeks * Math.round(period.days / 30) - displayPrice,
+                          ) / 100,
+                        ) * 100
+                      : 0;
+                  return {
+                    days: period.days,
+                    label: periodLabel(period),
+                    best: Boolean(period.is_highlighted),
+                    discount: discountChip(promoPeriod.percent, promoPeriod.isPromoGroup),
+                    // «В месяц» и выгода — целыми рублями, как на продлении: «140 ₽», не «139,50 ₽».
+                    perMonth:
+                      displayPerMonth !== null
+                        ? formatMoney(displayPerMonth / 100, { round: true })
+                        : null,
+                    saving: saving > 0 ? formatMoney(saving / 100, { round: true }) : null,
+                    price: formatPrice(displayPrice),
+                    original:
+                      displayOriginal && displayOriginal > displayPrice
+                        ? formatPrice(displayOriginal)
+                        : null,
+                  };
                 })}
-              </div>
+              />
             )}
 
             {/* No periods available fallback */}
@@ -601,91 +652,34 @@ export function TariffPurchaseForm({
             </section>
           )}
 
-          {/* Итог и оплата */}
-          {(selectedTariffPeriod || useCustomDays) && (
+          {/* Итог: состав суммы, ошибки оплаты и второй способ оплаты */}
+          {quote && (quote.detailed || sbpPurchaseEnabled || purchaseMutation.isError) && (
             <Surface>
-              {(() => {
-                const customQuote = customDaysPrice(tariff, customDays);
-                const basePeriodPrice = useCustomDays
-                  ? customQuote.price
-                  : selectedTariffPeriod?.price_kopeks || 0;
-                const existingPeriodOriginal = useCustomDays
-                  ? customQuote.original
-                  : selectedTariffPeriod?.original_price_kopeks &&
-                      selectedTariffPeriod.original_price_kopeks > selectedTariffPeriod.price_kopeks
-                    ? selectedTariffPeriod.original_price_kopeks
-                    : undefined;
-                const promoPeriod = applyPromoDiscount(basePeriodPrice, existingPeriodOriginal);
+              {quote.detailed &&
+                (() => {
+                  const { promoPeriod, trafficPrice, totalPrice, originalTotal } = quote;
+                  const line = (label: ReactNode, value: ReactNode, key?: string) => (
+                    <div
+                      key={key}
+                      className="flex flex-wrap justify-between gap-x-3 text-[14px] text-dark-300"
+                    >
+                      <span>{label}</span>
+                      <span className="flex items-center gap-2 whitespace-nowrap">{value}</span>
+                    </div>
+                  );
+                  const struck = (v?: number | null) =>
+                    v ? (
+                      <span className="text-[13px] text-dark-500 line-through">
+                        {formatPrice(v)}
+                      </span>
+                    ) : null;
 
-                const trafficPrice =
-                  useCustomTraffic && tariff.custom_traffic_enabled
-                    ? customTrafficGb * (tariff.traffic_price_per_gb_kopeks ?? 0)
-                    : 0;
-
-                const totalPrice = promoPeriod.price + trafficPrice;
-                // Баланса не хватает: кнопка сразу ведёт на оплату недостающей суммы и
-                // возвращает к этому тарифу и сроку — как на продлении. Раньше «Купить»
-                // сначала отвечала ошибкой, и только потом появлялась «Пополнить».
-                const shortKopeks =
-                  balanceKopeks !== undefined && totalPrice > 0
-                    ? Math.max(0, totalPrice - balanceKopeks)
-                    : 0;
-                const shortRubles = Math.ceil(shortKopeks / 100);
-                const goTopUp = () => {
-                  const params = new URLSearchParams();
-                  params.set('amount', String(shortRubles));
-                  params.set('returnTo', topUpReturnTo);
-                  navigate(`/balance/top-up?${params.toString()}`);
-                };
-                const originalTotal = promoPeriod.original
-                  ? promoPeriod.original + trafficPrice
-                  : null;
-
-                const line = (label: ReactNode, value: ReactNode, key?: string) => (
-                  <div
-                    key={key}
-                    className="flex flex-wrap justify-between gap-x-3 text-[14px] text-dark-300"
-                  >
-                    <span>{label}</span>
-                    <span className="flex items-center gap-2 whitespace-nowrap">{value}</span>
-                  </div>
-                );
-                const struck = (v?: number | null) =>
-                  v ? (
-                    <span className="text-[13px] text-dark-500 line-through">{formatPrice(v)}</span>
-                  ) : null;
-
-                return (
-                  <>
-                    <div className="space-y-2">
-                      {useCustomDays
-                        ? line(
-                            `${t('subscription.stepPeriod')}: ${t('subscription.days', { count: customDays })}`,
-                            <>
-                              {formatPrice(promoPeriod.price)}
-                              {promoPeriod.original &&
-                                promoPeriod.original > promoPeriod.price &&
-                                struck(promoPeriod.original)}
-                            </>,
-                          )
-                        : selectedTariffPeriod &&
-                          ((selectedTariffPeriod.extra_devices_count ?? 0) > 0 &&
-                          selectedTariffPeriod.base_tariff_price_kopeks ? (
-                            <>
-                              {line(
-                                `${t('subscription.baseTariff')}: ${periodLabel(selectedTariffPeriod)}`,
-                                formatPrice(selectedTariffPeriod.base_tariff_price_kopeks),
-                              )}
-                              {line(
-                                `${t('subscription.extraDevices')} (${selectedTariffPeriod.extra_devices_count})`,
-                                `+${formatPrice(selectedTariffPeriod.extra_devices_cost_kopeks ?? 0)}`,
-                              )}
-                            </>
-                          ) : (
-                            line(
-                              t('subscription.summary.period', {
-                                label: periodLabel(selectedTariffPeriod),
-                              }),
+                  return (
+                    <>
+                      <div className="space-y-2">
+                        {useCustomDays
+                          ? line(
+                              `${t('subscription.stepPeriod')}: ${t('subscription.days', { count: customDays })}`,
                               <>
                                 {formatPrice(promoPeriod.price)}
                                 {promoPeriod.original &&
@@ -693,56 +687,64 @@ export function TariffPurchaseForm({
                                   struck(promoPeriod.original)}
                               </>,
                             )
-                          ))}
-                      {useCustomTraffic &&
-                        tariff.custom_traffic_enabled &&
-                        line(
-                          t('subscription.summary.traffic', { gb: customTrafficGb }),
-                          `+${formatPrice(trafficPrice)}`,
-                        )}
-                    </div>
-
-                    {promoPeriod.percent ? (
-                      <p className="mt-3 rounded-2xl bg-warning-500/10 px-3 py-2 text-center text-[13px] font-medium text-warning-400">
-                        {t('promo.discountApplied')} -{promoPeriod.percent}%
-                      </p>
-                    ) : null}
-
-                    <div className="mt-4 flex items-end justify-between gap-3 border-t border-dark-800/70 pt-4">
-                      <span className="text-[15px] font-medium text-dark-300">
-                        {t('subscription.total')}
-                      </span>
-                      <div className="text-right">
-                        <span className="whitespace-nowrap text-[26px] font-bold leading-tight tracking-tight text-dark-50">
-                          {formatPrice(totalPrice)}
-                        </span>
-                        {originalTotal && (
-                          <div className="text-[13px] text-dark-500 line-through">
-                            {formatPrice(originalTotal)}
-                          </div>
-                        )}
+                          : selectedTariffPeriod &&
+                            (quote.extraDevices ? (
+                              <>
+                                {line(
+                                  `${t('subscription.baseTariff')}: ${periodLabel(selectedTariffPeriod)}`,
+                                  formatPrice(selectedTariffPeriod.base_tariff_price_kopeks ?? 0),
+                                )}
+                                {line(
+                                  `${t('subscription.extraDevices')} (${selectedTariffPeriod.extra_devices_count})`,
+                                  `+${formatPrice(selectedTariffPeriod.extra_devices_cost_kopeks ?? 0)}`,
+                                )}
+                              </>
+                            ) : (
+                              line(
+                                t('subscription.summary.period', {
+                                  label: periodLabel(selectedTariffPeriod),
+                                }),
+                                <>
+                                  {formatPrice(promoPeriod.price)}
+                                  {promoPeriod.original &&
+                                    promoPeriod.original > promoPeriod.price &&
+                                    struck(promoPeriod.original)}
+                                </>,
+                              )
+                            ))}
+                        {quote.customTraffic &&
+                          line(
+                            t('subscription.summary.traffic', { gb: customTrafficGb }),
+                            `+${formatPrice(trafficPrice)}`,
+                          )}
                       </div>
-                    </div>
 
-                    <Button
-                      className="mt-4 w-full"
-                      onClick={() => (shortKopeks > 0 ? goTopUp() : purchaseMutation.mutate())}
-                      disabled={purchaseMutation.isPending}
-                    >
-                      {purchaseMutation.isPending && (
-                        <span className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
-                      )}
-                      {shortKopeks > 0
-                        ? t('subscription.v10.payShort', 'Оплатить {{amount}}', {
-                            amount: formatMoney(shortRubles, { round: true }),
-                          })
-                        : t('subscription.purchase')}
-                    </Button>
+                      {promoPeriod.percent ? (
+                        <p className="mt-3 rounded-2xl bg-warning-500/10 px-3 py-2 text-center text-[13px] font-medium text-warning-400">
+                          {t('promo.discountApplied')} -{promoPeriod.percent}%
+                        </p>
+                      ) : null}
 
-                    {sbpPurchaseButton}
-                  </>
-                );
-              })()}
+                      <div className="mt-4 flex items-end justify-between gap-3 border-t border-dark-800/70 pt-4">
+                        <span className="text-[15px] font-medium text-dark-300">
+                          {t('subscription.total')}
+                        </span>
+                        <div className="text-right">
+                          <span className="whitespace-nowrap text-[26px] font-bold leading-tight tracking-tight text-dark-50">
+                            {formatPrice(totalPrice)}
+                          </span>
+                          {originalTotal && (
+                            <div className="text-[13px] text-dark-500 line-through">
+                              {formatPrice(originalTotal)}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </>
+                  );
+                })()}
+
+              {sbpPurchaseButton}
 
               {purchaseMutation.isError && !getInsufficientBalanceError(purchaseMutation.error) && (
                 <div className="mt-3 text-center text-[13px] text-error-400">
@@ -761,6 +763,44 @@ export function TariffPurchaseForm({
                 </div>
               )}
             </Surface>
+          )}
+
+          {/* Кнопка оплаты прижата к низу экрана — как на продлении: на телефоне 360×640
+              она стояла на 656-й точке, ниже края, и после выбора тарифа её не было видно.
+              Над ней — сколько уйдёт с баланса, если на нём есть деньги. На широком
+              экране — в потоке. */}
+          {quote && (
+            <>
+              <div className="h-[104px] lg:hidden" aria-hidden />
+              <div
+                data-pay-bar
+                className="fixed inset-x-0 bottom-0 z-40 bg-gradient-to-t from-dark-950 from-70% to-transparent px-4 pb-[calc(var(--mobile-nav-clearance)+2px)] pt-5 lg:static lg:z-auto lg:bg-none lg:p-0"
+              >
+                <div className="mx-auto w-full max-w-[600px]">
+                  {quote.balanceNote && (
+                    <p className="pb-2.5 text-center text-sm text-dark-400">{quote.balanceNote}</p>
+                  )}
+                  <Button
+                    className="h-[54px] w-full text-[16.5px]"
+                    onClick={() => (quote.shortKopeks > 0 ? goTopUp() : purchaseMutation.mutate())}
+                    disabled={purchaseMutation.isPending}
+                  >
+                    {purchaseMutation.isPending && (
+                      <span className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
+                    )}
+                    {quote.shortKopeks > 0
+                      ? t('subscription.v10.payShort', 'Оплатить {{amount}}', {
+                          amount: formatMoney(quote.shortRubles, { round: true }),
+                        })
+                      : quote.totalPrice > 0
+                        ? t('subscription.v10.buyFor', 'Купить за {{amount}}', {
+                            amount: formatPrice(quote.totalPrice),
+                          })
+                        : t('subscription.purchase')}
+                  </Button>
+                </div>
+              </div>
+            </>
           )}
         </>
       )}

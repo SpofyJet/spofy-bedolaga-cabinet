@@ -455,7 +455,38 @@
       "noLimit": "No limit",
       "addSlotShort": "Device"
     },
-    "loadFailed": "Couldn't load"
+    "loadFailed": "Couldn't load",
+    "vpn": {
+      "working": "VPN is on",
+      "off": "VPN is off",
+      "trialRunning": "Free trial is running",
+      "endsToday": "VPN turns off today",
+      "endsTomorrow": "VPN turns off tomorrow",
+      "endsIn_one": "VPN turns off in {{count}} day",
+      "endsIn_other": "VPN turns off in {{count}} days",
+      "untilLeft": "until {{date}} · {{left}} left",
+      "paidUntil": "paid until {{date}}",
+      "paidEnded": "payment ended on {{date}}",
+      "trialUntil": "free trial · until {{date}}",
+      "trialEnded": "free trial ended on {{date}}",
+      "trialNoDevice": "until {{date}} · no device connected",
+      "renewNote": "Renew now: new days are added to the remaining ones, your setup stays the same.",
+      "expiredNote": "Renew the subscription — VPN will work again in the same app, no setup needed.",
+      "trialExpiredNote": "Get a subscription — VPN will work again in the same app, no setup needed.",
+      "connect": "Connect a device",
+      "renew": "Renew",
+      "renewAndEnable": "Renew and turn VPN on",
+      "subscribe": "Get a subscription",
+      "devices": "Devices",
+      "connected": "connected",
+      "manage": "Manage",
+      "traffic": "Traffic",
+      "bypassTraffic": "Bypass traffic",
+      "buyMore": "Buy more",
+      "subscription": "Subscription",
+      "balance": "Balance",
+      "topUp": "Top up"
+    }
   },
   "subscription": {
     "dailyRenewalExplanation": "This plan renews one day at a time from your balance. Resuming after the paid period ends charges one day.",
@@ -934,11 +965,18 @@
       "toSubscription": "To subscription",
       "saving": "save {{amount}}",
       "shortOnBalance": "{{missing}} short: top up, then tap «Renew»",
-      "payShort": "Pay {{amount}}"
+      "payShort": "Pay {{amount}}",
+      "worksLabel": "VPN will work",
+      "fromBalancePart": "{{amount}} will come from your balance",
+      "fromBalanceFull": "Paid from your balance — it holds {{amount}}",
+      "renewFor": "Renew for {{amount}}",
+      "buyFor": "Buy for {{amount}}"
     },
     "noRenewalChooseTariff": "Choose a plan to keep your access.",
     "chooseTariff": "Choose a plan",
-    "trafficUsedOf": "{{used}} of {{limit}} GB"
+    "trafficUsedOf": "{{used}} of {{limit}} GB",
+    "choose": "Choose",
+    "recommended": "Our pick"
   },
   "balance": {
     "paymentRange": "From {{min}} to {{max}}",

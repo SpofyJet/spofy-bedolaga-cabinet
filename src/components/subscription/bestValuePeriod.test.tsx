@@ -161,27 +161,116 @@ describe('выделенный период при продлении', () => {
   });
 });
 
-// ==================== выделение самого тарифа ====================
+// ==================== отметка и главная кнопка в списке тарифов ====================
 
-describe('выделенный тариф в списке', () => {
-  it('обведён рамкой и подписан, остальные — нет', async () => {
+const CATALOG = [
+  { id: 2, name: 'Стандартный' },
+  { id: 3, name: 'С Обходами' },
+  { id: 4, name: 'ULTIMA' },
+];
+
+/** Карточки с залитой кнопкой: на экране она должна быть одна. */
+const primaryCards = () => Array.from(document.querySelectorAll('[data-tariff-primary]'));
+
+describe('отмеченный тариф в списке', () => {
+  it('отмечен «Советуем», остальные — нет', async () => {
     const { render: renderGrid, cardFor: tariffCard } = await import('./tariffGridHarness');
     renderGrid([
       { id: 1, name: 'Базовый', is_highlighted: false },
       { id: 2, name: 'Про', is_highlighted: true },
     ]);
 
-    const badges = await screen.findAllByText(ru('subscription.bestValue'));
+    const badges = await screen.findAllByText(ru('subscription.recommended'));
     expect(badges).toHaveLength(1);
     expect(tariffCard('Про').contains(badges[0])).toBe(true);
+    // «Выгодно» — слово для срока: у тарифа подороже оно было бы неправдой.
+    expect(screen.queryByText(ru('subscription.bestValue'))).toBeNull();
+  });
+
+  it('без отметки оператора «Советуем» стоит на тарифе с обходами', async () => {
+    const { render: renderGrid, cardFor: tariffCard } = await import('./tariffGridHarness');
+    renderGrid(CATALOG);
+
+    const badges = await screen.findAllByText(ru('subscription.recommended'));
+    expect(badges).toHaveLength(1);
+    expect(tariffCard('С Обходами').contains(badges[0])).toBe(true);
+  });
+
+  it('отметка оператора важнее встроенной: двух «Советуем» не бывает', async () => {
+    const { render: renderGrid, cardFor: tariffCard } = await import('./tariffGridHarness');
+    renderGrid([
+      { id: 2, name: 'Стандартный', is_highlighted: true },
+      { id: 3, name: 'С Обходами' },
+    ]);
+
+    const badges = await screen.findAllByText(ru('subscription.recommended'));
+    expect(badges).toHaveLength(1);
+    expect(tariffCard('Стандартный').contains(badges[0])).toBe(true);
+  });
+
+  it('единственному тарифу советовать нечего', async () => {
+    const { render: renderGrid } = await import('./tariffGridHarness');
+    renderGrid([{ id: 3, name: 'С Обходами' }]);
+
+    await screen.findByText('С Обходами');
+    expect(screen.queryByText(ru('subscription.recommended'))).toBeNull();
   });
 
   it('текущий тариф важнее подсказки: двух выделений сразу не бывает', async () => {
     const { render: renderGrid, cardFor: tariffCard } = await import('./tariffGridHarness');
     renderGrid([{ id: 2, name: 'Про', is_highlighted: true }], { currentTariffId: 2 });
 
-    expect(screen.queryByText(ru('subscription.bestValue'))).toBeNull();
-    // Текущий выделен заливкой, плашки «Выгодно» на нём нет.
+    expect(screen.queryByText(ru('subscription.recommended'))).toBeNull();
+    // Текущий выделен заливкой, отметки на нём нет.
     expect(tariffCard('Про').className).toContain('bg-accent-500/15');
+  });
+});
+
+describe('главная кнопка в списке тарифов', () => {
+  it('у кого тарифа ещё нет — на отмеченном тарифе, и она одна', async () => {
+    const { render: renderGrid, cardFor: tariffCard } = await import('./tariffGridHarness');
+    renderGrid(CATALOG);
+    await screen.findByText('С Обходами');
+
+    expect(primaryCards()).toEqual([tariffCard('С Обходами')]);
+    expect(tariffCard('С Обходами').className).toContain('bg-accent-500/15');
+    expect(tariffCard('Стандартный').className).not.toContain('bg-accent-500/15');
+    // У остальных то же действие, но текстом: тариф выбрать можно любой.
+    expect(screen.getAllByRole('button', { name: ru('subscription.choose') })).toHaveLength(3);
+  });
+
+  it('у кого тариф есть — на своём тарифе, а не на отмеченном', async () => {
+    const { render: renderGrid, cardFor: tariffCard } = await import('./tariffGridHarness');
+    renderGrid(CATALOG, { currentTariffId: 2 });
+    await screen.findByText('С Обходами');
+
+    expect(primaryCards()).toEqual([tariffCard('Стандартный')]);
+    expect(tariffCard('Стандартный').className).toContain('bg-accent-500/15');
+    // Отметка остаётся подсказкой, но не перетягивает на себя ни кнопку, ни заливку.
+    expect(tariffCard('С Обходами').textContent).toContain(ru('subscription.recommended'));
+    expect(tariffCard('С Обходами').className).not.toContain('bg-accent-500/15');
+  });
+
+  it('без отметки и без своего тарифа — на первом в списке', async () => {
+    const { render: renderGrid, cardFor: tariffCard } = await import('./tariffGridHarness');
+    renderGrid([
+      { id: 10, name: 'Первый' },
+      { id: 11, name: 'Второй' },
+    ]);
+    await screen.findByText('Первый');
+
+    expect(primaryCards()).toEqual([tariffCard('Первый')]);
+  });
+
+  it('вечный тариф продлевать нечем: залитой кнопки нет, выделен он сам', async () => {
+    const { render: renderGrid, cardFor: tariffCard } = await import('./tariffGridHarness');
+    renderGrid(CATALOG, {
+      subscription: { tariff_id: 4, is_active: true, end_date: '2099-12-31T23:59:59Z' },
+    });
+    await screen.findByText('ULTIMA');
+
+    expect(primaryCards()).toHaveLength(0);
+    expect(tariffCard('ULTIMA').className).toContain('bg-accent-500/15');
+    expect(tariffCard('С Обходами').className).not.toContain('bg-accent-500/15');
   });
 });

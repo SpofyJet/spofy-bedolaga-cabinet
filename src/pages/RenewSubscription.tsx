@@ -11,15 +11,15 @@ import { formatPeriodLabel } from '../utils/periodLabel';
 import { useCurrency } from '../hooks/useCurrency';
 import { useHaptic } from '../platform';
 import InsufficientBalancePrompt from '../components/InsufficientBalancePrompt';
-import { BestValueBadge, bestValueFrame } from '../components/subscription/BestValueBadge';
+import { PeriodList } from '../components/subscription/PeriodList';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { Button, Chip, EmptyState, Page, SectionTitle, Surface } from '@/components/spofy/ui';
-import { cn } from '@/lib/utils';
 import { PiCalendarXDuotone, PiInfinityDuotone } from 'react-icons/pi';
 import { PageSkeleton, Skeleton } from '../components/ui/skeleton';
 import { DailyPausePanel } from '../components/subscription/manage/DailyPausePanel';
 import { canOpenTariffSwitch, needsTariff, tariffSelectionPath } from '../utils/legacySubscription';
 import { plainTariffName } from '@/utils/plainTariffName';
+import { formatLiteDate } from '@/utils/liteDate';
 
 export default function RenewSubscription() {
   const { subscriptionId } = useParams<{ subscriptionId: string }>();
@@ -186,6 +186,41 @@ export default function RenewSubscription() {
   };
   const isDailyRenewal = Boolean(subscription?.is_daily && !subscription.is_trial);
   const isLifetime = Boolean(subscription && isLifetimeSubscription(subscription));
+  const showPay = !isDailyRenewal && !isLifetime && Boolean(options && options.length > 0);
+
+  // До какого числа будет работать VPN: бот прибавляет срок к концу оплаченного
+  // периода, а у закончившейся подписки — к сегодняшнему дню.
+  const worksUntil = (() => {
+    if (!selectedOption || isLifetimePeriod(selectedOption.period_days)) return null;
+    const end = subscription?.end_date ? new Date(subscription.end_date).getTime() : Number.NaN;
+    const from = Number.isNaN(end) ? Date.now() : Math.max(end, Date.now());
+    return formatLiteDate(new Date(from + selectedOption.period_days * 86_400_000).toISOString());
+  })();
+  // Если на балансе есть деньги, говорим, сколько из них уйдёт: на кнопке — только доплата.
+  const price = selectedOption?.price_kopeks ?? 0;
+  const balanceNote =
+    !selectedOption || price === 0 || balanceKopeks < 100
+      ? null
+      : shortKopeks > 0
+        ? t('subscription.v10.fromBalancePart', '{{amount}} спишется с баланса', {
+            amount: money(price - shortRubles * 100, { round: true }),
+          })
+        : t('subscription.v10.fromBalanceFull', 'Спишется с баланса — на нём {{amount}}', {
+            amount: money(balanceKopeks),
+          });
+  const payLabel = renewMutation.isPending
+    ? t('common.processing', 'Обработка...')
+    : !selectedOption
+      ? t('subscription.selectPeriod', 'Выберите период')
+      : price === 0
+        ? t('subscription.extend', 'Продлить подписку')
+        : shortKopeks > 0
+          ? t('subscription.v10.payShort', 'Оплатить {{amount}}', {
+              amount: money(shortRubles * 100, { round: true }),
+            })
+          : t('subscription.v10.renewFor', 'Продлить за {{amount}}', {
+              amount: money(price),
+            });
 
   return (
     <Page>
@@ -249,147 +284,89 @@ export default function RenewSubscription() {
       ) : (
         <section>
           <SectionTitle>{t('subscription.selectPeriod', 'Выберите период')}</SectionTitle>
-          <div className="space-y-2">
-            {options.map((option) => {
-              const isSelected = selectedPeriod === option.period_days;
-              const perMonth = isLifetimePeriod(option.period_days)
-                ? null
-                : getMonthlyPriceKopeks(option.price_kopeks, option.period_days);
-              // Выгодный вариант несёт жёлтую рамку и тогда, когда выбран: выбор
-              // виден заливкой и внутренним кольцом, подсказка не пропадает.
-              const isBestValue = option.period_days === recommendedDays;
+          <PeriodList
+            selectedDays={selectedPeriod}
+            onSelect={(days) => {
+              impact('light');
+              setSelectedPeriod(days);
+              setError(null);
+            }}
+            items={options.map((option) => {
+              // За месяц и короче «в месяц» повторяло бы саму цену.
+              const perMonth =
+                isLifetimePeriod(option.period_days) || option.period_days <= 31
+                  ? null
+                  : getMonthlyPriceKopeks(option.price_kopeks, option.period_days);
               const saving = savingKopeks(option);
-
-              return (
-                <button
-                  key={option.period_days}
-                  type="button"
-                  aria-pressed={isSelected}
-                  onClick={() => {
-                    impact('light');
-                    setSelectedPeriod(option.period_days);
-                    setError(null);
-                  }}
-                  className={cn(
-                    'flex min-h-[64px] w-full items-center gap-3 rounded-3xl px-4 py-3 text-left transition-colors',
-                    isBestValue
-                      ? `${bestValueFrame(isSelected)} ${isSelected ? 'bg-accent-500/15' : 'bg-dark-900/70'}`
-                      : isSelected
-                        ? 'bg-accent-500/15'
-                        : 'bg-dark-900/70 hover:bg-dark-800/50',
-                  )}
-                >
-                  <span
-                    className={cn(
-                      'flex h-5 w-5 shrink-0 items-center justify-center rounded-full',
-                      isSelected ? 'bg-accent-500' : 'bg-dark-700',
-                    )}
-                    aria-hidden
-                  >
-                    {isSelected && <span className="h-2 w-2 rounded-full bg-white" />}
-                  </span>
-                  <span className="min-w-0 flex-1">
-                    <span className="flex flex-wrap items-center gap-2">
-                      <span className="text-[15px] font-semibold text-dark-100">
-                        {formatPeriodLabel(option.period_days, t)}
-                      </span>
-                      {isBestValue && <BestValueBadge />}
-                      {option.discount_percent > 0 && (
-                        <Chip tone="success">-{option.discount_percent}%</Chip>
-                      )}
-                    </span>
-                    {perMonth !== null && (
-                      <span className="mt-0.5 block text-[13px] text-dark-400">
-                        {money(perMonth, { round: true })}/{t('subscription.month', 'мес')}
-                        {saving > 0 && (
-                          <span className="ml-2 font-semibold text-success-400">
-                            {t('subscription.v10.saving', 'выгода {{amount}}', {
-                              amount: money(saving, { round: true }),
-                            })}
-                          </span>
-                        )}
-                      </span>
-                    )}
-                  </span>
-                  <span className="flex shrink-0 flex-col items-end">
-                    <span className="whitespace-nowrap text-[15px] font-bold tabular-nums text-dark-50">
-                      {option.price_kopeks === 0
-                        ? t('subscription.free', 'Бесплатно')
-                        : money(option.price_kopeks)}
-                    </span>
-                    {option.original_price_kopeks && (
-                      <span className="whitespace-nowrap text-[13px] text-dark-500 line-through">
-                        {money(option.original_price_kopeks)}
-                      </span>
-                    )}
-                  </span>
-                </button>
-              );
+              return {
+                days: option.period_days,
+                label: formatPeriodLabel(option.period_days, t),
+                best: option.period_days === recommendedDays,
+                discount:
+                  option.discount_percent > 0 ? (
+                    <Chip tone="success">-{option.discount_percent}%</Chip>
+                  ) : null,
+                perMonth: perMonth !== null ? money(perMonth, { round: true }) : null,
+                saving: saving > 0 ? money(saving, { round: true }) : null,
+                price:
+                  option.price_kopeks === 0
+                    ? t('subscription.free', 'Бесплатно')
+                    : money(option.price_kopeks),
+                original: option.original_price_kopeks ? money(option.original_price_kopeks) : null,
+              };
             })}
-          </div>
+          />
         </section>
       )}
 
-      {/* Итог: баланс, сумма, кнопка */}
-      {!isDailyRenewal && !isLifetime && options && options.length > 0 && (
-        <Surface className="space-y-4">
-          <div className="flex items-center justify-between gap-3 text-[14px]">
-            <span className="text-dark-400">{t('common.balance', 'Баланс')}</span>
-            <span className="font-semibold tabular-nums text-dark-100">{money(balanceKopeks)}</span>
-          </div>
-          {selectedOption && (
-            <div className="flex items-end justify-between gap-3 border-t border-dark-800/70 pt-4">
-              <span className="text-[15px] font-medium text-dark-300">
-                {t('subscription.total', 'К оплате')}
-              </span>
-              <span className="whitespace-nowrap text-[26px] font-bold leading-tight tracking-tight text-dark-50">
-                {selectedOption.price_kopeks === 0
-                  ? t('subscription.free', 'Бесплатно')
-                  : money(selectedOption.price_kopeks)}
-              </span>
-            </div>
-          )}
-          {shortKopeks > 0 && !missingAmount && (
-            <p className="text-[13px] text-dark-400">
-              {t(
-                'subscription.v10.shortOnBalance',
-                'Не хватает {{missing}}: пополните баланс, затем нажмите «Продлить»',
-                {
-                  missing: money(shortRubles * 100, { round: true }),
-                },
-              )}
-            </p>
-          )}
-
-          {/* Insufficient balance prompt */}
-          {missingAmount && (
-            <InsufficientBalancePrompt missingAmountKopeks={missingAmount} compact />
-          )}
-
-          {error && !missingAmount && (
-            <p className="rounded-2xl bg-error-500/10 p-3 text-center text-[13px] text-error-400">
-              {error}
-            </p>
-          )}
-
-          <Button
-            className="w-full"
-            onClick={() =>
-              shortKopeks > 0 ? goTopUp() : selectedPeriod && handleRenew(selectedPeriod)
-            }
-            disabled={!selectedPeriod || renewMutation.isPending}
-          >
-            {shortKopeks > 0
-              ? t('subscription.v10.payShort', 'Оплатить {{amount}}', {
-                  amount: money(shortRubles * 100, { round: true }),
-                })
-              : renewMutation.isPending
-                ? t('common.processing', 'Обработка...')
-                : selectedPeriod
-                  ? t('subscription.extend', 'Продлить подписку')
-                  : t('subscription.selectPeriod', 'Выберите период')}
-          </Button>
+      {/* Ошибки оплаты — под списком, над прижатой кнопкой */}
+      {showPay && missingAmount && (
+        <Surface>
+          <InsufficientBalancePrompt missingAmountKopeks={missingAmount} compact />
         </Surface>
+      )}
+      {showPay && error && !missingAmount && (
+        <p className="rounded-2xl bg-error-500/10 p-3 text-center text-[13px] text-error-400">
+          {error}
+        </p>
+      )}
+
+      {/* Кнопка оплаты прижата к низу экрана: выбор срока и оплата видны вместе,
+          без прокрутки. Над ней — до какого числа будет работать VPN и, если на
+          балансе есть деньги, сколько из них уйдёт. На широком экране — в потоке. */}
+      {showPay && (
+        <>
+          <div className="h-[124px] lg:hidden" aria-hidden />
+          <div
+            data-pay-bar
+            className="fixed inset-x-0 bottom-0 z-40 bg-gradient-to-t from-dark-950 from-70% to-transparent px-4 pb-[calc(var(--mobile-nav-clearance)+2px)] pt-5 lg:static lg:z-auto lg:bg-none lg:p-0"
+          >
+            <div className="mx-auto w-full max-w-[600px]">
+              {selectedOption && (
+                <div className="pb-2.5 text-center text-sm text-dark-400">
+                  {worksUntil && (
+                    <p>
+                      {t('subscription.v10.worksLabel', 'VPN будет работать')}{' '}
+                      <span className="font-semibold text-dark-50">
+                        {t('subscription.v10.until', 'до {{date}}', { date: worksUntil })}
+                      </span>
+                    </p>
+                  )}
+                  {balanceNote && <p className="mt-0.5">{balanceNote}</p>}
+                </div>
+              )}
+              <Button
+                className="h-[54px] w-full text-[16.5px]"
+                onClick={() =>
+                  shortKopeks > 0 ? goTopUp() : selectedPeriod && handleRenew(selectedPeriod)
+                }
+                disabled={!selectedPeriod || renewMutation.isPending}
+              >
+                {payLabel}
+              </Button>
+            </div>
+          </div>
+        </>
       )}
     </Page>
   );

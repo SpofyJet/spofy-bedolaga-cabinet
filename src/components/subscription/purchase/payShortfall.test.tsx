@@ -82,7 +82,7 @@ it('при нехватке баланса кнопка ведёт на опла
 
 it('когда денег хватает, кнопка покупает сразу', async () => {
   mount(20000);
-  fireEvent.click(screen.getByRole('button', { name: 'subscription.purchase' }));
+  fireEvent.click(screen.getByRole('button', { name: /^subscription\.v10\.buyFor/ }));
   await waitFor(() => expect(api.purchaseTariff).toHaveBeenCalledTimes(1));
   expect(api.purchaseTariff.mock.calls[0].slice(0, 2)).toEqual([7, 30]);
   expect(screen.getByTestId('where').textContent).not.toContain('/balance/top-up');

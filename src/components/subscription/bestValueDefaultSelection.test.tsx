@@ -143,8 +143,11 @@ describe('покупка: выбранный по умолчанию перио�
       }),
     ]);
 
-    expect(screen.getByText('Период: 12 месяцев')).toBeTruthy();
-    expect(screen.queryByText('Период: 1 месяц')).toBeNull();
+    // Отдельной строки «Период: …» у одного срока без добавок больше нет: срок выбран
+    // в списке, сумма — на прижатой кнопке. Она и должна быть за 12 месяцев.
+    const payBar = document.querySelector('[data-pay-bar]');
+    expect(payBar?.textContent).toMatch(/2[\s,.]?640/);
+    expect(payBar?.textContent).not.toMatch(/399/);
   });
 });
 

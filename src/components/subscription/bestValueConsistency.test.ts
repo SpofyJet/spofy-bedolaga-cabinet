@@ -3,8 +3,8 @@ import { join, relative } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 /**
- * Отмеченный оператором вариант выглядит одинаково на всех витринах: плашка «Выгодно» первой
- * строкой карточки и золотая рамка.
+ * Отмеченный вариант выглядит одинаково на всех витринах: отметка рядом с названием
+ * («Выгодно» у срока, «Советуем» у тарифа) и общее выделение.
  */
 const SRC = join(__dirname, '..', '..');
 
@@ -23,7 +23,8 @@ const showcases = tsxFiles(SRC)
 
 describe('плашка «Выгодно» на витринах', () => {
   it('витрины найдены', () => {
-    expect(showcases.length).toBeGreaterThanOrEqual(4);
+    // Список сроков (PeriodList — один на продление и покупку), список тарифов, подарок.
+    expect(showcases.length).toBeGreaterThanOrEqual(3);
   });
 
   it.each(showcases.map((s) => [s.path, s.code]))(

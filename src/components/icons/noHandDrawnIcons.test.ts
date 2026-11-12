@@ -24,6 +24,7 @@ const ALLOWED = new Set([
   'pages/AdminBanSystem.tsx', // логотип Telegram
   'components/primitives/Button/Button.tsx', // спиннер
   'pages/AdminPayments.tsx', // спиннер
+  'components/dashboard/StatusShield.tsx', // щит бренда — знак состояния на главной
   'components/wheel/FortuneWheel.tsx',
   'components/admin/reachability/GeoMap.tsx',
   'components/admin/dpichecker/DpiRegionMap.tsx', // карта регионов, не иконка

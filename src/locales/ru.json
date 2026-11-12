@@ -465,7 +465,40 @@
       "noLimit": "Без лимита",
       "addSlotShort": "Устройство"
     },
-    "loadFailed": "Не удалось загрузить"
+    "loadFailed": "Не удалось загрузить",
+    "vpn": {
+      "working": "VPN работает",
+      "off": "VPN выключен",
+      "trialRunning": "Пробный период идёт",
+      "endsToday": "VPN выключится сегодня",
+      "endsTomorrow": "VPN выключится завтра",
+      "endsIn_one": "VPN выключится через {{count}} день",
+      "endsIn_few": "VPN выключится через {{count}} дня",
+      "endsIn_many": "VPN выключится через {{count}} дней",
+      "endsIn_other": "VPN выключится через {{count}} дня",
+      "untilLeft": "до {{date}} · ещё {{left}}",
+      "paidUntil": "оплачено до {{date}}",
+      "paidEnded": "оплата закончилась {{date}}",
+      "trialUntil": "пробный период · до {{date}}",
+      "trialEnded": "пробный период закончился {{date}}",
+      "trialNoDevice": "до {{date}} · устройство не подключено",
+      "renewNote": "Продлите сейчас: новые дни добавятся к оставшимся, настройки останутся.",
+      "expiredNote": "Продлите подписку — VPN снова заработает в том же приложении, без настройки.",
+      "trialExpiredNote": "Оформите подписку — VPN снова заработает в том же приложении, без настройки.",
+      "connect": "Подключить устройство",
+      "renew": "Продлить",
+      "renewAndEnable": "Продлить и включить VPN",
+      "subscribe": "Оформить подписку",
+      "devices": "Устройства",
+      "connected": "подключено",
+      "manage": "Управлять",
+      "traffic": "Трафик",
+      "bypassTraffic": "Трафик обходов",
+      "buyMore": "Докупить",
+      "subscription": "Подписка",
+      "balance": "Баланс",
+      "topUp": "Пополнить"
+    }
   },
   "subscription": {
     "dailyRenewalExplanation": "Суточный тариф продлевается на один день при списании с баланса. Если оплаченный срок закончился, при возобновлении спишется стоимость суток.",
@@ -968,11 +1001,18 @@
       "toSubscription": "К подписке",
       "saving": "выгода {{amount}}",
       "shortOnBalance": "Не хватает {{missing}}: пополните баланс, затем нажмите «Продлить»",
-      "payShort": "Оплатить {{amount}}"
+      "payShort": "Оплатить {{amount}}",
+      "worksLabel": "VPN будет работать",
+      "fromBalancePart": "{{amount}} спишется с баланса",
+      "fromBalanceFull": "Спишется с баланса — на нём {{amount}}",
+      "renewFor": "Продлить за {{amount}}",
+      "buyFor": "Купить за {{amount}}"
     },
     "noRenewalChooseTariff": "Выберите тариф — доступ продолжится.",
     "chooseTariff": "Выбрать тариф",
-    "trafficUsedOf": "{{used}} из {{limit}} ГБ"
+    "trafficUsedOf": "{{used}} из {{limit}} ГБ",
+    "choose": "Выбрать",
+    "recommended": "Советуем"
   },
   "balance": {
     "paymentRange": "От {{min}} до {{max}}",

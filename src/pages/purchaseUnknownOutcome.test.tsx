@@ -57,6 +57,8 @@ afterEach(() => {
   cleanup();
   state.commits = 0;
 });
+// Баланса хватает (500 при цене 100): кнопка — «Продлить за N».
+const RENEW_BUTTON = 'subscription.v10.renewFor';
 function mount(kind: string) {
   render(
     <QueryClientProvider
@@ -106,8 +108,7 @@ for (const kind of ['renew', 'traffic']) {
               response: typeof failure === 'number' ? { status: failure, data: {} } : undefined,
             });
       mount(kind);
-      const label =
-        kind === 'renew' ? 'subscription.extend' : 'subscription.additionalOptions.buyTrafficGb';
+      const label = kind === 'renew' ? RENEW_BUTTON : 'subscription.additionalOptions.buyTrafficGb';
       fireEvent.click(await screen.findByRole('button', { name: label }));
       await screen.findByText('subscription.purchaseOutcomeUnknown');
       expect(state.commits).toBe(1);
@@ -120,8 +121,7 @@ for (const kind of ['renew', 'traffic']) {
     mount(kind);
     fireEvent.click(
       await screen.findByRole('button', {
-        name:
-          kind === 'renew' ? 'subscription.extend' : 'subscription.additionalOptions.buyTrafficGb',
+        name: kind === 'renew' ? RENEW_BUTTON : 'subscription.additionalOptions.buyTrafficGb',
       }),
     );
     await screen.findByText('Validation rejected');
