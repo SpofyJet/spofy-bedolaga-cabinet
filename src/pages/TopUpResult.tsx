@@ -13,6 +13,7 @@ import { PageHeader } from '@/components/layout/PageHeader';
 import { Button, Page, Surface } from '@/components/spofy/ui';
 import { cn } from '@/lib/utils';
 import { loadTopUpPendingInfo, clearTopUpPendingInfo } from '../utils/topUpStorage';
+import { getSafeRedirectPath } from '../utils/safeRedirect';
 import { isPaidStatus, isFailedStatus } from '../utils/paymentStatus';
 import { required } from '@/utils/required';
 
@@ -95,13 +96,48 @@ function PendingState({ amountKopeks }: { amountKopeks: number | null }) {
   );
 }
 
-function SuccessState({ amountKopeks }: { amountKopeks: number | null }) {
+function SuccessState({
+  amountKopeks,
+  returnTo,
+}: {
+  amountKopeks: number | null;
+  /** Экран, с которого человек ушёл платить (продление, покупка), или null. */
+  returnTo: string | null;
+}) {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
   const handleGoToBalance = useCallback(() => {
     navigate('/balance', { replace: true });
   }, [navigate]);
+
+  // Человек платил, чтобы оформить подписку: ведём его обратно к оформлению с тем же
+  // выбором. Раньше здесь были только «К балансу» и «На главную», и покупку
+  // приходилось начинать заново. Списание — по его нажатию, само не происходит.
+  if (returnTo) {
+    return (
+      <ResultScreen
+        tone="success"
+        icon={<PiCheckCircleDuotone />}
+        title={t('balance.topUpResult.success')}
+        text={t(
+          'balance.topUpResult.successContinueDesc',
+          'Деньги уже на балансе. Остался один шаг — подтвердить оформление.',
+        )}
+        amountKopeks={amountKopeks}
+        actions={
+          <>
+            <Button onClick={() => navigate(returnTo, { replace: true })}>
+              {t('balance.topUpResult.continue', 'Продолжить оформление')}
+            </Button>
+            <Button tone="secondary" onClick={() => navigate('/', { replace: true })}>
+              {t('balance.topUpResult.toHome', 'На главную')}
+            </Button>
+          </>
+        }
+      />
+    );
+  }
 
   return (
     <ResultScreen
@@ -190,6 +226,10 @@ export default function TopUpResult() {
 
   // Load saved payment info from sessionStorage (once on mount)
   const [pendingInfo] = useState(() => loadTopUpPendingInfo());
+  // Куда вернуть после оплаты. Путь пришёл из адресной строки экрана пополнения,
+  // поэтому пропускаем только пути внутри кабинета.
+  const safeReturnTo = getSafeRedirectPath(pendingInfo?.return_to);
+  const returnTo = pendingInfo?.return_to && safeReturnTo !== '/' ? safeReturnTo : null;
 
   // Fallback: read method for external-browser redirects where sessionStorage is unavailable.
   // Providers that reject query strings return to /balance/top-up/result/<method>, so
@@ -338,7 +378,7 @@ export default function TopUpResult() {
         <PageHeader title={t('balance.topUpBalance')} backTo="/balance" />
         <div aria-live="polite" aria-atomic="true">
           {resolvedPaid ? (
-            <SuccessState amountKopeks={amountKopeks} />
+            <SuccessState amountKopeks={amountKopeks} returnTo={returnTo} />
           ) : resolvedFailed ? (
             <FailedState amountKopeks={amountKopeks} />
           ) : pollTimedOut ? (

@@ -16,6 +16,10 @@ interface InsufficientBalancePromptProps {
   className?: string;
   /** Callback to execute before opening top-up modal (e.g., save cart) */
   onBeforeTopUp?: () => Promise<void>;
+  /** Куда вернуть после пополнения. По умолчанию — текущий экран вместе с его
+   * параметрами (раньше параметры терялись). Форма покупки передаёт сюда путь
+   * с выбранным тарифом и сроком. */
+  returnTo?: string;
 }
 
 export default function InsufficientBalancePrompt({
@@ -24,6 +28,7 @@ export default function InsufficientBalancePrompt({
   compact = false,
   className = '',
   onBeforeTopUp,
+  returnTo,
 }: InsufficientBalancePromptProps) {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -47,7 +52,7 @@ export default function InsufficientBalancePrompt({
     }
     const params = new URLSearchParams();
     params.set('amount', String(Math.ceil(missingRubles)));
-    params.set('returnTo', location.pathname);
+    params.set('returnTo', returnTo ?? `${location.pathname}${location.search}`);
     navigate(`/balance/top-up?${params.toString()}`);
   };
 

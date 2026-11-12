@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 import { useSearchParams } from 'react-router';
@@ -12,6 +12,7 @@ import type { Tariff } from '../types';
 import { useCloseOnSuccessNotification } from '../store/successNotification';
 import { SwitchTariffSheet } from '../components/subscription/sheets/SwitchTariffSheet';
 import { TariffPurchaseForm } from '../components/subscription/purchase/TariffPurchaseForm';
+import { tariffAction } from '../components/subscription/purchase/tariffAction';
 import { canOpenTariffSwitch, needsTariff } from '../utils/legacySubscription';
 import { TariffPickerGrid } from '../components/subscription/purchase/TariffPickerGrid';
 import { TariffPickerLite } from '../components/subscription/purchase/TariffPickerLite';
@@ -80,6 +81,29 @@ export default function SubscriptionPurchase() {
 
   // Tariff switch
   const [switchTariffId, setSwitchTariffId] = useState<number | null>(null);
+
+  // Возврат после пополнения баланса: ?tariff=…&period=… — открываем форму с тем же
+  // тарифом и сроком, с которыми человек ушёл платить. Один раз, и только когда
+  // нажатие на этот тариф означает обычную покупку (ветвление — в tariffAction()).
+  const requestedTariffId = Number(searchParams.get('tariff')) || null;
+  const requestedPeriodDays = Number(searchParams.get('period')) || null;
+  const preselectDone = useRef(false);
+  useEffect(() => {
+    if (preselectDone.current || !requestedTariffId || !purchaseOptions || isLoading) return;
+    preselectDone.current = true;
+    const tariff = (purchaseOptions.tariffs ?? []).find((item) => item.id === requestedTariffId);
+    if (!tariff) return;
+    const action = tariffAction({
+      tariff,
+      subscription,
+      purchaseOptions,
+      isMultiTariff,
+      subscriptionId,
+    });
+    if (action !== 'purchase') return;
+    setSelectedTariff(tariff);
+    setShowTariffPurchase(true);
+  }, [requestedTariffId, purchaseOptions, isLoading, subscription, isMultiTariff, subscriptionId]);
 
   // Auto-close all modals on success notification
   const handleCloseAllModals = () => {
@@ -293,6 +317,9 @@ export default function SubscriptionPurchase() {
                 tariff={selectedTariff}
                 subscriptionId={subscriptionId}
                 balanceKopeks={purchaseOptions?.balance_kopeks}
+                initialPeriodDays={
+                  selectedTariff.id === requestedTariffId ? requestedPeriodDays : null
+                }
                 sbpPurchaseEnabled={
                   purchaseOptions !== undefined &&
                   'platega_recurrent_enabled' in purchaseOptions &&

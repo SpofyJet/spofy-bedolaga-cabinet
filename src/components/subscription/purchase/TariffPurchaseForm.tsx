@@ -3,7 +3,7 @@ import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { Button, Chip, SectionTitle, Stat, Surface } from '@/components/spofy/ui';
 import { cn } from '@/lib/utils';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router';
+import { useNavigate, useLocation } from 'react-router';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { subscriptionApi } from '../../../api/subscription';
 import { getErrorMessage, getInsufficientBalanceError } from '../../../utils/subscriptionHelpers';
@@ -46,6 +46,10 @@ export interface TariffPurchaseFormProps {
   balanceKopeks: number | undefined;
   /** СБП-оформление (Platega recurrent) доступно — показать вторую CTA. */
   sbpPurchaseEnabled?: boolean;
+  /** Срок, с которым человек ушёл пополнять баланс (?period= в адресе): после
+   * возврата выбран он, а не «выгодный» по умолчанию — иначе пополнивший ровно
+   * на свой срок видел «не хватает» за другой. */
+  initialPeriodDays?: number | null;
   onBack: () => void;
 }
 
@@ -54,12 +58,14 @@ export function TariffPurchaseForm({
   subscriptionId,
   balanceKopeks,
   sbpPurchaseEnabled = false,
+  initialPeriodDays = null,
   onBack,
 }: TariffPurchaseFormProps) {
   const { t } = useTranslation();
   // Срок словами («3 месяца», «Навсегда»), а не подписью с сервера («90 дней»).
   const periodLabel = (period: { days: number }) => formatPeriodLabel(period.days, t);
   const navigate = useNavigate();
+  const location = useLocation();
   const queryClient = useQueryClient();
   const { formatMoney } = useCurrency();
   const { applyPromoDiscount } = usePromoDiscount();
@@ -80,7 +86,10 @@ export function TariffPurchaseForm({
   // Отмеченный оператором период выбран сразу: рамка «Выгодно» и итог внизу
   // должны говорить об одном и том же периоде.
   const [selectedTariffPeriod, setSelectedTariffPeriod] = useState<TariffPeriod | null>(
-    pickBestValue(tariff.periods) || tariff.periods[0] || null,
+    (initialPeriodDays ? tariff.periods.find((p) => p.days === initialPeriodDays) : undefined) ||
+      pickBestValue(tariff.periods) ||
+      tariff.periods[0] ||
+      null,
   );
   const [customDays, setCustomDays] = useState<number>(30);
   const [customTrafficGb, setCustomTrafficGb] = useState<number>(50);
@@ -187,6 +196,19 @@ export function TariffPurchaseForm({
   const isDailyTariff = Boolean(
     tariff.is_daily || (tariff.daily_price_kopeks && tariff.daily_price_kopeks > 0),
   );
+  // Куда вернуть после пополнения: эта же витрина с выбранным тарифом и сроком.
+  // Без этого после оплаты тариф приходилось выбирать заново, а срок сбрасывался
+  // на «выгодный» — и пополнивший ровно на 1 месяц видел «не хватает» за 3.
+  const topUpReturnTo = (() => {
+    const params = new URLSearchParams(location.search);
+    params.set('tariff', String(tariff.id));
+    if (!isDailyTariff && !useCustomDays && selectedTariffPeriod) {
+      params.set('period', String(selectedTariffPeriod.days));
+    } else {
+      params.delete('period');
+    }
+    return `${location.pathname}?${params.toString()}`;
+  })();
   const discountChip = (percent: number | null | undefined, isPromoGroup?: boolean) =>
     percent != null && percent > 0 ? (
       <Chip tone={isPromoGroup ? 'success' : 'warning'}>-{percent}%</Chip>
@@ -268,6 +290,7 @@ export function TariffPurchaseForm({
               <div>
                 {balanceKopeks !== undefined && !hasEnoughBalance && (
                   <InsufficientBalancePrompt
+                    returnTo={topUpReturnTo}
                     missingAmountKopeks={dailyPrice - balanceKopeks}
                     compact
                     className="mb-4"
@@ -299,6 +322,7 @@ export function TariffPurchaseForm({
                   getInsufficientBalanceError(purchaseMutation.error) && (
                     <div className="mt-3">
                       <InsufficientBalancePrompt
+                        returnTo={topUpReturnTo}
                         missingAmountKopeks={
                           getInsufficientBalanceError(purchaseMutation.error)?.missingAmount ||
                           dailyPrice - (balanceKopeks || 0)
@@ -710,6 +734,7 @@ export function TariffPurchaseForm({
               {purchaseMutation.isError && getInsufficientBalanceError(purchaseMutation.error) && (
                 <div className="mt-3">
                   <InsufficientBalancePrompt
+                    returnTo={topUpReturnTo}
                     missingAmountKopeks={
                       getInsufficientBalanceError(purchaseMutation.error)?.missingAmount || 0
                     }

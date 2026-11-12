@@ -246,6 +246,9 @@ export default function TopUpAmount() {
             method_name: displayName,
             payment_id: data.payment_id,
             created_at: Date.now(),
+            // Оплата на внешней странице возвращает на /balance/top-up/result —
+            // без этого экран, с которого человек ушёл платить, терялся.
+            ...(returnTo ? { return_to: returnTo } : {}),
           });
         }
 

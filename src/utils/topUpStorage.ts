@@ -7,6 +7,9 @@ export interface TopUpPendingInfo {
   method_name: string;
   payment_id: string;
   created_at: number; // Date.now()
+  /** Экран, с которого человек ушёл платить (продление, покупка): после оплаты
+   * возвращаем туда, а не оставляем на «Баланс пополнен». Путь внутри кабинета. */
+  return_to?: string;
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -46,6 +49,9 @@ export function loadTopUpPendingInfo(): TopUpPendingInfo | null {
       method_name: parsed.method_name as string,
       payment_id: parsed.payment_id as string,
       created_at: parsed.created_at as number,
+      ...(typeof parsed.return_to === 'string' && parsed.return_to
+        ? { return_to: parsed.return_to }
+        : {}),
     };
   } catch {
     return null;

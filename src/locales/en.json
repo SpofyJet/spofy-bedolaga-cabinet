@@ -1060,7 +1060,9 @@
       "timeoutDesc": "Payment processing is taking longer than usual. You can try checking the status again.",
       "goToBalance": "Go to Balance",
       "tryAgain": "Try Again",
-      "toHome": "Home"
+      "toHome": "Home",
+      "continue": "Continue checkout",
+      "successContinueDesc": "The money is on your balance. One step left — confirm your order."
     },
     "top_up": "Top up balance",
     "scanQrToPay": "Scan the QR code in your banking app or open the payment page",
