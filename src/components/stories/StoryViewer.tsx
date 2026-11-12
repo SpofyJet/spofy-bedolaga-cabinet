@@ -6,7 +6,7 @@ import { PiXBold } from 'react-icons/pi';
 
 import { useBranding } from '@/hooks/useBranding';
 import { useHeaderHeight } from '@/hooks/useHeaderHeight';
-import { STORY_CTA_ROUTES, STORY_PHOTOS, useStorySeries } from './registry';
+import { STORY_CTA_ROUTES, storyPhotos, useStorySeries } from './registry';
 import { markStoryRead } from './useStoryRead';
 import { StoryVisual } from './visuals';
 
@@ -18,6 +18,20 @@ const TAP_MAX_DISTANCE_PX = 12;
 /** Зона тапа по горизонтали: левая треть — назад, остальное — вперёд. */
 export function tapZone(offsetX: number, width: number): 'prev' | 'next' {
   return offsetX < width / 3 ? 'prev' : 'next';
+}
+
+/**
+ * Шаг «вперёд» внутри одной истории. С последнего слайда история закрывается:
+ * в соседнюю тему просмотрщик сам не переходит — человек открыл «Как
+ * подключить» и не просил показывать ему «Нет INCY в App Store».
+ */
+export function stepForward(slide: number, count: number): number | 'close' {
+  return slide < count - 1 ? slide + 1 : 'close';
+}
+
+/** Шаг «назад»: с первого слайда идти некуда — остаёмся на нём. */
+export function stepBack(slide: number): number {
+  return Math.max(0, slide - 1);
 }
 
 /** Кнопки поверх слайда не должны листать сторис и ставить их на паузу. */
@@ -83,52 +97,45 @@ export function StoryViewer({ initialIndex, onClose }: StoryViewerProps) {
   const { appName, logoUrl, hasCustomLogo, logoLetter } = useBranding();
   const { topSafeArea, bottomSafeArea } = useHeaderHeight();
 
-  const [seriesIdx, setSeriesIdx] = useState(initialIndex);
   const [slideIdx, setSlideIdx] = useState(0);
   const [paused, setPaused] = useState(false);
 
-  // Индексы и пауза в ref — rAF-цикл не зависит от ререндеров.
-  const seriesRef = useRef(seriesIdx);
+  // Индекс слайда и пауза в ref — rAF-цикл не зависит от ререндеров.
   const slideRef = useRef(slideIdx);
   const pausedRef = useRef(paused);
-  seriesRef.current = seriesIdx;
   slideRef.current = slideIdx;
   pausedRef.current = paused;
 
   const fillRef = useRef<HTMLDivElement | null>(null);
   const holdStart = useRef<{ x: number; y: number; t: number; consumed: boolean } | null>(null);
+  // Касание признаётся тапом на pointerup, а действует на click. Если закрыть
+  // просмотрщик уже на pointerup, click того же касания достаётся главной под
+  // ним и открывает ссылку, оказавшуюся под пальцем.
+  const tapPending = useRef(false);
 
-  const series = seriesList[seriesIdx];
+  // Открытая история остаётся одной и той же до закрытия: листаются только её слайды.
+  const series = seriesList[initialIndex];
   const slides = series?.slides ?? [];
-
-  const goTo = useCallback((nextSeries: number, nextSlide: number) => {
-    setSeriesIdx(nextSeries);
-    setSlideIdx(nextSlide);
-  }, []);
+  const slideCount = slides.length;
+  const seriesId = series?.meta.id;
 
   const next = useCallback(() => {
-    const s = seriesRef.current;
-    const i = slideRef.current;
-    const count = seriesList[s]?.slides.length ?? 0;
-    if (i < count - 1) goTo(s, i + 1);
-    else if (s < seriesList.length - 1) goTo(s + 1, 0);
-    else onClose();
-  }, [seriesList, goTo, onClose]);
+    const target = stepForward(slideRef.current, slideCount);
+    if (target === 'close') onClose();
+    else setSlideIdx(target);
+  }, [slideCount, onClose]);
 
   const prev = useCallback(() => {
-    const s = seriesRef.current;
-    const i = slideRef.current;
-    if (i > 0) goTo(s, i - 1);
-    else if (s > 0) goTo(s - 1, (seriesList[s - 1]?.slides.length ?? 1) - 1);
-  }, [seriesList, goTo]);
+    setSlideIdx(stepBack(slideRef.current));
+  }, []);
 
-  // Таймер перезапускается только по смене слайда/серии.
+  // Таймер перезапускается только по смене слайда.
   const nextRef = useRef(next);
   nextRef.current = next;
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: seriesIdx/slideIdx — намеренный перезапуск таймера на каждом слайде
+  // biome-ignore lint/correctness/useExhaustiveDependencies: slideIdx — намеренный перезапуск таймера на каждом слайде
   useEffect(() => {
-    if (slides.length === 0) return;
+    if (slideCount === 0) return;
     let raf = 0;
     const start = performance.now();
     let last = start;
@@ -144,14 +151,16 @@ export function StoryViewer({ initialIndex, onClose }: StoryViewerProps) {
       const ratio = Math.min(1, (now - start - pausedMs) / SLIDE_DURATION_MS);
       if (fillRef.current) fillRef.current.style.transform = `scaleX(${ratio})`;
       if (ratio >= 1) {
-        nextRef.current();
+        // Последний слайд сам не листается и не закрывается: на нём кнопка
+        // действия, и человек дочитывает шаг столько, сколько ему нужно.
+        if (slideRef.current < slideCount - 1) nextRef.current();
         return;
       }
       raf = requestAnimationFrame(tick);
     };
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
-  }, [seriesIdx, slideIdx, slides.length]);
+  }, [slideIdx, slideCount]);
 
   // Страница под просмотрщиком не скроллится.
   useEffect(() => {
@@ -175,25 +184,25 @@ export function StoryViewer({ initialIndex, onClose }: StoryViewerProps) {
 
   // Просмотр засчитан с первого кадра серии.
   useEffect(() => {
-    const id = seriesList[seriesIdx]?.meta.id;
-    if (id) markStoryRead(id);
-  }, [seriesIdx, seriesList]);
+    if (seriesId) markStoryRead(seriesId);
+  }, [seriesId]);
 
-  // Фото всех серий — сразу при открытии и декодированными: иначе при переходе в
-  // следующую серию картинка догружалась уже на экране. Ссылки держим в ref, чтобы
-  // браузер не выгрузил декодированные кадры, пока просмотрщик открыт.
+  // Фото открытой серии — сразу при открытии и декодированными: иначе на следующем
+  // слайде картинка догружалась уже на экране. Ссылки держим в ref, чтобы браузер
+  // не выгрузил декодированные кадры, пока просмотрщик открыт.
   const photosRef = useRef<HTMLImageElement[]>([]);
   useEffect(() => {
-    photosRef.current = STORY_PHOTOS.map((src) => {
+    photosRef.current = storyPhotos(seriesId).map((src) => {
       const img = new Image();
       img.src = src;
       img.decode?.().catch(() => undefined);
       return img;
     });
-  }, []);
+  }, [seriesId]);
 
   const handlePointerDown = (e: React.PointerEvent) => {
     holdStart.current = { x: e.clientX, y: e.clientY, t: performance.now(), consumed: false };
+    tapPending.current = false;
     setPaused(true);
   };
 
@@ -225,11 +234,18 @@ export function StoryViewer({ initialIndex, onClose }: StoryViewerProps) {
     const dx = Math.abs(e.clientX - hold.x);
     const dy = Math.abs(e.clientY - hold.y);
     const dt = performance.now() - hold.t;
-    if (dt < TAP_MAX_DURATION_MS && dx < TAP_MAX_DISTANCE_PX && dy < TAP_MAX_DISTANCE_PX) {
-      const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
-      if (tapZone(e.clientX - rect.left, rect.width) === 'next') next();
-      else prev();
-    }
+    tapPending.current =
+      dt < TAP_MAX_DURATION_MS && dx < TAP_MAX_DISTANCE_PX && dy < TAP_MAX_DISTANCE_PX;
+  };
+
+  const handleClick = (e: React.MouseEvent) => {
+    if (!tapPending.current) return;
+    tapPending.current = false;
+    // Кнопка действия лежит внутри слоя жестов: её нажатие — не листание.
+    if ((e.target as HTMLElement).closest('button')) return;
+    const rect = e.currentTarget.getBoundingClientRect();
+    if (tapZone(e.clientX - rect.left, rect.width) === 'next') next();
+    else prev();
   };
 
   if (!series) return null;
@@ -301,8 +317,10 @@ export function StoryViewer({ initialIndex, onClose }: StoryViewerProps) {
           onPointerUp={handlePointerUp}
           onPointerCancel={() => {
             holdStart.current = null;
+            tapPending.current = false;
             setPaused(false);
           }}
+          onClick={handleClick}
         >
           <div key={`${meta.id}-${slideIdx}`} className="story-slide-inner">
             <div className="story-text">

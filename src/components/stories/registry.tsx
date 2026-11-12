@@ -75,10 +75,11 @@ export function cabinetHost(): string {
   return typeof window === 'undefined' ? '' : window.location.host;
 }
 
-/** Все фото из серий: просмотрщик загружает их заранее. */
-export const STORY_PHOTOS = STORY_SERIES.flatMap((meta) =>
-  meta.slides.flatMap((visual) => ('image' in visual ? [visual.image] : [])),
-);
+/** Фото одной серии: просмотрщик загружает их заранее, при открытии серии. */
+export function storyPhotos(seriesId: string | undefined): string[] {
+  const meta = seriesId ? getSeriesMeta(seriesId) : undefined;
+  return meta ? meta.slides.flatMap((visual) => ('image' in visual ? [visual.image] : [])) : [];
+}
 
 /**
  * Серии с текстом текущей локали. returnObjects отдаёт массив слайдов из JSON;

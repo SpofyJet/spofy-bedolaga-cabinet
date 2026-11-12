@@ -6,13 +6,14 @@ import { cn } from '@/lib/utils';
 import { usePlatform } from '@/platform';
 import { HIDDEN_UNDER_KEYBOARD, useVirtualKeyboard } from '@/hooks/useVirtualKeyboard';
 
-import { HomeIcon, WheelIcon, UsersIcon, ChatIcon, UserIcon } from './icons';
+import { HomeIcon, SubscriptionIcon, WheelIcon, UsersIcon, ChatIcon, UserIcon } from './icons';
 import type { MobileNavItem, MobileNavKey } from './mobileNavRoutes';
 
 type NavIcon = React.ComponentType<{ className?: string }>;
 
 const ICONS: Record<MobileNavKey, NavIcon> = {
   dashboard: HomeIcon,
+  subscription: SubscriptionIcon,
   wheel: WheelIcon,
   referral: UsersIcon,
   support: ChatIcon,
@@ -40,6 +41,9 @@ export function MobileBottomNav({ items, isMenuOpen = false, badges = {} }: Mobi
   const handleNavClick = () => {
     haptic.impact('light');
   };
+
+  // Пять вкладок: подпись 11px (на экране 320px — 10px), как в системных панелях.
+  const compact = items.length >= 5;
 
   return (
     <>
@@ -77,8 +81,10 @@ export function MobileBottomNav({ items, isMenuOpen = false, badges = {} }: Mobi
                 to={item.path}
                 onClick={handleNavClick}
                 className={cn(
-                  // Четыре вкладки — у каждой в запасе ~85px, подпись помещается
-                  // без многоточия даже с длинными переводами (fa/zh).
+                  // До четырёх вкладок у каждой в запасе ~80px. С пятой («Подписка»)
+                  // на экране 360px остаётся 64px, и «Поддержка» обычным размером
+                  // (71px) обрезалась многоточием — размер подписи ниже зависит от
+                  // числа вкладок.
                   'relative flex min-w-0 flex-1 flex-col items-center justify-center rounded-2xl px-0 py-2.5 transition-all duration-200',
                   isActive(item.path) ? 'text-accent-400' : 'text-dark-400 hover:text-dark-200',
                 )}
@@ -101,7 +107,8 @@ export function MobileBottomNav({ items, isMenuOpen = false, badges = {} }: Mobi
                 </span>
                 <span
                   className={cn(
-                    'tile-label relative z-10 mt-2 max-w-full truncate text-2xs transition-colors',
+                    'tile-label relative z-10 mt-2 max-w-full truncate transition-colors',
+                    compact ? 'text-[length:clamp(10px,3.05vw,11px)] leading-[14px]' : 'text-2xs',
                     isActive(item.path) ? 'font-semibold text-dark-100' : 'font-medium',
                   )}
                 >
