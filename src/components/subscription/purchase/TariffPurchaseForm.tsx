@@ -623,6 +623,20 @@ export function TariffPurchaseForm({
                     : 0;
 
                 const totalPrice = promoPeriod.price + trafficPrice;
+                // Баланса не хватает: кнопка сразу ведёт на оплату недостающей суммы и
+                // возвращает к этому тарифу и сроку — как на продлении. Раньше «Купить»
+                // сначала отвечала ошибкой, и только потом появлялась «Пополнить».
+                const shortKopeks =
+                  balanceKopeks !== undefined && totalPrice > 0
+                    ? Math.max(0, totalPrice - balanceKopeks)
+                    : 0;
+                const shortRubles = Math.ceil(shortKopeks / 100);
+                const goTopUp = () => {
+                  const params = new URLSearchParams();
+                  params.set('amount', String(shortRubles));
+                  params.set('returnTo', topUpReturnTo);
+                  navigate(`/balance/top-up?${params.toString()}`);
+                };
                 const originalTotal = promoPeriod.original
                   ? promoPeriod.original + trafficPrice
                   : null;
@@ -712,13 +726,17 @@ export function TariffPurchaseForm({
 
                     <Button
                       className="mt-4 w-full"
-                      onClick={() => purchaseMutation.mutate()}
+                      onClick={() => (shortKopeks > 0 ? goTopUp() : purchaseMutation.mutate())}
                       disabled={purchaseMutation.isPending}
                     >
                       {purchaseMutation.isPending && (
                         <span className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
                       )}
-                      {t('subscription.purchase')}
+                      {shortKopeks > 0
+                        ? t('subscription.v10.payShort', 'Оплатить {{amount}}', {
+                            amount: formatMoney(shortRubles, { round: true }),
+                          })
+                        : t('subscription.purchase')}
                     </Button>
 
                     {sbpPurchaseButton}
