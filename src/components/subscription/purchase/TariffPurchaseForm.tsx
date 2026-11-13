@@ -324,7 +324,8 @@ export function TariffPurchaseForm({
         </h3>
         <div className="mt-3 flex flex-wrap gap-1.5 text-[13px] text-dark-300">
           <span className="rounded-full bg-dark-800/60 px-2.5 py-1">
-            {t('subscription.traffic')}: {tariffTrafficLabel(tariff.traffic_limit_gb, t)}
+            {t('subscription.traffic')}:{' '}
+            {tariffTrafficLabel(tariff.traffic_limit_gb, t, tariff.bypass_quota)}
           </span>
           <span className="rounded-full bg-dark-800/60 px-2.5 py-1">
             {t('subscription.devices')}: {tariff.device_limit === 0 ? '∞' : tariff.device_limit}
@@ -595,7 +596,7 @@ export function TariffPurchaseForm({
                 {!useCustomTraffic && (
                   <p className="mt-1 text-[13px] text-dark-400">
                     {t('subscription.customTraffic.default', {
-                      label: tariffTrafficLabel(tariff.traffic_limit_gb, t),
+                      label: tariffTrafficLabel(tariff.traffic_limit_gb, t, tariff.bypass_quota),
                     })}
                   </p>
                 )}

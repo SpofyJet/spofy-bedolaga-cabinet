@@ -46,13 +46,20 @@ export function canOpenTariffSwitch(
   );
 }
 
-/** Заголовок карточки: у старой подписки честно «без тарифа», а не «текущий тариф». */
+/**
+ * Заголовок карточки: у старой подписки честно «без тарифа», у пробной — «Пробный
+ * период». Заглушку «Текущий тариф» под подписью «Тариф» видел каждый пробный: тарифа
+ * у пробной подписки нет (на 13.11.2026 — у 9 272 из 9 276).
+ */
 export function planTitle(
-  subscription: Pick<Subscription, 'tariff_name' | 'requires_tariff_selection'>,
+  subscription: Pick<Subscription, 'tariff_name' | 'requires_tariff_selection'> &
+    Partial<Pick<Subscription, 'is_trial'>>,
   t: (key: string) => string,
 ): string {
   if (needsTariff(subscription)) return t('subscription.legacy.noTariff');
-  return plainTariffName(subscription.tariff_name) || t('subscription.currentPlan');
+  const name = plainTariffName(subscription.tariff_name);
+  if (name) return name;
+  return t(subscription.is_trial ? 'subscription.trialStatus' : 'subscription.currentPlan');
 }
 
 /**

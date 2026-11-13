@@ -52,6 +52,7 @@ import {
 } from '@/components/icons';
 import { formatPeriodLabel } from '@/utils/periodLabel';
 import { plainTariffName } from '@/utils/plainTariffName';
+import { tariffTrafficLabel } from '@/utils/tariffTrafficLabel';
 
 function getGiftStatusKey(status: string): string {
   const statusMap: Record<string, string> = {
@@ -168,10 +169,10 @@ function TariffCard({
               isSelected ? 'text-accent-400' : 'text-dark-400',
             )}
           >
-            {tariff.traffic_limit_gb > 0
-              ? `${tariff.traffic_limit_gb} ${t('gift.gbShort')}`
-              : t('gift.unlimitedTraffic')}
-            {' \u2022 '}
+            {/* Тариф с обходами — «Безлимит + 50 ГБ обходов»: «50 ГБ» читалось как лимит
+                на весь трафик, хотя обычные серверы у него без лимита. */}
+            {tariffTrafficLabel(tariff.traffic_limit_gb, t, tariff.bypass_quota)}
+            {' · '}
             {t('gift.deviceCount', { count: tariff.device_limit })}
           </p>
         </div>
@@ -1010,11 +1011,11 @@ function SentGiftCard({ gift }: { gift: SentGift }) {
       {/* Info line */}
       <p className="mb-3 text-[13px] text-dark-400">
         {formatGiftDate(gift.created_at)}
-        {' \u2022 '}
+        {' · '}
         {isLifetimePeriod(gift.period_days)
           ? t('subscription.lifetime.forever')
           : `${gift.period_days} ${t('gift.daysShort')}`}
-        {' \u2022 '}
+        {' · '}
         {gift.device_limit} {t('gift.devicesShort', { count: gift.device_limit })}
       </p>
 
@@ -1084,11 +1085,11 @@ function ReceivedGiftCard({ gift }: { gift: ReceivedGift }) {
       {/* Info line */}
       <p className="mb-2 text-[13px] text-dark-400">
         {formatGiftDate(gift.created_at)}
-        {' \u2022 '}
+        {' · '}
         {isLifetimePeriod(gift.period_days)
           ? t('subscription.lifetime.forever')
           : `${gift.period_days} ${t('gift.daysShort')}`}
-        {' \u2022 '}
+        {' · '}
         {gift.device_limit} {t('gift.devicesShort', { count: gift.device_limit })}
       </p>
 

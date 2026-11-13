@@ -626,7 +626,7 @@
     },
     "trialInfo": {
       "title": "Trial Period",
-      "description": "You are using a trial version. Choose a plan below for full access.",
+      "description": "To keep using the VPN after the trial, get a subscription.",
       "remaining": "remaining",
       "upgradeNow": "Choose a plan"
     },
@@ -636,7 +636,7 @@
     },
     "expiredBanner": {
       "title": "Subscription expired",
-      "selectTariff": "Your subscription has expired. Choose a plan below to restore access to VPN."
+      "selectTariff": "Choose a plan below to restore VPN access."
     },
     "connection": {
       "title": "Connect VPN",
@@ -854,6 +854,7 @@
     },
     "tariff": {
       "perDay": "/ day",
+      "per30Days": "for 30 days",
       "flexiblePayment": "Flexible payment",
       "selectForRenewal": "Select for renewal"
     },
@@ -946,6 +947,7 @@
       "trialCta": "Get «С Обходами»"
     },
     "bypassQuotaLabel": "Bypass",
+    "bypassQuotaTariff": "Unlimited + {{gb}} GB bypass",
     "lifetime": {
       "forever": "Forever",
       "term": "Term"
@@ -1004,7 +1006,7 @@
         "description": "Pay via Wata"
       }
     },
-    "transactionHistory": "Transaction History",
+    "transactionHistory": "Transaction history",
     "noTransactions": "No transactions",
     "date": "Date",
     "type": "Type",
@@ -6957,7 +6959,7 @@
       "linkError": "Failed to connect account",
       "telegramLinkUnavailable": "Telegram linking is temporarily unavailable. Use the bot:",
       "unlinkError": "Failed to disconnect account",
-      "goToAccounts": "Connected Accounts",
+      "goToAccounts": "Connected accounts",
       "linking": "Linking account...",
       "linkingTelegram": "Connecting Telegram...",
       "returnToTelegram": "Return to Telegram to continue",
@@ -6993,7 +6995,7 @@
         "settings": "Settings"
       },
       "devices": "My devices",
-      "paymentHistory": "Payment history",
+      "paymentHistory": "Transaction history",
       "promocode": "Promocode",
       "connected": "Connected accounts",
       "notifications": "Notifications",

@@ -835,6 +835,8 @@ export default function Referral() {
           icon={<PiShareNetworkDuotone />}
           label={t('referral.cabinetLink')}
           value={referralLink}
+          copied={copiedLink === 'cabinet'}
+          onCopy={() => copyLink(referralLink, 'cabinet')}
         />
         {botReferralLink && (
           <LinkField
@@ -960,8 +962,8 @@ export default function Referral() {
                 <>
                   {t(`referral.reasons.${earning.reason}`, earning.reason)}
                   {(earning.level ?? 1) > 1 &&
-                    ` • ${t('referral.levelBadge', { count: earning.level ?? 1 })}`}{' '}
-                  • {new Date(earning.created_at).toLocaleDateString(i18n.language)}
+                    ` · ${t('referral.levelBadge', { count: earning.level ?? 1 })}`}{' '}
+                  · {new Date(earning.created_at).toLocaleDateString(i18n.language)}
                 </>
               }
               trailing={

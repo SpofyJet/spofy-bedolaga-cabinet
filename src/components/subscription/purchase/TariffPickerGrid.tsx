@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router';
 import { useCurrency } from '../../../hooks/useCurrency';
 import { usePromoDiscount } from '../../../hooks/usePromoDiscount';
 import { dailyPriceQuote } from './dailyPrice';
+import { listPricePeriod } from './listPrice';
 import { PiCheckCircleDuotone } from 'react-icons/pi';
 import { Button, Chip, EmptyState } from '@/components/spofy/ui';
 import { cn } from '@/lib/utils';
@@ -158,14 +159,17 @@ export function TariffPickerGrid({
                 isPromoGroup: promoDaily.isPromoGroup,
               };
             }
-            if (tariff.periods.length > 0) {
+            const listed = listPricePeriod(tariff);
+            if (listed) {
               // Цена срока уже со всеми скидками человека — столько и спишет покупка.
-              const promoPeriod = periodQuote(tariff.periods[0]);
+              const promoPeriod = periodQuote(listed.period);
               return {
-                // «от» — только когда сроков несколько: у единственного это и есть цена.
-                prefix: tariff.periods.length > 1 ? t('subscription.from') : null,
+                // «от» — только когда сроков несколько и месячного среди них нет: у
+                // единственного срока это и есть цена, у месячного пишем «за 30 дней».
+                prefix:
+                  !listed.isMonth && tariff.periods.length > 1 ? t('subscription.from') : null,
                 value: formatPrice(promoPeriod.price),
-                suffix: null,
+                suffix: listed.isMonth ? t('subscription.tariff.per30Days') : null,
                 original:
                   promoPeriod.original && promoPeriod.original > promoPeriod.price
                     ? formatPrice(promoPeriod.original)
@@ -184,7 +188,7 @@ export function TariffPickerGrid({
             .map((line) => line.trim())
             .filter(Boolean);
           const facts = [
-            tariffTrafficLabel(tariff.traffic_limit_gb, t),
+            tariffTrafficLabel(tariff.traffic_limit_gb, t, tariff.bypass_quota),
             tariff.device_limit === 0
               ? null
               : t('subscription.devices', { count: tariff.device_limit }),

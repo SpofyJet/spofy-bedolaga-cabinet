@@ -6,6 +6,7 @@ import { useCurrency } from '../../../hooks/useCurrency';
 import { usePromoDiscount } from '../../../hooks/usePromoDiscount';
 import type { Tariff } from '../../../types';
 import { dailyPriceQuote } from './dailyPrice';
+import { listPricePeriod } from './listPrice';
 import { tariffAction } from './tariffAction';
 import type { TariffPickerGridProps } from './TariffPickerGrid';
 import { plainTariffName } from '@/utils/plainTariffName';
@@ -37,7 +38,7 @@ export function TariffPickerLite({
   const formatPrice = (kopeks: number) =>
     kopeks === 0 ? t('subscription.free', 'Бесплатно') : formatMoney(kopeks / 100);
 
-  /** Цена строкой: посуточная, «от» за первый период либо гибкая оплата. */
+  /** Цена строкой: посуточная, за 30 дней (нет такого срока — «от» за первый) либо гибкая оплата. */
   const priceOf = (tariff: Tariff) => {
     const daily = dailyPriceQuote(tariff, applyPromoDiscount);
     if (daily) {
@@ -46,12 +47,14 @@ export function TariffPickerLite({
         was: daily.original && daily.original > daily.price ? formatPrice(daily.original) : null,
       };
     }
-    const first = tariff.periods[0];
-    if (first) {
+    const listed = listPricePeriod(tariff);
+    if (listed) {
       // Цена срока уже со всеми скидками человека — столько и спишет покупка.
-      const promo = periodQuote(first);
+      const promo = periodQuote(listed.period);
       return {
-        text: `${t('subscription.from')} ${formatPrice(promo.price)}`,
+        text: listed.isMonth
+          ? `${formatPrice(promo.price)} ${t('subscription.tariff.per30Days')}`
+          : `${t('subscription.from')} ${formatPrice(promo.price)}`,
         was: promo.original && promo.original > promo.price ? formatPrice(promo.original) : null,
       };
     }
@@ -63,7 +66,7 @@ export function TariffPickerLite({
       tariff.device_limit === 0
         ? t('lite.tariff.unlimitedDevices', 'Устройств без ограничений')
         : t('subscription.devices', { count: tariff.device_limit });
-    return `${tariffTrafficLabel(tariff.traffic_limit_gb, t)}, ${devices}`;
+    return `${tariffTrafficLabel(tariff.traffic_limit_gb, t, tariff.bypass_quota)}, ${devices}`;
   };
 
   return (

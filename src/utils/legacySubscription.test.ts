@@ -63,6 +63,14 @@ describe('planTitle', () => {
     );
     expect(planTitle({ tariff_name: undefined }, t)).toBe('subscription.currentPlan');
   });
+
+  it('пробной без тарифа пишет «Пробный период», а не заглушку «Текущий тариф»', () => {
+    expect(planTitle({ tariff_name: undefined, is_trial: true }, t)).toBe(
+      'subscription.trialStatus',
+    );
+    // Имя тарифа, если оно есть, важнее.
+    expect(planTitle({ tariff_name: 'Базовый', is_trial: true }, t)).toBe('Базовый');
+  });
 });
 
 describe('showsAddonOptions', () => {

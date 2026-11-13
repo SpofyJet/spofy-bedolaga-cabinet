@@ -654,7 +654,7 @@
     },
     "trialInfo": {
       "title": "Пробный период",
-      "description": "Вы используете пробную версию сервиса. Выберите тариф ниже для полного доступа.",
+      "description": "Чтобы пользоваться VPN после пробного периода, оформите подписку.",
       "remaining": "осталось",
       "upgradeNow": "Выбрать тариф"
     },
@@ -664,7 +664,7 @@
     },
     "expiredBanner": {
       "title": "Подписка истекла",
-      "selectTariff": "Ваша подписка истекла. Выберите тариф ниже, чтобы возобновить доступ к VPN."
+      "selectTariff": "Выберите тариф ниже, чтобы вернуть доступ к VPN."
     },
     "connection": {
       "title": "Подключить VPN",
@@ -712,7 +712,7 @@
     },
     "myDevices": "Мои устройства",
     "connectedOfLimit": "Подключено {{used}} из {{limit}}",
-    "noDevices": "Нет подключенных устройств",
+    "noDevices": "Нет подключённых устройств",
     "deleteDevice": "Удалить устройство",
     "deleteAllDevices": "Удалить все",
     "confirmDeleteDevice": "Удалить это устройство?",
@@ -888,6 +888,7 @@
     },
     "tariff": {
       "perDay": "/ день",
+      "per30Days": "за 30 дней",
       "flexiblePayment": "Гибкая оплата",
       "selectForRenewal": "Выбрать для продления"
     },
@@ -982,6 +983,7 @@
       "trialCta": "Оформить «С Обходами»"
     },
     "bypassQuotaLabel": "Обходы",
+    "bypassQuotaTariff": "Безлимит + {{gb}} ГБ обходов",
     "lifetime": {
       "forever": "Навсегда",
       "term": "Срок"
@@ -5085,7 +5087,7 @@
         "restriction": "Ограничение",
         "firstPurchaseOnly": "Только первая покупка",
         "usageHistory": "История использования",
-        "noUsages": "Промокод еще не использовался",
+        "noUsages": "Промокод ещё не использовался",
         "totalPromocodes": "Всего промокодов",
         "activeCount": "Активных",
         "usagesCount": "Использований",
@@ -7354,9 +7356,9 @@
       "enable": "Включить",
       "disable": "Отключить",
       "hide": "Скрыть ({{count}})",
-      "showMore_one": "Показать еще {{count}} ноду",
-      "showMore_few": "Показать еще {{count}} ноды",
-      "showMore_many": "Показать еще {{count}} нод",
+      "showMore_one": "Показать ещё {{count}} ноду",
+      "showMore_few": "Показать ещё {{count}} ноды",
+      "showMore_many": "Показать ещё {{count}} нод",
       "showMore": "Показать ещё"
     },
     "revenue": {
@@ -7558,9 +7560,9 @@
         "settings": "Настройки"
       },
       "devices": "Мои устройства",
-      "paymentHistory": "История платежей",
+      "paymentHistory": "История операций",
       "promocode": "Промокод",
-      "connected": "Подключённые аккаунты",
+      "connected": "Привязанные аккаунты",
       "notifications": "Уведомления",
       "notificationsOn": "Включены",
       "notificationsOff": "Выключены",

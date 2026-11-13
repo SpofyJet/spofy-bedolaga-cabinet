@@ -70,13 +70,16 @@ export default function PurchaseCTAButton({
   if (isMultiTariff && isDaily && !isExpired) return null;
   if (isLifetime && !isExpired) return null;
 
+  // Пробной — «Оформить подписку», теми же словами, что на главной: раньше здесь
+  // стоял заголовок плашки «Выберите тариф для продолжения».
   const buttonText = requiresTariff
     ? t('subscription.cta.moveToTariff')
-    : isExpired
+    : isExpired || isTrial
       ? t('subscription.getSubscription')
-      : isTrial
-        ? t('subscription.trialUpgrade.title')
-        : t('subscription.extend');
+      : t('subscription.extend');
+  // Пока пробная работает, главная кнопка экрана — «Подключить устройство» в карточке
+  // выше, эта спокойная. Пробная закончилась — действие на экране одно, кнопка залита.
+  const trialLive = Boolean(isTrial && (subscription?.is_active || subscription?.is_limited));
 
   // Legacy (no tariff) → tariff catalog pinned to this subscription
   // Trial → purchase page (buy a real tariff, trial can't be renewed)
@@ -92,7 +95,7 @@ export default function PurchaseCTAButton({
           : '/subscription/purchase';
 
   return (
-    <Link to={linkTo} className={linkButton(isTrial ? 'secondary' : 'primary', 'w-full')}>
+    <Link to={linkTo} className={linkButton(trialLive ? 'secondary' : 'primary', 'w-full')}>
       {buttonText}
     </Link>
   );

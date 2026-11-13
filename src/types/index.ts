@@ -307,6 +307,8 @@ export interface Tariff {
   traffic_limit_gb: number;
   traffic_limit_label: string;
   is_unlimited_traffic: boolean;
+  /** Spofy: лимит тарифа — квота только на обходы, обычные серверы без лимита. */
+  bypass_quota?: boolean;
   device_limit: number;
   base_device_limit?: number;
   extra_devices_count: number;

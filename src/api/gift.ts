@@ -17,6 +17,8 @@ export interface GiftTariff {
   name: string;
   description: string | null;
   traffic_limit_gb: number;
+  /** Spofy: лимит тарифа — квота только на обходы, обычные серверы без лимита. */
+  bypass_quota?: boolean;
   device_limit: number;
   periods: GiftTariffPeriod[];
   /** Тариф, отмеченный оператором как выгодный. */

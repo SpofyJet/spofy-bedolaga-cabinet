@@ -323,10 +323,10 @@ export default function Subscription() {
   const isLifetime = isLifetimeSubscription(subscription);
   const isLive = subscription.is_active || subscription.is_limited;
 
+  // У пробной «Пробный период» стоит названием тарифа; отметка рядом говорит о
+  // состоянии («Активна»), а не повторяет название.
   const status = subscription.is_active
-    ? subscription.is_trial
-      ? { tone: 'accent' as const, label: t('subscription.trialStatus') }
-      : { tone: 'success' as const, label: t('subscription.active') }
+    ? { tone: 'success' as const, label: t('subscription.active') }
     : subscription.is_limited
       ? { tone: 'warning' as const, label: t('subscription.trafficLimited') }
       : subscription.status === 'disabled'

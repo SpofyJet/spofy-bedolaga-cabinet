@@ -106,6 +106,29 @@ describe('старая подписка (нужен тариф)', () => {
   });
 });
 
+describe('пробная подписка', () => {
+  it('зовёт теми же словами, что главная: «Оформить подписку»', async () => {
+    await renderCta(subscription({ is_trial: true }), false);
+
+    expect(href()).toBe('/subscription/purchase');
+    expect(screen.getByText('subscription.getSubscription')).toBeTruthy();
+    expect(screen.queryByText('subscription.trialUpgrade.title')).toBeNull();
+  });
+
+  it('пока пробная работает, кнопка спокойная; закончилась — залитая (действие одно)', async () => {
+    await renderCta(subscription({ is_trial: true }), false);
+    expect(screen.getByRole('link').className).not.toContain('bg-cta-500');
+    cleanup();
+
+    await renderCta(
+      subscription({ is_trial: true, is_active: false, is_expired: true, status: 'expired' }),
+      false,
+    );
+    expect(screen.getByRole('link').className).toContain('bg-cta-500');
+    expect(screen.getByText('subscription.getSubscription')).toBeTruthy();
+  });
+});
+
 describe('подписка с тарифом', () => {
   it('в мультитарифе по-прежнему ведёт на продление', async () => {
     await renderCta(subscription({ tariff_id: 7, requires_tariff_selection: false }), true);

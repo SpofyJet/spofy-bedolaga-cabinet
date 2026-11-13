@@ -201,7 +201,7 @@ export function SwitchTariffSheet({
                   {t('subscription.switchTariff.newLimits')}
                 </dt>
                 <dd className="min-w-0 space-y-1 text-end text-sm text-dark-100">
-                  <div>{tariffTrafficLabel(target.traffic_limit_gb, t)}</div>
+                  <div>{tariffTrafficLabel(target.traffic_limit_gb, t, target.bypass_quota)}</div>
                   <div>
                     {target.device_limit === 0
                       ? t('lite.tariff.unlimitedDevices')
