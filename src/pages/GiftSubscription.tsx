@@ -52,6 +52,7 @@ import {
 } from '@/components/icons';
 import { formatPeriodLabel } from '@/utils/periodLabel';
 import { plainTariffName } from '@/utils/plainTariffName';
+import { DOT_PART, DOT_ROW } from '@/utils/dotSeparated';
 import { tariffTrafficLabel } from '@/utils/tariffTrafficLabel';
 
 function getGiftStatusKey(status: string): string {
@@ -165,15 +166,22 @@ function TariffCard({
           </p>
           <p
             className={cn(
-              'mt-0.5 text-[13px] transition-colors',
+              'mt-0.5 overflow-hidden text-[13px] transition-colors',
               isSelected ? 'text-accent-400' : 'text-dark-400',
             )}
           >
             {/* Тариф с обходами — «Безлимит + 50 ГБ обходов»: «50 ГБ» читалось как лимит
-                на весь трафик, хотя обычные серверы у него без лимита. */}
-            {tariffTrafficLabel(tariff.traffic_limit_gb, t, tariff.bypass_quota)}
-            {' · '}
-            {t('gift.deviceCount', { count: tariff.device_limit })}
+                на весь трафик, хотя обычные серверы у него без лимита. Строка длиннее
+                соседних и на телефоне не помещается: устройства переходят на вторую
+                строку целиком, а не «· 3 / устройства». */}
+            <span className={DOT_ROW}>
+              <span className={DOT_PART}>
+                {tariffTrafficLabel(tariff.traffic_limit_gb, t, tariff.bypass_quota)}
+              </span>
+              <span className={cn(DOT_PART, 'whitespace-nowrap')}>
+                {t('gift.deviceCount', { count: tariff.device_limit })}
+              </span>
+            </span>
           </p>
         </div>
 

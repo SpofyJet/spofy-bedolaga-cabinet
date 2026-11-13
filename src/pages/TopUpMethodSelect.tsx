@@ -36,13 +36,6 @@ const FAST_METHOD_ID = 'platega_m2';
 
 const LEADING_EMOJI = /^(?:\p{Extended_Pictographic}|️|‍|\s)+/u;
 
-/**
- * «Описание · суммы» через точку. Точка стоит слева от каждой части и уходит за
- * обрезанный край у первой в строке: когда суммы переносятся на вторую строку,
- * точка не повисает в конце первой.
- */
-const DOT_SEPARATED = "relative pl-3 before:absolute before:left-1 before:content-['·']";
-
 /** Имя без эмодзи-префикса (рядом есть иконка); в группе крипты — без «Криптовалюта (…)». */
 function methodTitle(name: string, group: MethodGroup): string {
   let title = name.replace(LEADING_EMOJI, '').trim();
@@ -111,12 +104,15 @@ export default function TopUpMethodSelect() {
               </span>
             )}
           </span>
-          <span className="mt-0.5 block overflow-hidden text-[13px] leading-snug text-dark-400">
+          {/* Описание и суммы — всегда на своих строках. Через точку в одну строку на
+              телефоне помещались два способа из шести, и строки списка выходили разной
+              высоты. */}
+          <span className="mt-0.5 block text-[13px] leading-snug text-dark-400">
             {method.is_available ? (
-              <span className="-ml-3 flex flex-wrap">
-                {description && <span className={DOT_SEPARATED}>{description}</span>}
-                <span className={cn(DOT_SEPARATED, 'whitespace-nowrap')}>{range}</span>
-              </span>
+              <>
+                {description && <span className="block">{description}</span>}
+                <span className="block whitespace-nowrap">{range}</span>
+              </>
             ) : (
               t('balance.notAvailable')
             )}
