@@ -1070,7 +1070,6 @@
       "checking": "Checking..."
     },
     "paymentReady": "Payment link is ready",
-    "clickToOpenPayment": "Click the button below to open the payment page in a new tab",
     "openPaymentPage": "Open payment page",
     "errors": {
       "noPaymentLink": "Server did not return a payment link",

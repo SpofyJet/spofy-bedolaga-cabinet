@@ -157,6 +157,12 @@ export default function TopUpAmount() {
   // round-trip that could push a min-amount chip just below the allowed minimum. Cleared
   // as soon as the user edits the field by hand.
   const [quickRub, setQuickRub] = useState<number | null>(null);
+  // Готовая ссылка — на прежнюю сумму и вариант оплаты: после правки она не годится,
+  // и главная кнопка снова создаёт платёж.
+  const dropPaymentLink = () => {
+    setPaymentUrl(null);
+    setQrPayload(null);
+  };
 
   // Once methods have loaded, redirect to method selection if this method id is unknown.
   useEffect(() => {
@@ -453,6 +459,7 @@ export default function TopUpAmount() {
 
   const amountNumber = parseFloat(amount);
   const canSubmit = !isPending && !!amount && amountNumber > 0;
+  const paymentReady = !!paymentUrl && !isPending;
   const methodTitle = methodName.replace(/^(?:\p{Extended_Pictographic}|️|‍|\s)+/u, '').trim();
   // Итог: сколько станет на балансе. Только когда сумма введена и баланс известен.
   const amountRubForSummary =
@@ -506,7 +513,10 @@ export default function TopUpAmount() {
                   key={opt.id}
                   type="button"
                   aria-pressed={active}
-                  onClick={() => setSelectedOption(opt.id)}
+                  onClick={() => {
+                    if (opt.id !== selectedOption) dropPaymentLink();
+                    setSelectedOption(opt.id);
+                  }}
                   className={cn(
                     'h-10 min-w-0 flex-1 truncate rounded-xl px-3 text-[13px] font-semibold transition-colors',
                     active ? 'bg-dark-700 text-dark-50' : 'text-dark-400 hover:text-dark-200',
@@ -544,13 +554,15 @@ export default function TopUpAmount() {
             onChange={(e) => {
               setAmount(e.target.value);
               setQuickRub(null);
+              dropPaymentLink();
             }}
             onFocus={() => setIsInputFocused(true)}
             onBlur={() => setIsInputFocused(false)}
             onKeyDown={(e) => {
               if (e.key === 'Enter') {
                 e.preventDefault();
-                handleSubmit();
+                if (paymentReady) handleOpenPayment();
+                else handleSubmit();
               }
             }}
             placeholder="0"
@@ -565,17 +577,19 @@ export default function TopUpAmount() {
         {quickAmounts.length > 0 && (
           <div
             className={cn(
-              'mt-3 grid gap-2',
+              'mt-3 grid',
               // Без одинокой кнопки на второй строке: 5 — в ряд, 6 — 3×2.
+              // Пять в ряд на 360 px — по 54 px на кнопку: зазор и поля меньше, иначе
+              // «1 500 ₽» и «5 000 ₽» обрезались до «1 500…» и «5 00…».
               (
                 {
-                  1: 'grid-cols-1',
-                  2: 'grid-cols-2',
-                  3: 'grid-cols-3',
-                  5: 'grid-cols-5',
-                  6: 'grid-cols-3',
+                  1: 'grid-cols-1 gap-2',
+                  2: 'grid-cols-2 gap-2',
+                  3: 'grid-cols-3 gap-2',
+                  5: 'grid-cols-5 gap-1.5',
+                  6: 'grid-cols-3 gap-2',
                 } as Record<number, string>
-              )[quickAmounts.length] ?? 'grid-cols-4',
+              )[quickAmounts.length] ?? 'grid-cols-4 gap-2',
             )}
           >
             {quickAmounts.map((a) => {
@@ -587,12 +601,14 @@ export default function TopUpAmount() {
                   type="button"
                   aria-pressed={isSelected}
                   onClick={() => {
+                    if (val !== amount) dropPaymentLink();
                     setAmount(val);
                     setQuickRub(a);
                     inputRef.current?.blur();
                   }}
                   className={cn(
-                    'h-10 min-w-0 truncate rounded-xl px-1 text-[13px] font-semibold transition-colors',
+                    'h-10 min-w-0 truncate rounded-xl text-[13px] font-semibold transition-colors',
+                    quickAmounts.length === 5 ? 'px-0 tracking-tight' : 'px-1',
                     isSelected
                       ? 'bg-accent-500/15 text-accent-400'
                       : 'bg-dark-800/60 text-dark-200 hover:bg-dark-800',
@@ -619,27 +635,30 @@ export default function TopUpAmount() {
         )}
       </Surface>
 
-      {/* Оплатить */}
-      <Button
-        // Когда ссылка уже готова, главная кнопка — «Открыть страницу оплаты» ниже.
-        tone={paymentUrl ? 'secondary' : 'primary'}
-        onClick={handleSubmit}
-        disabled={!canSubmit}
-        className="w-full"
-      >
-        {isPending ? (
-          <span
-            aria-hidden
-            className="h-5 w-5 animate-spin rounded-full border-2 border-current border-t-transparent"
-          />
-        ) : canSubmit ? (
-          t('balance.topUpFor', {
-            amount: `${formatAmount(amountNumber, 0)} ${currencySymbol}`,
-          })
-        ) : (
-          t('balance.topUp')
-        )}
-      </Button>
+      {/* Оплатить. Когда ссылка готова, оплату открывает эта же кнопка: второй шаг — там же,
+          куда человек только что нажал. Раньше он появлялся отдельной кнопкой ниже (на 360×640 —
+          у самого края экрана), «Пополнить» жали повторно и плодили платежи. */}
+      {paymentReady ? (
+        <Button onClick={handleOpenPayment} className="w-full">
+          <PiArrowSquareOutBold className="h-[18px] w-[18px]" aria-hidden />
+          {t('balance.openPaymentPage')}
+        </Button>
+      ) : (
+        <Button onClick={handleSubmit} disabled={!canSubmit} className="w-full">
+          {isPending ? (
+            <span
+              aria-hidden
+              className="h-5 w-5 animate-spin rounded-full border-2 border-current border-t-transparent"
+            />
+          ) : canSubmit ? (
+            t('balance.topUpFor', {
+              amount: `${formatAmount(amountNumber, 0)} ${currencySymbol}`,
+            })
+          ) : (
+            t('balance.topUp')
+          )}
+        </Button>
+      )}
 
       {/* Ошибка и «Попробуйте другой способ»: те же деньги можно внести иначе (как в боте) */}
       {error && (
@@ -680,21 +699,16 @@ export default function TopUpAmount() {
         </Surface>
       )}
 
-      {/* Ссылка на оплату готова */}
+      {/* Ссылка на оплату готова: QR и сама ссылка — запасной путь (другое устройство, копия) */}
       {paymentUrl && (
         <Surface className="space-y-4">
           <div className="flex items-center gap-3">
             <RowIcon tone="success">
               <PiCheckCircleDuotone />
             </RowIcon>
-            <div className="min-w-0">
-              <p className="text-[15px] font-semibold text-dark-100">{t('balance.paymentReady')}</p>
-              {!qrPayload && (
-                <p className="mt-0.5 text-[13px] leading-snug text-dark-400">
-                  {t('balance.clickToOpenPayment')}
-                </p>
-              )}
-            </div>
+            <p className="min-w-0 text-[15px] font-semibold text-dark-100">
+              {t('balance.paymentReady')}
+            </p>
           </div>
 
           {qrPayload && (
@@ -710,11 +724,6 @@ export default function TopUpAmount() {
               </p>
             </div>
           )}
-
-          <Button onClick={handleOpenPayment} className="w-full">
-            <PiArrowSquareOutBold className="h-[18px] w-[18px]" aria-hidden />
-            {t('balance.openPaymentPage')}
-          </Button>
 
           <div className="flex items-center gap-2">
             <div className="min-w-0 flex-1 rounded-xl bg-dark-800/60 px-3 py-2.5">
