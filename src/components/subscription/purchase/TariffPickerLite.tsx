@@ -32,7 +32,7 @@ export function TariffPickerLite({
 }: TariffPickerGridProps) {
   const { t } = useTranslation();
   const { formatMoney } = useCurrency();
-  const { applyPromoDiscount } = usePromoDiscount();
+  const { applyPromoDiscount, periodQuote } = usePromoDiscount();
 
   const formatPrice = (kopeks: number) =>
     kopeks === 0 ? t('subscription.free', 'Бесплатно') : formatMoney(kopeks / 100);
@@ -48,7 +48,8 @@ export function TariffPickerLite({
     }
     const first = tariff.periods[0];
     if (first) {
-      const promo = applyPromoDiscount(first.price_kopeks || 0, first.original_price_kopeks);
+      // Цена срока уже со всеми скидками человека — столько и спишет покупка.
+      const promo = periodQuote(first);
       return {
         text: `${t('subscription.from')} ${formatPrice(promo.price)}`,
         was: promo.original && promo.original > promo.price ? formatPrice(promo.original) : null,

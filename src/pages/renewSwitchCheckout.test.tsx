@@ -29,7 +29,10 @@ vi.mock('../hooks/useCurrency', () => ({
 vi.mock('../hooks/useTheme', () => ({ useTheme: () => ({ isDark: true }) }));
 vi.mock('../hooks/useLiteMode', () => ({ useLiteMode: () => ({ lite: state.lite }) }));
 vi.mock('../hooks/usePromoDiscount', () => ({
-  usePromoDiscount: () => ({ applyPromoDiscount: (price: number) => ({ price }) }),
+  usePromoDiscount: () => ({
+    applyPromoDiscount: (price: number) => ({ price }),
+    periodQuote: (period: { price_kopeks: number }) => ({ price: period.price_kopeks }),
+  }),
 }));
 vi.mock('../api/subscription', () => ({
   subscriptionApi: {

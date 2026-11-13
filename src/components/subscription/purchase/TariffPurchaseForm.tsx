@@ -68,7 +68,7 @@ export function TariffPurchaseForm({
   const location = useLocation();
   const queryClient = useQueryClient();
   const { formatMoney } = useCurrency();
-  const { applyPromoDiscount } = usePromoDiscount();
+  const { applyPromoDiscount, periodQuote } = usePromoDiscount();
   // Та же котировка, что на карточке тарифа: серверная цена + промокод один раз.
   const dailyQuote = dailyPriceQuote(tariff, applyPromoDiscount);
   const customDayUnitPrice =
@@ -217,9 +217,7 @@ export function TariffPurchaseForm({
     ) : null;
   // Цена месяца с учётом скидки человека — от неё считаем выгоду длинных сроков.
   const monthlyPeriod = tariff.periods.find((period) => period.days === 30);
-  const monthlyPriceKopeks = monthlyPeriod
-    ? applyPromoDiscount(monthlyPeriod.price_kopeks, monthlyPeriod.original_price_kopeks).price
-    : null;
+  const monthlyPriceKopeks = monthlyPeriod ? periodQuote(monthlyPeriod).price : null;
   const switchClass = (on: boolean) =>
     cn(
       "relative h-7 w-12 shrink-0 rounded-full transition-colors duration-200 before:absolute before:-inset-2 before:content-['']",
@@ -237,17 +235,13 @@ export function TariffPurchaseForm({
   // Итог выбранного срока: нужен и блоку «Итог», и прижатой к низу кнопке оплаты.
   const quote = (() => {
     if (isDailyTariff || !(selectedTariffPeriod || useCustomDays)) return null;
+    // Готовый срок — цена сервера как есть: персональная скидка уже в ней, и ровно
+    // столько спишет покупка. «Свой срок» сервер отдаёт без неё — накладываем здесь.
     const customQuote = customDaysPrice(tariff, customDays);
-    const basePeriodPrice = useCustomDays
-      ? customQuote.price
-      : selectedTariffPeriod?.price_kopeks || 0;
-    const existingPeriodOriginal = useCustomDays
-      ? customQuote.original
-      : selectedTariffPeriod?.original_price_kopeks &&
-          selectedTariffPeriod.original_price_kopeks > selectedTariffPeriod.price_kopeks
-        ? selectedTariffPeriod.original_price_kopeks
-        : undefined;
-    const promoPeriod = applyPromoDiscount(basePeriodPrice, existingPeriodOriginal);
+    const promoPeriod =
+      useCustomDays || !selectedTariffPeriod
+        ? applyPromoDiscount(customQuote.price, customQuote.original)
+        : periodQuote(selectedTariffPeriod);
     const customTraffic = useCustomTraffic && Boolean(tariff.custom_traffic_enabled);
     const trafficPrice = customTraffic
       ? customTrafficGb * (tariff.traffic_price_per_gb_kopeks ?? 0)
@@ -423,10 +417,7 @@ export function TariffPurchaseForm({
                   setUseCustomDays(false);
                 }}
                 items={tariff.periods.map((period) => {
-                  const promoPeriod = applyPromoDiscount(
-                    period.price_kopeks,
-                    period.original_price_kopeks,
-                  );
+                  const promoPeriod = periodQuote(period);
                   const displayOriginal = promoPeriod.original;
                   const displayPrice = promoPeriod.price;
                   // За месяц и короче «в месяц» повторяло бы саму цену.

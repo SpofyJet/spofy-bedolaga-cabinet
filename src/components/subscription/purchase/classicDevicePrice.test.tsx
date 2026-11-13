@@ -28,6 +28,8 @@ vi.mock('@/hooks/usePromoDiscount', async (load) => {
     ...actual,
     usePromoDiscount: () => ({
       applyPromoDiscount: (p: number, o?: number) => actual.combinePromoDiscount(p, o, 0),
+      periodQuote: (period: { price_kopeks: number; original_price_kopeks?: number }) =>
+        actual.serverPeriodQuote(period, false),
     }),
   };
 });

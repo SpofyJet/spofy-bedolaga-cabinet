@@ -28,6 +28,11 @@ vi.mock('@/hooks/useCurrency', () => ({
 vi.mock('@/hooks/usePromoDiscount', () => ({
   usePromoDiscount: () => ({
     applyPromoDiscount: (price: number, original?: number) => ({ price, original, percent: null }),
+    periodQuote: (period: { price_kopeks: number; original_price_kopeks?: number }) => ({
+      price: period.price_kopeks,
+      original: period.original_price_kopeks,
+      percent: null,
+    }),
   }),
 }));
 

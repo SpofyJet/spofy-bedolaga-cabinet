@@ -64,7 +64,7 @@ export function TariffPickerGrid({
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { formatMoney } = useCurrency();
-  const { applyPromoDiscount } = usePromoDiscount();
+  const { applyPromoDiscount, periodQuote } = usePromoDiscount();
 
   // Целые суммы без «,00»: «299 ₽», а не «299,00 ₽».
   const formatPrice = (kopeks: number) =>
@@ -159,11 +159,8 @@ export function TariffPickerGrid({
               };
             }
             if (tariff.periods.length > 0) {
-              const firstPeriod = tariff.periods[0];
-              const promoPeriod = applyPromoDiscount(
-                firstPeriod?.price_kopeks || 0,
-                firstPeriod?.original_price_kopeks,
-              );
+              // Цена срока уже со всеми скидками человека — столько и спишет покупка.
+              const promoPeriod = periodQuote(tariff.periods[0]);
               return {
                 // «от» — только когда сроков несколько: у единственного это и есть цена.
                 prefix: tariff.periods.length > 1 ? t('subscription.from') : null,
