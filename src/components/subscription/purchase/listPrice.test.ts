@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { listPricePeriod } from './listPrice';
+import { defaultPeriod, listPricePeriod } from './listPrice';
 
 const period = (days: number, price: number) => ({ days, price_kopeks: price });
 
@@ -21,5 +21,27 @@ describe('listPricePeriod', () => {
 
   it('без сроков цены нет', () => {
     expect(listPricePeriod({ periods: [] })).toBeNull();
+  });
+});
+
+describe('defaultPeriod', () => {
+  it('без отметки оператора заранее выбран месяц, а не две недели', () => {
+    // «Стандартный»: первый срок — 14 дней за 159 ₽, карточка тарифа пишет «179 ₽ за 30 дней».
+    const chosen = defaultPeriod([period(14, 15900), period(30, 17900), period(60, 31900)]);
+    expect(chosen?.days).toBe(30);
+  });
+
+  it('отметка оператора «Выгодно» важнее месяца', () => {
+    const chosen = defaultPeriod([
+      period(14, 15900),
+      period(30, 17900),
+      { ...period(90, 40900), is_highlighted: true },
+    ]);
+    expect(chosen?.days).toBe(90);
+  });
+
+  it('нет ни отметки, ни 30 дней — первый срок, как раньше', () => {
+    expect(defaultPeriod([period(2222, 579000)])?.days).toBe(2222);
+    expect(defaultPeriod([])).toBeUndefined();
   });
 });

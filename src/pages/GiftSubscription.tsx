@@ -32,6 +32,7 @@ import { buildGiftClaimArtifacts } from '../utils/giftShare';
 import { getApiErrorMessage } from '../utils/api-error';
 import { formatPriceShort as formatPrice } from '../utils/format';
 import { pickBestValue } from '../utils/bestValue';
+import { defaultPeriod } from '../components/subscription/purchase/listPrice';
 import { BestValueBadge, bestValueFrame } from '../components/subscription/BestValueBadge';
 import { useCurrency } from '../hooks/useCurrency';
 import { usePlatform, useHaptic } from '@/platform';
@@ -413,8 +414,8 @@ function BuyTabContent({
     if (lastTariffIdRef.current === tariff.id) return;
     lastTariffIdRef.current = tariff.id;
     if (tariff.periods.length > 0) {
-      const period = pickBestValue(tariff.periods) ?? tariff.periods[0];
-      setSelectedPeriodDays(period.days);
+      const period = defaultPeriod(tariff.periods);
+      if (period) setSelectedPeriodDays(period.days);
     }
   }, [config.tariffs, selectedTariffId]);
 

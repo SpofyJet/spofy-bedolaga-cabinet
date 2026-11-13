@@ -12,12 +12,12 @@ import { usePromoDiscount } from '../../../hooks/usePromoDiscount';
 import { useSuccessNotification } from '../../../store/successNotification';
 import { dailyPriceQuote } from './dailyPrice';
 import { customDaysPrice } from './customDaysPrice';
+import { defaultPeriod } from './listPrice';
 import { usePlatform } from '../../../platform';
 import { openPaymentUrl } from '../../../utils/openPaymentUrl';
 import { getMonthlyPriceKopeks } from '../../../utils/pricing';
 import { isLifetimePeriod } from '../../../utils/lifetime';
 import { formatPeriodLabel } from '../../../utils/periodLabel';
-import { pickBestValue } from '../../../utils/bestValue';
 import InsufficientBalancePrompt from '../../InsufficientBalancePrompt';
 import type { Tariff, TariffPeriod } from '../../../types';
 import { PeriodList } from '../PeriodList';
@@ -85,11 +85,11 @@ export function TariffPurchaseForm({
   // Form-internal state — seeded from the tariff prop. Resets via
   // `key={tariff.id}` on the parent's render.
   // Отмеченный оператором период выбран сразу: рамка «Выгодно» и итог внизу
-  // должны говорить об одном и том же периоде.
+  // должны говорить об одном и том же периоде. Отметки нет — 30 дней, как на
+  // карточке тарифа (см. defaultPeriod).
   const [selectedTariffPeriod, setSelectedTariffPeriod] = useState<TariffPeriod | null>(
     (initialPeriodDays ? tariff.periods.find((p) => p.days === initialPeriodDays) : undefined) ||
-      pickBestValue(tariff.periods) ||
-      tariff.periods[0] ||
+      defaultPeriod(tariff.periods) ||
       null,
   );
   const [customDays, setCustomDays] = useState<number>(30);

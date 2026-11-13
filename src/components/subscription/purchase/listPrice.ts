@@ -15,3 +15,21 @@ export function listPricePeriod<P extends { days: number }>(tariff: {
   const first = tariff.periods[0];
   return first ? { period: first, isMonth: false } : null;
 }
+
+/**
+ * Срок, выбранный заранее в форме покупки и в подарке. Сначала отметка оператора
+ * «Выгодно», затем 30 дней, затем первый по счёту. Раньше без отметки брался первый —
+ * у «Стандартного» это две недели за 159 ₽, хотя карточка тарифа, с которой человек
+ * пришёл, пишет «179 ₽ за 30 дней»: кто не посмотрел на срок, покупал две недели
+ * почти по цене месяца.
+ */
+export function defaultPeriod<P extends { days: number; is_highlighted?: boolean | null }>(
+  periods: readonly P[] | null | undefined,
+): P | undefined {
+  if (!periods || periods.length === 0) return undefined;
+  return (
+    periods.find((period) => Boolean(period.is_highlighted)) ??
+    periods.find((period) => period.days === LIST_PRICE_PERIOD_DAYS) ??
+    periods[0]
+  );
+}
