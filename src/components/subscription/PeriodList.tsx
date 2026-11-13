@@ -75,10 +75,17 @@ export function PeriodList({ items, selectedDays, onSelect }: PeriodListProps) {
                 {item.discount}
               </span>
               {item.perMonth ? (
-                <span className="mt-0.5 block text-[13.5px] text-dark-400">
-                  {item.perMonth}/{t('subscription.month', 'мес')}
+                // «выгода 1 402 ₽» не рвётся посередине: на 360 px рядом с плашкой скидки
+                // слово оставалось на первой строке, а сумма уезжала на вторую.
+                <span className="mt-0.5 flex flex-wrap gap-x-1.5 text-[13.5px] text-dark-400">
+                  <span className="whitespace-nowrap">
+                    {item.perMonth}/{t('subscription.month', 'мес')}
+                  </span>
                   {item.saving ? (
-                    <span className="ml-1.5 font-semibold text-success-400 light:text-success-700">
+                    <span
+                      data-saving
+                      className="whitespace-nowrap font-semibold text-success-400 light:text-success-700"
+                    >
                       {t('subscription.v10.saving', 'выгода {{amount}}', { amount: item.saving })}
                     </span>
                   ) : null}
