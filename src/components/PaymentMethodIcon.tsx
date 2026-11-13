@@ -250,7 +250,8 @@ const SPOFY_CRYPTO_ICONS: Record<string, string> = {
   pay2328: 'spofy_crypto_pay2328',
   xrocket: 'spofy_crypto_xrocket',
 };
-const SPOFY_CARD_METHODS = new Set(['wata']);
+/** WATA принимает оплату по СБП, а не картой — знак «СБП». */
+const SPOFY_SBP_METHODS = new Set(['wata']);
 
 /**
  * Spofy: какую плитку показать способу оплаты — по тому, ЧЕМ платит человек
@@ -260,8 +261,8 @@ const SPOFY_CARD_METHODS = new Set(['wata']);
 export function spofyPaymentIcon(methodId: string): string {
   const id = methodId.toLowerCase();
   if (id === 'platega_m12') return 'spofy_intl_card';
-  if (id === 'platega_m2' || id.includes('sbp')) return 'spofy_sbp';
-  if (id.startsWith('platega') || SPOFY_CARD_METHODS.has(id)) return 'spofy_card';
+  if (id === 'platega_m2' || id.includes('sbp') || SPOFY_SBP_METHODS.has(id)) return 'spofy_sbp';
+  if (id.startsWith('platega')) return 'spofy_card';
   if (SPOFY_CRYPTO_ICONS[id]) return SPOFY_CRYPTO_ICONS[id];
   if (id.includes('crypto') || id.includes('ton') || id.includes('usdt')) return 'spofy_crypto';
   if (id.includes('stars')) return 'spofy_stars';
