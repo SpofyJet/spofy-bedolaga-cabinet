@@ -1,270 +1,239 @@
+import { useId } from 'react';
+
 interface PaymentMethodIconProps {
   method: string;
   className?: string;
+}
+
+/**
+ * Знаки способов оплаты. Правило: официальный знак того, ЧЕМ человек платит
+ * (СБП, Visa / Mastercard, монета, звезда Telegram, кошелёк xRocket), на белой
+ * плашке — так цвета знака не искажаются ни в тёмной, ни в светлой теме.
+ * Самодельных подписей и абстрактных символов провайдеров здесь нет: покупателю
+ * они ничего не говорили. Откуда взяты знаки — в NOTICE.
+ */
+type IconKind =
+  | 'spofy_sbp'
+  | 'spofy_intl_card'
+  | 'spofy_card'
+  | 'spofy_crypto'
+  | 'spofy_crypto_xrocket'
+  | 'spofy_stars'
+  | 'spofy_other';
+
+const KINDS = new Set<string>([
+  'spofy_sbp',
+  'spofy_intl_card',
+  'spofy_card',
+  'spofy_crypto',
+  'spofy_crypto_xrocket',
+  'spofy_stars',
+  'spofy_other',
+]);
+
+/** СБП без карты: WATA принимает оплату только по СБП. */
+const SBP_METHODS = new Set(['wata', 'platega_recurrent']);
+/** Кошелёк xRocket узнают по его знаку; у остальных крипто-способов знак монеты. */
+const XROCKET_METHODS = new Set(['xrocket']);
+const CRYPTO_METHODS = new Set(['cryptobot', 'pay2328', 'heleket', 'platega_m13']);
+const STARS_METHODS = new Set(['telegram_stars', 'stars']);
+
+/**
+ * Spofy: какой знак показать способу оплаты. Принимает и id способа из API
+ * (platega_m2, wata, xrocket…), и id провайдера из статистики (platega, cryptobot…).
+ */
+export function spofyPaymentIcon(methodId: string): string {
+  const id = methodId.toLowerCase();
+  if (KINDS.has(id)) return id;
+  if (id === 'platega_m12') return 'spofy_intl_card';
+  if (id === 'platega_m11') return 'spofy_card';
+  if (XROCKET_METHODS.has(id)) return 'spofy_crypto_xrocket';
+  if (CRYPTO_METHODS.has(id) || id.includes('crypto') || id.includes('usdt')) return 'spofy_crypto';
+  if (STARS_METHODS.has(id) || id.includes('stars')) return 'spofy_stars';
+  // «Карта / СБП» Platega: 9 оплат из 10 идут по СБП — знак СБП.
+  if (id.startsWith('platega') || id.includes('sbp') || SBP_METHODS.has(id)) return 'spofy_sbp';
+  return 'spofy_other';
+}
+
+function Tile() {
+  return <rect width="40" height="40" rx="11" fill="#fff" />;
 }
 
 export default function PaymentMethodIcon({
   method,
   className = 'h-8 w-8',
 }: PaymentMethodIconProps) {
-  switch (method) {
-    case 'telegram_stars':
-      return (
-        <svg className={className} viewBox="0 0 40 40">
-          <circle cx="20" cy="20" r="20" fill="#229ED9" />
-          <path
-            d="M20 8l3.09 6.26L30 15.27l-5 4.87 1.18 6.88L20 23.77l-6.18 3.25L15 20.14l-5-4.87 6.91-1.01L20 8z"
-            fill="#FFD700"
-          />
-        </svg>
-      );
+  const gradientId = useId();
+  const kind = spofyPaymentIcon(method) as IconKind;
+  const svgProps = { className, viewBox: '0 0 40 40', 'aria-hidden': true } as const;
 
-    case 'cryptobot':
-      return (
-        <svg className={className} viewBox="0 0 40 40">
-          <circle cx="20" cy="20" r="20" fill="#0088CC" />
-          <path
-            d="M20 7c-7.18 0-13 5.82-13 13s5.82 13 13 13 13-5.82 13-13S27.18 7 20 7zm1.5 18.75v2.5h-3v-2.4c-2.1-.3-3.8-1.2-4.6-2.1l1.8-2.4c.9.8 2.1 1.5 3.3 1.5 1.1 0 1.8-.5 1.8-1.3 0-.9-.8-1.3-2.5-1.9-2.3-.8-4.2-1.9-4.2-4.4 0-2.1 1.5-3.7 4.2-4.1v-2.4h3v2.3c1.6.2 2.9.9 3.8 1.7l-1.7 2.3c-.7-.6-1.7-1.1-2.8-1.1-1 0-1.6.4-1.6 1.2 0 .8.8 1.2 2.6 1.9 2.5.9 4.1 2 4.1 4.4 0 2.2-1.6 3.9-4.2 4.2z"
-            fill="#fff"
-          />
-        </svg>
-      );
-
-    case 'pay2328':
-      return (
-        <svg className={className} viewBox="0 0 40 40">
-          <circle cx="20" cy="20" r="20" fill="#1A1A2E" />
-          <path
-            d="M20 8l2.47 5.01.55 1.12 1.23.18L30 15.27l-4 3.9-.89.87.21 1.22L26.18 27 20.9 24.22l-1.1-.58-1.1.58L13.62 27l.86-5.74.21-1.22-.89-.87-4-3.9 5.75-.96 1.23-.18.55-1.12L20 8z"
-            fill="#00E68A"
-          />
-        </svg>
-      );
-
+  switch (kind) {
+    // Система быстрых платежей — официальный знак (sbp.nspk.ru).
     case 'spofy_sbp':
       return (
-        <svg className={className} viewBox="0 0 40 40" aria-hidden="true">
-          <rect width="40" height="40" rx="11" fill="#2B63F5" />
-          <text
-            x="20"
-            y="24.6"
-            textAnchor="middle"
-            fontFamily="Manrope, system-ui, sans-serif"
-            fontSize="12.5"
-            fontWeight="800"
-            letterSpacing=".3"
-            fill="#fff"
-          >
-            СБП
-          </text>
+        <svg {...svgProps}>
+          <Tile />
+          <g transform="translate(8.857 7) scale(0.531)">
+            <path
+              d="M12.1929 24.4954L5.86836 28.1832L0 38.4605L23.9386 24.4954H12.1929Z"
+              fill="#874691"
+            />
+            <path
+              d="M30.263 13.9651L23.9384 17.653L18.0701 27.9302L41.9997 13.9651H30.263Z"
+              fill="#DA1844"
+            />
+            <path
+              d="M23.9384 10.2773L18.0701 0V21.0697V27.9303V49L23.9384 38.7227V10.2773Z"
+              fill="#F9B229"
+            />
+            <path d="M18.0701 0L23.9384 10.2773L30.263 13.9651H41.9997L18.0701 0Z" fill="#F07F1A" />
+            <path
+              d="M18.0701 21.0696V48.9999L23.9384 38.7226V31.3378L18.0701 21.0696Z"
+              fill="#72B22C"
+            />
+            <path
+              d="M30.263 35.0347L23.9384 38.7225L18.0701 48.9998L41.9997 35.0347H30.263Z"
+              fill="#00743E"
+            />
+            <path d="M0 10.5303V38.4605L5.86836 28.1833V20.8075L0 10.5303Z" fill="#5F5A94" />
+            <path
+              d="M18.0702 21.0697V21.0787L0 10.5303L5.86836 20.8075L30.2632 35.0348H41.9999L18.0702 21.0697Z"
+              fill="#0D90CD"
+            />
+          </g>
         </svg>
       );
 
+    // Зарубежные карты: знаки Visa и Mastercard.
     case 'spofy_intl_card':
       return (
-        <svg className={className} viewBox="0 0 40 40" aria-hidden="true">
-          <rect width="40" height="40" rx="11" fill="#1B2232" />
-          <circle cx="16.5" cy="20" r="7.5" fill="#EB001B" />
-          <circle cx="23.5" cy="20" r="7.5" fill="#F79E1B" />
-          <path d="M20 13.37A7.5 7.5 0 0 1 20 26.63A7.5 7.5 0 0 1 20 13.37Z" fill="#FF5F00" />
+        <svg {...svgProps}>
+          <Tile />
+          <g transform="translate(7 -0.5) scale(1.083)">
+            <path
+              d="M9.112 8.262L5.97 15.758H3.92L2.374 9.775c-.094-.368-.175-.503-.461-.658C1.447 8.864.677 8.627 0 8.479l.046-.217h3.3a.904.904 0 01.894.764l.817 4.338 2.018-5.102zm8.033 5.049c.008-1.979-2.736-2.088-2.717-2.972.006-.269.262-.555.822-.628a3.66 3.66 0 011.913.336l.34-1.59a5.207 5.207 0 00-1.814-.333c-1.917 0-3.266 1.02-3.278 2.479-.012 1.079.963 1.68 1.698 2.04.756.367 1.01.603 1.006.931-.005.504-.602.725-1.16.734-.975.015-1.54-.263-1.992-.473l-.351 1.642c.453.208 1.289.39 2.156.398 2.037 0 3.37-1.006 3.377-2.564m5.061 2.447H24l-1.565-7.496h-1.656a.883.883 0 00-.826.55l-2.909 6.946h2.036l.405-1.12h2.488zm-2.163-2.656l1.02-2.815.588 2.815zm-8.16-4.84l-1.603 7.496H8.34l1.605-7.496z"
+              fill="#1434CB"
+            />
+          </g>
+          <circle cx="15.908" cy="26.5" r="6.6" fill="#EB001B" />
+          <circle cx="24.092" cy="26.5" r="6.6" fill="#F79E1B" />
+          <path d="M20 21.322A6.6 6.6 0 0 1 20 31.678A6.6 6.6 0 0 1 20 21.322Z" fill="#FF5F00" />
         </svg>
       );
 
+    // Карта российского банка: нейтральный знак карты.
     case 'spofy_card':
       return (
-        <svg className={className} viewBox="0 0 40 40" aria-hidden="true">
-          <rect width="40" height="40" rx="11" fill="#0A84C6" />
-          <rect
-            x="9"
-            y="12.5"
-            width="22"
-            height="15"
-            rx="2.6"
-            fill="none"
-            stroke="#fff"
-            strokeWidth="1.8"
-          />
-          <path d="M9 17.3h22" stroke="#fff" strokeWidth="2.6" />
-          <rect x="12.4" y="21.2" width="5.2" height="3.4" rx=".9" fill="#fff" />
+        <svg {...svgProps}>
+          <Tile />
+          <rect x="9" y="12" width="22" height="16" rx="3" fill="#0B1F3B" />
+          <path d="M9 17h22v3.2H9z" fill="#fff" fillOpacity=".85" />
+          <rect x="12" y="23" width="6" height="2" rx="1" fill="#fff" fillOpacity=".85" />
         </svg>
       );
 
-    case 'spofy_crypto_cryptobot':
-      return (
-        <svg className={className} viewBox="0 0 40 40" aria-hidden="true">
-          <rect width="40" height="40" rx="11" fill="#2F8FEA" />
-          <circle
-            cx="20"
-            cy="20"
-            r="10.5"
-            fill="none"
-            stroke="#fff"
-            strokeOpacity=".35"
-            strokeWidth="1.6"
-          />
-          <path d="M14.6 14.4h10.8v2.7h-4.05v10.4h-2.7V17.1H14.6z" fill="#fff" />
-          <ellipse
-            cx="20"
-            cy="19.7"
-            rx="6.4"
-            ry="1.75"
-            fill="none"
-            stroke="#fff"
-            strokeWidth="1.4"
-          />
-        </svg>
-      );
-
-    case 'spofy_crypto_pay2328':
-      return (
-        <svg className={className} viewBox="0 0 40 40" aria-hidden="true">
-          <rect width="40" height="40" rx="11" fill="#12A37E" />
-          <circle
-            cx="20"
-            cy="20"
-            r="10.5"
-            fill="none"
-            stroke="#fff"
-            strokeOpacity=".35"
-            strokeWidth="1.6"
-          />
-          <path d="M14.6 14.4h10.8v2.7h-4.05v10.4h-2.7V17.1H14.6z" fill="#fff" />
-          <ellipse
-            cx="20"
-            cy="19.7"
-            rx="6.4"
-            ry="1.75"
-            fill="none"
-            stroke="#fff"
-            strokeWidth="1.4"
-          />
-        </svg>
-      );
-
-    case 'spofy_crypto_xrocket':
-      return (
-        <svg className={className} viewBox="0 0 40 40" aria-hidden="true">
-          <rect width="40" height="40" rx="11" fill="#2A2F3A" />
-          <circle
-            cx="20"
-            cy="20"
-            r="10.5"
-            fill="none"
-            stroke="#fff"
-            strokeOpacity=".35"
-            strokeWidth="1.6"
-          />
-          <path d="M14.6 14.4h10.8v2.7h-4.05v10.4h-2.7V17.1H14.6z" fill="#fff" />
-          <ellipse
-            cx="20"
-            cy="19.7"
-            rx="6.4"
-            ry="1.75"
-            fill="none"
-            stroke="#fff"
-            strokeWidth="1.4"
-          />
-        </svg>
-      );
-
+    // Криптовалюта: знак Tether (USDT) — им платят чаще всего.
     case 'spofy_crypto':
       return (
-        <svg className={className} viewBox="0 0 40 40" aria-hidden="true">
-          <rect width="40" height="40" rx="11" fill="#26A17B" />
-          <circle
-            cx="20"
-            cy="20"
-            r="10.5"
-            fill="none"
-            stroke="#fff"
-            strokeOpacity=".35"
-            strokeWidth="1.6"
-          />
-          <path d="M14.6 14.4h10.8v2.7h-4.05v10.4h-2.7V17.1H14.6z" fill="#fff" />
-          <ellipse
-            cx="20"
-            cy="19.7"
-            rx="6.4"
-            ry="1.75"
-            fill="none"
-            stroke="#fff"
-            strokeWidth="1.4"
-          />
+        <svg {...svgProps}>
+          <Tile />
+          <g transform="translate(7.5 8.1) scale(1.042)">
+            <path
+              d="M18.7538 10.5176c0 .6251-2.2379 1.1483-5.2381 1.2812l.0028.0007c-.0848.0064-.5233.0325-1.5012.0325-.7778 0-1.33-.0233-1.5237-.0325-3.0059-.1322-5.2495-.6555-5.2495-1.2819s2.2436-1.149 5.2495-1.2834v2.0442c.1965.0142.7594.0474 1.5372.0474.9334 0 1.4008-.0389 1.4849-.0466V9.2356c2.9994.1337 5.2381.657 5.2381 1.282zm5.19.5466L12.1248 22.389a.1803.1803 0 0 1-.2496 0L.0562 11.0635a.1781.1781 0 0 1-.0382-.2079l4.3762-9.1921a.1767.1767 0 0 1 .1626-.1026h14.8878a.1768.1768 0 0 1 .1612.1032l4.3762 9.1922a.1782.1782 0 0 1-.0382.2079zm-4.478-.4038c0-.8068-2.5515-1.4799-5.9473-1.6369V7.195h4.186V4.4055H6.3076V7.195h4.1852v1.8286c-3.4018.1562-5.9601.83-5.9601 1.6376 0 .8075 2.5583 1.4806 5.9601 1.6376v5.8618h3.025v-5.8639c3.394-.1563 5.948-.8295 5.948-1.6363z"
+              fill="#50AF95"
+            />
+          </g>
         </svg>
       );
 
+    // Кошелёк xRocket — его знак (xrocket.exchange).
+    case 'spofy_crypto_xrocket':
+      return (
+        <svg {...svgProps}>
+          <defs>
+            <linearGradient
+              id={gradientId}
+              x1="18"
+              y1="0"
+              x2="18"
+              y2="36"
+              gradientUnits="userSpaceOnUse"
+            >
+              <stop stopColor="#5EBEF0" />
+              <stop offset="1" stopColor="#0295FD" />
+            </linearGradient>
+          </defs>
+          <Tile />
+          <g transform="translate(6.5 6.5) scale(0.75)">
+            <circle cx="18" cy="18" r="18" fill={`url(#${gradientId})`} />
+            <path
+              fillRule="evenodd"
+              clipRule="evenodd"
+              d="M22.8278 21.1771L19.4153 23.4839C19.4053 23.4939 19.122 23.6817 19.0262 23.7536C18.9304 23.8255 18.9464 23.9833 18.9663 24.0532C19.4752 25.641 19.3255 27.049 19.3255 27.2887C19.3255 27.5284 19.3255 27.6782 19.4752 27.7381C19.5949 27.786 19.7047 27.6782 19.7446 27.6183C20.7823 26.0404 22.9296 22.7769 23.2169 22.3455C23.5762 21.8063 23.3965 21.5067 23.2169 21.267C23.0733 21.0753 22.8976 21.1272 22.8278 21.1771Z"
+              fill="#fff"
+            />
+            <path
+              fillRule="evenodd"
+              clipRule="evenodd"
+              d="M14.9038 13.2005L12.5059 16.8372C12.4957 16.8477 12.3004 17.1498 12.226 17.2517C12.1516 17.3536 11.9951 17.3319 11.9262 17.3083C10.3626 16.712 8.95766 16.8351 8.7193 16.8284C8.48095 16.8217 8.33198 16.8175 8.27693 16.6535C8.2329 16.5223 8.3435 16.4063 8.4043 16.3647C10.005 15.2832 13.3159 13.0455 13.7537 12.7459C14.3009 12.3713 14.5934 12.5745 14.8263 12.776C15.0126 12.9371 14.9556 13.1262 14.9038 13.2005Z"
+              fill="#fff"
+            />
+            <path
+              fillRule="evenodd"
+              clipRule="evenodd"
+              d="M13.9969 16.6233C14.9847 14.9756 17.3076 11.4704 18.6965 10.6316C20.4327 9.58302 21.8695 9.10368 23.5159 9.04376C23.5976 9.04078 23.6778 9.03781 23.7566 9.03489C25.2646 8.979 26.2293 8.94325 26.5991 9.31339C26.928 9.64259 26.9575 10.143 26.9769 10.471C26.9804 10.531 26.9836 10.5852 26.9882 10.6316C27.0182 10.9312 27.0182 13.8671 26.5991 14.8857C26.5554 14.9919 26.512 15.1007 26.4677 15.2121C26.0865 16.1684 25.6317 17.3094 24.2642 18.5707C23.0429 19.6971 20.303 21.5566 19.0857 22.3455L18.7265 22.5851C18.6367 22.6451 18.4271 22.663 18.3074 22.2556C18.1577 21.7463 17.1399 20.2484 15.9127 19.1698C14.9308 18.307 13.9669 17.8117 13.6077 17.6719C13.5279 17.6419 13.4162 17.5101 13.6077 17.2225C13.7993 16.9349 13.947 16.7032 13.9969 16.6233ZM23.1866 11.9493C23.5658 12.0092 24.2822 12.4586 24.1146 13.2975C23.905 14.346 23.2764 15.1249 22.2886 16.0537C21.1906 17.086 20.1932 17.5516 19.3551 17.1322C18.5169 16.7128 18.7564 15.2747 19.3551 14.5258C19.9538 13.7768 21.0912 12.3687 22.3485 12.0392C22.8339 11.912 23.113 11.9377 23.1866 11.9493Z"
+              fill="#fff"
+            />
+            <path
+              fillRule="evenodd"
+              clipRule="evenodd"
+              d="M15.7038 21.4164C15.0333 19.9784 13.4288 20.0982 12.7104 20.3379C11.3035 20.8472 10.3873 24.9345 10.2559 25.4608C10.1062 26.06 10.5352 25.9601 10.6749 25.9102L11.8124 25.5507C12.5209 25.321 13.7881 24.9489 14.5963 24.5621C15.3446 24.2039 16.5001 23.124 15.7038 21.4164Z"
+              fill="#fff"
+            />
+          </g>
+        </svg>
+      );
+
+    // Telegram Stars — золотая звезда Telegram.
     case 'spofy_stars':
       return (
-        <svg className={className} viewBox="0 0 40 40" aria-hidden="true">
-          <rect width="40" height="40" rx="11" fill="#F2A60D" />
-          <path
-            d="M20 9.5l3.1 6.3 6.9 1-5 4.9 1.2 6.9-6.2-3.3-6.2 3.3 1.2-6.9-5-4.9 6.9-1z"
-            fill="#fff"
-          />
+        <svg {...svgProps}>
+          <defs>
+            <linearGradient
+              id={gradientId}
+              x1="-8.399"
+              y1="100.459"
+              x2="79.17"
+              y2="-6.038"
+              gradientUnits="userSpaceOnUse"
+            >
+              <stop stopColor="#FDEB32" />
+              <stop offset=".439" stopColor="#FEBD04" />
+              <stop offset="1" stopColor="#D75902" />
+            </linearGradient>
+          </defs>
+          <Tile />
+          <g transform="translate(6.5 7.128) scale(0.314)">
+            <path
+              d="M39.908 68.9386L20.33 80.9306C19.7381 81.293 19.0517 81.4706 18.3584 81.4409C17.665 81.4112 16.9963 81.1755 16.4376 80.7638C15.8789 80.3522 15.4556 79.7833 15.2218 79.1299C14.988 78.4765 14.9543 77.7683 15.125 77.0956L18.155 65.1666C18.6658 63.1578 19.6111 61.2854 20.9243 59.6817C22.2374 58.0779 23.8864 56.7817 25.755 55.8846L47.113 45.6296C47.7285 45.3329 48.2161 44.8238 48.4859 44.196C48.7558 43.5683 48.7897 42.8642 48.5816 42.2134C48.3734 41.5626 47.9371 41.0089 47.353 40.6543C46.769 40.2997 46.0764 40.1681 45.403 40.2836L21.629 44.3996C17.037 45.1946 12.329 43.9266 8.758 40.9336L1.247 34.6396C0.716175 34.1943 0.32991 33.6011 0.137406 32.9355C-0.0550987 32.2699 -0.0451286 31.5621 0.166046 30.9022C0.377221 30.2422 0.780042 29.6601 1.3232 29.23C1.86636 28.7998 2.52527 28.541 3.216 28.4866L26.163 26.6906C27.1114 26.6161 28.0206 26.2809 28.7904 25.722C29.5602 25.1631 30.1605 24.4023 30.525 23.5236L39.377 2.15362C39.6413 1.51611 40.0886 0.971254 40.6624 0.587925C41.2363 0.204595 41.9109 0 42.601 0C43.2911 0 43.9657 0.204595 44.5396 0.587925C45.1134 0.971254 45.5607 1.51611 45.825 2.15362L54.677 23.5236C55.0415 24.4023 55.6418 25.1631 56.4116 25.722C57.1814 26.2809 58.0907 26.6161 59.039 26.6906L82.112 28.4966C82.8003 28.5507 83.4571 28.8078 83.9992 29.2352C84.5414 29.6626 84.9446 30.2413 85.1579 30.8979C85.3711 31.5546 85.3848 32.2597 85.1972 32.9241C85.0096 33.5886 84.6292 34.1824 84.104 34.6306L66.507 49.6336C65.7828 50.2516 65.2436 51.0579 64.9493 51.9633C64.6549 52.8687 64.6167 53.8379 64.839 54.7636L70.249 77.2376C70.4104 77.9088 70.3691 78.6127 70.1303 79.2604C69.8916 79.908 69.4662 80.4704 68.9079 80.8763C68.3496 81.2821 67.6834 81.5134 66.9937 81.5407C66.304 81.568 65.6217 81.3901 65.033 81.0296L45.294 68.9386C44.4833 68.4426 43.5514 68.1801 42.601 68.1801C41.6506 68.1801 40.7187 68.4426 39.908 68.9386Z"
+              fill={`url(#${gradientId})`}
+            />
+          </g>
         </svg>
       );
 
-    case 'platega':
-      return (
-        <svg className={className} viewBox="0 0 40 40">
-          <circle cx="20" cy="20" r="20" fill="#6C5CE7" />
-          <path
-            d="M14 12h8c3.31 0 6 2.69 6 6s-2.69 6-6 6h-4v4h-4V12zm4 8h4c1.1 0 2-.9 2-2s-.9-2-2-2h-4v4z"
-            fill="#fff"
-          />
-        </svg>
-      );
-
-    case 'wata':
-      return (
-        <svg className={className} viewBox="0 0 40 40">
-          <circle cx="20" cy="20" r="20" fill="#2D7FF9" />
-          <path
-            d="M20 10c-.55 0-1 .35-1.27.8L12 24c-.4.7.1 1.5.9 1.5h14.2c.8 0 1.3-.8.9-1.5l-6.73-13.2c-.27-.45-.72-.8-1.27-.8z"
-            fill="#fff"
-            opacity=".9"
-          />
-          <path
-            d="M20 30c3.87 0 7-2.24 7-5 0-2.76-7-10-7-10s-7 7.24-7 10c0 2.76 3.13 5 7 5z"
-            fill="#fff"
-          />
-        </svg>
-      );
-
+    // Остальное (ручное пополнение, неизвестный провайдер): кошелёк.
     default:
       return (
-        <svg className={className} viewBox="0 0 40 40">
-          <circle cx="20" cy="20" r="20" fill="#4B5563" />
+        <svg {...svgProps}>
+          <Tile />
           <path
-            d="M10 14h20c1.1 0 2 .9 2 2v8c0 1.1-.9 2-2 2H10c-1.1 0-2-.9-2-2v-8c0-1.1.9-2 2-2zm0 3v6h20v-6H10z"
-            fill="#fff"
-            opacity=".7"
+            d="M11 14.5A2.5 2.5 0 0 1 13.5 12h13a2.5 2.5 0 0 1 2.5 2.5V16h-4.5a4 4 0 0 0 0 8H29v1.5a2.5 2.5 0 0 1-2.5 2.5h-13a2.5 2.5 0 0 1-2.5-2.5z"
+            fill="#0B1F3B"
           />
+          <path d="M24.5 17.5H30v5h-5.5a2.5 2.5 0 0 1 0-5z" fill="#0B1F3B" />
+          <circle cx="24.6" cy="20" r="1.1" fill="#fff" />
         </svg>
       );
   }
-}
-
-const SPOFY_CRYPTO_ICONS: Record<string, string> = {
-  cryptobot: 'spofy_crypto_cryptobot',
-  pay2328: 'spofy_crypto_pay2328',
-  xrocket: 'spofy_crypto_xrocket',
-};
-/** WATA принимает оплату по СБП, а не картой — знак «СБП». */
-const SPOFY_SBP_METHODS = new Set(['wata']);
-
-/**
- * Spofy: какую плитку показать способу оплаты — по тому, ЧЕМ платит человек
- * (СБП, карта, зарубежная карта, крипта, звёзды), а не по логотипу провайдера:
- * абстрактные знаки провайдеров покупателю ничего не говорили.
- */
-export function spofyPaymentIcon(methodId: string): string {
-  const id = methodId.toLowerCase();
-  if (id === 'platega_m12') return 'spofy_intl_card';
-  if (id === 'platega_m2' || id.includes('sbp') || SPOFY_SBP_METHODS.has(id)) return 'spofy_sbp';
-  if (id.startsWith('platega')) return 'spofy_card';
-  if (SPOFY_CRYPTO_ICONS[id]) return SPOFY_CRYPTO_ICONS[id];
-  if (id.includes('crypto') || id.includes('ton') || id.includes('usdt')) return 'spofy_crypto';
-  if (id.includes('stars')) return 'spofy_stars';
-  return id;
 }

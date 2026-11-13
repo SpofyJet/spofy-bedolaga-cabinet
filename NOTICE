@@ -11,3 +11,17 @@ Dedication (https://creativecommons.org/publicdomain/zero/1.0/).
 (цвета задаёт кабинет по вердиктам); регионы помечены `data-region` с кодом ISO 3166-2 без
 префикса `RU-`; безымянному контуру Камчатского края дан `id="KAM"`; удалены подписи кодов регионов (глифы
 контурами поверх регионов), пустой блок стилей и метаданные Inkscape.
+
+## Знаки способов оплаты (`src/components/PaymentMethodIcon.tsx`)
+
+Товарные знаки принадлежат их владельцам и показаны только для обозначения способа оплаты.
+
+- Система быстрых платежей — официальный знак с сайта СБП (https://sbp.nspk.ru, логотип шапки
+  для телефонов), © АО «НСПК».
+- Telegram Stars — звезда из открытого клиента Telegram Web A
+  (https://github.com/Ajaxy/telegram-tt, `src/assets/icons/star/GoldStarFill.svg`, GPL-3.0).
+- xRocket — знак с сайта сервиса (https://xrocket.exchange).
+- Visa, Tether — контуры из набора Simple Icons 16.37.0 (https://simpleicons.org, CC0 1.0),
+  цвета фирменные. Mastercard — два круга фирменных цветов.
+
+Изменения (2026-11-13): знаки вписаны в поле 40×40 на белой плашке, без подписей.
