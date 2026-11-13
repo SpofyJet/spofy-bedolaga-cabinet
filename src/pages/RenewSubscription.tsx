@@ -78,11 +78,15 @@ export default function RenewSubscription() {
   }, [options, selectedPeriod, requestedPeriod]);
 
   // Load balance
-  const { data: purchaseOptions } = useQuery({
+  const { data: purchaseOptions, isLoading: isBalanceLoading } = useQuery({
     queryKey: ['purchase-options', subId],
     queryFn: () => subscriptionApi.getPurchaseOptions(subId),
     staleTime: 0,
   });
+  // Баланс известен, только когда пришёл ответ. Раньше «нет ответа» считалось нулём:
+  // при медленном или упавшем запросе человеку с деньгами на балансе кнопка
+  // предлагала «Оплатить N ₽» — заплатить ещё раз.
+  const balanceKnown = purchaseOptions?.balance_kopeks != null;
   const balanceKopeks = purchaseOptions?.balance_kopeks ?? 0;
 
   const renewMutation = useMutation({
@@ -146,7 +150,8 @@ export default function RenewSubscription() {
     return <Navigate to="/subscription/purchase" replace />;
   }
 
-  if (isLoading || isSubscriptionLoading) {
+  // Ждём и баланс: от него зависит, что написано на кнопке оплаты.
+  if (isLoading || isSubscriptionLoading || isBalanceLoading) {
     return (
       <PageSkeleton leading={1} titleWidth="w-56" className="space-y-5">
         <Skeleton variant="card" className="h-16" />
@@ -180,8 +185,10 @@ export default function RenewSubscription() {
       : 0;
   // Баланса не хватает: кнопка сразу ведёт на пополнение недостающей суммы и
   // возвращает на этот же срок (раньше — красная ошибка до нажатия и лишний шаг).
+  // Баланс узнать не удалось — пробуем продлить: если денег нет, бот ответит,
+  // сколько не хватает, и появится пополнение.
   const shortKopeks =
-    selectedOption && selectedOption.price_kopeks > 0
+    selectedOption && selectedOption.price_kopeks > 0 && balanceKnown
       ? Math.max(0, selectedOption.price_kopeks - balanceKopeks)
       : 0;
   const shortRubles = Math.ceil(shortKopeks / 100);
