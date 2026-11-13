@@ -63,4 +63,25 @@ describe('SuccessNotificationModal next action', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Go to Subscription' }));
     expect(navigate).toHaveBeenCalledWith('/subscriptions');
   });
+
+  // Человек продлил сам и уже стоит на экране подписки: одна кнопка, она закрывает окно.
+  it('shows one button after a manual renewal and stays where the person is', () => {
+    useSuccessNotification.getState().show({
+      type: 'subscription_renewed',
+      title: 'Done',
+      amountKopeks: 31000,
+      expiresAt: '2027-01-06T00:00:00Z',
+      onSubscriptionScreen: true,
+    });
+    render(<SuccessNotificationModal />);
+
+    // Крестик в углу и одна кнопка действия — без второй «Закрыть».
+    expect(screen.getAllByRole('button')).toHaveLength(2);
+    expect(screen.queryByRole('button', { name: 'Close' })).toBeNull();
+    expect(document.body.textContent).toMatch(/310\s₽/);
+
+    fireEvent.click(screen.getByRole('button', { name: 'Go to Subscription' }));
+    expect(navigate).not.toHaveBeenCalled();
+    expect(useSuccessNotification.getState().isOpen).toBe(false);
+  });
 });

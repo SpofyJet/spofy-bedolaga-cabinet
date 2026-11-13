@@ -9,6 +9,7 @@ import { subscriptionApi } from '../../../api/subscription';
 import { getErrorMessage, getInsufficientBalanceError } from '../../../utils/subscriptionHelpers';
 import { useCurrency } from '../../../hooks/useCurrency';
 import { usePromoDiscount } from '../../../hooks/usePromoDiscount';
+import { useSuccessNotification } from '../../../store/successNotification';
 import { dailyPriceQuote } from './dailyPrice';
 import { customDaysPrice } from './customDaysPrice';
 import { usePlatform } from '../../../platform';
@@ -133,11 +134,18 @@ export function TariffPurchaseForm({
         checkoutAttempt.current.id,
       );
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['subscription'] });
       queryClient.invalidateQueries({ queryKey: ['purchase-options'] });
       queryClient.invalidateQueries({ queryKey: ['subscriptions-list'] });
       navigate('/subscriptions', { replace: true });
+      // Подтверждение оплаты и следующий шаг — «Подключить устройство». Раньше после
+      // покупки молча открывался список подписок.
+      useSuccessNotification.getState().show({
+        type: 'subscription_purchased',
+        tariffName: data?.tariff_name ?? tariff.name,
+        expiresAt: data?.subscription?.end_date ?? undefined,
+      });
     },
   });
 

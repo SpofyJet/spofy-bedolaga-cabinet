@@ -202,9 +202,13 @@ export default function SuccessNotificationModal() {
       value: formattedExpiry,
     });
 
+  // Продлил сам и уже на экране подписки — идти некуда, окно просто закрывается.
+  const alreadyOnSubscription =
+    data.type === 'subscription_renewed' && data.onSubscriptionScreen === true;
+
   const handleGoToSubscription = () => {
     hide();
-    navigate('/subscriptions');
+    if (!alreadyOnSubscription) navigate('/subscriptions');
   };
 
   const handleGoToConnection = () => {
@@ -301,9 +305,11 @@ export default function SuccessNotificationModal() {
                 {t('successNotification.goToSubscription', 'Go to Subscription')}
               </Button>
             )}
-            <Button tone="secondary" className="w-full" onClick={handleClose}>
-              {t('common.close', 'Close')}
-            </Button>
+            {!alreadyOnSubscription && (
+              <Button tone="secondary" className="w-full" onClick={handleClose}>
+                {t('common.close', 'Close')}
+              </Button>
+            )}
           </div>
         </div>
       </div>

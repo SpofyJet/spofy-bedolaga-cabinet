@@ -31,6 +31,11 @@ export interface SuccessNotificationData {
   trafficGbAdded?: number;
   /** New total traffic limit in GB */
   newTrafficLimitGb?: number;
+  /**
+   * Человек сам только что продлил и уже стоит на экране подписки: «Перейти к подписке»
+   * просто закрывает окно, а отдельная «Закрыть» была бы второй кнопкой с тем же итогом.
+   */
+  onSubscriptionScreen?: boolean;
 }
 
 interface SuccessNotificationState {

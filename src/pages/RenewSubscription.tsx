@@ -10,6 +10,7 @@ import { pickBestValue } from '../utils/bestValue';
 import { formatPeriodLabel } from '../utils/periodLabel';
 import { useCurrency } from '../hooks/useCurrency';
 import { useHaptic } from '../platform';
+import { useSuccessNotification } from '../store/successNotification';
 import InsufficientBalancePrompt from '../components/InsufficientBalancePrompt';
 import { PeriodList } from '../components/subscription/PeriodList';
 import { PageHeader } from '@/components/layout/PageHeader';
@@ -87,12 +88,20 @@ export default function RenewSubscription() {
   const renewMutation = useMutation({
     retry: false,
     mutationFn: (periodDays: number) => subscriptionApi.renewSubscription(periodDays, subId),
-    onSuccess: () => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['subscription', subId] });
       queryClient.invalidateQueries({ queryKey: ['subscriptions-list'] });
       queryClient.invalidateQueries({ queryKey: ['renewal-options', subId] });
       queryClient.invalidateQueries({ queryKey: ['balance'] });
       navigate(`/subscriptions/${subId}`, { replace: true });
+      // Подтверждение оплаты. Раньше экран подписки открывался молча, с кнопкой
+      // «Продлить подписку» на виду — и часть людей шла продлевать ещё раз.
+      useSuccessNotification.getState().show({
+        type: 'subscription_renewed',
+        amountKopeks: data?.amount_paid_kopeks,
+        expiresAt: data?.new_end_date,
+        onSubscriptionScreen: true,
+      });
     },
     onError: (err: unknown) => {
       if (isUncertainPurchaseOutcome(err)) {
