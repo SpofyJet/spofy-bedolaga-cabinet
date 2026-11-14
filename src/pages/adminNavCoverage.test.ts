@@ -37,8 +37,6 @@ const SUB_SCREEN_SUFFIXES = [
   '/revoke',
   '/review',
   '/campaigns',
-  '/history',
-  '/other',
 ];
 
 function isSubScreen(route: string): boolean {

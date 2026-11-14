@@ -5,7 +5,7 @@ import type { ReactElement, ReactNode } from 'react';
 import { MemoryRouter } from 'react-router';
 import { afterEach, beforeAll, beforeEach, expect, it, vi } from 'vitest';
 import type { UserActivityItem, UserActivityResponse } from '@/api/adminUsers';
-import { installMatchMedia } from '@/components/admin/reachability/testUtils';
+import { installMatchMedia } from '@/test/utils';
 import { PlatformProvider } from '@/platform/PlatformProvider';
 
 /**
@@ -15,7 +15,7 @@ import { PlatformProvider } from '@/platform/PlatformProvider';
  */
 
 vi.mock('react-i18next', async () =>
-  (await import('@/components/admin/reachability/testUtils')).i18nMock(),
+  (await import('@/test/utils')).i18nMock(),
 );
 
 const requested: string[] = [];

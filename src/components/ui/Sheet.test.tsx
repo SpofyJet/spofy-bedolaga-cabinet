@@ -10,7 +10,7 @@ import { PlatformProvider } from '@/platform/PlatformProvider';
  */
 
 vi.mock('react-i18next', async () =>
-  (await import('@/components/admin/reachability/testUtils')).i18nMock(),
+  (await import('@/test/utils')).i18nMock(),
 );
 vi.mock('@/hooks/useHeaderHeight', () => ({
   useHeaderHeight: () => ({

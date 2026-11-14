@@ -1,9 +1,8 @@
 import { useState } from 'react';
-import { Link } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { adminUsersApi, type UserPanelInfo } from '@/api/adminUsers';
-import { ChevronDownIcon, CopyIcon, RadarIcon } from '@/components/icons';
+import { ChevronDownIcon, CopyIcon } from '@/components/icons';
 import { Spinner } from '@/components/ui/Spinner';
 import { useNotify } from '@/platform/hooks/useNotify';
 import { copyToClipboard } from '@/utils/clipboard';
@@ -15,7 +14,6 @@ interface SupportDetailsProps {
   subscriptionId: number | null;
   panelInfo: UserPanelInfo | null;
   remnawaveId: number | null;
-  reachabilityLink: string | null;
 }
 
 const HISTORY_PAGE = 20;
@@ -30,7 +28,6 @@ export function SupportDetails({
   subscriptionId,
   panelInfo,
   remnawaveId,
-  reachabilityLink,
 }: SupportDetailsProps) {
   const { t } = useTranslation();
   const notify = useNotify();
@@ -103,18 +100,6 @@ export function SupportDetails({
               <div className="text-[13px] text-dark-500">{item.label}</div>
               <div className="truncate font-mono text-[13px] text-dark-200">{item.value}</div>
             </div>
-            {/* Проверка — у той ссылки, которую проверяет BSCHEKER, а не отдельной кнопкой под
-                списком и не пунктом «Проверить конфиги (РФ)» в «⋯», где не было видно, что это он. */}
-            {item.key === 'url' && reachabilityLink && (
-              <Link
-                to={reachabilityLink}
-                // На телефоне — отдельной строкой под ссылкой: рядом она сжимала адрес до «https://…».
-                className="btn-secondary order-last mb-1 min-h-0 shrink-0 gap-1.5 px-2.5 py-1.5 text-[13px] sm:order-none sm:mb-0"
-              >
-                <RadarIcon className="h-4 w-4" />
-                {t('admin.reachability.shortcuts.checkSubscription')}
-              </Link>
-            )}
             <button
               type="button"
               onClick={() => void copy(item.value)}

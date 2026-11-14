@@ -61,7 +61,6 @@ function Harness({
       can={{ manage: false, sync: false, devices: false }}
       busy={false}
       actions={{} as SubscriptionTabProps['actions']}
-      reachabilityLink={null}
       mode={mode}
     />
   );

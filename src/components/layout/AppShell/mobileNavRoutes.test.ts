@@ -113,7 +113,7 @@ describe('isMobileNavScreen', () => {
   it('админка и вложенные страницы — нет', () => {
     for (const path of [
       '/admin',
-      '/admin/reachability',
+      '/admin/servers',
       '/balance',
       '/balance/top-up',
       '/connection',

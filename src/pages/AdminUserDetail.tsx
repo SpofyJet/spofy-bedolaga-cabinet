@@ -15,8 +15,6 @@ import { SubscriptionTab } from '@/components/admin/userDetail/SubscriptionTab';
 import { UserActionsMenu } from '@/components/admin/userDetail/UserActionsMenu';
 import { UserFacts } from '@/components/admin/userDetail/UserFacts';
 import { UserHeader } from '@/components/admin/userDetail/UserHeader';
-import { buildReachabilityLink } from '@/components/admin/reachability/deepLink';
-import { useReachabilityAvailable } from '@/components/admin/reachability/useReachabilityStatus';
 import { EmailIcon, TelegramSmallIcon } from '@/components/icons';
 import { PageSkeleton, Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/lib/utils';
@@ -55,11 +53,6 @@ export default function AdminUserDetail() {
 
   const data = useUserDetailData(userId, activeTab);
   const actions = useUserDetailActions(userId ?? 0, data);
-  const reachabilityAvailable = useReachabilityAvailable();
-  const reachabilityLink =
-    userId !== null && hasPermission('reachability:run') && reachabilityAvailable
-      ? buildReachabilityLink({ mode: 'vless', userId })
-      : null;
 
   useEffect(() => {
     if (userId === null) navigate('/admin/users', { replace: true });
@@ -279,7 +272,6 @@ export default function AdminUserDetail() {
           can={{ manage: can.subscription, sync: can.sync, devices: can.devices }}
           busy={actions.busy}
           actions={actions}
-          reachabilityLink={reachabilityLink}
         />
       )}
 

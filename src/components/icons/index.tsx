@@ -31,7 +31,6 @@ import {
   PiPlay,
   PiPlus,
   PiShield,
-  PiShuffle,
   PiSignOut,
   PiSparkle,
   PiStar,
@@ -290,8 +289,4 @@ export const ArrowPathIcon = ({ className }: IconProps) => (
 
 export const CreditCardIcon = ({ className }: IconProps) => (
   <PiCreditCard className={cn('h-5 w-5', className)} />
-);
-/** Смена выхода в повторе GEO: «перемешать» — другой провайдер или IP в том же городе. */
-export const ShuffleIcon = ({ className }: IconProps) => (
-  <PiShuffle className={cn('h-4 w-4', className)} />
 );

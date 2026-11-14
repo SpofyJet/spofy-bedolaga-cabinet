@@ -147,9 +147,6 @@ const AdminPromoOfferTemplateEdit = lazyWithRetry(
   () => import('./pages/AdminPromoOfferTemplateEdit'),
 );
 const AdminPromoOfferSend = lazyWithRetry(() => import('./pages/AdminPromoOfferSend'));
-const AdminReachability = lazyWithRetry(() => import('./pages/AdminReachability'));
-const AdminReachabilityHistory = lazyWithRetry(() => import('./pages/AdminReachabilityHistory'));
-const AdminReachabilityOther = lazyWithRetry(() => import('./pages/AdminReachabilityOther'));
 const AdminRemnawave = lazyWithRetry(() => import('./pages/AdminRemnawave'));
 const AdminRemnawaveSquadDetail = lazyWithRetry(() => import('./pages/AdminRemnawaveSquadDetail'));
 const AdminEmailTemplates = lazyWithRetry(() => import('./pages/AdminEmailTemplates'));
@@ -826,36 +823,6 @@ function App() {
             <PermissionRoute permission="stats:read">
               <LazyPage>
                 <AdminDashboard />
-              </LazyPage>
-            </PermissionRoute>
-          }
-        />
-        <Route
-          path="/admin/reachability"
-          element={
-            <PermissionRoute permission="reachability:read">
-              <LazyPage>
-                <AdminReachability />
-              </LazyPage>
-            </PermissionRoute>
-          }
-        />
-        <Route
-          path="/admin/reachability/history"
-          element={
-            <PermissionRoute permission="reachability:read">
-              <LazyPage>
-                <AdminReachabilityHistory />
-              </LazyPage>
-            </PermissionRoute>
-          }
-        />
-        <Route
-          path="/admin/reachability/other"
-          element={
-            <PermissionRoute permission="reachability:read">
-              <LazyPage>
-                <AdminReachabilityOther />
               </LazyPage>
             </PermissionRoute>
           }

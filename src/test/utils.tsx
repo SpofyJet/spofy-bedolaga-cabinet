@@ -45,6 +45,20 @@ export function i18nMock() {
   };
 }
 
+export function installMatchMedia(): void {
+  if (typeof window.matchMedia === 'function') return;
+  window.matchMedia = ((query: string) => ({
+    matches: false,
+    media: query,
+    onchange: null,
+    addListener: () => {},
+    removeListener: () => {},
+    addEventListener: () => {},
+    removeEventListener: () => {},
+    dispatchEvent: () => false,
+  })) as unknown as typeof window.matchMedia;
+}
+
 export function renderWithProviders(node: ReactNode, path = '/admin') {
   const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
   return render(

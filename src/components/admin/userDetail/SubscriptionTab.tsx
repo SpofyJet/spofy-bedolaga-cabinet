@@ -62,7 +62,6 @@ export interface SubscriptionTabProps {
   can: { manage: boolean; sync: boolean; devices: boolean };
   busy: boolean;
   actions: SubscriptionTabActions;
-  reachabilityLink: string | null;
   mode: SalesMode;
 }
 
@@ -186,7 +185,6 @@ export function SubscriptionTab(props: SubscriptionTabProps) {
             subscriptionId={selectedSub.id}
             panelInfo={props.panelInfo}
             remnawaveId={selectedSub.remnawave_id ?? (mode === 'multi' ? null : user.remnawave_id)}
-            reachabilityLink={props.reachabilityLink}
           />
         </>
       )}

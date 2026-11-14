@@ -9,7 +9,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
  */
 
 vi.mock('react-i18next', async () =>
-  (await import('@/components/admin/reachability/testUtils')).i18nMock(),
+  (await import('@/test/utils')).i18nMock(),
 );
 vi.mock('@/platform', () => ({ useHaptic: () => ({ impact: vi.fn() }) }));
 

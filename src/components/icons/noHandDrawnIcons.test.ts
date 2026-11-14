@@ -26,7 +26,6 @@ const ALLOWED = new Set([
   'pages/AdminPayments.tsx', // спиннер
   'components/dashboard/StatusShield.tsx', // щит бренда — знак состояния на главной
   'components/wheel/FortuneWheel.tsx',
-  'components/admin/reachability/GeoMap.tsx',
   'components/ui/backgrounds/background-beams.tsx',
   'components/ui/backgrounds/background-gradient-animation.tsx',
 ]);
