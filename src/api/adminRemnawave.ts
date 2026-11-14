@@ -203,15 +203,6 @@ export interface NodesListResponse {
   total: number;
 }
 
-export interface NodesOverview {
-  total: number;
-  online: number;
-  offline: number;
-  disabled: number;
-  total_users_online: number;
-  nodes: NodeInfo[];
-}
-
 export interface NodeActionResponse {
   success: boolean;
   message?: string;

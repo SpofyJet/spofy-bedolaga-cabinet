@@ -212,16 +212,6 @@ export interface TariffTrialResponse {
   message: string;
 }
 
-export interface TariffStats {
-  id: number;
-  name: string;
-  subscriptions_count: number;
-  active_subscriptions: number;
-  trial_subscriptions: number;
-  revenue_kopeks: number;
-  revenue_rubles: number;
-}
-
 export const tariffsApi = {
   // Get all tariffs
   getTariffs: async (includeInactive = true): Promise<TariffListResponse> => {

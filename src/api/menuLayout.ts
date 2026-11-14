@@ -24,7 +24,6 @@ export interface MenuConfig {
 }
 
 export const BOT_LOCALES = ['ru', 'en'] as const;
-export type BotLocale = (typeof BOT_LOCALES)[number];
 
 export const BUILTIN_SECTIONS = [
   'home',

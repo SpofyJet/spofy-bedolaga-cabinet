@@ -77,17 +77,6 @@ export interface ServerTrialToggleResponse {
   message: string;
 }
 
-export interface ServerStats {
-  id: number;
-  display_name: string;
-  squad_uuid: string;
-  current_users: number;
-  max_users: number | null;
-  active_subscriptions: number;
-  trial_subscriptions: number;
-  usage_percent: number | null;
-}
-
 export interface ServerSyncResponse {
   created: number;
   updated: number;

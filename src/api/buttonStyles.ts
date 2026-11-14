@@ -35,8 +35,6 @@ export type ButtonSection = (typeof BUTTON_SECTIONS)[number];
 
 export const BOT_LOCALES = ['ru', 'en'] as const;
 
-export type BotLocale = (typeof BOT_LOCALES)[number];
-
 const DEFAULT_SECTION: ButtonSectionConfig = {
   style: 'primary',
   icon_custom_emoji_id: '',

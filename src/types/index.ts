@@ -708,18 +708,6 @@ export interface UnreadCountResponse {
   unread_count: number;
 }
 
-export interface TicketSettings {
-  sla_enabled: boolean;
-  sla_minutes: number;
-  sla_check_interval_seconds: number;
-  sla_reminder_cooldown_minutes: number;
-  support_system_mode: string;
-  cabinet_user_notifications_enabled: boolean;
-  cabinet_admin_notifications_enabled: boolean;
-  /** Поля, закреплённые в .env: из кабинета их не изменить. */
-  env_locked?: string[];
-}
-
 // Payment method config types (admin)
 export interface PaymentMethodSubOptionInfo {
   id: string;

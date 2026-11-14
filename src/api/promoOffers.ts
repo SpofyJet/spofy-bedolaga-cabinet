@@ -11,34 +11,6 @@ export interface PromoOfferUserInfo {
   full_name: string | null;
 }
 
-export interface PromoOfferSubscriptionInfo {
-  id: number;
-  status: string;
-  is_trial: boolean;
-  start_date: string;
-  end_date: string;
-  autopay_enabled: boolean;
-}
-
-export interface PromoOffer {
-  id: number;
-  user_id: number;
-  subscription_id: number | null;
-  notification_type: string;
-  discount_percent: number;
-  bonus_amount_kopeks: number;
-  expires_at: string;
-  claimed_at: string | null;
-  is_active: boolean;
-  effect_type: string;
-  // Dynamic extra data from backend - shape depends on effect_type
-  extra_data: { test_squad_uuids?: string[]; [key: string]: unknown };
-  created_at: string;
-  updated_at: string;
-  user: PromoOfferUserInfo | null;
-  subscription: PromoOfferSubscriptionInfo | null;
-}
-
 export interface PromoOfferBroadcastRequest {
   notification_type: string;
   valid_hours: number;

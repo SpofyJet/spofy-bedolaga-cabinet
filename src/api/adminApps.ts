@@ -1,11 +1,5 @@
 import apiClient from './client';
 
-export interface LocalizedText {
-  en: string;
-  ru: string;
-  fr?: string;
-}
-
 export const adminAppsApi = {
   // Get Remnawave config status
   getRemnaWaveStatus: async (): Promise<{ enabled: boolean; config_uuid: string | null }> => {
