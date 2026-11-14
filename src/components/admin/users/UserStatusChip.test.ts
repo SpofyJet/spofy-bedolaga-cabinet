@@ -3,13 +3,8 @@ import type { UserListItem } from '@/api/adminUsers';
 import { describeUserStatus } from './UserStatusChip';
 import { extraTariffsCount } from './UsersTable';
 
-/**
- * Чип строки при истёкшей подписке и открытом временном доступе (грейсе).
- *
- * У человека подписка кончилась, а VPN ещё работает — по списку это было не
- * отличить от обычной «истекла», и админ не понимал, почему тот в сети.
- */
-describe('describeUserStatus: временный доступ', () => {
+/** Чип строки при истёкшей подписке: состояние аккаунта важнее подписки. */
+describe('describeUserStatus: истёкшая подписка', () => {
   const NOW = Date.parse('2026-09-16T12:00:00Z');
 
   const expired = (extra: Partial<UserListItem> = {}) =>
@@ -23,29 +18,15 @@ describe('describeUserStatus: временный доступ', () => {
       ...extra,
     }) as UserListItem;
 
-  it('открытый грейс вытесняет «истекла»', () => {
-    const chip = describeUserStatus(expired({ grace_until: '2026-09-18T12:00:00Z' }), NOW);
-    expect(chip.key).toBe('subscriptionChips.graceUntil');
-    expect(chip.tone).toBe('warning');
-    expect(chip.date).toBeTruthy();
-  });
-
-  it('кончившийся грейс возвращает обычную «истекла»', () => {
-    const chip = describeUserStatus(expired({ grace_until: '2026-09-15T12:00:00Z' }), NOW);
+  it('«истекла N дн. назад»', () => {
+    const chip = describeUserStatus(expired(), NOW);
     expect(chip.key).toBe('subscriptionChips.expiredAgo');
     expect(chip.tone).toBe('error');
+    expect(chip.count).toBe(3);
   });
 
-  it('без грейса всё как было', () => {
-    expect(describeUserStatus(expired(), NOW).key).toBe('subscriptionChips.expiredAgo');
-  });
-
-  it('заблокированный аккаунт важнее любого доступа', () => {
-    const chip = describeUserStatus(
-      expired({ status: 'blocked', grace_until: '2026-09-18T12:00:00Z' }),
-      NOW,
-    );
-    expect(chip.key).toBe('statuses.blocked');
+  it('заблокированный аккаунт важнее подписки', () => {
+    expect(describeUserStatus(expired({ status: 'blocked' }), NOW).key).toBe('statuses.blocked');
   });
 });
 

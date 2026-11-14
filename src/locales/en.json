@@ -4540,8 +4540,7 @@
             "trafficUsed": "Used",
             "devices": "Devices",
             "squads": "Squads"
-          },
-          "graceNote": "This person has temporary access until {{date}} — while it lasts, the panel holds its settings. That is not a mismatch, nothing needs syncing."
+          }
         },
         "loadError": "Could not load the user",
         "done": {
@@ -4601,10 +4600,6 @@
           "asc": "Expiring soonest",
           "desc": "Expiring latest"
         },
-        "grace": {
-          "asc": "Grace ends soonest",
-          "desc": "Grace ends latest"
-        },
         "activity": {
           "asc": "Least recently active",
           "desc": "Most recently active"
@@ -4633,7 +4628,6 @@
       "views": {
         "all": "All",
         "expiring": "Expiring in {{days}} days",
-        "grace": "In grace",
         "traffic": "Traffic running out",
         "nopay": "No purchases",
         "online": "Online",
@@ -4683,8 +4677,7 @@
         "today": "expires today",
         "expiredToday": "expired today",
         "expiredAgo": "expired {{count}} d ago",
-        "limited": "traffic exhausted",
-        "graceUntil": "temporary until {{date}}"
+        "limited": "traffic exhausted"
       },
       "summaryShort": {
         "total_one": "{{value}}",
@@ -4711,7 +4704,6 @@
         "insufficientBalance": "Balance is {{current}}, but {{requested}} was requested",
         "tariffTaken": "There is already a live subscription for this plan — extend it",
         "singleTariff": "A subscription already exists. A second one needs multi-plan mode",
-        "graceActive": "Temporary access is active — wait for it to end or restore the subscription",
         "badDays": "Enter a number of days above zero",
         "selfReferrer": "A user cannot be their own referrer",
         "circularReferral": "This would create a loop in the referral chain",

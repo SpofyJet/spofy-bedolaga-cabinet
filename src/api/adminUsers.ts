@@ -27,8 +27,6 @@ export interface UserSubscriptionInfo {
   sbp_recurring_id: number | null;
   is_active: boolean;
   days_remaining: number;
-  /** Открыт временный доступ (грейс) до этого числа; null — обычная подписка. */
-  grace_until?: string | null;
   purchased_traffic_gb: number;
   traffic_purchases: TrafficPurchaseInfo[];
 }
@@ -50,8 +48,6 @@ export interface UserListItemSubscription {
   traffic_used_gb: number;
   traffic_limit_gb: number;
   device_limit: number;
-  /** Открыт временный доступ (грейс) до этого числа; null — обычная подписка. */
-  grace_until?: string | null;
 }
 
 export interface UserListItem {
@@ -70,8 +66,6 @@ export interface UserListItem {
   is_online?: boolean | null;
   /** Отметка последнего подключения из панели: по ней строка сама гасит точку «в сети». */
   online_at?: string | null;
-  /** Открыт временный доступ (грейс) до этого числа — подписка истекла, а VPN ещё работает. */
-  grace_until?: string | null;
   has_subscription: boolean;
   subscription_status: string | null;
   subscription_is_trial: boolean;
@@ -333,9 +327,6 @@ export interface PanelSyncStatusResponse {
   panel_traffic_used_gb: number;
   panel_device_limit: number;
   panel_squads: string[];
-  /** Открыт временный доступ (грейс): панель намеренно держит его настройки. */
-  grace_open?: boolean;
-  grace_until?: string | null;
   has_differences: boolean;
   differences: string[];
 }
@@ -477,8 +468,6 @@ export interface UsersListParams {
   traffic_used_percent_min?: number;
   /** 0 — ни одной покупки (сегмент «без покупок»). */
   purchase_count?: number;
-  /** Только с открытым временным доступом (сегмент «в грейсе»). */
-  in_grace?: boolean;
   sort_by?:
     | 'created_at'
     | 'balance'
@@ -486,9 +475,8 @@ export interface UsersListParams {
     | 'last_activity'
     | 'total_spent'
     | 'purchase_count'
-    | 'subscription_end_date'
-    | 'grace_until';
-  /** Не задано — привычное направление ключа (истечение и грейс с ближайших, остальное с больших). */
+    | 'subscription_end_date';
+  /** Не задано — привычное направление ключа (истечение с ближайших, остальное с больших). */
   sort_order?: 'asc' | 'desc';
 }
 

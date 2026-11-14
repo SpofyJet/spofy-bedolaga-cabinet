@@ -31,7 +31,6 @@ const RULES: Rule[] = [
   },
   { pattern: /^Cannot activate: user already has an active subscription/, key: 'tariffTaken' },
   { pattern: /already has a subscription\. Enable multi-tariff/, key: 'singleTariff' },
-  { pattern: /Open grace access|Temporary renewal access is still active/, key: 'graceActive' },
   { pattern: /^Days must be a positive integer/, key: 'badDays' },
   {
     pattern: /cannot be their own referrer|cannot assign themselves as referrer/,

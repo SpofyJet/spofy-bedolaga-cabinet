@@ -12,7 +12,6 @@ export type StatusFilter = '' | 'active' | 'blocked' | 'deleted';
 export type SubFilter = '' | 'active' | 'trial' | 'expiring' | 'expired' | 'limited' | 'none';
 export type SortKey =
   | 'expires'
-  | 'grace'
   | 'activity'
   | 'created'
   | 'balance'
@@ -21,7 +20,7 @@ export type SortKey =
   | 'purchases';
 /** Направление сортировки; пусто — привычное для ключа (см. NATURAL_DIRECTION). */
 export type SortDirection = 'asc' | 'desc';
-export type ViewKey = 'all' | 'expiring' | 'grace' | 'traffic' | 'nopay' | 'online' | 'blocked';
+export type ViewKey = 'all' | 'expiring' | 'traffic' | 'nopay' | 'online' | 'blocked';
 
 export interface UsersListState {
   /** Строка поиска как её ввели — разбирается в `classifySearch`. */
@@ -53,7 +52,6 @@ export const SUB_FILTERS: readonly SubFilter[] = [
 ];
 export const SORT_KEYS: readonly SortKey[] = [
   'expires',
-  'grace',
   'activity',
   'created',
   'balance',
@@ -63,18 +61,9 @@ export const SORT_KEYS: readonly SortKey[] = [
 ];
 export const SORT_DIRECTIONS: readonly SortDirection[] = ['asc', 'desc'];
 
-/**
- * Ключи для меню сортировки. Порядок по концу грейса есть только в сегменте
- * «в грейсе»: вне его ключ пуст у всех, и список показывал бы просто всех подряд —
- * на вид мусор и повтор сегмента.
- */
-export function sortKeysForView(view: ViewKey): readonly SortKey[] {
-  return view === 'grace' ? SORT_KEYS : SORT_KEYS.filter((key) => key !== 'grace');
-}
 export const VIEW_KEYS: readonly ViewKey[] = [
   'all',
   'expiring',
-  'grace',
   'traffic',
   'nopay',
   'online',
@@ -100,7 +89,6 @@ export const TRAFFIC_LOW_PERCENT = 80;
 
 const SORT_TO_API: Record<SortKey, NonNullable<UsersQuery['sort_by']>> = {
   expires: 'subscription_end_date',
-  grace: 'grace_until',
   activity: 'last_activity',
   created: 'created_at',
   balance: 'balance',
@@ -109,10 +97,9 @@ const SORT_TO_API: Record<SortKey, NonNullable<UsersQuery['sort_by']>> = {
   purchases: 'purchase_count',
 };
 
-/** Как ключ сортируется, пока направление не выбрано: истечение и грейс — с ближайших, остальное — с больших и новых. */
+/** Как ключ сортируется, пока направление не выбрано: истечение — с ближайших, остальное — с больших и новых. */
 const NATURAL_DIRECTION: Record<SortKey, SortDirection> = {
   expires: 'asc',
-  grace: 'asc',
   activity: 'desc',
   created: 'desc',
   balance: 'desc',
@@ -147,9 +134,6 @@ export function withSort(
 const VIEW_PRESETS: Record<ViewKey, Partial<Omit<UsersListState, 'q' | 'view'>>> = {
   all: {},
   expiring: { sub: 'expiring', sort: 'expires' },
-  // Открытый временный доступ; сортировка по его концу без сегмента никого не
-  // выделяет, когда открытых грейсов нет, — сегмент отвечает прямо, кто в грейсе.
-  grace: { sort: 'grace' },
   traffic: { sort: 'traffic' },
   nopay: { sort: 'purchases' },
   online: { sort: 'activity' },
@@ -182,7 +166,7 @@ export function parseUsersListState(params: URLSearchParams): UsersListState {
     tariff: params.get('tariff') ?? '',
     group: params.get('group') ?? '',
     campaign: params.get('campaign') ?? '',
-    sort: pick(params.get('sort'), sortKeysForView(view), base.sort),
+    sort: pick(params.get('sort'), SORT_KEYS, base.sort),
     dir: pick<'' | SortDirection>(params.get('dir'), SORT_DIRECTIONS, base.dir),
     view,
   };
@@ -235,7 +219,6 @@ export function buildUsersQuery(state: UsersListState): UsersQuery {
   if (state.campaign) query.campaign_id = Number(state.campaign);
   // «Онлайн» — подключён к VPN сейчас: бот спрашивает панель, а не смотрит на кнопки в боте.
   if (state.view === 'online') query.online = true;
-  if (state.view === 'grace') query.in_grace = true;
   if (state.view === 'nopay') query.purchase_count = 0;
   if (state.view === 'traffic') query.traffic_used_percent_min = TRAFFIC_LOW_PERCENT;
   return query;
