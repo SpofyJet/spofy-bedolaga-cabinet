@@ -18,7 +18,6 @@ import {
   PiSlidersHorizontal,
   PiWrench,
   PiBookOpen,
-  PiLifebuoy,
   PiArrowDown,
   PiArrowUp,
   PiProhibit,
@@ -318,10 +317,6 @@ export const HistoryIcon = ({ className }: IconProps) => (
 );
 export const ScanIcon = ({ className }: IconProps) => (
   <PiScan className={cn('h-5 w-5', className)} />
-);
-
-export const LifebuoyIcon = ({ className }: IconProps) => (
-  <PiLifebuoy className={cn('h-5 w-5', className)} />
 );
 
 export const ImageIcon = ({ className }: IconProps) => (
