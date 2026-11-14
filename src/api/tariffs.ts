@@ -269,12 +269,6 @@ export const tariffsApi = {
     return response.data;
   },
 
-  // Get tariff stats
-  getTariffStats: async (tariffId: number): Promise<TariffStats> => {
-    const response = await apiClient.get(`/cabinet/admin/tariffs/${tariffId}/stats`);
-    return response.data;
-  },
-
   // Update tariff display order
   updateOrder: async (tariffIds: number[]): Promise<void> => {
     await apiClient.put('/cabinet/admin/tariffs/order', { tariff_ids: tariffIds });

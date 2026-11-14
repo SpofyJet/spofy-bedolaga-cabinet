@@ -91,12 +91,6 @@ export interface AdminTicketListResponse {
 }
 
 export const adminApi = {
-  // Check if current user is admin
-  checkIsAdmin: async (): Promise<{ is_admin: boolean }> => {
-    const response = await apiClient.get('/cabinet/auth/me/is-admin');
-    return response.data;
-  },
-
   // Get ticket statistics
   getTicketStats: async (): Promise<AdminTicketStats> => {
     const response = await apiClient.get('/cabinet/admin/tickets/stats');
@@ -144,14 +138,6 @@ export const adminApi = {
   // Update ticket status
   updateTicketStatus: async (ticketId: number, status: string): Promise<AdminTicketDetail> => {
     const response = await apiClient.post(`/cabinet/admin/tickets/${ticketId}/status`, { status });
-    return response.data;
-  },
-
-  // Update ticket priority
-  updateTicketPriority: async (ticketId: number, priority: string): Promise<AdminTicketDetail> => {
-    const response = await apiClient.post(`/cabinet/admin/tickets/${ticketId}/priority`, {
-      priority,
-    });
     return response.data;
   },
 
@@ -341,12 +327,6 @@ export const statsApi = {
   // Get complete dashboard stats
   getDashboardStats: async (): Promise<DashboardStats> => {
     const response = await apiClient.get('/cabinet/admin/stats/dashboard');
-    return response.data;
-  },
-
-  // Get nodes status
-  getNodesStatus: async (): Promise<NodesOverview> => {
-    const response = await apiClient.get('/cabinet/admin/stats/nodes');
     return response.data;
   },
 

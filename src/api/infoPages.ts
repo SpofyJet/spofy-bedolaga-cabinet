@@ -66,10 +66,6 @@ export interface FaqItem {
   a: string;
 }
 
-export interface InfoPageReorderRequest {
-  items: Array<{ id: number; sort_order: number }>;
-}
-
 export const infoPagesApi = {
   // Public endpoints
   getTabReplacements: async (): Promise<TabReplacements> => {
@@ -123,10 +119,6 @@ export const infoPagesApi = {
       `/cabinet/admin/info-pages/${id}/toggle-active`,
     );
     return response.data;
-  },
-
-  reorder: async (data: InfoPageReorderRequest): Promise<void> => {
-    await apiClient.post('/cabinet/admin/info-pages/reorder', data);
   },
 };
 

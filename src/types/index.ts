@@ -45,13 +45,6 @@ export interface AuthResponse {
   campaign_bonus?: CampaignBonusInfo | null;
 }
 
-export interface TokenResponse {
-  access_token: string;
-  refresh_token: string;
-  token_type: string;
-  expires_in: number;
-}
-
 export interface RegisterResponse {
   message: string;
   email: string;
@@ -196,57 +189,6 @@ export interface TrialInfo {
   reason_unavailable: string | null;
 }
 
-// Purchase options types
-export interface TrafficOption {
-  value: number;
-  label: string;
-  price_kopeks: number;
-  price_label: string;
-  original_price_kopeks?: number;
-  original_price_label?: string;
-  discount_percent?: number;
-  is_available: boolean;
-  is_default?: boolean;
-}
-
-export interface ServerOption {
-  uuid: string;
-  name: string;
-  price_kopeks: number;
-  price_label: string;
-  original_price_kopeks?: number;
-  original_price_label?: string;
-  discount_percent?: number;
-  is_available: boolean;
-}
-
-export interface DevicesConfig {
-  min: number;
-  max: number;
-  default: number;
-  current: number;
-  price_per_device_kopeks: number;
-  price_per_device_label: string;
-  price_per_device_original_kopeks?: number;
-  discount_percent?: number;
-}
-
-export interface TrafficConfig {
-  selectable: boolean;
-  mode: string;
-  options: TrafficOption[];
-  default?: number;
-  current?: number;
-}
-
-export interface ServersConfig {
-  options: ServerOption[];
-  min: number;
-  max: number;
-  default: string[];
-  selected: string[];
-}
-
 // Tariff types for tariffs mode
 export interface TariffPeriod {
   days: number;
@@ -359,32 +301,6 @@ export interface TariffsPurchaseOptions {
 }
 
 export type PurchaseOptions = TariffsPurchaseOptions;
-
-export interface PurchaseSelection {
-  period_id?: string;
-  period_days?: number;
-  traffic_value?: number;
-  servers?: string[];
-  devices?: number;
-}
-
-export interface PurchasePreview {
-  total_price_kopeks: number;
-  total_price_label: string;
-  original_price_kopeks?: number;
-  original_price_label?: string;
-  discount_percent?: number;
-  discount_label?: string;
-  per_month_price_kopeks: number;
-  per_month_price_label: string;
-  breakdown: { label: string; value: string }[];
-  balance_kopeks: number;
-  balance_label: string;
-  missing_amount_kopeks: number;
-  missing_amount_label?: string;
-  can_purchase: boolean;
-  status_message?: string;
-}
 
 // Balance types
 export interface Balance {

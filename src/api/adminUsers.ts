@@ -511,12 +511,6 @@ export const adminUsersApi = {
     return response.data;
   },
 
-  // Get user by telegram ID
-  getUserByTelegram: async (telegramId: number): Promise<UserDetailResponse> => {
-    const response = await apiClient.get(`/cabinet/admin/users/by-telegram/${telegramId}`);
-    return response.data;
-  },
-
   // Get available tariffs for user
   getAvailableTariffs: async (
     userId: number,
@@ -564,19 +558,6 @@ export const adminUsersApi = {
       `/cabinet/admin/users/${userId}/subscriptions/${subId}`,
       { params: force ? { force: true } : undefined },
     );
-    return response.data;
-  },
-
-  // Update status
-  updateStatus: async (
-    userId: number,
-    status: 'active' | 'blocked' | 'deleted',
-    reason?: string,
-  ): Promise<UpdateUserStatusResponse> => {
-    const response = await apiClient.post(`/cabinet/admin/users/${userId}/status`, {
-      status,
-      reason,
-    });
     return response.data;
   },
 
@@ -630,18 +611,6 @@ export const adminUsersApi = {
   ): Promise<{ success: boolean; message: string }> => {
     const response = await apiClient.post(`/cabinet/admin/users/${userId}/referral-commission`, {
       commission_percent: commissionPercent,
-    });
-    return response.data;
-  },
-
-  // Delete user (soft delete, does NOT remove from Remnawave)
-  deleteUser: async (
-    userId: number,
-    softDelete = true,
-    reason?: string,
-  ): Promise<{ success: boolean; message: string }> => {
-    const response = await apiClient.delete(`/cabinet/admin/users/${userId}`, {
-      data: { soft_delete: softDelete, reason },
     });
     return response.data;
   },
@@ -753,12 +722,6 @@ export const adminUsersApi = {
   // Reset trial
   resetTrial: async (userId: number): Promise<{ success: boolean; message: string }> => {
     const response = await apiClient.post(`/cabinet/admin/users/${userId}/reset-trial`);
-    return response.data;
-  },
-
-  // Reset subscription
-  resetSubscription: async (userId: number): Promise<{ success: boolean; message: string }> => {
-    const response = await apiClient.post(`/cabinet/admin/users/${userId}/reset-subscription`);
     return response.data;
   },
 

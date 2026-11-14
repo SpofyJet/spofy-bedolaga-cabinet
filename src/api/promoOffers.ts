@@ -39,13 +39,6 @@ export interface PromoOffer {
   subscription: PromoOfferSubscriptionInfo | null;
 }
 
-export interface PromoOfferListResponse {
-  items: PromoOffer[];
-  total: number;
-  limit: number;
-  offset: number;
-}
-
 export interface PromoOfferBroadcastRequest {
   notification_type: string;
   valid_hours: number;
@@ -199,17 +192,6 @@ export type OfferType = keyof typeof OFFER_TYPE_CONFIG;
 // ============== API ==============
 
 export const promoOffersApi = {
-  // Get list of promo offers
-  getOffers: async (params?: {
-    limit?: number;
-    offset?: number;
-    user_id?: number;
-    is_active?: boolean;
-  }): Promise<PromoOfferListResponse> => {
-    const response = await apiClient.get('/cabinet/admin/promo-offers', { params });
-    return response.data;
-  },
-
   // Broadcast offer to multiple users
   broadcastOffer: async (
     data: PromoOfferBroadcastRequest,
@@ -238,12 +220,6 @@ export const promoOffersApi = {
   // Get all templates
   getTemplates: async (): Promise<PromoOfferTemplateListResponse> => {
     const response = await apiClient.get('/cabinet/admin/promo-offers/templates');
-    return response.data;
-  },
-
-  // Get single template
-  getTemplate: async (id: number): Promise<PromoOfferTemplate> => {
-    const response = await apiClient.get(`/cabinet/admin/promo-offers/templates/${id}`);
     return response.data;
   },
 

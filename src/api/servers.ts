@@ -128,12 +128,6 @@ export const serversApi = {
     return response.data;
   },
 
-  // Get server stats
-  getServerStats: async (serverId: number): Promise<ServerStats> => {
-    const response = await apiClient.get(`/cabinet/admin/servers/${serverId}/stats`);
-    return response.data;
-  },
-
   // Sync servers with Remnawave
   syncServers: async (): Promise<ServerSyncResponse> => {
     const response = await apiClient.post('/cabinet/admin/servers/sync');

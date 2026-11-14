@@ -28,14 +28,6 @@ export interface RecurrentPaymentsResponse {
   updated_at: string | null;
 }
 
-export interface ServiceInfo {
-  name: string;
-  description: string | null;
-  support_email: string | null;
-  support_telegram: string | null;
-  website: string | null;
-}
-
 export interface LanguageInfo {
   code: string;
   name: string;
@@ -57,15 +49,6 @@ export const infoApi = {
   // Get FAQ pages list
   getFaqPages: async (language?: string): Promise<FaqPage[]> => {
     const response = await apiClient.get<FaqPage[]>('/cabinet/info/faq', languageParams(language));
-    return response.data;
-  },
-
-  // Get specific FAQ page
-  getFaqPage: async (pageId: number, language?: string): Promise<FaqPage> => {
-    const response = await apiClient.get<FaqPage>(
-      `/cabinet/info/faq/${pageId}`,
-      languageParams(language),
-    );
     return response.data;
   },
 
@@ -105,29 +88,9 @@ export const infoApi = {
     return response.data;
   },
 
-  // Get service info
-  getServiceInfo: async (): Promise<ServiceInfo> => {
-    const response = await apiClient.get<ServiceInfo>('/cabinet/info/service');
-    return response.data;
-  },
-
   // Get available languages
   getLanguages: async (): Promise<{ languages: LanguageInfo[]; default: string }> => {
     const response = await apiClient.get('/cabinet/info/languages');
-    return response.data;
-  },
-
-  // Get user language
-  getUserLanguage: async (): Promise<{ language: string }> => {
-    const response = await apiClient.get<{ language: string }>('/cabinet/info/user/language');
-    return response.data;
-  },
-
-  // Update user language
-  updateUserLanguage: async (language: string): Promise<{ language: string }> => {
-    const response = await apiClient.patch<{ language: string }>('/cabinet/info/user/language', {
-      language,
-    });
     return response.data;
   },
 

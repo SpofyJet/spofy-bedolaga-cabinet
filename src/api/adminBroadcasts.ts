@@ -97,19 +97,6 @@ export interface BroadcastMedia {
   caption?: string;
 }
 
-export interface BroadcastCreateRequest {
-  target: string;
-  message_text: string;
-  selected_buttons: string[];
-  media?: BroadcastMedia;
-}
-
-export interface EmailBroadcastCreateRequest {
-  target: string;
-  subject: string;
-  html_content: string;
-}
-
 export interface CombinedBroadcastCreateRequest {
   channel: BroadcastChannel;
   target?: string;
@@ -165,11 +152,6 @@ export interface BroadcastListResponse {
   total: number;
   limit: number;
   offset: number;
-}
-
-export interface BroadcastPreviewResponse {
-  target: string;
-  count: number;
 }
 
 export interface MediaUploadResponse {
@@ -237,17 +219,6 @@ export const adminBroadcastsApi = {
     return response.data;
   },
 
-  // Preview broadcast (get recipients count)
-  preview: async (target: string): Promise<BroadcastPreviewResponse> => {
-    const response = await apiClient.post<BroadcastPreviewResponse>(
-      '/cabinet/admin/broadcasts/preview',
-      {
-        target,
-      },
-    );
-    return response.data;
-  },
-
   // Письмо рассылки так, как его получит адресат: фрагмент — в общей обёртке
   // писем из редактора шаблонов, полный документ — как есть. Тем же кодом,
   // что и отправка, чтобы превью не расходилось с письмом.
@@ -260,29 +231,6 @@ export const adminBroadcastsApi = {
       '/cabinet/admin/broadcasts/email-render',
       data,
     );
-    return response.data;
-  },
-
-  // Preview email broadcast (get recipients count)
-  previewEmail: async (target: string): Promise<BroadcastPreviewResponse> => {
-    const response = await apiClient.post<BroadcastPreviewResponse>(
-      '/cabinet/admin/broadcasts/email-preview',
-      {
-        target,
-      },
-    );
-    return response.data;
-  },
-
-  // Create and start broadcast (Telegram only - legacy)
-  create: async (data: BroadcastCreateRequest): Promise<Broadcast> => {
-    const response = await apiClient.post<Broadcast>('/cabinet/admin/broadcasts', data);
-    return response.data;
-  },
-
-  // Create email broadcast
-  createEmail: async (data: EmailBroadcastCreateRequest): Promise<Broadcast> => {
-    const response = await apiClient.post<Broadcast>('/cabinet/admin/broadcasts/email', data);
     return response.data;
   },
 

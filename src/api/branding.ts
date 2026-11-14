@@ -14,10 +14,6 @@ export interface BrandingInfo {
   has_custom_logo: boolean;
 }
 
-export interface AnimationEnabled {
-  enabled: boolean;
-}
-
 export interface FullscreenEnabled {
   enabled: boolean;
 }
@@ -274,20 +270,6 @@ export const brandingApi = {
   // Get logo URL as blob (hides backend URL from DOM)
   getLogoUrl: (_branding: BrandingInfo): string | null => {
     return _logoBlobUrl;
-  },
-
-  // Get animation enabled (public, no auth required)
-  getAnimationEnabled: async (): Promise<AnimationEnabled> => {
-    const response = await apiClient.get<AnimationEnabled>('/cabinet/branding/animation');
-    return response.data;
-  },
-
-  // Update animation enabled (admin only)
-  updateAnimationEnabled: async (enabled: boolean): Promise<AnimationEnabled> => {
-    const response = await apiClient.patch<AnimationEnabled>('/cabinet/branding/animation', {
-      enabled,
-    });
-    return response.data;
   },
 
   // Get animation config (public, no auth required)

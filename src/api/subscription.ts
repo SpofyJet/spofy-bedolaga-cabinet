@@ -3,14 +3,11 @@ import { getYandexCid } from '../utils/yandexCid';
 import type {
   Subscription,
   SubscriptionStatusResponse,
-  SubscriptionListItem,
   SubscriptionsListResponse,
   RenewalOption,
   TrafficPackage,
   TrialInfo,
   PurchaseOptions,
-  PurchaseSelection,
-  PurchasePreview,
   AppConfig,
   SbpRecurringInfo,
 } from '../types';
@@ -40,13 +37,6 @@ export const subscriptionApi = {
 
   getSubscriptions: async (): Promise<SubscriptionsListResponse> => {
     const response = await apiClient.get<SubscriptionsListResponse>('/cabinet/subscriptions');
-    return response.data;
-  },
-
-  getSubscriptionById: async (subscriptionId: number): Promise<SubscriptionListItem> => {
-    const response = await apiClient.get<SubscriptionListItem>(
-      `/cabinet/subscriptions/${subscriptionId}`,
-    );
     return response.data;
   },
 
@@ -112,25 +102,6 @@ export const subscriptionApi = {
     amount_paid_kopeks: number;
   }> => {
     const response = await apiClient.post(
-      '/cabinet/subscription/traffic',
-      ...bodyWithSubId({ gb, yandex_cid: getYandexCid() || undefined }, subscriptionId),
-    );
-    return response.data;
-  },
-
-  switchTraffic: async (
-    gb: number,
-    subscriptionId?: number,
-  ): Promise<{
-    success: boolean;
-    message: string;
-    old_traffic_gb: number;
-    new_traffic_gb: number;
-    charged_kopeks: number;
-    balance_kopeks: number;
-    balance_label: string;
-  }> => {
-    const response = await apiClient.put(
       '/cabinet/subscription/traffic',
       ...bodyWithSubId({ gb, yandex_cid: getYandexCid() || undefined }, subscriptionId),
     );
@@ -421,33 +392,6 @@ export const subscriptionApi = {
     return response.data;
   },
 
-  previewPurchase: async (
-    selection: PurchaseSelection,
-    subscriptionId?: number,
-  ): Promise<PurchasePreview> => {
-    const response = await apiClient.post<PurchasePreview>(
-      '/cabinet/subscription/purchase-preview',
-      ...bodyWithSubId({ selection }, subscriptionId),
-    );
-    return response.data;
-  },
-
-  submitPurchase: async (
-    selection: PurchaseSelection,
-    subscriptionId?: number,
-  ): Promise<{
-    success: boolean;
-    message: string;
-    subscription: Subscription;
-    was_trial_conversion: boolean;
-  }> => {
-    const response = await apiClient.post(
-      '/cabinet/subscription/purchase',
-      ...bodyWithSubId({ selection, yandex_cid: getYandexCid() || undefined }, subscriptionId),
-    );
-    return response.data;
-  },
-
   purchaseTariff: async (
     tariffId: number,
     periodDays: number,
@@ -483,51 +427,6 @@ export const subscriptionApi = {
 
   // ── Countries / Servers ─────────────────────────────────────────────
 
-  getCountries: async (
-    subscriptionId?: number,
-  ): Promise<{
-    countries: Array<{
-      uuid: string;
-      name: string;
-      country_code: string | null;
-      base_price_kopeks: number;
-      price_kopeks: number;
-      price_per_month_kopeks: number;
-      price_rubles: number;
-      is_available: boolean;
-      is_connected: boolean;
-      has_discount: boolean;
-      discount_percent: number;
-    }>;
-    connected_count: number;
-    has_subscription: boolean;
-    days_left: number;
-    discount_percent: number;
-  }> => {
-    const response = await apiClient.get(
-      '/cabinet/subscription/countries',
-      withSubId(subscriptionId),
-    );
-    return response.data;
-  },
-
-  updateCountries: async (
-    countries: string[],
-    subscriptionId?: number,
-  ): Promise<{
-    message: string;
-    added: string[];
-    removed: string[];
-    amount_paid_kopeks: number;
-    connected_squads: string[];
-  }> => {
-    const response = await apiClient.post(
-      '/cabinet/subscription/countries',
-      ...bodyWithSubId({ countries, yandex_cid: getYandexCid() || undefined }, subscriptionId),
-    );
-    return response.data;
-  },
-
   // ── Connection ──────────────────────────────────────────────────────
 
   getConnectionLink: async (
@@ -550,21 +449,6 @@ export const subscriptionApi = {
       '/cabinet/subscription/connection-link',
       withSubId(subscriptionId),
     );
-    return response.data;
-  },
-
-  getHappDownloads: async (): Promise<{
-    platforms: Record<
-      string,
-      {
-        name: string;
-        icon: string;
-        link: string;
-      }
-    >;
-    happ_enabled: boolean;
-  }> => {
-    const response = await apiClient.get('/cabinet/subscription/happ-downloads');
     return response.data;
   },
 

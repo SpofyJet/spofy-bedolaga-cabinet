@@ -72,14 +72,6 @@ export const adminPinnedMessagesApi = {
     return response.data;
   },
 
-  // Get current active message
-  getActive: async (): Promise<PinnedMessageResponse> => {
-    const response = await apiClient.get<PinnedMessageResponse>(
-      '/cabinet/admin/pinned-messages/active',
-    );
-    return response.data;
-  },
-
   // Get pinned message by ID
   get: async (id: number): Promise<PinnedMessageResponse> => {
     const response = await apiClient.get<PinnedMessageResponse>(
@@ -101,18 +93,6 @@ export const adminPinnedMessagesApi = {
   update: async (id: number, data: PinnedMessageUpdateRequest): Promise<PinnedMessageResponse> => {
     const response = await apiClient.patch<PinnedMessageResponse>(
       `/cabinet/admin/pinned-messages/${id}`,
-      data,
-    );
-    return response.data;
-  },
-
-  // Update settings only
-  updateSettings: async (
-    id: number,
-    data: Pick<PinnedMessageUpdateRequest, 'send_before_menu' | 'send_on_every_start'>,
-  ): Promise<PinnedMessageResponse> => {
-    const response = await apiClient.patch<PinnedMessageResponse>(
-      `/cabinet/admin/pinned-messages/${id}/settings`,
       data,
     );
     return response.data;

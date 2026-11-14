@@ -10,7 +10,6 @@ import type {
   RegisterResponse,
   ServerCompletePreviewResponse,
   ServerCompleteResponse,
-  TokenResponse,
   User,
   UserAvatarResponse,
 } from '../types';
@@ -154,13 +153,6 @@ export const authApi = {
    */
   resendVerificationPublic: async (email: string): Promise<{ message: string }> => {
     const response = await apiClient.post('/cabinet/auth/email/register/resend', { email });
-    return response.data;
-  },
-
-  refreshToken: async (refreshToken: string): Promise<TokenResponse> => {
-    const response = await apiClient.post<TokenResponse>('/cabinet/auth/refresh', {
-      refresh_token: refreshToken,
-    });
     return response.data;
   },
 

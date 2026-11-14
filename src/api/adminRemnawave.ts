@@ -212,13 +212,6 @@ export interface NodesOverview {
   nodes: NodeInfo[];
 }
 
-export interface NodeStatisticsResponse {
-  node: NodeInfo;
-  realtime?: Record<string, unknown>;
-  usage_history: Record<string, unknown>[];
-  last_updated?: string;
-}
-
 export interface NodeActionResponse {
   success: boolean;
   message?: string;
@@ -303,51 +296,6 @@ export interface SquadsListResponse {
   total: number;
 }
 
-export interface SquadDetailResponse extends SquadWithLocalInfo {
-  description?: string;
-  sort_order?: number;
-  active_subscriptions: number;
-}
-
-export interface SquadOperationResponse {
-  success: boolean;
-  message?: string;
-  data?: Record<string, unknown>;
-}
-
-// Migration
-export interface MigrationPreviewResponse {
-  squad_uuid: string;
-  squad_name: string;
-  current_users: number;
-  max_users?: number;
-  users_to_migrate: number;
-}
-
-export interface MigrationStats {
-  source_uuid: string;
-  target_uuid: string;
-  total: number;
-  updated: number;
-  panel_updated: number;
-  panel_failed: number;
-  source_removed: number;
-  target_added: number;
-}
-
-export interface MigrationResponse {
-  success: boolean;
-  message?: string;
-  error?: string;
-  data?: MigrationStats;
-}
-
-// Inbounds
-export interface InboundsListResponse {
-  items: Record<string, unknown>[];
-  total: number;
-}
-
 // Auto Sync
 export interface AutoSyncStatus {
   enabled: boolean;
@@ -426,23 +374,8 @@ export const adminRemnawaveApi = {
     return response.data;
   },
 
-  getNodesOverview: async (): Promise<NodesOverview> => {
-    const response = await apiClient.get('/cabinet/admin/remnawave/nodes/overview');
-    return response.data;
-  },
-
   getNodesRealtime: async (): Promise<NodeRealtimeStats[]> => {
     const response = await apiClient.get('/cabinet/admin/remnawave/nodes/realtime');
-    return response.data;
-  },
-
-  getNode: async (uuid: string): Promise<NodeInfo> => {
-    const response = await apiClient.get(`/cabinet/admin/remnawave/nodes/${uuid}`);
-    return response.data;
-  },
-
-  getNodeStatistics: async (uuid: string): Promise<NodeStatisticsResponse> => {
-    const response = await apiClient.get(`/cabinet/admin/remnawave/nodes/${uuid}/statistics`);
     return response.data;
   },
 
@@ -482,74 +415,9 @@ export const adminRemnawaveApi = {
     return response.data;
   },
 
-  getSquad: async (uuid: string): Promise<SquadDetailResponse> => {
-    const response = await apiClient.get(`/cabinet/admin/remnawave/squads/${uuid}`);
-    return response.data;
-  },
-
-  createSquad: async (data: {
-    name: string;
-    inbound_uuids?: string[];
-  }): Promise<SquadOperationResponse> => {
-    const response = await apiClient.post('/cabinet/admin/remnawave/squads', data);
-    return response.data;
-  },
-
-  updateSquad: async (
-    uuid: string,
-    data: { name?: string; inbound_uuids?: string[] },
-  ): Promise<SquadOperationResponse> => {
-    const response = await apiClient.patch(`/cabinet/admin/remnawave/squads/${uuid}`, data);
-    return response.data;
-  },
-
-  deleteSquad: async (uuid: string): Promise<SquadOperationResponse> => {
-    const response = await apiClient.delete(`/cabinet/admin/remnawave/squads/${uuid}`);
-    return response.data;
-  },
-
-  squadAction: async (
-    uuid: string,
-    data: {
-      action: 'add_all_users' | 'remove_all_users' | 'delete' | 'rename' | 'update_inbounds';
-      name?: string;
-      inbound_uuids?: string[];
-    },
-  ): Promise<SquadOperationResponse> => {
-    const response = await apiClient.post(`/cabinet/admin/remnawave/squads/${uuid}/action`, data);
-    return response.data;
-  },
-
-  // Migration
-  getMigrationPreview: async (uuid: string): Promise<MigrationPreviewResponse> => {
-    const response = await apiClient.get(
-      `/cabinet/admin/remnawave/squads/${uuid}/migration-preview`,
-    );
-    return response.data;
-  },
-
-  migrateSquad: async (sourceUuid: string, targetUuid: string): Promise<MigrationResponse> => {
-    const response = await apiClient.post('/cabinet/admin/remnawave/squads/migrate', {
-      source_uuid: sourceUuid,
-      target_uuid: targetUuid,
-    });
-    return response.data;
-  },
-
-  // Inbounds
-  getInbounds: async (): Promise<InboundsListResponse> => {
-    const response = await apiClient.get('/cabinet/admin/remnawave/inbounds');
-    return response.data;
-  },
-
   // Auto Sync
   getAutoSyncStatus: async (): Promise<AutoSyncStatus> => {
     const response = await apiClient.get('/cabinet/admin/remnawave/sync/auto/status');
-    return response.data;
-  },
-
-  toggleAutoSync: async (enabled: boolean): Promise<SyncResponse> => {
-    const response = await apiClient.post('/cabinet/admin/remnawave/sync/auto/toggle', { enabled });
     return response.data;
   },
 
@@ -573,26 +441,6 @@ export const adminRemnawaveApi = {
 
   syncServers: async (): Promise<SyncResponse> => {
     const response = await apiClient.post('/cabinet/admin/remnawave/sync/servers');
-    return response.data;
-  },
-
-  validateSubscriptions: async (): Promise<SyncResponse> => {
-    const response = await apiClient.post('/cabinet/admin/remnawave/sync/subscriptions/validate');
-    return response.data;
-  },
-
-  cleanupSubscriptions: async (): Promise<SyncResponse> => {
-    const response = await apiClient.post('/cabinet/admin/remnawave/sync/subscriptions/cleanup');
-    return response.data;
-  },
-
-  syncSubscriptionStatuses: async (): Promise<SyncResponse> => {
-    const response = await apiClient.post('/cabinet/admin/remnawave/sync/subscriptions/statuses');
-    return response.data;
-  },
-
-  getSyncRecommendations: async (): Promise<SyncResponse> => {
-    const response = await apiClient.get('/cabinet/admin/remnawave/sync/recommendations');
     return response.data;
   },
 };

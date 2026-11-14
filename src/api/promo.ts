@@ -20,14 +20,6 @@ export interface ActiveDiscount {
   is_active: boolean;
 }
 
-export interface PromoGroupDiscounts {
-  group_name: string | null;
-  server_discount_percent: number;
-  traffic_discount_percent: number;
-  device_discount_percent: number;
-  period_discounts: Record<string, number>;
-}
-
 export interface ClaimOfferResponse {
   success: boolean;
   message: string;
@@ -70,12 +62,6 @@ export const promoApi = {
   // Get active discount
   getActiveDiscount: async (): Promise<ActiveDiscount> => {
     const response = await apiClient.get<ActiveDiscount>('/cabinet/promo/active-discount');
-    return response.data;
-  },
-
-  // Get promo group discounts
-  getGroupDiscounts: async (): Promise<PromoGroupDiscounts> => {
-    const response = await apiClient.get<PromoGroupDiscounts>('/cabinet/promo/group-discounts');
     return response.data;
   },
 

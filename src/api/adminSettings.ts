@@ -5,13 +5,6 @@ export interface SettingCategoryRef {
   label: string;
 }
 
-export interface SettingCategorySummary {
-  key: string;
-  label: string;
-  description: string;
-  items: number;
-}
-
 export interface SettingChoice {
   value: unknown;
   label: string;
@@ -45,26 +38,12 @@ export interface SettingDefinition {
 }
 
 export const adminSettingsApi = {
-  // Get list of setting categories
-  getCategories: async (): Promise<SettingCategorySummary[]> => {
-    const response = await apiClient.get<SettingCategorySummary[]>(
-      '/cabinet/admin/settings/categories',
-    );
-    return response.data;
-  },
-
   // Get all settings or settings for a specific category
   getSettings: async (categoryKey?: string): Promise<SettingDefinition[]> => {
     const params = categoryKey ? { category_key: categoryKey } : {};
     const response = await apiClient.get<SettingDefinition[]>('/cabinet/admin/settings', {
       params,
     });
-    return response.data;
-  },
-
-  // Get a specific setting by key
-  getSetting: async (key: string): Promise<SettingDefinition> => {
-    const response = await apiClient.get<SettingDefinition>(`/cabinet/admin/settings/${key}`);
     return response.data;
   },
 

@@ -120,15 +120,6 @@ export const adminTrafficApi = {
     return data;
   },
 
-  getCached: (params: TrafficParams): TrafficUsageResponse | null => {
-    const key = buildCacheKey(params);
-    const cached = trafficCache.get(key);
-    if (cached && Date.now() - cached.timestamp < CACHE_TTL) {
-      return cached.data;
-    }
-    return null;
-  },
-
   invalidateCache: () => {
     trafficCache.clear();
   },

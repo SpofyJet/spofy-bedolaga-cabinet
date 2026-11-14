@@ -44,12 +44,4 @@ describe('infoApi: язык документов', () => {
 
     expect(get).toHaveBeenCalledWith(url, undefined);
   });
-
-  it('getFaqPage передаёт язык вместе с id страницы', async () => {
-    const { infoApi } = await import('./info');
-
-    await infoApi.getFaqPage(7, 'zh');
-
-    expect(get).toHaveBeenCalledWith('/cabinet/info/faq/7', { params: { language: 'zh' } });
-  });
 });

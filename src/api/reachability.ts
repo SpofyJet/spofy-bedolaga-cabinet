@@ -74,16 +74,6 @@ export interface HostTarget {
   target_key: string;
 }
 
-export interface NodeTarget {
-  uuid: string;
-  name: string;
-  address: string;
-  is_connected: boolean;
-  is_disabled: boolean;
-  host_uuids: string[];
-  target_key: string;
-}
-
 export interface SubscriptionConfig {
   index: number;
   protocol: string | null;
@@ -398,13 +388,6 @@ export interface Batch {
   jobs: BatchJob[];
 }
 
-export interface BatchList {
-  items: Batch[];
-  total: number;
-  offset: number;
-  limit: number;
-}
-
 export interface BatchCreateRequest {
   host_refs: string[];
   units: string[];
@@ -495,9 +478,6 @@ export const reachabilityApi = {
       })
     ).data.items,
 
-  getNodes: async (): Promise<NodeTarget[]> =>
-    (await apiClient.get(`${BASE}/targets/nodes`)).data.items,
-
   getSubscriptionConfigs: async (params: {
     shortUuid?: string;
     userId?: number;
@@ -550,9 +530,6 @@ export const reachabilityApi = {
 
   createBatch: async (body: BatchCreateRequest): Promise<Batch> =>
     (await apiClient.post(`${BASE}/batches`, body)).data,
-
-  listBatches: async (params: { offset?: number; limit?: number } = {}): Promise<BatchList> =>
-    (await apiClient.get(`${BASE}/batches`, { params })).data,
 
   getBatch: async (id: number): Promise<Batch> =>
     (await apiClient.get(`${BASE}/batches/${id}`)).data,

@@ -23,16 +23,6 @@ function resolveArticle<T extends { featured_image_url: string | null; content?:
 }
 
 export const newsApi = {
-  // User endpoints
-  getNews: async (params?: {
-    category?: string;
-    limit?: number;
-    offset?: number;
-  }): Promise<NewsListResponse> => {
-    const response = await apiClient.get<NewsListResponse>('/cabinet/news', { params });
-    return { ...response.data, items: response.data.items.map(resolveArticle) };
-  },
-
   getArticle: async (slug: string): Promise<NewsArticle> => {
     const response = await apiClient.get<NewsArticle>(`/cabinet/news/${encodeURIComponent(slug)}`);
     return resolveArticle(response.data);
@@ -90,10 +80,6 @@ export const newsApi = {
     };
   },
 
-  deleteMedia: async (filename: string): Promise<void> => {
-    await apiClient.delete(`/cabinet/admin/news/media/${encodeURIComponent(filename)}`);
-  },
-
   // Categories
   getCategories: async (): Promise<NewsCategory[]> => {
     const response = await apiClient.get<NewsCategory[]>('/cabinet/admin/news/categories');
@@ -102,17 +88,6 @@ export const newsApi = {
 
   createCategory: async (data: { name: string; color: string }): Promise<NewsCategory> => {
     const response = await apiClient.post<NewsCategory>('/cabinet/admin/news/categories', data);
-    return response.data;
-  },
-
-  updateCategory: async (
-    id: number,
-    data: { name?: string; color?: string },
-  ): Promise<NewsCategory> => {
-    const response = await apiClient.put<NewsCategory>(
-      `/cabinet/admin/news/categories/${id}`,
-      data,
-    );
     return response.data;
   },
 
@@ -128,11 +103,6 @@ export const newsApi = {
 
   createTag: async (data: { name: string; color: string }): Promise<NewsTag> => {
     const response = await apiClient.post<NewsTag>('/cabinet/admin/news/tags', data);
-    return response.data;
-  },
-
-  updateTag: async (id: number, data: { name?: string; color?: string }): Promise<NewsTag> => {
-    const response = await apiClient.put<NewsTag>(`/cabinet/admin/news/tags/${id}`, data);
     return response.data;
   },
 

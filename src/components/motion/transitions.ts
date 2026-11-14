@@ -10,18 +10,6 @@ export const springTransition: Transition = {
 // Expo easing curve (Linear-style)
 export const easeOutExpo = [0.16, 1, 0.3, 1] as const;
 
-// Fade in animation
-export const fadeIn: Variants = {
-  initial: { opacity: 0 },
-  animate: { opacity: 1 },
-  exit: { opacity: 0 },
-};
-
-export const fadeInTransition: Transition = {
-  duration: 0.2,
-  ease: easeOutExpo,
-};
-
 // Slide up animation (for page content, cards)
 // Exit is instant to avoid visual glitches in Telegram Mini App
 export const slideUp: Variants = {
@@ -125,18 +113,6 @@ export const dropdown: Variants = {
 };
 
 export const dropdownTransition: Transition = {
-  duration: 0.15,
-  ease: easeOutExpo,
-};
-
-// Command palette animation
-export const commandPalette: Variants = {
-  initial: { opacity: 0, scale: 0.98 },
-  animate: { opacity: 1, scale: 1 },
-  exit: { opacity: 0, scale: 0.98 },
-};
-
-export const commandPaletteTransition: Transition = {
   duration: 0.15,
   ease: easeOutExpo,
 };
