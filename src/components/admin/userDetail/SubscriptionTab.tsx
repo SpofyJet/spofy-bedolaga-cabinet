@@ -63,7 +63,6 @@ export interface SubscriptionTabProps {
   busy: boolean;
   actions: SubscriptionTabActions;
   reachabilityLink: string | null;
-  dpicheckerLink?: string | null;
   mode: SalesMode;
 }
 
@@ -188,7 +187,6 @@ export function SubscriptionTab(props: SubscriptionTabProps) {
             panelInfo={props.panelInfo}
             remnawaveId={selectedSub.remnawave_id ?? (mode === 'multi' ? null : user.remnawave_id)}
             reachabilityLink={props.reachabilityLink}
-            dpicheckerLink={props.dpicheckerLink ?? null}
           />
         </>
       )}

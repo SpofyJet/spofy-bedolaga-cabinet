@@ -27,7 +27,6 @@ const ALLOWED = new Set([
   'components/dashboard/StatusShield.tsx', // щит бренда — знак состояния на главной
   'components/wheel/FortuneWheel.tsx',
   'components/admin/reachability/GeoMap.tsx',
-  'components/admin/dpichecker/DpiRegionMap.tsx', // карта регионов, не иконка
   'components/ui/backgrounds/background-beams.tsx',
   'components/ui/backgrounds/background-gradient-animation.tsx',
 ]);

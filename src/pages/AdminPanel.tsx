@@ -42,7 +42,6 @@ import {
   WheelIcon,
   XIcon,
   RadarIcon,
-  WallIcon,
 } from '@/components/icons';
 
 const CABINET_VERSION = __APP_VERSION__;
@@ -77,7 +76,6 @@ const icons = {
   server: <ServerIcon />,
   remnawave: <RemnawaveIcon />,
   radar: <RadarIcon />,
-  wall: <WallIcon />,
   mail: <MailIcon />,
   refresh: <SyncIcon />,
   shield: <ShieldIcon />,
@@ -287,12 +285,6 @@ const sections: AdminSection[] = [
         icon: 'radar',
         to: '/admin/reachability',
         permission: 'reachability:read',
-      },
-      {
-        name: 'admin.nav.dpichecker',
-        icon: 'wall',
-        to: '/admin/dpichecker',
-        permission: 'dpichecker:read',
       },
       {
         name: 'admin.nav.emailTemplates',

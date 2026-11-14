@@ -150,7 +150,6 @@ const AdminPromoOfferSend = lazyWithRetry(() => import('./pages/AdminPromoOfferS
 const AdminReachability = lazyWithRetry(() => import('./pages/AdminReachability'));
 const AdminReachabilityHistory = lazyWithRetry(() => import('./pages/AdminReachabilityHistory'));
 const AdminReachabilityOther = lazyWithRetry(() => import('./pages/AdminReachabilityOther'));
-const AdminDpiChecker = lazyWithRetry(() => import('./pages/AdminDpiChecker'));
 const AdminRemnawave = lazyWithRetry(() => import('./pages/AdminRemnawave'));
 const AdminRemnawaveSquadDetail = lazyWithRetry(() => import('./pages/AdminRemnawaveSquadDetail'));
 const AdminEmailTemplates = lazyWithRetry(() => import('./pages/AdminEmailTemplates'));
@@ -827,16 +826,6 @@ function App() {
             <PermissionRoute permission="stats:read">
               <LazyPage>
                 <AdminDashboard />
-              </LazyPage>
-            </PermissionRoute>
-          }
-        />
-        <Route
-          path="/admin/dpichecker"
-          element={
-            <PermissionRoute permission="dpichecker:read">
-              <LazyPage>
-                <AdminDpiChecker />
               </LazyPage>
             </PermissionRoute>
           }

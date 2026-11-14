@@ -3,10 +3,10 @@ import { useState } from 'react';
 import { cleanup, fireEvent, screen } from '@testing-library/react';
 import { afterEach, expect, it, vi } from 'vitest';
 import type { UserDetailResponse, UserSubscriptionInfo } from '@/api/adminUsers';
-import { renderWithProviders } from '../dpichecker/testUtils';
+import { renderWithProviders } from '@/test/utils';
 import { SubscriptionTab, type SubscriptionTabProps } from './SubscriptionTab';
 
-vi.mock('react-i18next', async () => (await import('../dpichecker/testUtils')).i18nMock());
+vi.mock('react-i18next', async () => (await import('@/test/utils')).i18nMock());
 vi.mock('./SubscriptionCard', () => ({ SubscriptionCard: () => null }));
 vi.mock('./DevicesCard', () => ({ DevicesCard: () => null }));
 vi.mock('@/api/adminUsers', () => ({

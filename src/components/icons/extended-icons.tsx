@@ -17,7 +17,6 @@ import {
   PiNetwork,
   PiSlidersHorizontal,
   PiWrench,
-  PiBookOpen,
   PiArrowDown,
   PiArrowUp,
   PiProhibit,
@@ -98,7 +97,6 @@ import {
   PiCpu,
   PiMemory,
   PiPulse,
-  PiWall,
 } from 'react-icons/pi';
 // У Phosphor нет радара — единственная иконка из Lucide, для раздела BSCHEKER.
 import { LuRadar } from 'react-icons/lu';
@@ -121,10 +119,6 @@ export const AdjustmentsIcon = ({ className }: IconProps) => (
 
 export const WrenchIcon = ({ className }: IconProps) => (
   <PiWrench className={cn('h-5 w-5', className)} />
-);
-
-export const BookOpenIcon = ({ className }: IconProps) => (
-  <PiBookOpen className={cn('h-5 w-5', className)} />
 );
 
 export const ArrowDownIcon = ({ className }: IconProps) => (
@@ -486,11 +480,6 @@ export const XCloseIcon = ({ className }: IconProps) => (
 );
 
 export const XMarkIcon = ({ className }: IconProps) => <PiX className={cn('h-5 w-5', className)} />;
-
-/** Раздел DPI//CHECKER: стена (ТСПУ, фильтрация). */
-export const WallIcon = ({ className }: IconProps) => (
-  <PiWall className={cn('h-5 w-5', className)} />
-);
 
 /** Раздел BSCHEKER: радар. */
 export const RadarIcon = ({ className }: IconProps) => (

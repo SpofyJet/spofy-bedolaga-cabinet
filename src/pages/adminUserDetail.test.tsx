@@ -36,10 +36,6 @@ vi.mock('@/components/admin/reachability/useReachabilityStatus', () => ({
   useReachabilityAvailable: () => false,
 }));
 
-vi.mock('@/components/admin/dpichecker/useDpiStatus', () => ({
-  useDpiAvailable: () => false,
-}));
-
 const detail: UserDetailResponse = {
   id: 42,
   telegram_id: 453205530,
