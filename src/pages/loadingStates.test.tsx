@@ -128,7 +128,6 @@ const PAGES: PageCase[] = [
   { name: 'SubscriptionPurchase', load: () => import('./SubscriptionPurchase') },
   { name: 'Wheel', load: () => import('./Wheel') },
   { name: 'AdminNews', load: () => import('./AdminNews') },
-  { name: 'AdminInfoPages', load: () => import('./AdminInfoPages') },
   { name: 'AdminEmailTemplates', load: () => import('./AdminEmailTemplates') },
   { name: 'AdminUpdates', load: () => import('./AdminUpdates') },
   { name: 'AdminDashboard', load: () => import('./AdminDashboard') },
@@ -158,12 +157,6 @@ const PAGES: PageCase[] = [
     load: () => import('./AdminNewsCreate'),
     path: '/n/:id',
     entry: '/n/1',
-  },
-  {
-    name: 'AdminInfoPageEditor',
-    load: () => import('./AdminInfoPageEditor'),
-    path: '/i/:id',
-    entry: '/i/1',
   },
   {
     name: 'AdminCampaignEdit',
@@ -216,7 +209,6 @@ const PAGES: PageCase[] = [
     entry: '/m/tok',
   },
   { name: 'NewsArticle', load: () => import('./NewsArticle'), path: '/na/:slug', entry: '/na/x' },
-  { name: 'InfoPageView', load: () => import('./InfoPageView'), path: '/ip/:slug', entry: '/ip/x' },
   { name: 'GiftClaim', load: () => import('./GiftClaim'), path: '/g/:code', entry: '/g/x' },
 ];
 

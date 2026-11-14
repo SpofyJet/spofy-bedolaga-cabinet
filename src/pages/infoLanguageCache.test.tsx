@@ -17,9 +17,6 @@ vi.mock('../components/layout/PageHeader', () => ({
   PageHeader: ({ title }: { title: ReactNode }) => <h1>{title}</h1>,
 }));
 vi.mock('../api/client', () => ({ default: { get: (...args: unknown[]) => state.get(...args) } }));
-vi.mock('../api/infoPages', () => ({
-  infoPagesApi: { getTabReplacements: async () => ({}), getPages: async () => [] },
-}));
 let client: QueryClient;
 beforeEach(() => {
   state.language = 'ru';

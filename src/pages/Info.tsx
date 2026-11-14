@@ -1,14 +1,11 @@
 import { uiLocale } from '@/utils/uiLocale';
-import { useState, useMemo, useCallback, useRef, useEffect } from 'react';
+import { useState, useMemo, useCallback, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 import { PiCaretDownBold } from 'react-icons/pi';
-import DOMPurify from 'dompurify';
 import { infoApi, type FaqPage, type InfoVisibility } from '../api/info';
 import { formatContent } from '../utils/legalContent';
-import { infoPagesApi } from '../api/infoPages';
 import { promoApi, type LoyaltyTierInfo } from '../api/promo';
-import type { FaqItem, ReplacesTab } from '../api/infoPages';
 import { DocumentIcon, QuestionIcon, ShieldIcon, StarIcon } from '@/components/icons';
 import { Skeleton, SkeletonGroup } from '@/components/ui/skeleton';
 import { PageHeader } from '@/components/layout/PageHeader';
@@ -21,239 +18,11 @@ const ChevronIcon = ({ expanded }: { expanded: boolean }) => (
   />
 );
 
-const BUILTIN_TABS = new Set<string>(['faq', 'rules', 'privacy', 'offer', 'loyalty']);
-
-// Rich sanitizer for custom InfoPage content (TipTap editor output with media)
-const ALLOWED_IFRAME_HOSTS = new Set([
-  'www.youtube.com',
-  'youtube.com',
-  'player.vimeo.com',
-  'www.youtube-nocookie.com',
-]);
-
-const infoPagePurify = DOMPurify(window);
-
-infoPagePurify.addHook('afterSanitizeAttributes', (node) => {
-  if (node.tagName === 'IFRAME') {
-    const src = node.getAttribute('src') ?? '';
-    try {
-      const url = new URL(src);
-      if (url.protocol !== 'https:' || !ALLOWED_IFRAME_HOSTS.has(url.hostname)) {
-        node.remove();
-        return;
-      }
-    } catch {
-      node.remove();
-      return;
-    }
-    node.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-presentation');
-    node.setAttribute('allow', 'autoplay; encrypted-media; picture-in-picture');
-  }
-  if (node.tagName === 'VIDEO') {
-    const src = node.getAttribute('src') ?? '';
-    try {
-      const url = new URL(src);
-      if (url.protocol !== 'https:' && url.protocol !== 'http:') {
-        node.remove();
-        return;
-      }
-    } catch {
-      node.remove();
-      return;
-    }
-    node.setAttribute('controls', '');
-    node.setAttribute('preload', 'metadata');
-  }
-  if (node.tagName === 'A') {
-    node.setAttribute('target', '_blank');
-    node.setAttribute('rel', 'noopener noreferrer');
-  }
-  if (node.hasAttribute('style')) {
-    const style = node.getAttribute('style') ?? '';
-    const match = style.match(/text-align\s*:\s*(left|center|right|justify)/i);
-    if (match) {
-      node.setAttribute('style', `text-align: ${match[1]}`);
-    } else {
-      node.removeAttribute('style');
-    }
-  }
-});
-
-const RICH_SANITIZE_CONFIG = {
-  ALLOWED_TAGS: [
-    'p',
-    'div',
-    'br',
-    'hr',
-    'h1',
-    'h2',
-    'h3',
-    'h4',
-    'h5',
-    'h6',
-    'blockquote',
-    'pre',
-    'code',
-    'ul',
-    'ol',
-    'li',
-    'table',
-    'thead',
-    'tbody',
-    'tr',
-    'th',
-    'td',
-    'a',
-    'strong',
-    'b',
-    'em',
-    'i',
-    'u',
-    's',
-    'del',
-    'ins',
-    'span',
-    'mark',
-    'sub',
-    'sup',
-    'small',
-    'img',
-    'video',
-    'iframe',
-    'figure',
-    'figcaption',
-  ],
-  ALLOWED_ATTR: [
-    'href',
-    'target',
-    'rel',
-    'src',
-    'alt',
-    'title',
-    'width',
-    'height',
-    'loading',
-    'class',
-    'start',
-    'reversed',
-    'type',
-    'controls',
-    'preload',
-    'frameborder',
-    'allowfullscreen',
-    'allow',
-    'sandbox',
-    'style',
-  ],
-  ALLOW_DATA_ATTR: false,
-  ADD_ATTR: ['target'],
-};
-
-const sanitizeRichHtml = (html: string): string => {
-  return infoPagePurify.sanitize(html, RICH_SANITIZE_CONFIG);
-};
-
-// --- FAQ Accordion for tab replacements ---
-
-function ReplacementFaqItem({
-  item,
-  isOpen,
-  onToggle,
-}: {
-  item: FaqItem;
-  isOpen: boolean;
-  onToggle: () => void;
-}) {
-  const contentRef = useRef<HTMLDivElement>(null);
-  const [height, setHeight] = useState(0);
-
-  useEffect(() => {
-    if (contentRef.current) {
-      setHeight(isOpen ? contentRef.current.scrollHeight : 0);
-    }
-  }, [isOpen]);
-
-  useEffect(() => {
-    if (!isOpen || !contentRef.current) return;
-    const observer = new ResizeObserver(() => {
-      if (contentRef.current) setHeight(contentRef.current.scrollHeight);
-    });
-    observer.observe(contentRef.current);
-    return () => observer.disconnect();
-  }, [isOpen]);
-
-  const sanitizedAnswer = useMemo(() => sanitizeRichHtml(item.a), [item.a]);
-
-  return (
-    <div className="overflow-hidden">
-      <button
-        type="button"
-        onClick={onToggle}
-        className="flex min-h-[60px] w-full items-center justify-between gap-3 px-4 py-3 text-left transition-colors hover:bg-dark-800/40"
-        aria-expanded={isOpen}
-      >
-        <span className="text-[15px] font-semibold text-dark-100">{item.q}</span>
-        <ChevronIcon expanded={isOpen} />
-      </button>
-      <div
-        style={{ height }}
-        className="overflow-hidden transition-[height] duration-300 ease-in-out"
-      >
-        <div ref={contentRef} className="px-4 pb-4 pt-0">
-          <div
-            className="prose prose-sm max-w-none text-dark-300"
-            // biome-ignore lint/security/noDangerouslySetInnerHtml: HTML проходит через DOMPurify
-            dangerouslySetInnerHTML={{ __html: sanitizedAnswer }}
-          />
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function ReplacementFaqView({ items }: { items: FaqItem[] }) {
-  const [openKey, setOpenKey] = useState<string | null>(null);
-
-  const handleToggle = useCallback((key: string) => {
-    setOpenKey((prev) => (prev === key ? null : key));
-  }, []);
-
-  return (
-    <div className="divide-y divide-dark-800/70 overflow-hidden rounded-3xl bg-dark-900/70">
-      {items.map((item, index) => {
-        const key = `${index}-${item.q.slice(0, 50)}`;
-        return (
-          <ReplacementFaqItem
-            key={key}
-            item={item}
-            isOpen={openKey === key}
-            onToggle={() => handleToggle(key)}
-          />
-        );
-      })}
-    </div>
-  );
-}
-
 export default function Info() {
   const { t, i18n } = useTranslation();
   const [activeTab, setActiveTab] = useState<string>('faq');
   const [expandedFaq, setExpandedFaq] = useState<number | null>(null);
   const locale = i18n.language.split('-')[0];
-
-  // Fetch tab replacements
-  const { data: tabReplacements, isError: replacementsError } = useQuery({
-    queryKey: ['info-pages', 'tab-replacements'],
-    queryFn: infoPagesApi.getTabReplacements,
-    staleTime: 60_000,
-  });
-
-  // Fetch custom InfoPages (active pages without replaces_tab — shown as extra tabs)
-  const { data: customPages } = useQuery({
-    queryKey: ['info-pages', 'list'],
-    queryFn: () => infoPagesApi.getPages(),
-    staleTime: 60_000,
-  });
 
   const { data: visibility } = useQuery({
     queryKey: ['info-visibility'],
@@ -261,62 +30,10 @@ export default function Info() {
     staleTime: 60_000,
   });
 
-  // Filter to only pages that don't replace a built-in tab and don't collide with built-in IDs
-  const extraPages = useMemo(
-    () => (customPages ?? []).filter((p) => !p.replaces_tab && !BUILTIN_TABS.has(p.slug)),
-    [customPages],
-  );
-
-  // Determine if we're on a built-in tab or a custom page tab
-  const isCustomTab = !BUILTIN_TABS.has(activeTab);
-  const customTabSlug = isCustomTab ? activeTab : null;
-
-  // Check if current built-in tab has a replacement
-  const currentTabSlug =
-    !isCustomTab && activeTab !== 'loyalty'
-      ? (tabReplacements?.[activeTab as ReplacesTab] ?? null)
-      : null;
-
-  // Slug to fetch: either a custom page tab or a tab replacement
-  const pageSlugToFetch = customTabSlug ?? currentTabSlug;
-
-  // Wait for tab replacements before firing built-in queries (also proceed on error — graceful degradation)
-  const replacementsLoaded = tabReplacements !== undefined || replacementsError;
-
-  // Fetch the InfoPage when needed (replacement or custom tab)
-  const { data: infoPage, isLoading: infoPageLoading } = useQuery({
-    queryKey: ['info-pages', 'page', pageSlugToFetch],
-    queryFn: () => {
-      if (!pageSlugToFetch) throw new Error('No slug');
-      return infoPagesApi.getPageBySlug(pageSlugToFetch);
-    },
-    enabled: !!pageSlugToFetch,
-    staleTime: 60_000,
-  });
-
-  // Parse FAQ items from InfoPage content
-  const infoPageFaqItems = useMemo((): FaqItem[] => {
-    if (infoPage?.page_type !== 'faq') return [];
-    const raw = infoPage.content[locale] || infoPage.content.ru || infoPage.content.en || '[]';
-    try {
-      const parsed = typeof raw === 'string' ? JSON.parse(raw) : raw;
-      return Array.isArray(parsed) ? parsed : [];
-    } catch {
-      return [];
-    }
-  }, [infoPage, locale]);
-
-  // Sanitize regular InfoPage HTML content
-  const infoPageHtml = useMemo(() => {
-    if (!infoPage || infoPage.page_type === 'faq') return '';
-    const rawContent = infoPage.content[locale] || infoPage.content.ru || infoPage.content.en || '';
-    return sanitizeRichHtml(rawContent);
-  }, [infoPage, locale]);
-
   const { data: faqPages, isLoading: faqLoading } = useQuery({
     queryKey: ['faq-pages', locale],
     queryFn: () => infoApi.getFaqPages(locale),
-    enabled: activeTab === 'faq' && !currentTabSlug && replacementsLoaded,
+    enabled: activeTab === 'faq',
     staleTime: 0,
     refetchOnMount: 'always',
   });
@@ -324,7 +41,7 @@ export default function Info() {
   const { data: rules, isLoading: rulesLoading } = useQuery({
     queryKey: ['rules', locale],
     queryFn: () => infoApi.getRules(locale),
-    enabled: activeTab === 'rules' && !currentTabSlug && replacementsLoaded,
+    enabled: activeTab === 'rules',
     staleTime: 0,
     refetchOnMount: 'always',
   });
@@ -332,7 +49,7 @@ export default function Info() {
   const { data: privacy, isLoading: privacyLoading } = useQuery({
     queryKey: ['privacy-policy', locale],
     queryFn: () => infoApi.getPrivacyPolicy(locale),
-    enabled: activeTab === 'privacy' && !currentTabSlug && replacementsLoaded,
+    enabled: activeTab === 'privacy',
     staleTime: 0,
     refetchOnMount: 'always',
   });
@@ -340,7 +57,7 @@ export default function Info() {
   const { data: offer, isLoading: offerLoading } = useQuery({
     queryKey: ['public-offer', locale],
     queryFn: () => infoApi.getPublicOffer(locale),
-    enabled: activeTab === 'offer' && !currentTabSlug && replacementsLoaded,
+    enabled: activeTab === 'offer',
     staleTime: 0,
     refetchOnMount: 'always',
   });
@@ -354,7 +71,7 @@ export default function Info() {
   });
 
   const tabs = useMemo(() => {
-    const builtinTabs: Array<{ id: string; label: string; icon: React.FC; emoji?: string }> = [
+    const builtinTabs: Array<{ id: string; label: string; icon: React.FC }> = [
       { id: 'faq', label: t('info.faq'), icon: QuestionIcon },
       { id: 'rules', label: t('info.rules'), icon: DocumentIcon },
       { id: 'privacy', label: t('info.privacy'), icon: ShieldIcon },
@@ -362,21 +79,13 @@ export default function Info() {
       { id: 'loyalty', label: t('info.loyalty'), icon: StarIcon },
     ];
 
-    const visibleBuiltinTabs = builtinTabs.filter((tab) => {
+    return builtinTabs.filter((tab) => {
       // Spofy: программа лояльности («Статусы») в разделе «Информация» не показывается.
       if (tab.id === 'loyalty') return false;
-      if (tabReplacements?.[tab.id as ReplacesTab]) return true;
       if (!visibility) return true;
       return visibility[tab.id as keyof InfoVisibility];
     });
-
-    const customTabs = extraPages.map((p) => {
-      const label = p.title[locale] || p.title.ru || p.title.en || p.slug;
-      return { id: p.slug, label, icon: DocumentIcon, emoji: p.icon ?? undefined };
-    });
-
-    return [...visibleBuiltinTabs, ...customTabs];
-  }, [visibility, tabReplacements, extraPages, locale, t]);
+  }, [visibility, t]);
 
   useEffect(() => {
     if (tabs.length === 0) return;
@@ -389,61 +98,7 @@ export default function Info() {
     setExpandedFaq((prev) => (prev === id ? null : id));
   }, []);
 
-  const renderInfoPageContent = () => {
-    if (infoPageLoading) {
-      return (
-        <SkeletonGroup className="space-y-3">
-          <Skeleton variant="card" count={3} className="h-16 rounded-3xl" />
-        </SkeletonGroup>
-      );
-    }
-
-    if (!infoPage) {
-      return <InfoEmpty icon={<DocumentIcon />} title={t('info.noContent')} />;
-    }
-
-    if (infoPage.page_type === 'faq') {
-      if (infoPageFaqItems.length === 0) {
-        return <InfoEmpty icon={<QuestionIcon />} title={t('info.noFaq')} />;
-      }
-      return <ReplacementFaqView items={infoPageFaqItems} />;
-    }
-
-    if (!infoPageHtml) {
-      return <InfoEmpty icon={<DocumentIcon />} title={t('info.noContent')} />;
-    }
-
-    return (
-      <div className="rounded-3xl bg-dark-900/70 p-4 sm:p-5 prose prose-invert max-w-none">
-        <div
-          className="overflow-x-auto"
-          // biome-ignore lint/security/noDangerouslySetInnerHtml: HTML проходит через DOMPurify
-          dangerouslySetInnerHTML={{ __html: infoPageHtml }}
-        />
-      </div>
-    );
-  };
-
   const renderContent = () => {
-    // Custom page tab — always render InfoPage content
-    if (isCustomTab) {
-      return renderInfoPageContent();
-    }
-
-    // Show spinner while tab replacements are loading (prevents flash of wrong content)
-    if (!replacementsLoaded) {
-      return (
-        <SkeletonGroup className="space-y-3">
-          <Skeleton variant="card" count={3} className="h-16 rounded-3xl" />
-        </SkeletonGroup>
-      );
-    }
-
-    // Built-in tab replaced by an InfoPage
-    if (currentTabSlug) {
-      return renderInfoPageContent();
-    }
-
     if (activeTab === 'faq') {
       if (faqLoading) {
         return (
@@ -783,7 +438,7 @@ export default function Info() {
                 : 'bg-dark-900/70 text-dark-300 hover:bg-dark-800/70'
             }`}
           >
-            {tab.emoji ? <span className="text-base">{tab.emoji}</span> : <tab.icon />}
+            <tab.icon />
             <span className="max-w-[240px] truncate">{tab.label}</span>
           </button>
         ))}

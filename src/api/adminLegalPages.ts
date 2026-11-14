@@ -1,7 +1,6 @@
 import apiClient from './client';
-import type { InfoPageDisplayMode } from './infoPages';
 
-export type LegalDisplayMode = InfoPageDisplayMode;
+export type LegalDisplayMode = 'bot' | 'web' | 'both';
 
 export interface LegalDocumentItem {
   language: string;

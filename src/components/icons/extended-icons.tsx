@@ -54,7 +54,6 @@ import {
   PiNewspaper,
   PiHandshake,
   PiPushPin,
-  PiPlus,
   PiPower,
   PiQuestion,
   PiRepeat,
@@ -76,7 +75,6 @@ import {
   PiTelegramLogo,
   PiTicket,
   PiGauge,
-  PiTrash,
   PiTrophy,
   PiPushPinSlash,
   PiUserPlus,
@@ -350,10 +348,6 @@ export const PinIcon = ({ className }: IconProps) => (
   <PiPushPin className={cn('h-5 w-5', className)} />
 );
 
-export const PlusSmallIcon = ({ className }: IconProps) => (
-  <PiPlus className={cn('h-4 w-4', className)} />
-);
-
 export const PowerIcon = ({ className }: IconProps) => (
   <PiPower className={cn('h-5 w-5', className)} />
 );
@@ -434,10 +428,6 @@ export const TicketIcon = ({ className }: IconProps) => (
 
 export const TrafficIcon = ({ className }: IconProps) => (
   <PiGauge className={cn('h-5 w-5', className)} />
-);
-
-export const TrashSmallIcon = ({ className }: IconProps) => (
-  <PiTrash className={cn('h-4 w-4', className)} />
 );
 
 export const TrophyIcon = ({ className }: IconProps) => (

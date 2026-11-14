@@ -2,8 +2,8 @@ import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 import type { Plugin } from 'vite';
 
-/** Разделы admin.*, которые нужны и обычным экранам: заголовок ссылки на админку, страницы FAQ. */
-const SHARED_ADMIN_SECTIONS = ['nav', 'infoPages'];
+/** Разделы admin.*, которые нужны и обычным экранам: заголовок ссылки на админку. */
+const SHARED_ADMIN_SECTIONS = ['nav'];
 
 type Dictionary = Record<string, unknown> & { admin?: Record<string, unknown> };
 

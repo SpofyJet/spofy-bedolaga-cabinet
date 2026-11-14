@@ -1671,7 +1671,6 @@
       "referralNetwork": "Referral Network",
       "news": "News",
       "bulkActions": "Bulk Actions",
-      "infoPages": "Info Pages",
       "legalPages": "System pages",
       "systemErrors": "System errors"
     },
@@ -5210,87 +5209,9 @@
         "phantom_merged": "Placeholder account merged"
       }
     },
-    "infoPages": {
-      "botFaq": "Bot FAQ",
-      "title": "Information Pages",
-      "subtitle": "Manage static information pages",
-      "create": "Create Page",
-      "createFaq": "Create FAQ",
-      "edit": "Edit",
-      "save": "Save",
-      "saving": "Saving...",
-      "saved": "Page saved",
-      "delete": "Delete",
-      "confirmDelete": "Delete this page?",
-      "saveError": "Failed to save page. Please try again.",
-      "noPages": "No information pages yet",
-      "notFound": "Page not found",
-      "active": "Active",
-      "inactive": "Inactive",
-      "typePage": "Page",
-      "localeLabel": "Content Language",
-      "fields": {
-        "slug": "URL Slug",
-        "title": "Title",
-        "content": "Content",
-        "isActive": "Active",
-        "sortOrder": "Sort Order",
-        "icon": "Icon (emoji)",
-        "pageType": "Page Type",
-        "replacesTab": "Replaces Tab",
-        "displayMode": "Visibility"
-      },
-      "replacesTabNone": "None",
-      "replacesTabOptions": {
-        "faq": "FAQ",
-        "rules": "Rules",
-        "privacy": "Privacy",
-        "offer": "Offer"
-      },
-      "displayModes": {
-        "bot": "Bot only",
-        "web": "Web only",
-        "both": "Bot and web"
-      },
-      "replacesTabConflict": "already assigned",
-      "replacesTabWarning": "Another page already replaces this tab. It will be unassigned on save.",
-      "filter": {
-        "all": "All",
-        "page": "Pages",
-        "faq": "FAQ"
-      },
-      "pageTypes": {
-        "page": "Page",
-        "faq": "FAQ"
-      },
-      "faq": {
-        "questions": "Questions & Answers",
-        "questionsCount": "questions",
-        "noQuestions": "No questions yet. Click the button below to add one.",
-        "questionNumber": "Question #{{n}}",
-        "question": "Question",
-        "answer": "Answer",
-        "questionPlaceholder": "Enter question...",
-        "answerPlaceholder": "Enter answer (HTML supported)...",
-        "htmlHint": "HTML markup is supported",
-        "addQuestion": "Add Question",
-        "removeQuestion": "Remove question",
-        "moveUp": "Move up",
-        "moveDown": "Move down",
-        "searchPlaceholder": "Search questions...",
-        "noResults": "No results found"
-      },
-      "locales": {
-        "ru": "Russian",
-        "en": "English",
-        "zh": "Chinese",
-        "fa": "Persian"
-      }
-    },
     "legalPages": {
       "title": "System pages",
       "subtitle": "Rules, privacy policy, public offer and FAQ",
-      "open": "System pages",
       "tabs": {
         "privacy": "Privacy",
         "offer": "Offer",

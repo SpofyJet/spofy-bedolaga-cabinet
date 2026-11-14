@@ -12,7 +12,7 @@ describe('разделение словаря', () => {
   const admin = adminPart as unknown as Tree;
 
   it('обычному пользователю не приезжают строки админки', () => {
-    expect(Object.keys(user.admin).sort()).toEqual(['infoPages', 'nav']);
+    expect(Object.keys(user.admin).sort()).toEqual(['nav']);
     expect(JSON.stringify(user).length).toBeLessThan(JSON.stringify(full).length / 2);
   });
 

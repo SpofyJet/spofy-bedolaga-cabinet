@@ -171,10 +171,7 @@ const NewsArticlePage = lazyWithRetry(() => import('./pages/NewsArticle'));
 const AdminNews = lazyWithRetry(() => import('./pages/AdminNews'));
 const AdminNewsCreate = lazyWithRetry(() => import('./pages/AdminNewsCreate'));
 
-// Info pages
-const InfoPageView = lazyWithRetry(() => import('./pages/InfoPageView'));
-const AdminInfoPages = lazyWithRetry(() => import('./pages/AdminInfoPages'));
-const AdminInfoPageEditor = lazyWithRetry(() => import('./pages/AdminInfoPageEditor'));
+// Legal pages
 const AdminLegalPages = lazyWithRetry(() => import('./pages/AdminLegalPages'));
 
 function ProtectedRoute({
@@ -666,16 +663,6 @@ function App() {
             <ProtectedRoute>
               <LazyPage>
                 <NewsArticlePage />
-              </LazyPage>
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/info/:slug"
-          element={
-            <ProtectedRoute>
-              <LazyPage>
-                <InfoPageView />
               </LazyPage>
             </ProtectedRoute>
           }
@@ -1405,37 +1392,7 @@ function App() {
           }
         />
 
-        {/* Info pages admin routes */}
-        <Route
-          path="/admin/info-pages"
-          element={
-            <PermissionRoute permission="info_pages:read">
-              <LazyPage>
-                <AdminInfoPages />
-              </LazyPage>
-            </PermissionRoute>
-          }
-        />
-        <Route
-          path="/admin/info-pages/create"
-          element={
-            <PermissionRoute permission="info_pages:edit">
-              <LazyPage>
-                <AdminInfoPageEditor />
-              </LazyPage>
-            </PermissionRoute>
-          }
-        />
-        <Route
-          path="/admin/info-pages/:id/edit"
-          element={
-            <PermissionRoute permission="info_pages:edit">
-              <LazyPage>
-                <AdminInfoPageEditor />
-              </LazyPage>
-            </PermissionRoute>
-          }
-        />
+        {/* Legal pages admin route */}
         <Route
           path="/admin/legal-pages"
           element={

@@ -279,12 +279,6 @@ const sections: AdminSection[] = [
         permission: 'email_templates:read',
       },
       {
-        name: 'admin.nav.infoPages',
-        icon: 'file-text',
-        to: '/admin/info-pages',
-        permission: 'info_pages:read',
-      },
-      {
         name: 'admin.nav.legalPages',
         icon: 'file-text',
         to: '/admin/legal-pages',
