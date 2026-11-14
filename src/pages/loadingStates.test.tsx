@@ -98,12 +98,6 @@ const PAGES: PageCase[] = [
     entry: '/b/1',
   },
   {
-    name: 'AdminCouponDetail',
-    load: () => import('./AdminCouponDetail'),
-    path: '/c/:id',
-    entry: '/c/1',
-  },
-  {
     name: 'AdminWithdrawalDetail',
     load: () => import('./AdminWithdrawalDetail'),
     path: '/w/:id',
@@ -133,7 +127,6 @@ const PAGES: PageCase[] = [
   { name: 'Connection', load: () => import('./Connection') },
   { name: 'SubscriptionPurchase', load: () => import('./SubscriptionPurchase') },
   { name: 'Wheel', load: () => import('./Wheel') },
-  { name: 'CouponStatus', load: () => import('./CouponStatus') },
   { name: 'AdminNews', load: () => import('./AdminNews') },
   { name: 'AdminInfoPages', load: () => import('./AdminInfoPages') },
   { name: 'AdminEmailTemplates', load: () => import('./AdminEmailTemplates') },

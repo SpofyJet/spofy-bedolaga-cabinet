@@ -16,7 +16,7 @@ import { Section } from './sectionParts';
 const FEED_TYPES = {
   all: null,
   payments: 'transaction,withdrawal,referral_earning',
-  subscription: 'event,promocode,coupon',
+  subscription: 'event,promocode',
   actions: 'button_click,cabinet_action,miniapp_action,wheel_spin,poll',
   logins: 'cabinet_login',
 } as const;
