@@ -67,7 +67,6 @@ export const SETTINGS_TREE: SettingsTreeConfig = {
         { id: 'subs_pricing', categories: ['SUBSCRIPTION_PRICES'] },
         { id: 'subs_periods', categories: ['PERIODS'] },
         { id: 'subs_traffic', categories: ['TRAFFIC', 'TRAFFIC_PACKAGES'] },
-        { id: 'subs_simple', categories: ['SIMPLE_SUBSCRIPTION'] },
         { id: 'subs_autopay', categories: ['AUTOPAY'] },
       ],
     },
