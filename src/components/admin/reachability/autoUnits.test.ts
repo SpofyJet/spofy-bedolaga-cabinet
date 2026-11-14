@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { autoUnitsFor, describeUnits } from './autoUnits';
+import { autoUnitsFor } from './autoUnits';
 import { unit } from './testUtils';
 
 /** Симки выбираются сами по назначению целей; человек видит одну строку и «Изменить». */
@@ -23,15 +23,5 @@ describe('autoUnitsFor', () => {
   it('назначение неизвестно — как под Белый список; целей нет — ничего', () => {
     expect(autoUnitsFor(['unknown'], catalog)).toEqual(['mts|цфо|on', 'tele2|цфо|on']);
     expect(autoUnitsFor([], catalog)).toEqual([]);
-  });
-});
-
-describe('describeUnits', () => {
-  it('считает выбранные симки с Белым списком и без', () => {
-    expect(describeUnits(['mts|цфо|on', 'yota|уфо|off', 'нет|такой|on'], catalog)).toEqual({
-      total: 2,
-      bs: 1,
-      regular: 1,
-    });
   });
 });

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { Leg } from '@/api/reachability';
-import { probeMatrix, scanSummary, vlessLegView } from './resultShapes';
+import { scanSummary, vlessLegView } from './resultShapes';
 
 const leg = (target_key: string, op_key: string, raw: Record<string, unknown> = {}): Leg => ({
   id: 1,
@@ -15,17 +15,6 @@ const leg = (target_key: string, op_key: string, raw: Record<string, unknown> = 
   matches_expectation: true,
   raw,
   checked_at: '2026-09-05T12:00:00Z',
-});
-
-describe('probeMatrix', () => {
-  it('строки и столбцы в порядке появления, ячейки по паре', () => {
-    const legs = [leg('a', 'mts|цфо|on'), leg('b', 'mts|цфо|on'), leg('a', 'tele2|цфо|on')];
-    const matrix = probeMatrix(legs);
-    expect(matrix.rows).toEqual(['a', 'b']);
-    expect(matrix.cols).toEqual(['mts|цфо|on', 'tele2|цфо|on']);
-    expect(matrix.cells.a['tele2|цфо|on']).toBe(legs[2]);
-    expect(matrix.cells.b['tele2|цфо|on']).toBeUndefined();
-  });
 });
 
 describe('vlessLegView', () => {

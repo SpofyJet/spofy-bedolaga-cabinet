@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { transactionTypeBadge, transactionTypeLabelKey } from './transactionType';
+import { transactionTypeLabelKey } from './transactionType';
 
 /** Все типы операций бота (app/database/models.py, TransactionType). */
 const BOT_TYPES = [
@@ -33,13 +33,11 @@ describe('тип операции в истории баланса', () => {
 
   it('регистр не важен: бот присылал и DEPOSIT, и deposit', () => {
     expect(transactionTypeLabelKey('DEPOSIT')).toBe(transactionTypeLabelKey('deposit'));
-    expect(transactionTypeBadge('Referral_Reward')).toBe(transactionTypeBadge('referral_reward'));
   });
 
   it('незнакомый тип — нейтральное «Операция», не сырое имя', () => {
     const key = transactionTypeLabelKey('something_new');
     expect(key).toBe('balance.otherOperation');
     for (const { dict } of LOCALES) expect(typeof lookup(dict, key)).toBe('string');
-    expect(transactionTypeBadge('something_new')).toBe('badge-neutral');
   });
 });

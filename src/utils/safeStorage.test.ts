@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { isStorageAvailable, resetSafeStorage, safeLocal, safeSession } from './safeStorage';
+import { resetSafeStorage, safeLocal, safeSession } from './safeStorage';
 
 /**
  * Обёртка обязана никогда не бросать — и при этом не терять того, что ещё работает.
@@ -186,28 +186,5 @@ describe('getJson', () => {
     circular.self = circular;
 
     expect(safeLocal.setJson('k', circular)).toBe(false);
-  });
-});
-
-describe('isStorageAvailable', () => {
-  it('различает рабочее, переполненное и заблокированное хранилище', () => {
-    defineStorage('localStorage', workingStorage());
-    expect(isStorageAvailable('local')).toBe(true);
-
-    defineStorage('localStorage', readOnlyStorage());
-    expect(isStorageAvailable('local')).toBe(false);
-
-    throwingAccessor('localStorage');
-    expect(isStorageAvailable('local')).toBe(false);
-  });
-
-  it('не кэширует отрицательный вердикт на всю страницу', () => {
-    throwingAccessor('localStorage');
-    expect(isStorageAvailable('local')).toBe(false);
-
-    // Транзиентный отказ не должен выключать хранилище навсегда.
-    defineStorage('localStorage', workingStorage());
-    expect(isStorageAvailable('local')).toBe(true);
-    expect(safeLocal.setItem('k', 'v')).toBe(true);
   });
 });

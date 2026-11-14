@@ -20,9 +20,6 @@ export function BestValueBadge({ className, label }: { className?: string; label
   );
 }
 
-/** Цвет выделенного периода — тот же токен, что и у отметки. */
-export const BEST_VALUE_BORDER = 'rgba(var(--color-cta-500), 0.25)';
-
 /**
  * Выделение отмеченного варианта — одно на все витрины: отметка рядом с
  * названием, а у выбранного ещё и заливка выбора. Выбор отметку не затирает,

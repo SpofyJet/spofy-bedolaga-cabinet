@@ -33,15 +33,3 @@ export function jobOutcome(job: Pick<Job, 'status' | 'legs' | 'kind' | 'result'>
   if (reachable === 0) return 'down';
   return 'warn';
 }
-
-/** Уникальные коды операторов задачи для ряда иконок. */
-export function jobOperators(
-  job: Pick<Job, 'legs' | 'units_effective' | 'units_resolved'>,
-): string[] {
-  const codes = new Set<string>();
-  for (const leg of job.legs) codes.add(leg.operator ?? leg.op_key.split('|')[0]);
-  if (codes.size === 0) {
-    for (const key of job.units_effective ?? job.units_resolved ?? []) codes.add(key.split('|')[0]);
-  }
-  return [...codes];
-}

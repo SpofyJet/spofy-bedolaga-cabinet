@@ -29,8 +29,6 @@
 
 type StorageKind = 'local' | 'session';
 
-const PROBE_KEY = '__safe_storage_probe__';
-
 const memory: Record<StorageKind, Map<string, string>> = {
   local: new Map(),
   session: new Map(),
@@ -131,24 +129,6 @@ function createSafeStorage(kind: StorageKind) {
 
 export const safeLocal = createSafeStorage('local');
 export const safeSession = createSafeStorage('session');
-
-/**
- * Whether a value written now would actually persist. Probes with a throwaway
- * write, the way i18next-browser-languagedetector does it — `typeof window
- * !== 'undefined'` is an SSR guard and does not detect a blocked storage.
- * Diagnostics and UX hints only; the wrappers above never need it.
- */
-export function isStorageAvailable(kind: StorageKind = 'local'): boolean {
-  const store = backend(kind);
-  if (!store) return false;
-  try {
-    store.setItem(PROBE_KEY, '1');
-    store.removeItem(PROBE_KEY);
-    return true;
-  } catch {
-    return false;
-  }
-}
 
 /** Test seam: drops the in-memory fallback so cases do not leak into each other. */
 export function resetSafeStorage(): void {

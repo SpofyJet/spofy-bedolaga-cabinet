@@ -85,9 +85,3 @@ export function worstVerdict(verdicts: readonly string[]): GeoVerdict | null {
   }
   return worst;
 }
-
-/** Тон региона на карте: худший результат его городов; ничего результативного — серый. */
-export function regionTone(rows: ReadonlyArray<{ verdict: string }>): GeoTone {
-  const worst = worstVerdict(rows.map((row) => row.verdict));
-  return worst === null ? 'na' : TONE[worst];
-}

@@ -1,11 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import {
-  GEO_VERDICTS,
-  isResultVerdict,
-  regionTone,
-  verdictTone,
-  worstVerdict,
-} from './geoVerdicts';
+import { GEO_VERDICTS, isResultVerdict, verdictTone, worstVerdict } from './geoVerdicts';
 
 describe('geoVerdicts', () => {
   it('легенда — десять вердиктов в порядке оригинала', () => {
@@ -22,6 +16,12 @@ describe('geoVerdicts', () => {
       'port_blocked',
     ]);
   });
+  it('тон вердикта на карте; незнакомый — серый', () => {
+    expect(verdictTone('throttled')).toBe('orange');
+    expect(verdictTone('no_udp')).toBe('violet');
+    expect(verdictTone('чушь')).toBe('na');
+  });
+
   it('результат — только шесть; шум сервиса результатом не считается', () => {
     expect(
       ['ok', 'partial', 'throttled', 'blocked', 'unconfirmed', 'target_error'].every(
@@ -38,13 +38,5 @@ describe('geoVerdicts', () => {
     expect(worstVerdict(['throttled', 'blocked', 'exit_bad'])).toBe('blocked');
     expect(worstVerdict(['exit_bad', 'no_ru_node'])).toBeNull();
     expect(worstVerdict([])).toBeNull();
-  });
-  it('тон региона по худшему результату, серый без результатов', () => {
-    expect(regionTone([{ verdict: 'ok' }, { verdict: 'ok' }])).toBe('ok');
-    expect(regionTone([{ verdict: 'ok' }, { verdict: 'blocked' }])).toBe('down');
-    expect(regionTone([{ verdict: 'exit_bad' }])).toBe('na');
-    expect(verdictTone('throttled')).toBe('orange');
-    expect(verdictTone('no_udp')).toBe('violet');
-    expect(verdictTone('чушь')).toBe('na');
   });
 });

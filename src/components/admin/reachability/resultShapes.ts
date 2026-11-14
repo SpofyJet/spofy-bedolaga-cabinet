@@ -18,25 +18,6 @@ function asString(value: unknown): string | null {
 
 // ---------------------------------------------------------------- probe
 
-export interface ProbeMatrix {
-  rows: string[];
-  cols: string[];
-  cells: Record<string, Record<string, Leg>>;
-}
-
-/** Строки — цели, столбцы — симки, порядок — как леги пришли с сервера. */
-export function probeMatrix(legs: Leg[]): ProbeMatrix {
-  const rows: string[] = [];
-  const cols: string[] = [];
-  const cells: Record<string, Record<string, Leg>> = {};
-  for (const leg of legs) {
-    if (!rows.includes(leg.target_key)) rows.push(leg.target_key);
-    if (!cols.includes(leg.op_key)) cols.push(leg.op_key);
-    cells[leg.target_key] = { ...(cells[leg.target_key] ?? {}), [leg.op_key]: leg };
-  }
-  return { rows, cols, cells };
-}
-
 // ---------------------------------------------------------------- vless
 
 export interface VlessLegView {
