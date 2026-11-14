@@ -8,9 +8,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
  * там ничего не делает (человек застревал на колесе после ссылки с промокодом).
  */
 
-vi.mock('react-i18next', async () =>
-  (await import('@/test/utils')).i18nMock(),
-);
+vi.mock('react-i18next', async () => (await import('@/test/utils')).i18nMock());
 vi.mock('@/platform', () => ({ useHaptic: () => ({ impact: vi.fn() }) }));
 
 const navigate = vi.fn();

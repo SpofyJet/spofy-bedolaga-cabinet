@@ -14,9 +14,7 @@ import { PlatformProvider } from '@/platform/PlatformProvider';
  * «GRACE_GRANTED», «miniapp_action») и бейджей источника на экране нет.
  */
 
-vi.mock('react-i18next', async () =>
-  (await import('@/test/utils')).i18nMock(),
-);
+vi.mock('react-i18next', async () => (await import('@/test/utils')).i18nMock());
 
 const requested: string[] = [];
 const response: UserActivityResponse = {

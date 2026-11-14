@@ -9,9 +9,7 @@ import { PlatformProvider } from '@/platform/PlatformProvider';
  * полоске Home и закрывается кнопкой в заголовке, а не только жестом.
  */
 
-vi.mock('react-i18next', async () =>
-  (await import('@/test/utils')).i18nMock(),
-);
+vi.mock('react-i18next', async () => (await import('@/test/utils')).i18nMock());
 vi.mock('@/hooks/useHeaderHeight', () => ({
   useHeaderHeight: () => ({
     mobile: 168,
