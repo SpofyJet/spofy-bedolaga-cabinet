@@ -122,18 +122,10 @@
   },
   "wsNotifications": {
     "balance": {
-      "topupTitle": "Баланс пополнен",
-      "topupMessage": "Ваш баланс пополнен на {{amount}} {{currency}}",
       "changeTitle": "Баланс изменён",
       "changeMessage": "Ваш баланс изменился на {{amount}} {{currency}}"
     },
     "subscription": {
-      "activatedTitle": "Подписка активирована",
-      "activatedMessage": "Ваша подписка теперь активна!",
-      "activatedWithTariff": "Ваша подписка «{{tariff}}» теперь активна!",
-      "renewedTitle": "Подписка продлена",
-      "renewedMessage": "Ваша подписка была продлена!",
-      "renewedWithAmount": "Ваша подписка продлена за {{amount}} {{currency}}",
       "expiringTitle": "Подписка скоро истекает",
       "expiringMessage": "Ваша подписка истекает через {{days}} дн.",
       "expiredTitle": "Подписка истекла",
@@ -219,26 +211,19 @@
   "auth": {
     "login": "Вход",
     "register": "Регистрация",
-    "logout": "Выход",
     "email": "Email",
     "password": "Пароль",
     "confirmPassword": "Подтвердите пароль",
     "firstName": "Имя",
     "firstNamePlaceholder": "Ваше имя (необязательно)",
     "forgotPassword": "Забыли пароль?",
-    "resetPassword": "Сбросить пароль",
     "loginWithTelegram": "Войти через Telegram",
     "loginWithEmail": "Войти по Email",
-    "noAccount": "Нет аккаунта?",
-    "hasAccount": "Уже есть аккаунт?",
     "or": "или",
-    "registerHint": "Для регистрации по email сначала авторизуйтесь через Telegram, затем привяжите email в настройках.",
     "telegramRequired": "Требуется авторизация через Telegram",
-    "telegramRetryFailed": "Авторизация не удалась. Закройте приложение и откройте заново.",
     "telegramReopenHint": "Если проблема повторяется, закройте и откройте приложение заново",
     "telegramNotConfigured": "Telegram бот не настроен",
     "botOutdated": "Версия бота несовместима с кабинетом. Обновите бота до v3.33.0 или новее.",
-    "telegramUnavailable": "Вход через Telegram временно недоступен",
     "authenticating": "Авторизация…",
     "orOpenInApp": "Или откройте бота в приложении",
     "loginFailed": "Ошибка входа",
@@ -253,9 +238,6 @@
     "scanQrToLogin": "Отсканируйте QR-код камерой телефона",
     "orSendCommand": "Или отправьте боту команду:",
     "commandCopied": "Команда скопирована",
-    "welcomeBack": "Добро пожаловать!",
-    "loginTitle": "Вход в личный кабинет",
-    "loginSubtitle": "Войдите через Telegram или используйте email",
     "referralInvite": "Вас пригласил друг",
     "passwordMismatch": "Пароли не совпадают",
     "passwordTooShort": "Пароль должен быть минимум 8 символов",
@@ -286,19 +268,12 @@
     "backToLogin": "Вернуться ко входу",
     "emailNotVerified": "Сначала подтвердите email",
     "loginSuccess": "Вы вошли",
-    "continueWithGoogle": "Продолжить через Google",
-    "continueWithYandex": "Продолжить через Яндекс",
-    "continueWithDiscord": "Продолжить через Discord",
-    "continueWithVk": "Продолжить через VK",
-    "oauthError": "Авторизация отклонена или не удалась",
-    "oauthExpired": "Сессия OAuth истекла. Попробуйте снова."
+    "oauthError": "Авторизация отклонена или не удалась"
   },
   "emailVerification": {
-    "title": "Подтверждение email",
     "verifying": "Проверяем email…",
     "pleaseWait": "Пожалуйста, подождите пока мы проверяем ваш email.",
     "success": "Почта подтверждена",
-    "successMessage": "Почта подтверждена. Теперь можно входить по почте и паролю.",
     "redirecting": "Переходим в личный кабинет…",
     "failed": "Ссылка из письма не сработала",
     "goToLogin": "Ко входу",
@@ -7326,7 +7301,6 @@
     "currentVersion": "Текущая версия",
     "upToDate": "Актуальная версия",
     "updateAvailable": "Доступно обновление",
-    "published": "Опубликовано",
     "prerelease": "Предрелиз",
     "refresh": "Проверить обновления",
     "noReleases": "Нет данных о релизах"
@@ -7378,13 +7352,6 @@
       "month": "Месяц",
       "conversion": "Конверсия триал→платные"
     },
-    "servers": {
-      "title": "Серверы",
-      "total": "Всего серверов",
-      "available": "Доступных",
-      "withConnections": "С подключениями",
-      "revenue": "Доход"
-    },
     "tariffs": {
       "title": "Статистика по тарифам",
       "subtitle": "Распределение подписок по тарифам",
@@ -7393,8 +7360,7 @@
       "trialSubscriptions": "Триал",
       "purchasedToday": "Сегодня",
       "purchasedWeek": "Неделя",
-      "purchasedMonth": "Месяц",
-      "noTariffs": "Нет тарифов"
+      "purchasedMonth": "Месяц"
     },
     "topReferrers": {
       "title": "Топ рефералов",
@@ -7642,32 +7608,6 @@
     "emptyHint": "Если нужна помощь — напишите нам, ответим в чате.",
     "writeSupport": "Написать в поддержку"
   },
-  "onboarding": {
-    "skip": "Пропустить",
-    "finish": "Готово",
-    "steps": {
-      "welcome": {
-        "title": "Добро пожаловать",
-        "description": "Это ваш личный кабинет. Здесь вы можете управлять подпиской, пополнять баланс и подключать устройства."
-      },
-      "connectDevices": {
-        "title": "Подключите устройства",
-        "description": "Нажмите эту кнопку, чтобы получить инструкции по подключению VPN на ваших устройствах."
-      },
-      "balance": {
-        "title": "Ваш баланс",
-        "description": "Здесь отображается ваш текущий баланс. Нажмите, чтобы пополнить его."
-      },
-      "subscription": {
-        "title": "Статус подписки",
-        "description": "Здесь вы видите сколько дней осталось до окончания подписки."
-      },
-      "quickActions": {
-        "title": "Быстрые действия",
-        "description": "Используйте эти кнопки для быстрого доступа к основным функциям: пополнению баланса, продлению подписки и приглашению друзей."
-      }
-    }
-  },
   "promo": {
     "activeDiscount": "Активная скидка",
     "discountActive": "Скидка активна!",
@@ -7755,9 +7695,7 @@
       "waitSeconds": "Подождите {{seconds}} сек.",
       "hint": "После подписки нажмите кнопку проверки",
       "notSubscribed": "Вы ещё не подписались на канал",
-      "checkError": "Ошибка проверки. Попробуйте позже.",
-      "subscribed": "Подписан",
-      "channelsRequired": "Подпишитесь на все каналы ниже для продолжения"
+      "checkError": "Ошибка проверки. Попробуйте позже."
     },
     "blacklisted": {
       "title": "Доступ запрещён",
@@ -7777,8 +7715,7 @@
       "description": "Не удаётся подключиться к сервису. Возможно, идут технические работы или временные неполадки со связью.",
       "retry": "Повторить попытку",
       "checking": "Проверяем соединение…",
-      "hint": "Страница обновится автоматически, как только сервис снова станет доступен.",
-      "close": "Закрыть"
+      "hint": "Страница обновится автоматически, как только сервис снова станет доступен."
     }
   },
   "merge": {
@@ -8315,10 +8252,6 @@
         ]
       }
     }
-  },
-  "legal": {
-    "serviceRules": "Правила сервиса",
-    "privacy": "Политика конфиденциальности"
   },
   "errors": {
     "boundary": {

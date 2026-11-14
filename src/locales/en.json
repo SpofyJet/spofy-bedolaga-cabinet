@@ -114,18 +114,10 @@
   },
   "wsNotifications": {
     "balance": {
-      "topupTitle": "Balance topped up",
-      "topupMessage": "Your balance has been topped up by {{amount}} {{currency}}",
       "changeTitle": "Balance updated",
       "changeMessage": "Your balance has changed by {{amount}} {{currency}}"
     },
     "subscription": {
-      "activatedTitle": "Subscription activated",
-      "activatedMessage": "Your subscription is now active!",
-      "activatedWithTariff": "Your subscription \"{{tariff}}\" is now active!",
-      "renewedTitle": "Subscription renewed",
-      "renewedMessage": "Your subscription has been renewed!",
-      "renewedWithAmount": "Your subscription has been renewed for {{amount}} {{currency}}",
       "expiringTitle": "Subscription expiring soon",
       "expiringMessage": "Your subscription expires in {{days}} days",
       "expiredTitle": "Subscription expired",
@@ -211,26 +203,19 @@
   "auth": {
     "login": "Login",
     "register": "Register",
-    "logout": "Logout",
     "email": "Email",
     "password": "Password",
     "confirmPassword": "Confirm Password",
     "firstName": "First Name",
     "firstNamePlaceholder": "Your name (optional)",
     "forgotPassword": "Forgot password?",
-    "resetPassword": "Reset password",
     "loginWithTelegram": "Login with Telegram",
     "loginWithEmail": "Login with Email",
-    "noAccount": "Don't have an account?",
-    "hasAccount": "Already have an account?",
     "or": "or",
-    "registerHint": "To register with email, first log in via Telegram, then link your email in settings.",
     "telegramRequired": "Telegram authorization required",
-    "telegramRetryFailed": "Authorization failed. Close the app and try again.",
     "telegramReopenHint": "If the problem persists, close and reopen the app",
     "telegramNotConfigured": "Telegram bot is not configured",
     "botOutdated": "The bot version is not compatible with the cabinet. Update the bot to v3.33.0 or newer.",
-    "telegramUnavailable": "Telegram login is temporarily unavailable",
     "authenticating": "Authenticating...",
     "orOpenInApp": "Or open the bot in the app",
     "loginFailed": "Login Failed",
@@ -245,9 +230,6 @@
     "scanQrToLogin": "Scan QR code with your phone camera",
     "orSendCommand": "Or send the bot this command:",
     "commandCopied": "Command copied",
-    "welcomeBack": "Welcome back!",
-    "loginTitle": "Login to Cabinet",
-    "loginSubtitle": "Sign in with Telegram or use your email",
     "referralInvite": "You've been invited via referral link!",
     "passwordMismatch": "Passwords do not match",
     "passwordTooShort": "Password must be at least 8 characters",
@@ -278,19 +260,12 @@
     "loginSuccess": "Login successful",
     "passwordResetSent": "Password reset link sent to your email",
     "sendResetLink": "Send reset link",
-    "continueWithGoogle": "Continue with Google",
-    "continueWithYandex": "Continue with Yandex",
-    "continueWithDiscord": "Continue with Discord",
-    "continueWithVk": "Continue with VK",
-    "oauthError": "Authorization was denied or failed",
-    "oauthExpired": "OAuth session expired. Please try again."
+    "oauthError": "Authorization was denied or failed"
   },
   "emailVerification": {
-    "title": "Email Verification",
     "verifying": "Verifying email...",
     "pleaseWait": "Please wait while we verify your email address.",
     "success": "Email Verified!",
-    "successMessage": "Your email has been successfully verified. You can now log in with your email and password.",
     "redirecting": "Redirecting to dashboard...",
     "failed": "The link from the email didn't work",
     "goToLogin": "Go to Login",
@@ -6768,7 +6743,6 @@
     "currentVersion": "Current version",
     "upToDate": "Up to date",
     "updateAvailable": "Update available",
-    "published": "Published",
     "prerelease": "Pre-release",
     "refresh": "Check for updates",
     "noReleases": "No release data"
@@ -6849,13 +6823,6 @@
       "month": "Month",
       "conversion": "Trial to Paid Conversion"
     },
-    "servers": {
-      "title": "Servers",
-      "total": "Total Servers",
-      "available": "Available",
-      "withConnections": "With Connections",
-      "revenue": "Revenue"
-    },
     "tariffs": {
       "title": "Tariff Statistics",
       "subtitle": "Subscription distribution by tariffs",
@@ -6864,8 +6831,7 @@
       "trialSubscriptions": "Trial",
       "purchasedToday": "Today",
       "purchasedWeek": "Week",
-      "purchasedMonth": "Month",
-      "noTariffs": "No tariffs"
+      "purchasedMonth": "Month"
     },
     "systemInfo": {
       "title": "System",
@@ -7077,32 +7043,6 @@
     "emptyHint": "Need help? Message us and we will reply in the chat.",
     "writeSupport": "Contact support"
   },
-  "onboarding": {
-    "skip": "Skip",
-    "finish": "Finish",
-    "steps": {
-      "welcome": {
-        "title": "Welcome!",
-        "description": "This is your personal cabinet. Here you can manage your subscription, top up balance and connect devices."
-      },
-      "connectDevices": {
-        "title": "Connect Devices",
-        "description": "Click this button to get instructions on how to connect VPN on your devices."
-      },
-      "balance": {
-        "title": "Your Balance",
-        "description": "Your current balance is displayed here. Click to top it up."
-      },
-      "subscription": {
-        "title": "Subscription Status",
-        "description": "Here you can see how many days are left until your subscription expires."
-      },
-      "quickActions": {
-        "title": "Quick Actions",
-        "description": "Use these buttons for quick access to main features: top up balance, extend subscription, and invite friends."
-      }
-    }
-  },
   "promo": {
     "activeDiscount": "Active discount",
     "discountActive": "Discount active!",
@@ -7189,9 +7129,7 @@
       "waitSeconds": "Wait {{seconds}} sec.",
       "hint": "Click check button after subscribing",
       "notSubscribed": "You haven't subscribed to the channel yet",
-      "checkError": "Check failed. Please try again later.",
-      "subscribed": "Subscribed",
-      "channelsRequired": "Subscribe to all channels below to continue"
+      "checkError": "Check failed. Please try again later."
     },
     "blacklisted": {
       "title": "Access Denied",
@@ -7211,8 +7149,7 @@
       "description": "We can't reach the service right now. It may be undergoing maintenance or there's a temporary connection issue.",
       "retry": "Try again",
       "checking": "Checking connection...",
-      "hint": "This page will refresh automatically as soon as the service is back.",
-      "close": "Close"
+      "hint": "This page will refresh automatically as soon as the service is back."
     }
   },
   "merge": {
@@ -7742,10 +7679,6 @@
         ]
       }
     }
-  },
-  "legal": {
-    "serviceRules": "Service rules",
-    "privacy": "Privacy policy"
   },
   "errors": {
     "boundary": {
