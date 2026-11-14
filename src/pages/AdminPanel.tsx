@@ -19,7 +19,6 @@ import {
   LockIcon,
   MailIcon,
   MegaphoneIcon,
-  NewsIcon,
   PartnerIcon,
   PercentIcon,
   PinIcon,
@@ -60,7 +59,6 @@ const icons = {
   sparkle: <SparklesIcon />,
   wallet: <WalletIcon />,
   layout: <CabinetIcon />,
-  newspaper: <NewsIcon />,
   megaphone: <MegaphoneIcon />,
   send: <SendIcon />,
   pin: <PinIcon />,
@@ -188,7 +186,6 @@ const sections: AdminSection[] = [
     id: 'marketing',
     titleKey: 'admin.groups.marketing',
     items: [
-      { name: 'admin.nav.news', icon: 'newspaper', to: '/admin/news', permission: 'news:read' },
       {
         name: 'admin.nav.campaigns',
         icon: 'megaphone',

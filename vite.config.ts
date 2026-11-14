@@ -9,8 +9,8 @@ import { precompress } from './vite-plugins/precompress.ts';
 // Vendor-чанки: [имя, какие модули в него идут]. Порядок = приоритет группы.
 // Rolldown по умолчанию забирает в группу и все зависимости её модулей, поэтому
 // базовые чанки (react, utils) стоят первыми: общие пакеты (clsx,
-// use-sync-external-store) должны достаться им, а не тяжёлым ленивым
-// recharts/tiptap — иначе стартовая страница тянет чанк графиков.
+// use-sync-external-store) должны достаться им, а не тяжёлому ленивому
+// recharts — иначе стартовая страница тянет чанк графиков.
 const VENDOR_CHUNKS: ReadonlyArray<readonly [string, RegExp]> = [
   ['vendor-react', /node_modules\/(react|react-dom|react-router|scheduler)\//],
   [
@@ -32,7 +32,6 @@ const VENDOR_CHUNKS: ReadonlyArray<readonly [string, RegExp]> = [
   // Heavy admin-only deps — split so they don't bloat the shared
   // chunks of other lazy admin pages that don't use them.
   ['vendor-recharts', /\/recharts\/|\/d3-/],
-  ['vendor-tiptap', /@tiptap\/|\/prosemirror-/],
 ];
 
 // https://vitejs.dev/config/

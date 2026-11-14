@@ -50,7 +50,6 @@ import { cn } from '@/lib/utils';
 // Re-export the extended Phosphor icon sets so the whole cabinet imports the
 // panel's icon family from a single barrel.
 export * from './extended-icons';
-export * from './editor-icons';
 
 interface IconProps {
   className?: string;

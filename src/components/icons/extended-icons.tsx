@@ -51,7 +51,6 @@ import {
   PiLink,
   PiMegaphone,
   PiMinus,
-  PiNewspaper,
   PiHandshake,
   PiPushPin,
   PiPower,
@@ -304,10 +303,6 @@ export const HistoryIcon = ({ className }: IconProps) => (
   <PiClockCounterClockwise className={cn('h-5 w-5', className)} />
 );
 
-export const ImageIcon = ({ className }: IconProps) => (
-  <PiImage className={cn('h-5 w-5', className)} />
-);
-
 export const InfinityIcon = ({ className }: IconProps) => (
   <PiInfinity className={cn('h-5 w-5', className)} />
 );
@@ -326,10 +321,6 @@ export const MegaphoneIcon = ({ className }: IconProps) => (
 
 export const MinusIcon = ({ className }: IconProps) => (
   <PiMinus className={cn('h-5 w-5', className)} />
-);
-
-export const NewsIcon = ({ className }: IconProps) => (
-  <PiNewspaper className={cn('h-5 w-5', className)} />
 );
 
 export const PartnerIcon = ({ className }: IconProps) => (

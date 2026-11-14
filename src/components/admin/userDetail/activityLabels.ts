@@ -62,7 +62,6 @@ const SCREEN_PREFIXES: Array<[string, string]> = [
   ['/buy/success', 'buy'],
   ['/buy', 'buy'],
   ['/info', 'info'],
-  ['/news', 'news'],
   ['/merge', 'merge'],
   ['/auth', 'login'],
   ['/auto-login', 'login'],

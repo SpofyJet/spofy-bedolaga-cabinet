@@ -166,11 +166,6 @@ const AdminAuditLog = lazyWithRetry(() => import('./pages/AdminAuditLog'));
 const AdminSystemErrors = lazyWithRetry(() => import('./pages/AdminSystemErrors'));
 const AdminReferralNetwork = lazyWithRetry(() => import('./pages/ReferralNetwork'));
 
-// News pages
-const NewsArticlePage = lazyWithRetry(() => import('./pages/NewsArticle'));
-const AdminNews = lazyWithRetry(() => import('./pages/AdminNews'));
-const AdminNewsCreate = lazyWithRetry(() => import('./pages/AdminNewsCreate'));
-
 // Legal pages
 const AdminLegalPages = lazyWithRetry(() => import('./pages/AdminLegalPages'));
 
@@ -653,16 +648,6 @@ function App() {
             <ProtectedRoute>
               <LazyPage>
                 <Connection />
-              </LazyPage>
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/news/:slug"
-          element={
-            <ProtectedRoute>
-              <LazyPage>
-                <NewsArticlePage />
               </LazyPage>
             </ProtectedRoute>
           }
@@ -1360,38 +1345,6 @@ function App() {
             </PermissionRoute>
           }
         />
-        {/* News admin routes */}
-        <Route
-          path="/admin/news"
-          element={
-            <PermissionRoute permission="news:read">
-              <LazyPage>
-                <AdminNews />
-              </LazyPage>
-            </PermissionRoute>
-          }
-        />
-        <Route
-          path="/admin/news/create"
-          element={
-            <PermissionRoute permission="news:create">
-              <LazyPage>
-                <AdminNewsCreate />
-              </LazyPage>
-            </PermissionRoute>
-          }
-        />
-        <Route
-          path="/admin/news/:id/edit"
-          element={
-            <PermissionRoute permission="news:edit">
-              <LazyPage>
-                <AdminNewsCreate />
-              </LazyPage>
-            </PermissionRoute>
-          }
-        />
-
         {/* Legal pages admin route */}
         <Route
           path="/admin/legal-pages"

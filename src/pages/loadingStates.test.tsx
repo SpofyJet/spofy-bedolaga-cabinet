@@ -127,7 +127,6 @@ const PAGES: PageCase[] = [
   { name: 'Connection', load: () => import('./Connection') },
   { name: 'SubscriptionPurchase', load: () => import('./SubscriptionPurchase') },
   { name: 'Wheel', load: () => import('./Wheel') },
-  { name: 'AdminNews', load: () => import('./AdminNews') },
   { name: 'AdminEmailTemplates', load: () => import('./AdminEmailTemplates') },
   { name: 'AdminUpdates', load: () => import('./AdminUpdates') },
   { name: 'AdminDashboard', load: () => import('./AdminDashboard') },
@@ -151,12 +150,6 @@ const PAGES: PageCase[] = [
     load: () => import('./AdminTariffCreate'),
     path: '/tc/:id',
     entry: '/tc/1',
-  },
-  {
-    name: 'AdminNewsCreate',
-    load: () => import('./AdminNewsCreate'),
-    path: '/n/:id',
-    entry: '/n/1',
   },
   {
     name: 'AdminCampaignEdit',
@@ -208,7 +201,6 @@ const PAGES: PageCase[] = [
     path: '/m/:mergeToken',
     entry: '/m/tok',
   },
-  { name: 'NewsArticle', load: () => import('./NewsArticle'), path: '/na/:slug', entry: '/na/x' },
   { name: 'GiftClaim', load: () => import('./GiftClaim'), path: '/g/:code', entry: '/g/x' },
 ];
 
