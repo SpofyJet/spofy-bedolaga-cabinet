@@ -326,7 +326,6 @@ export function AppShell({ children }: AppShellProps) {
         <AppHeader
           mobileMenuOpen={mobileMenuOpen}
           setMobileMenuOpen={setMobileMenuOpen}
-          onCommandPaletteOpen={() => {}}
           headerHeight={headerHeight}
           isFullscreen={isMobileFullscreen}
           safeAreaInset={safeAreaInset}

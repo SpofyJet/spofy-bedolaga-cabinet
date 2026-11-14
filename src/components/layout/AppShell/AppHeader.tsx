@@ -40,7 +40,6 @@ import {
   CloseIcon,
   SunIcon,
   MoonIcon,
-  SearchIcon,
 } from './icons';
 
 const FALLBACK_NAME = import.meta.env.VITE_APP_NAME || 'Cabinet';
@@ -51,7 +50,6 @@ import type { TelegramPlatform } from '@/hooks/useTelegramSDK';
 interface AppHeaderProps {
   mobileMenuOpen: boolean;
   setMobileMenuOpen: (open: boolean) => void;
-  onCommandPaletteOpen: () => void;
   /** CSS-длина шапки (учитывает safe-area) — сдвиг оверлея меню. */
   headerHeight: string;
   isFullscreen: boolean;
@@ -66,7 +64,6 @@ interface AppHeaderProps {
 export function AppHeader({
   mobileMenuOpen,
   setMobileMenuOpen,
-  onCommandPaletteOpen,
   headerHeight,
   isFullscreen,
   safeAreaInset,
@@ -82,7 +79,7 @@ export function AppHeader({
     useShallow((state) => ({ user: state.user, logout: state.logout, isAdmin: state.isAdmin })),
   );
   const { toggleTheme, isDark } = useTheme();
-  const { haptic, platform } = usePlatform();
+  const { haptic } = usePlatform();
   const avatar = useUserAvatar(user);
   const [logoLoaded, setLogoLoaded] = useState(() => isLogoPreloaded());
 
@@ -218,20 +215,6 @@ export function AppHeader({
 
             {/* Right side */}
             <div className="flex items-center gap-1.5">
-              {/* Command palette trigger (web only) */}
-              {platform !== 'telegram' && (
-                <button
-                  onClick={() => {
-                    haptic.impact('light');
-                    onCommandPaletteOpen();
-                  }}
-                  className="btn-icon hidden sm:flex"
-                  title="Search (⌘K)"
-                >
-                  <SearchIcon className="h-5 w-5" />
-                </button>
-              )}
-
               {/* Theme toggle */}
               {canToggle && (
                 <button
