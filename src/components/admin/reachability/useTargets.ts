@@ -7,7 +7,6 @@ import {
 } from '@/api/reachability';
 
 export const REACHABILITY_HOSTS_KEY = 'admin-reachability-hosts';
-export const REACHABILITY_NODES_KEY = ['admin-reachability-nodes'] as const;
 export const REACHABILITY_SUBSCRIPTION_KEY = 'admin-reachability-subscription';
 export const REACHABILITY_PARSE_KEY = 'admin-reachability-parse';
 export const REACHABILITY_SUMMARY_KEY = 'admin-reachability-summary';

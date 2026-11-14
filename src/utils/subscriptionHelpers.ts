@@ -1,8 +1,6 @@
 import { AxiosError } from 'axios';
 import i18n from '../i18n';
 
-export type PurchaseStep = 'period' | 'traffic' | 'servers' | 'devices' | 'confirm';
-
 export const getErrorMessage = (error: unknown): string => {
   if (error instanceof AxiosError) {
     const detail = error.response?.data?.detail;

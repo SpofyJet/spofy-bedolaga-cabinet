@@ -18,7 +18,6 @@ import {
   PiSlidersHorizontal,
   PiWrench,
   PiBookOpen,
-  PiHeadset,
   PiLifebuoy,
   PiArrowDown,
   PiArrowUp,
@@ -63,7 +62,6 @@ import {
   PiPower,
   PiQuestion,
   PiRepeat,
-  PiFlag,
   PiArrowCounterClockwise,
   PiArrowClockwise,
   PiCloudWarning,
@@ -76,7 +74,6 @@ import {
   PiShareNetwork,
   PiSparkle,
   PiChartLine,
-  PiGift,
   PiTimer,
   PiCircle,
   PiTag,
@@ -129,10 +126,6 @@ export const WrenchIcon = ({ className }: IconProps) => (
 
 export const BookOpenIcon = ({ className }: IconProps) => (
   <PiBookOpen className={cn('h-5 w-5', className)} />
-);
-
-export const AgentIcon = ({ className }: IconProps) => (
-  <PiHeadset className={cn('h-5 w-5', className)} />
 );
 
 export const ArrowDownIcon = ({ className }: IconProps) => (
@@ -320,10 +313,6 @@ export const GripVerticalIcon = ({ className }: IconProps) => (
   <PiDotsSixVertical className={cn('h-5 w-5', className)} />
 );
 
-export const HealthIcon = ({ className }: IconProps) => (
-  <PiHeartbeat className={cn('h-5 w-5', className)} />
-);
-
 export const HistoryIcon = ({ className }: IconProps) => (
   <PiClockCounterClockwise className={cn('h-5 w-5', className)} />
 );
@@ -395,10 +384,6 @@ export const RepeatIcon = ({ className }: IconProps) => (
   <PiRepeat className={cn('h-5 w-5', className)} />
 );
 
-export const ReportIcon = ({ className }: IconProps) => (
-  <PiFlag className={cn('h-5 w-5', className)} />
-);
-
 export const ResetIcon = ({ className }: IconProps) => (
   <PiArrowCounterClockwise className={cn('h-5 w-5', className)} />
 );
@@ -439,24 +424,8 @@ export const SparklesIcon = ({ className }: IconProps) => (
   <PiSparkle className={cn('h-5 w-5', className)} />
 );
 
-export const StatBotIcon = ({ className }: IconProps) => (
-  <PiRobot className={cn('h-5 w-5', className)} />
-);
-
-export const StatCabinetIcon = ({ className }: IconProps) => (
-  <PiAppWindow className={cn('h-5 w-5', className)} />
-);
-
-export const StatPaidIcon = ({ className }: IconProps) => (
-  <PiMoney className={cn('h-5 w-5', className)} />
-);
-
 export const StatsChartIcon = ({ className }: IconProps) => (
   <PiChartLine className={cn('h-5 w-5', className)} />
-);
-
-export const StatTrialIcon = ({ className }: IconProps) => (
-  <PiGift className={cn('h-5 w-5', className)} />
 );
 
 export const StatUptimeIcon = ({ className }: IconProps) => (

@@ -72,5 +72,3 @@ export function useAdminAction() {
 
   return { busy, run };
 }
-
-export type RunAction = ReturnType<typeof useAdminAction>['run'];

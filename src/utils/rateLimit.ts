@@ -60,46 +60,6 @@ export function getRateLimitResetTime(key: string): number {
   return remaining > 0 ? Math.ceil(remaining / 1000) : 0;
 }
 
-/**
- * Debounce function - delays execution until after wait ms have elapsed
- */
-export function debounce<T extends (...args: unknown[]) => unknown>(
-  func: T,
-  wait: number,
-): (...args: Parameters<T>) => void {
-  let timeoutId: ReturnType<typeof setTimeout> | null = null;
-
-  return (...args: Parameters<T>) => {
-    if (timeoutId) {
-      clearTimeout(timeoutId);
-    }
-    timeoutId = setTimeout(() => {
-      func(...args);
-      timeoutId = null;
-    }, wait);
-  };
-}
-
-/**
- * Throttle function - ensures function is called at most once per limit ms
- */
-export function throttle<T extends (...args: unknown[]) => unknown>(
-  func: T,
-  limit: number,
-): (...args: Parameters<T>) => void {
-  let inThrottle = false;
-
-  return (...args: Parameters<T>) => {
-    if (!inThrottle) {
-      func(...args);
-      inThrottle = true;
-      setTimeout(() => {
-        inThrottle = false;
-      }, limit);
-    }
-  };
-}
-
 // Rate limit keys for different actions
 export const RATE_LIMIT_KEYS = {
   PAYMENT: 'payment',

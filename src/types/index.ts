@@ -247,24 +247,6 @@ export interface ServersConfig {
   selected: string[];
 }
 
-export interface PeriodOption {
-  id: string;
-  period_days: number;
-  months: number;
-  label: string;
-  price_kopeks: number;
-  price_label: string;
-  per_month_price_kopeks: number;
-  per_month_price_label: string;
-  discount_percent?: number;
-  original_price_kopeks?: number;
-  original_price_label?: string;
-  is_available: boolean;
-  traffic: TrafficConfig;
-  servers: ServersConfig;
-  devices: DevicesConfig;
-}
-
 // Tariff types for tariffs mode
 export interface TariffPeriod {
   days: number;

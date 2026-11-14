@@ -108,9 +108,3 @@ export function BackgroundRenderer() {
   const effectiveConfig = config ?? DEFAULT_ANIMATION_CONFIG;
   return <RenderBackground config={effectiveConfig} />;
 }
-
-export function StaticBackgroundRenderer({ config }: { config: AnimationConfig }) {
-  const validated = useMemo(() => validateConfig(config), [config]);
-  if (!validated) return null;
-  return <RenderBackground config={validated} />;
-}

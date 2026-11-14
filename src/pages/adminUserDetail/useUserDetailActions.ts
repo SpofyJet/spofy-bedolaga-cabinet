@@ -197,5 +197,3 @@ export function useUserDetailActions(userId: number, data: UserDetailData) {
       }),
   };
 }
-
-export type UserDetailActions = ReturnType<typeof useUserDetailActions>;
