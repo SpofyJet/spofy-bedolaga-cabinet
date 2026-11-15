@@ -8,8 +8,8 @@ import { useAdminLocaleReady } from './hooks/useAdminLocaleReady';
  * Wrapper around React.lazy that auto-reloads the page when a chunk fails to load
  * (e.g. after a new deploy with different chunk hashes).
  */
-function lazyWithRetry<T extends ComponentType<unknown>>(factory: () => Promise<{ default: T }>) {
-  let loading: Promise<{ default: T }> | undefined;
+function lazyWithRetry<P extends object>(factory: () => Promise<{ default: ComponentType<P> }>) {
+  let loading: Promise<{ default: ComponentType<P> }> | undefined;
   const preload = () => {
     loading ??= factory().catch((error) => {
       loading = undefined;
@@ -53,15 +53,17 @@ import { saveReturnUrl } from './utils/token';
 import { ScreenViewReporter } from './components/ScreenViewReporter';
 import { useAnalyticsCounters } from './hooks/useAnalyticsCounters';
 import { useDoneKey } from './hooks/useDoneKey';
-// Auth pages - load immediately (small)
+// Вход — сразу: на него попадает каждый без сессии.
 import Login from './pages/Login';
-import TelegramCallback from './pages/TelegramCallback';
-import TelegramRedirect from './pages/TelegramRedirect';
-import DeepLinkRedirect from './pages/DeepLinkRedirect';
-import VerifyEmail from './pages/VerifyEmail';
-import ResetPassword from './pages/ResetPassword';
-import PublicLegal from './pages/PublicLegal';
-import OAuthCallback from './pages/OAuthCallback';
+// Колбэки, переходы и правовые страницы открывают единицы в неделю (на «/» — тысячи):
+// в стартовой загрузке они только мешали, а правовые тянули ещё и DOMPurify.
+const TelegramCallback = lazyWithRetry(() => import('./pages/TelegramCallback'));
+const TelegramRedirect = lazyWithRetry(() => import('./pages/TelegramRedirect'));
+const DeepLinkRedirect = lazyWithRetry(() => import('./pages/DeepLinkRedirect'));
+const VerifyEmail = lazyWithRetry(() => import('./pages/VerifyEmail'));
+const ResetPassword = lazyWithRetry(() => import('./pages/ResetPassword'));
+const PublicLegal = lazyWithRetry(() => import('./pages/PublicLegal'));
+const OAuthCallback = lazyWithRetry(() => import('./pages/OAuthCallback'));
 
 // Dashboard - load eagerly (default route, LCP-critical).
 // HomeScreen выбирает между полным и простым видом по настройке оператора.
@@ -325,17 +327,94 @@ function App() {
       <Routes>
         {/* Public routes */}
         <Route path="/login" element={<Login />} />
-        <Route path="/auth/telegram/callback" element={<TelegramCallback />} />
-        <Route path="/auth/telegram" element={<TelegramRedirect />} />
-        <Route path="/tg" element={<TelegramRedirect />} />
-        <Route path="/connect" element={<DeepLinkRedirect />} />
-        <Route path="/add" element={<DeepLinkRedirect />} />
-        <Route path="/auth/oauth/callback" element={<OAuthCallback />} />
-        <Route path="/verify-email" element={<VerifyEmail />} />
-        <Route path="/reset-password" element={<ResetPassword />} />
-        <Route path="/offer" element={<PublicLegal doc="offer" />} />
-        <Route path="/privacy" element={<PublicLegal doc="privacy" />} />
-        <Route path="/recurrent-payments" element={<PublicLegal doc="recurrent" />} />
+        <Route
+          path="/auth/telegram/callback"
+          element={
+            <LazyPage>
+              <TelegramCallback />
+            </LazyPage>
+          }
+        />
+        <Route
+          path="/auth/telegram"
+          element={
+            <LazyPage>
+              <TelegramRedirect />
+            </LazyPage>
+          }
+        />
+        <Route
+          path="/tg"
+          element={
+            <LazyPage>
+              <TelegramRedirect />
+            </LazyPage>
+          }
+        />
+        <Route
+          path="/connect"
+          element={
+            <LazyPage>
+              <DeepLinkRedirect />
+            </LazyPage>
+          }
+        />
+        <Route
+          path="/add"
+          element={
+            <LazyPage>
+              <DeepLinkRedirect />
+            </LazyPage>
+          }
+        />
+        <Route
+          path="/auth/oauth/callback"
+          element={
+            <LazyPage>
+              <OAuthCallback />
+            </LazyPage>
+          }
+        />
+        <Route
+          path="/verify-email"
+          element={
+            <LazyPage>
+              <VerifyEmail />
+            </LazyPage>
+          }
+        />
+        <Route
+          path="/reset-password"
+          element={
+            <LazyPage>
+              <ResetPassword />
+            </LazyPage>
+          }
+        />
+        <Route
+          path="/offer"
+          element={
+            <LazyPage>
+              <PublicLegal doc="offer" />
+            </LazyPage>
+          }
+        />
+        <Route
+          path="/privacy"
+          element={
+            <LazyPage>
+              <PublicLegal doc="privacy" />
+            </LazyPage>
+          }
+        />
+        <Route
+          path="/recurrent-payments"
+          element={
+            <LazyPage>
+              <PublicLegal doc="recurrent" />
+            </LazyPage>
+          }
+        />
         <Route
           path="/merge/:mergeToken"
           element={

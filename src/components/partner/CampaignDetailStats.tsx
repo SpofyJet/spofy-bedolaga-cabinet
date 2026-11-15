@@ -8,7 +8,7 @@ import { DailyChart } from '../stats/DailyChart';
 import { PeriodComparison } from '../stats/PeriodComparison';
 import { MiniStat } from './MiniStat';
 import { TopReferrals } from './TopReferrals';
-import { Skeleton, SkeletonGroup } from '../ui/skeleton';
+import { CampaignDetailStatsSkeleton } from './CampaignDetailStatsSkeleton';
 
 interface CampaignDetailStatsProps {
   campaignId: number;
@@ -25,18 +25,7 @@ export function CampaignDetailStats({ campaignId }: CampaignDetailStatsProps) {
   });
 
   if (isLoading) {
-    return (
-      <SkeletonGroup className="space-y-3 pt-2">
-        <div className="grid grid-cols-3 gap-2">
-          <Skeleton
-            variant="card"
-            count={PARTNER_STATS.SKELETON_COUNT}
-            className="h-16 rounded-xl"
-          />
-        </div>
-        <Skeleton variant="card" className="h-52 rounded-xl" />
-      </SkeletonGroup>
-    );
+    return <CampaignDetailStatsSkeleton />;
   }
 
   if (isError || !data) {

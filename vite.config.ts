@@ -11,12 +11,15 @@ import { precompress } from './vite-plugins/precompress.ts';
 // базовые чанки (react, utils) стоят первыми: общие пакеты (clsx,
 // use-sync-external-store) должны достаться им, а не тяжёлому ленивому
 // recharts — иначе стартовая страница тянет чанк графиков.
+// Slot из Radix нужен кнопке на любом экране — он в базовом чанке, иначе стартовая
+// страница тянула бы весь vendor-radix (меню и поповеры живут только в админке).
+// DOMPurify — только в ленивых экранах (правовые страницы, поддержка, инструкция).
 const VENDOR_CHUNKS: ReadonlyArray<readonly [string, RegExp]> = [
-  ['vendor-react', /node_modules\/(react|react-dom|react-router|scheduler)\//],
   [
-    'vendor-utils',
-    /node_modules\/(axios|zustand|clsx|tailwind-merge|class-variance-authority|dompurify)\//,
+    'vendor-react',
+    /node_modules\/(react|react-dom|react-router|scheduler|@radix-ui\/react-(slot|compose-refs))\//,
   ],
+  ['vendor-utils', /node_modules\/(axios|zustand|clsx|tailwind-merge|class-variance-authority)\//],
   ['vendor-query', /@tanstack\/react-query/],
   ['vendor-i18n', /i18next/],
   ['vendor-motion', /framer-motion/],
@@ -24,11 +27,8 @@ const VENDOR_CHUNKS: ReadonlyArray<readonly [string, RegExp]> = [
   ['vendor-telegram', /@telegram-apps\/|\/@tma\.js\//],
   ['vendor-twemoji', /node_modules\/.*twemoji/],
   ['vendor-crypto', /\/jsencrypt\/|@kastov\//],
-  ['vendor-cmdk', /\/cmdk\//],
   ['vendor-dnd', /@dnd-kit\//],
   ['vendor-table', /@tanstack\/react-table/],
-  ['vendor-webgl', /\/ogl\//],
-  ['vendor-lottie', /@lottiefiles\//],
   // Heavy admin-only deps — split so they don't bloat the shared
   // chunks of other lazy admin pages that don't use them.
   ['vendor-recharts', /\/recharts\/|\/d3-/],

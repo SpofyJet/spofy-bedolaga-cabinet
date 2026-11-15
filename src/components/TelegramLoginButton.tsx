@@ -1,8 +1,7 @@
-import { useEffect, useRef, useState, useCallback } from 'react';
+import { lazy, Suspense, useEffect, useRef, useState, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
-import { QRCodeSVG } from 'qrcode.react';
 import { brandingApi, type TelegramWidgetConfig } from '../api/branding';
 import { authApi } from '../api/auth';
 import { useAuthStore } from '../store/auth';
@@ -18,6 +17,13 @@ interface TelegramLoginButtonProps {
 }
 
 const SCRIPT_LOAD_TIMEOUT_MS = 2000;
+const QR_SIZE = 180;
+
+// QR нужен только входу по ссылке, а экран входа грузится вместе с главной у всех.
+// Библиотеку тянем отдельно — и сразу при появлении кнопки, чтобы к ответу сервера
+// со ссылкой она уже была на месте.
+const loadQrCode = () => import('qrcode.react');
+const QRCodeSVG = lazy(() => loadQrCode().then((m) => ({ default: m.QRCodeSVG })));
 const DEEPLINK_POLL_INTERVAL_MS = 2500;
 
 export default function TelegramLoginButton({ referralCode }: TelegramLoginButtonProps) {
@@ -72,6 +78,7 @@ export default function TelegramLoginButton({ referralCode }: TelegramLoginButto
 
   useEffect(() => {
     mountedRef.current = true;
+    void loadQrCode().catch(() => {});
     return () => {
       mountedRef.current = false;
     };
@@ -504,7 +511,9 @@ export default function TelegramLoginButton({ referralCode }: TelegramLoginButto
             {/* QR Code */}
             <div className="flex flex-col items-center space-y-2">
               <div className="rounded-2xl bg-white p-4">
-                <QRCodeSVG value={deepLinkUrl} size={180} level="M" includeMargin={false} />
+                <Suspense fallback={<div style={{ width: QR_SIZE, height: QR_SIZE }} />}>
+                  <QRCodeSVG value={deepLinkUrl} size={QR_SIZE} level="M" includeMargin={false} />
+                </Suspense>
               </div>
               <p className="text-[13px] text-dark-500">{t('auth.scanQrToLogin')}</p>
             </div>

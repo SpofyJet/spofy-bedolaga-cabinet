@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { lazy, Suspense, useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { PiCaretDownBold, PiCheckBold, PiCopyDuotone } from 'react-icons/pi';
 
@@ -9,8 +9,15 @@ import { PARTNER_STATS } from '../../constants/partner';
 import { useCurrency } from '../../hooks/useCurrency';
 import { useHaptic } from '../../platform';
 import { copyToClipboard } from '../../utils/clipboard';
-import { CampaignDetailStats } from './CampaignDetailStats';
+import { CampaignDetailStatsSkeleton } from './CampaignDetailStatsSkeleton';
 import { MiniStat } from './MiniStat';
+
+// Графики кампании (recharts, ~115 КБ gzip) нужны только партнёру и только в
+// раскрытой карточке. Статический импорт тянул их в чанк «Партнёрки», а его
+// заранее подгружает каждый, кто открыл кабинет.
+const CampaignDetailStats = lazy(() =>
+  import('./CampaignDetailStats').then((m) => ({ default: m.CampaignDetailStats })),
+);
 
 const ChevronIcon = ({ expanded }: { expanded: boolean }) => (
   <PiCaretDownBold className={`h-3.5 w-3.5 transition-transform ${expanded ? 'rotate-180' : ''}`} />
@@ -185,7 +192,11 @@ export function CampaignCard({ campaign }: CampaignCardProps) {
 
       {/* Expanded detail stats */}
       <div id={`campaign-detail-${campaign.id}`}>
-        {expanded && <CampaignDetailStats campaignId={campaign.id} />}
+        {expanded && (
+          <Suspense fallback={<CampaignDetailStatsSkeleton />}>
+            <CampaignDetailStats campaignId={campaign.id} />
+          </Suspense>
+        )}
       </div>
     </Surface>
   );
