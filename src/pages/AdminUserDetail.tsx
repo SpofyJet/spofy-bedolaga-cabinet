@@ -128,7 +128,7 @@ export default function AdminUserDetail() {
     promoGroup: hasPermission('users:promo_group'),
     restrictions: hasPermission('users:edit'),
     sync: hasPermission('users:sync'),
-    offer: hasPermission('users:send_offer'),
+    offer: hasPermission('promo_offers:send'),
     referral: hasPermission('users:referral'),
     devices: hasPermission('users:edit'),
     deactivateOffer: hasPermission('promocodes:edit'),

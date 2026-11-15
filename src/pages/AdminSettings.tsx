@@ -16,7 +16,6 @@ import {
 import { usePlatform } from '../platform/hooks/usePlatform';
 import { AnalyticsTab } from '../components/admin/AnalyticsTab';
 import { BrandingTab } from '../components/admin/BrandingTab';
-import { MenuEditorTab } from '../components/admin/MenuEditorTab';
 import { ThemeTab } from '../components/admin/ThemeTab';
 import { FavoritesTab } from '../components/admin/FavoritesTab';
 import { SettingsTab } from '../components/admin/SettingsTab';
@@ -195,8 +194,6 @@ export default function AdminSettings() {
         return <BrandingTab accentColor={themeColors?.accent} />;
       case 'theme':
         return <ThemeTab />;
-      case 'buttons':
-        return <MenuEditorTab />;
       case 'favorites':
         return (
           <FavoritesTab

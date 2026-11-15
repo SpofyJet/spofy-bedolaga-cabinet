@@ -106,7 +106,7 @@ export function SettingsMobileTabs({
           )}
         </button>
 
-        {/* Special item chips (branding, theme, analytics, buttons) */}
+        {/* Special item chips (branding, theme, analytics) */}
         {specialItems.map((item) => {
           const isActive = isSpecialActive(item.id);
           return (

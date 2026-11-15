@@ -36,14 +36,13 @@ export function findSettingsSection(id: string | null): string | null {
   return known ? id : null;
 }
 
-// Hierarchical settings tree — all 61 backend category keys mapped into 7 groups
+// Дерево настроек: категории бота, разложенные по 6 группам
 export const SETTINGS_TREE: SettingsTreeConfig = {
   specialItems: [
     { id: 'favorites', iconType: 'star' },
     { id: 'branding', icon: '🎨' },
     { id: 'theme', icon: '🌈' },
     { id: 'analytics', icon: '📊' },
-    { id: 'buttons', icon: '📱' },
   ],
   groups: [
     {
@@ -56,17 +55,22 @@ export const SETTINGS_TREE: SettingsTreeConfig = {
         { id: 'payments_platega', categories: ['PLATEGA'] },
         { id: 'payments_pay2328', categories: ['PAY2328'] },
         { id: 'payments_wata', categories: ['WATA'] },
+        { id: 'payments_xrocket', categories: ['XROCKET'] },
       ],
     },
     {
       id: 'subscriptions',
       icon: '📦',
       children: [
-        { id: 'subs_core', categories: ['SUBSCRIPTIONS_CORE'] },
+        {
+          id: 'subs_core',
+          categories: ['SUBSCRIPTIONS_CORE', 'SUBSCRIPTION', 'TARIFF', 'CART', 'PRICE', 'DAILY'],
+        },
         { id: 'subs_trial', categories: ['TRIAL'] },
         { id: 'subs_pricing', categories: ['SUBSCRIPTION_PRICES'] },
         { id: 'subs_periods', categories: ['PERIODS'] },
         { id: 'subs_traffic', categories: ['TRAFFIC', 'TRAFFIC_PACKAGES'] },
+        { id: 'subs_bypass', categories: ['BYPASS_DOWNGRADE'] },
         { id: 'subs_autopay', categories: ['AUTOPAY'] },
       ],
     },
@@ -76,9 +80,9 @@ export const SETTINGS_TREE: SettingsTreeConfig = {
       children: [
         {
           id: 'iface_general',
-          categories: ['INTERFACE', 'INTERFACE_BRANDING', 'INTERFACE_SUBSCRIPTION'],
+          categories: ['INTERFACE', 'INTERFACE_BRANDING', 'INTERFACE_SUBSCRIPTION', 'SERVICE', 'MEDIA'],
         },
-        { id: 'iface_connect', categories: ['CONNECT_BUTTON'] },
+        { id: 'iface_connect', categories: ['CONNECT_BUTTON', 'INCY'] },
         { id: 'iface_miniapp', categories: ['MINIAPP'] },
         { id: 'iface_happ', categories: ['HAPP'] },
         { id: 'iface_widget', categories: ['TELEGRAM_WIDGET'] },
@@ -96,8 +100,13 @@ export const SETTINGS_TREE: SettingsTreeConfig = {
         { id: 'users_support', categories: ['SUPPORT'] },
         { id: 'users_referral', categories: ['REFERRAL'] },
         { id: 'users_channel', categories: ['CHANNEL'] },
-        { id: 'users_localization', categories: ['LOCALIZATION', 'TIMEZONE'] },
+        { id: 'users_localization', categories: ['LOCALIZATION'] },
         { id: 'users_moderation', categories: ['MODERATION'] },
+        {
+          id: 'users_auth',
+          categories: ['OAUTH', 'REGISTRATION_ACCESS', 'DISPOSABLE', 'BLACKLIST'],
+        },
+        { id: 'users_marketing', categories: ['FUNNEL', 'PROMO', 'S2S', 'YANDEX'] },
       ],
     },
     {
@@ -107,23 +116,14 @@ export const SETTINGS_TREE: SettingsTreeConfig = {
         { id: 'notif_user', categories: ['NOTIFICATIONS', 'WEBHOOK_NOTIFICATIONS'] },
         { id: 'notif_admin', categories: ['ADMIN_NOTIFICATIONS'] },
         { id: 'notif_reports', categories: ['ADMIN_REPORTS'] },
-      ],
-    },
-    {
-      id: 'database',
-      icon: '🗄️',
-      children: [
-        { id: 'db_general', categories: ['DATABASE'] },
-        { id: 'db_postgres', categories: ['POSTGRES'] },
-        { id: 'db_sqlite', categories: ['SQLITE'] },
-        { id: 'db_redis', categories: ['REDIS'] },
+        { id: 'notif_email', categories: ['SMTP', 'EMAIL', 'TIMEZONE'] },
       ],
     },
     {
       id: 'system',
       icon: '⚙️',
       children: [
-        { id: 'sys_core', categories: ['CORE', 'DEBUG'] },
+        { id: 'sys_core', categories: ['CORE', 'BOT', 'DEBUG', 'PROXY', 'REDIS'] },
         { id: 'sys_remnawave', categories: ['REMNAWAVE'] },
         { id: 'sys_webapi', categories: ['WEB_API'] },
         { id: 'sys_cabinet', categories: ['CABINET'] },
@@ -131,8 +131,6 @@ export const SETTINGS_TREE: SettingsTreeConfig = {
         { id: 'sys_monitoring', categories: ['MONITORING'] },
         { id: 'sys_maintenance', categories: ['MAINTENANCE'] },
         { id: 'sys_backup', categories: ['BACKUP'] },
-        { id: 'sys_version', categories: ['VERSION'] },
-        { id: 'sys_logging', categories: ['LOG'] },
         // Категории на бэкенде выводятся из имени ключа, поэтому каждая новая
         // настройка может создать категорию, которой в дереве нет — и тогда она
         // просто исчезала из админки (так пропала вся категория CABINET).

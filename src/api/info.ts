@@ -23,11 +23,6 @@ export interface PublicOfferResponse {
   updated_at: string | null;
 }
 
-export interface RecurrentPaymentsResponse {
-  content: string;
-  updated_at: string | null;
-}
-
 export interface LanguageInfo {
   code: string;
   name: string;
@@ -39,7 +34,6 @@ export interface InfoVisibility {
   rules: boolean;
   privacy: boolean;
   offer: boolean;
-  recurrent: boolean;
 }
 
 // Язык интерфейса уходит в query: без него бэкенд отдаёт документы на языке по умолчанию.
@@ -74,15 +68,6 @@ export const infoApi = {
   getPublicOffer: async (language?: string): Promise<PublicOfferResponse> => {
     const response = await apiClient.get<PublicOfferResponse>(
       '/cabinet/info/public-offer',
-      languageParams(language),
-    );
-    return response.data;
-  },
-
-  // Get recurring-payments document
-  getRecurrentPayments: async (language?: string): Promise<RecurrentPaymentsResponse> => {
-    const response = await apiClient.get<RecurrentPaymentsResponse>(
-      '/cabinet/info/recurrent-payments',
       languageParams(language),
     );
     return response.data;

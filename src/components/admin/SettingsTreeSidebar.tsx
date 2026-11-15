@@ -232,7 +232,7 @@ export function SettingsTreeSidebar({
         </span>
       </div>
 
-      {/* Special items (branding, theme, analytics, buttons) */}
+      {/* Special items (branding, theme, analytics) */}
       <div className="space-y-0.5 px-3 pb-1">
         {customizationItems.map((item) => {
           const isActive = activeSection === item.id;

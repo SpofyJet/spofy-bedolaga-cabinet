@@ -408,14 +408,6 @@ function App() {
           }
         />
         <Route
-          path="/recurrent-payments"
-          element={
-            <LazyPage>
-              <PublicLegal doc="recurrent" />
-            </LazyPage>
-          }
-        />
-        <Route
           path="/merge/:mergeToken"
           element={
             <LazyPage>

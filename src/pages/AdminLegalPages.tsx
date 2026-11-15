@@ -15,11 +15,11 @@ import { cn } from '../lib/utils';
 import { ChevronDownIcon, ChevronUpIcon, PlusIcon, TrashIcon } from '@/components/icons';
 import { Skeleton, SkeletonGroup } from '@/components/ui/skeleton';
 
-type LegalTab = 'privacy' | 'offer' | 'recurrent' | 'rules' | 'faq';
+type LegalTab = 'privacy' | 'offer' | 'rules' | 'faq';
 
 const DISPLAY_MODES: LegalDisplayMode[] = ['bot', 'web', 'both'];
 
-type DocumentKind = 'privacy-policy' | 'public-offer' | 'recurrent-payments';
+type DocumentKind = 'privacy-policy' | 'public-offer';
 
 // Bot chunk/page size (split_telegram_text max_length): longer texts are
 // delivered by the bot in several messages / paginated pages
@@ -93,10 +93,6 @@ const DOCUMENT_API: Record<
   'public-offer': {
     get: adminLegalPagesApi.getPublicOffer,
     update: adminLegalPagesApi.updatePublicOffer,
-  },
-  'recurrent-payments': {
-    get: adminLegalPagesApi.getRecurrentPayments,
-    update: adminLegalPagesApi.updateRecurrentPayments,
   },
 };
 
@@ -301,7 +297,7 @@ function DocumentEditor({
         />
         <ContentLengthMeta
           text={contents[activeLang] ?? ''}
-          botVisible={kind !== 'recurrent-payments' && displayMode !== 'web'}
+          botVisible={displayMode !== 'web'}
         />
       </div>
       {saveError && <p className="text-sm text-error-400">{saveError}</p>}
@@ -759,7 +755,7 @@ export default function AdminLegalPages() {
       </div>
 
       <div className="flex flex-wrap gap-1">
-        {(['privacy', 'offer', 'recurrent', 'rules', 'faq'] as const).map((tab) => (
+        {(['privacy', 'offer', 'rules', 'faq'] as const).map((tab) => (
           <button
             key={tab}
             type="button"
@@ -781,9 +777,6 @@ export default function AdminLegalPages() {
       )}
       {activeTab === 'offer' && (
         <DocumentEditor key="offer" kind="public-offer" onDirtyChange={setDirty} />
-      )}
-      {activeTab === 'recurrent' && (
-        <DocumentEditor key="recurrent" kind="recurrent-payments" onDirtyChange={setDirty} />
       )}
       {activeTab === 'rules' && <RulesEditor onDirtyChange={setDirty} />}
       {activeTab === 'faq' && <FaqEditor onDirtyChange={setDirty} />}

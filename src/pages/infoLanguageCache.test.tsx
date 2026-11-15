@@ -40,7 +40,7 @@ afterEach(() => {
   client.clear();
 });
 
-it.each(['offer', 'privacy', 'recurrent'] as PublicLegalDoc[])(
+it.each(['offer', 'privacy'] as PublicLegalDoc[])(
   'reloads %s in the selected language with a warm document cache',
   async (doc) => {
     const element = () => (

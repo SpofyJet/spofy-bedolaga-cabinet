@@ -7,7 +7,7 @@ import { formatContent } from '../utils/legalContent';
 import LanguageSwitcher from '../components/LanguageSwitcher';
 import { Skeleton, SkeletonGroup } from '@/components/ui/skeleton';
 
-export type PublicLegalDoc = 'offer' | 'privacy' | 'recurrent';
+export type PublicLegalDoc = 'offer' | 'privacy';
 
 interface PublicLegalProps {
   doc: PublicLegalDoc;
@@ -33,12 +33,6 @@ const DOC_CONFIG: Record<
     titleKey: 'footer.privacy',
     titleFallback: 'Политика конфиденциальности',
     fetch: infoApi.getPrivacyPolicy,
-  },
-  recurrent: {
-    queryKey: 'recurrent-payments',
-    titleKey: 'footer.recurrent',
-    titleFallback: 'Рекуррентные платежи',
-    fetch: infoApi.getRecurrentPayments,
   },
 };
 

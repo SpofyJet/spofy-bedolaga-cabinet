@@ -23,7 +23,6 @@ const DOCUMENTS = [
   ['getRules', '/cabinet/info/rules'],
   ['getPrivacyPolicy', '/cabinet/info/privacy-policy'],
   ['getPublicOffer', '/cabinet/info/public-offer'],
-  ['getRecurrentPayments', '/cabinet/info/recurrent-payments'],
 ] as const;
 
 describe('infoApi: язык документов', () => {

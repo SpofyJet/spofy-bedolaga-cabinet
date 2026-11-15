@@ -382,7 +382,7 @@ export function BrandingTab({ accentColor = '#3b82f6' }: BrandingTabProps) {
               <p className="text-sm text-dark-400">
                 {t(
                   'admin.settings.legalFooterDesc',
-                  'Ссылки на оферту/политику/рекурренты внизу страницы входа',
+                  'Ссылки на оферту и политику внизу страницы входа',
                 )}
               </p>
             </div>

@@ -2022,7 +2022,6 @@
       "noSearchResults": "Nothing found",
       "example": "Example",
       "analytics": "Analytics",
-      "buttons": "Buttons",
       "notConfigured": "Not configured",
       "counterActive": "Active",
       "counterInactive": "Inactive",
@@ -2093,7 +2092,6 @@
       "subscriptions": "Subscriptions",
       "interface": "Interface",
       "notifications": "Notifications",
-      "database": "Database",
       "system": "System",
       "users": "Users",
       "customization": "Customization",
@@ -2107,7 +2105,6 @@
         "interface": "Interface",
         "users": "Users",
         "notifications": "Notifications",
-        "database": "Database",
         "system": "System"
       },
       "tree": {
@@ -2139,10 +2136,6 @@
         "notif_user": "User notifications",
         "notif_admin": "Admin notifications",
         "notif_reports": "Reports",
-        "db_general": "General",
-        "db_postgres": "PostgreSQL",
-        "db_sqlite": "SQLite",
-        "db_redis": "Redis",
         "sys_core": "Core & Debug",
         "sys_remnawave": "Remnawave",
         "sys_webapi": "Web server",
@@ -2150,34 +2143,61 @@
         "sys_monitoring": "Monitoring",
         "sys_maintenance": "Maintenance",
         "sys_backup": "Backup",
-        "sys_version": "Version",
-        "sys_logging": "Logging",
         "iface_info": "Legal documents",
         "iface_menu": "Menu button",
         "sys_cabinet": "Cabinet",
-        "sys_other": "Other settings"
+        "sys_other": "Other settings",
+        "payments_xrocket": "xRocket",
+        "subs_bypass": "Bypass servers",
+        "users_auth": "Sign-in and registration",
+        "users_marketing": "Funnel and ads",
+        "notif_email": "Email"
       },
       "categories": {
-        "ANORE": "Anore",
         "CABINET": "Cabinet",
         "INFO_PAGES": "Legal documents and FAQ",
         "MENU": "Menu button",
         "TELEGRAM_WIDGET": "Telegram Login Widget",
-        "TELEGRAM_OIDC": "Telegram Login (OIDC)"
+        "TELEGRAM_OIDC": "Telegram Login (OIDC)",
+        "XROCKET": "xRocket",
+        "SUBSCRIPTION": "Link reissue",
+        "TARIFF": "Tariff switch",
+        "CART": "Cart",
+        "PRICE": "Price rounding",
+        "DAILY": "Daily tariffs",
+        "BYPASS_DOWNGRADE": "Bypass on traffic exhaustion",
+        "SERVICE": "Service website",
+        "MEDIA": "Media files",
+        "INCY": "INCY",
+        "OAUTH": "Social sign-in",
+        "REGISTRATION_ACCESS": "Invite-only registration",
+        "DISPOSABLE": "Disposable emails",
+        "BLACKLIST": "Blacklist",
+        "FUNNEL": "Activation funnel",
+        "PROMO": "Promo",
+        "S2S": "S2S postbacks",
+        "YANDEX": "Yandex Metrica: offline conversions",
+        "SMTP": "SMTP",
+        "EMAIL": "Emails and unsubscribe",
+        "TIMEZONE": "Date format in emails",
+        "BOT": "Bot run mode",
+        "PROXY": "Proxy",
+        "WEBHOOK_NOTIFICATIONS": "Panel event notifications",
+        "CORE": "Bot",
+        "DEBUG": "Debug",
+        "REDIS": "Redis",
+        "WEB_API": "Web server"
       },
       "settingNames": {
         "Telegram Widget Size": "Widget Size",
         "Telegram Widget Radius": "Corner Radius",
         "Telegram Widget Userpic": "Show User Photo",
-        "Telegram Widget Request Access": "Request Access",
-        "telegramOidcEnabled": "OIDC Enabled",
-        "telegramOidcClientId": "Client ID (Bot ID)",
-        "telegramOidcClientSecret": "Client Secret"
+        "Telegram Widget Request Access": "Request Access"
       },
       "offlineConv": "Offline Conversions",
       "apiKey": "API Key",
       "legalFooter": "Legal Footer",
-      "legalFooterDesc": "Links to the offer, privacy policy and recurring payments at the bottom of the login page",
+      "legalFooterDesc": "Links to the offer and privacy policy at the bottom of the login page",
       "botStartVideo": "Bot start-menu video",
       "botStartVideoDesc": "The bot attaches this video to the /start message instead of the logo image. The file is uploaded to Telegram once — we only keep its identifier.",
       "botStartVideoUpload": "Upload video",
@@ -2186,49 +2206,6 @@
       "botStartVideoActive": "Video is set",
       "botStartVideoNone": "No video — the menu uses the logo image",
       "botStartVideoError": "Could not upload the video"
-    },
-    "buttons": {
-      "color": "Button color",
-      "emojiId": "Custom Emoji ID",
-      "emojiPlaceholder": "Custom emoji ID (optional)",
-      "resetAll": "Reset all styles",
-      "customLabels": "Button labels",
-      "sections": {
-        "home": "Home",
-        "subscription": "Subscription",
-        "balance": "Balance",
-        "referral": "Referrals",
-        "support": "Support",
-        "info": "Info",
-        "admin": "Admin Panel",
-        "language": "Language"
-      },
-      "styles": {
-        "default": "No color",
-        "primary": "Blue",
-        "success": "Green",
-        "danger": "Red"
-      }
-    },
-    "menuEditor": {
-      "dragHint": "Drag rows to reorder them",
-      "dragToReorder": "Drag to reorder",
-      "row": "Row",
-      "addRow": "Add row",
-      "addButton": "Add button",
-      "addUrlButton": "URL button (link)",
-      "builtinButtons": "Built-in buttons",
-      "resetConfirm": "Reset menu layout to defaults?",
-      "buttonTextPlaceholder": "Custom button text",
-      "customLabelsHint": "Empty = default label",
-      "moveUp": "Move up",
-      "moveDown": "Move down",
-      "openIn": "Open in",
-      "openMode": {
-        "external": "External browser",
-        "webapp": "Telegram miniapp"
-      },
-      "invalidUrl": "Please provide a valid URL (http:// or https://) for all custom buttons"
     },
     "apps": {
       "title": "App Management",
@@ -3727,7 +3704,7 @@
         "generic": "The action failed. Please try again",
         "insufficientBalance": "Balance is {{current}}, but {{requested}} was requested",
         "tariffTaken": "There is already a live subscription for this plan — extend it",
-        "singleTariff": "A subscription already exists. A second one needs multi-plan mode",
+        "singleTariff": "A subscription already exists. Edit the current one instead of granting a second",
         "badDays": "Enter a number of days above zero",
         "selfReferrer": "A user cannot be their own referrer",
         "circularReferral": "This would create a loop in the referral chain",
@@ -3839,7 +3816,7 @@
         "trialEnding": "Trial ending",
         "expiring": "Subscription expiring",
         "expired": "Expired subscription",
-        "zero": "Zero balance",
+        "zero": "Subscription with 0 GB used",
         "autopayFailed": "Autopay failed",
         "lowBalance": "Low balance",
         "inactive30d": "Inactive 30 days",
@@ -3865,7 +3842,6 @@
       "tabs": {
         "privacy": "Privacy",
         "offer": "Offer",
-        "recurrent": "Recurring Payments",
         "rules": "Rules",
         "faq": "FAQ"
       },
@@ -4582,8 +4558,7 @@
   },
   "footer": {
     "offer": "Public Offer",
-    "privacy": "Privacy Policy",
-    "recurrent": "Recurring Payments"
+    "privacy": "Privacy Policy"
   },
   "lite": {
     "status": {

@@ -6,5 +6,6 @@ export const METHOD_LABELS: Record<string, string> = {
   heleket: 'Heleket',
   platega: 'Platega',
   wata: 'WATA',
+  xrocket: 'xRocket',
   manual: 'Ручное пополнение',
 };
