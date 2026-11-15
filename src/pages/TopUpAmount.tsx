@@ -286,6 +286,9 @@ export default function TopUpAmount() {
           // when it hands off to a bank app via a custom scheme (SBP) — Android shows
           // ERR_UNKNOWN_URL_SCHEME, iOS opens nothing (bug #654272). Open externally there;
           // on web keep same-tab navigation.
+          // Ссылка остаётся и здесь: вернувшись из браузера, человек жмёт ту же кнопку —
+          // она открывает этот платёж, а не создаёт второй.
+          setPaymentUrl(redirectUrl);
           openPaymentUrl(redirectUrl, platform, openLink);
           return;
         }
@@ -360,6 +363,8 @@ export default function TopUpAmount() {
     method.name || t(`balance.paymentMethods.${methodKey}.name`, { defaultValue: '' });
 
   const handleSubmit = () => {
+    // Enter в поле суммы зовёт отправку в обход заблокированной кнопки.
+    if (topUpMutation.isPending || starsPaymentMutation.isPending) return;
     setError(null);
     setPaymentUrl(null);
     setQrPayload(null);

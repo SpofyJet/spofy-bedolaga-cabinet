@@ -80,12 +80,17 @@ export default function SubscriptionCardExpired({
         return;
       }
       haptic.success();
-      queryClient.invalidateQueries({
-        predicate: (query) => Array.isArray(query.queryKey) && query.queryKey[0] === 'subscription',
-      });
-      queryClient.invalidateQueries({ queryKey: ['subscriptions-list'] });
-      queryClient.invalidateQueries({ queryKey: ['balance'] });
-      queryClient.invalidateQueries({ queryKey: ['purchase-options'] });
+      // Кнопку отпускаем только после перезапроса: пока карточка «истекла» на экране,
+      // второе нажатие купило бы ещё один день.
+      await Promise.all([
+        queryClient.invalidateQueries({
+          predicate: (query) =>
+            Array.isArray(query.queryKey) && query.queryKey[0] === 'subscription',
+        }),
+        queryClient.invalidateQueries({ queryKey: ['subscriptions-list'] }),
+        queryClient.invalidateQueries({ queryKey: ['balance'] }),
+        queryClient.invalidateQueries({ queryKey: ['purchase-options'] }),
+      ]);
     } catch (err: unknown) {
       haptic.error();
       const insufficientData = getInsufficientBalanceError(err);

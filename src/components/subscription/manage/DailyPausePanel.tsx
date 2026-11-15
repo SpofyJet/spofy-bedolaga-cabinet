@@ -37,12 +37,15 @@ export function DailyPausePanel({ subscription, subscriptionId }: DailyPausePane
   const pauseMutation = useMutation({
     retry: false,
     mutationFn: () => subscriptionApi.togglePause(subscriptionId, !needsResume),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['subscription', subscriptionId] });
-      queryClient.invalidateQueries({ queryKey: ['subscriptions-list'] });
-      queryClient.invalidateQueries({ queryKey: ['balance'] });
-      queryClient.invalidateQueries({ queryKey: ['purchase-options', subscriptionId] });
-    },
+    // Ждём перезапроса подписки: до него кнопка с прежней надписью снова жала бы
+    // ту же паузу или возобновление (а возобновление списывает суточную цену).
+    onSuccess: () =>
+      Promise.all([
+        queryClient.invalidateQueries({ queryKey: ['subscription', subscriptionId] }),
+        queryClient.invalidateQueries({ queryKey: ['subscriptions-list'] }),
+        queryClient.invalidateQueries({ queryKey: ['balance'] }),
+        queryClient.invalidateQueries({ queryKey: ['purchase-options', subscriptionId] }),
+      ]),
   });
 
   if (!subscription.is_daily || subscription.is_trial) return null;
@@ -178,5 +181,3 @@ export function DailyPausePanel({ subscription, subscriptionId }: DailyPausePane
     </>
   );
 }
-
-export default DailyPausePanel;
