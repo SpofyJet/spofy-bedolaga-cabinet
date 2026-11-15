@@ -128,7 +128,6 @@ const PAGES: PageCase[] = [
   { name: 'SubscriptionPurchase', load: () => import('./SubscriptionPurchase') },
   { name: 'Wheel', load: () => import('./Wheel') },
   { name: 'AdminEmailTemplates', load: () => import('./AdminEmailTemplates') },
-  { name: 'AdminUpdates', load: () => import('./AdminUpdates') },
   { name: 'AdminDashboard', load: () => import('./AdminDashboard') },
   { name: 'AdminChannelSubscriptions', load: () => import('./AdminChannelSubscriptions') },
   { name: 'AdminWheel', load: () => import('./AdminWheel') },

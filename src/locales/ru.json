@@ -1561,7 +1561,6 @@
       "promocodes": "Промокоды",
       "promoGroups": "Группы скидок",
       "trafficUsage": "Расход трафика",
-      "updates": "Обновления",
       "pinnedMessages": "Закреплённые",
       "partners": "Партнёры",
       "referralLevels": "Уровни наград",
@@ -5158,18 +5157,6 @@
         "retryFailed": "Не удалось отправить в админ-чат"
       }
     }
-  },
-  "adminUpdates": {
-    "title": "Обновления",
-    "subtitle": "История релизов бота и кабинета",
-    "bot": "Бот",
-    "cabinet": "Кабинет",
-    "currentVersion": "Текущая версия",
-    "upToDate": "Актуальная версия",
-    "updateAvailable": "Доступно обновление",
-    "prerelease": "Предрелиз",
-    "refresh": "Проверить обновления",
-    "noReleases": "Нет данных о релизах"
   },
   "adminDashboard": {
     "title": "Панель статистики",

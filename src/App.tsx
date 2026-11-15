@@ -148,7 +148,6 @@ const AdminRemnawaveSquadDetail = lazyWithRetry(() => import('./pages/AdminRemna
 const AdminEmailTemplates = lazyWithRetry(() => import('./pages/AdminEmailTemplates'));
 const AdminTrafficUsage = lazyWithRetry(() => import('./pages/AdminTrafficUsage'));
 const AdminSalesStats = lazyWithRetry(() => import('./pages/AdminSalesStats'));
-const AdminUpdates = lazyWithRetry(() => import('./pages/AdminUpdates'));
 const AdminUserDetail = lazyWithRetry(() => import('./pages/AdminUserDetail'));
 const AdminBroadcastDetail = lazyWithRetry(() => import('./pages/AdminBroadcastDetail'));
 const AdminPinnedMessages = lazyWithRetry(() => import('./pages/AdminPinnedMessages'));
@@ -1149,16 +1148,6 @@ function App() {
             <PermissionRoute permission="email_templates:read">
               <LazyPage>
                 <AdminEmailTemplates />
-              </LazyPage>
-            </PermissionRoute>
-          }
-        />
-        <Route
-          path="/admin/updates"
-          element={
-            <PermissionRoute permission="updates:read">
-              <LazyPage>
-                <AdminUpdates />
               </LazyPage>
             </PermissionRoute>
           }

@@ -1524,7 +1524,6 @@
       "promocodes": "Promo Codes",
       "promoGroups": "Discount Groups",
       "trafficUsage": "Traffic Usage",
-      "updates": "Updates",
       "pinnedMessages": "Pinned Messages",
       "partners": "Partners",
       "referralLevels": "Reward levels",
@@ -4647,18 +4646,6 @@
         "retryFailed": "Could not send to the admin chat"
       }
     }
-  },
-  "adminUpdates": {
-    "title": "Updates",
-    "subtitle": "Bot and cabinet release history",
-    "bot": "Bot",
-    "cabinet": "Cabinet",
-    "currentVersion": "Current version",
-    "upToDate": "Up to date",
-    "updateAvailable": "Update available",
-    "prerelease": "Pre-release",
-    "refresh": "Check for updates",
-    "noReleases": "No release data"
   },
   "adminDashboard": {
     "title": "Statistics Dashboard",
