@@ -18,7 +18,7 @@ interface PermissionRouteProps {
 
 // Широкие таблицы и графики; всё остальное — колонка 600px, как в основном интерфейсе.
 const WIDE_ADMIN_PAGES =
-  /^\/admin\/(dashboard|traffic-usage|bulk-actions|remnawave|landings|referral-network|sales-stats)(\/|$)/;
+  /^\/admin\/(dashboard|traffic-usage|remnawave|landings|referral-network|sales-stats)(\/|$)/;
 
 export function PermissionRoute({
   children,

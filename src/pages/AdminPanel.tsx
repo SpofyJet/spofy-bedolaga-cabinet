@@ -11,7 +11,6 @@ import {
   BroadcastIcon,
   CabinetIcon,
   ChartBarIcon,
-  ClipboardIcon,
   CreditCardIcon,
   FileTextIcon,
   GiftIcon,
@@ -72,7 +71,6 @@ const icons = {
   mail: <MailIcon />,
   refresh: <SyncIcon />,
   shield: <ShieldIcon />,
-  'list-checks': <ClipboardIcon />,
   search: <SearchIcon />,
   'file-text': <FileTextIcon />,
   x: <XIcon />,
@@ -131,12 +129,6 @@ const sections: AdminSection[] = [
     titleKey: 'admin.groups.users',
     items: [
       { name: 'admin.nav.users', icon: 'users', to: '/admin/users', permission: 'users:read' },
-      {
-        name: 'admin.nav.bulkActions',
-        icon: 'list-checks',
-        to: '/admin/bulk-actions',
-        permission: 'bulk_actions:read',
-      },
       {
         name: 'admin.nav.tickets',
         icon: 'ticket',

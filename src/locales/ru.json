@@ -12,7 +12,6 @@
     "close": "Закрыть",
     "search": "Поиск",
     "noData": "Нет данных",
-    "actions": "Действия",
     "yes": "Да",
     "no": "Нет",
     "or": "или",
@@ -1574,7 +1573,6 @@
       "channelSubscriptions": "Обязательные каналы",
       "salesStats": "Статистика продаж",
       "referralNetwork": "Реферальная сеть",
-      "bulkActions": "Массовые действия",
       "legalPages": "Системные страницы",
       "systemErrors": "Ошибки системы"
     },
@@ -5087,103 +5085,6 @@
       "tariffs": "Тарифы и продажи",
       "users": "Пользователи",
       "security": "Безопасность"
-    },
-    "bulkActions": {
-      "title": "Массовые действия",
-      "subtitle": "Управление пользователями",
-      "selectedCount": "Выбрано: {{count}}",
-      "selectAll": "Выбрать всех",
-      "deselectAll": "Снять выделение",
-      "selectUser": "Выбрать пользователя {{name}}",
-      "deselectUser": "Снять выбор пользователя {{name}}",
-      "noResults": "Пользователи не найдены",
-      "perPage": "На странице",
-      "actions": {
-        "extend": "Продлить подписку",
-        "cancel": "Деактивировать подписки",
-        "activate": "Активировать подписки",
-        "changeTariff": "Сменить тариф",
-        "addTraffic": "Начислить трафик",
-        "addBalance": "Начислить баланс",
-        "assignPromoGroup": "Назначить промогруппу",
-        "grantSubscription": "Выдать подписку",
-        "setDevices": "Изменить устройства",
-        "deleteSubscription": "Удалить подписки",
-        "deleteUser": "Удалить пользователей"
-      },
-      "deleteSubscription": {
-        "warning": "Выбранные подписки будут безвозвратно удалены из бота и панели Remnawave!",
-        "hint": "Пользователи потеряют доступ к VPN по удалённым подпискам. Это действие нельзя отменить."
-      },
-      "deleteUser": {
-        "warning": "Выбранные пользователи будут безвозвратно удалены из бота! Все их подписки, баланс и данные будут потеряны!",
-        "hint": "Это действие нельзя отменить. Пользователям придётся заново запустить бота для создания нового аккаунта.",
-        "deleteFromPanel": "Также удалить из панели Remnawave"
-      },
-      "params": {
-        "days": "Количество дней",
-        "tariff": "Выберите тариф",
-        "trafficGb": "Объём трафика (ГБ)",
-        "balanceRub": "Сумма (руб.)",
-        "promoGroup": "Промогруппа",
-        "removePromoGroup": "Убрать промогруппу",
-        "deviceLimit": "Кол-во устройств"
-      },
-      "grantSubscription": {
-        "warning": "Пользователи, у которых уже есть подписка на выбранный тариф, будут пропущены"
-      },
-      "confirm": "Применить",
-      "cancel": "Отмена",
-      "executing": "Выполнение...",
-      "complete": "Выполнено",
-      "successCount": "Успешно: {{count}}",
-      "errorCount": "Ошибок: {{count}}",
-      "progress": {
-        "processed": "Обработано: {{current}} / {{total}}",
-        "succeeded": "успешно",
-        "failed": "ошибок",
-        "ok": "ОК",
-        "errorGeneric": "Ошибка",
-        "doNotClose": "Не закрывайте это окно, пока операция выполняется",
-        "summarySuccess": "{{count}} успешно",
-        "summaryErrors": "{{count}} ошибок"
-      },
-      "errors": {
-        "title": "{{count}} ошибок. Показать детали"
-      },
-      "filters": {
-        "search": "Поиск по ID, нику, email",
-        "status": "Статус подписки",
-        "tariff": "Тариф",
-        "promoGroup": "Промогруппа",
-        "allStatuses": "Все статусы",
-        "allTariffs": "Все тарифы",
-        "allGroups": "Все группы",
-        "allCampaigns": "Все кампании",
-        "allPartners": "Все партнёры",
-        "trialOnly": "Только триал",
-        "tariffsSelected": "{{count}} тарифов",
-        "selectAll": "Выбрать все",
-        "deselectAll": "Снять все"
-      },
-      "statuses": {
-        "active": "Активна",
-        "expired": "Истекла",
-        "trial": "Триал",
-        "limited": "Ограничена",
-        "disabled": "Отключена"
-      },
-      "columns": {
-        "user": "Пользователь",
-        "status": "Статус",
-        "tariff": "Тариф",
-        "balance": "Баланс",
-        "daysRemaining": "Дни",
-        "promoGroup": "Группа",
-        "spent": "Потрачено"
-      },
-      "usersSelected": "{{count}} пользователей выбрано",
-      "noSubscriptions": "Нет подписок"
     },
     "theme": {
       "accentColor": "Акцентный цвет",

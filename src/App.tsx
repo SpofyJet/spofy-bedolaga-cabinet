@@ -147,7 +147,6 @@ const AdminRemnawave = lazyWithRetry(() => import('./pages/AdminRemnawave'));
 const AdminRemnawaveSquadDetail = lazyWithRetry(() => import('./pages/AdminRemnawaveSquadDetail'));
 const AdminEmailTemplates = lazyWithRetry(() => import('./pages/AdminEmailTemplates'));
 const AdminTrafficUsage = lazyWithRetry(() => import('./pages/AdminTrafficUsage'));
-const AdminBulkActions = lazyWithRetry(() => import('./pages/AdminBulkActions'));
 const AdminSalesStats = lazyWithRetry(() => import('./pages/AdminSalesStats'));
 const AdminUpdates = lazyWithRetry(() => import('./pages/AdminUpdates'));
 const AdminUserDetail = lazyWithRetry(() => import('./pages/AdminUserDetail'));
@@ -1032,16 +1031,6 @@ function App() {
             <PermissionRoute permission="users:read">
               <LazyPage>
                 <AdminUsers />
-              </LazyPage>
-            </PermissionRoute>
-          }
-        />
-        <Route
-          path="/admin/bulk-actions"
-          element={
-            <PermissionRoute permission="bulk_actions:read">
-              <LazyPage>
-                <AdminBulkActions />
               </LazyPage>
             </PermissionRoute>
           }

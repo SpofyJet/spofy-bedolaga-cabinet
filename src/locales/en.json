@@ -11,7 +11,6 @@
     "close": "Close",
     "search": "Search",
     "noData": "No data",
-    "actions": "Actions",
     "yes": "Yes",
     "no": "No",
     "or": "or",
@@ -1537,7 +1536,6 @@
       "channelSubscriptions": "Required Channels",
       "salesStats": "Sales Statistics",
       "referralNetwork": "Referral Network",
-      "bulkActions": "Bulk Actions",
       "legalPages": "System pages",
       "systemErrors": "System errors"
     },
@@ -2727,103 +2725,6 @@
       "botStartVideoActive": "Video is set",
       "botStartVideoNone": "No video — the menu uses the logo image",
       "botStartVideoError": "Could not upload the video"
-    },
-    "bulkActions": {
-      "title": "Bulk Actions",
-      "subtitle": "User management",
-      "selectedCount": "Selected: {{count}}",
-      "selectAll": "Select all",
-      "deselectAll": "Deselect all",
-      "selectUser": "Select user {{name}}",
-      "deselectUser": "Deselect user {{name}}",
-      "noResults": "No users found",
-      "perPage": "Per page",
-      "actions": {
-        "extend": "Extend subscription",
-        "cancel": "Deactivate subscriptions",
-        "activate": "Activate subscriptions",
-        "changeTariff": "Change tariff",
-        "addTraffic": "Add traffic",
-        "addBalance": "Add balance",
-        "assignPromoGroup": "Assign promo group",
-        "grantSubscription": "Grant subscription",
-        "setDevices": "Set devices",
-        "deleteSubscription": "Delete subscriptions",
-        "deleteUser": "Delete users"
-      },
-      "deleteSubscription": {
-        "warning": "Selected subscriptions will be permanently deleted from the bot and Remnawave panel!",
-        "hint": "Users will lose VPN access for deleted subscriptions. This action cannot be undone."
-      },
-      "deleteUser": {
-        "warning": "Selected users will be permanently deleted from the bot! All their subscriptions, balance, and data will be lost!",
-        "hint": "This action cannot be undone. Users will need to restart the bot to create a new account.",
-        "deleteFromPanel": "Also delete from Remnawave panel"
-      },
-      "params": {
-        "days": "Number of days",
-        "tariff": "Select tariff",
-        "trafficGb": "Traffic amount (GB)",
-        "balanceRub": "Amount (RUB)",
-        "promoGroup": "Promo group",
-        "removePromoGroup": "Remove promo group",
-        "deviceLimit": "Device count"
-      },
-      "grantSubscription": {
-        "warning": "Users who already have a subscription on the selected tariff will be skipped"
-      },
-      "confirm": "Apply",
-      "cancel": "Cancel",
-      "executing": "Executing...",
-      "complete": "Complete",
-      "successCount": "Succeeded: {{count}}",
-      "errorCount": "Errors: {{count}}",
-      "progress": {
-        "processed": "Processed: {{current}} / {{total}}",
-        "succeeded": "succeeded",
-        "failed": "failed",
-        "ok": "OK",
-        "errorGeneric": "Error",
-        "doNotClose": "Please do not close this window while the operation is in progress",
-        "summarySuccess": "{{count}} succeeded",
-        "summaryErrors": "{{count}} errors"
-      },
-      "errors": {
-        "title": "{{count}} errors. Show details"
-      },
-      "filters": {
-        "search": "Search by ID, username, email",
-        "status": "Subscription status",
-        "tariff": "Tariff",
-        "promoGroup": "Promo group",
-        "allStatuses": "All statuses",
-        "allTariffs": "All tariffs",
-        "allGroups": "All groups",
-        "allCampaigns": "All campaigns",
-        "allPartners": "All partners",
-        "trialOnly": "Trial only",
-        "tariffsSelected": "{{count}} tariffs",
-        "selectAll": "Select all",
-        "deselectAll": "Deselect all"
-      },
-      "statuses": {
-        "active": "Active",
-        "expired": "Expired",
-        "trial": "Trial",
-        "limited": "Limited",
-        "disabled": "Disabled"
-      },
-      "columns": {
-        "user": "User",
-        "status": "Status",
-        "tariff": "Tariff",
-        "balance": "Balance",
-        "daysRemaining": "Days",
-        "promoGroup": "Group",
-        "spent": "Spent"
-      },
-      "usersSelected": "{{count}} users selected",
-      "noSubscriptions": "No subscriptions"
     },
     "theme": {
       "accentColor": "Accent color",

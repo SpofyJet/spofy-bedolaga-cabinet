@@ -2,16 +2,10 @@ import { ChevronDownIcon } from '@/components/icons';
 import { cn } from '@/lib/utils';
 
 // ──────────────────────────────────────────────────────────────────
-// DropdownSelect — small native-<select> wrapper used both by the
-// AdminBulkActions filter row and the ActionModal's tariff/promo
-// picker. Shared primitive so both consumers stay on the same
-// chrome (border, focus ring, chevron).
+// DropdownSelect — small native-<select> wrapper shared by the admin
+// user list filters and the user-detail subscription editors, so all
+// of them stay on the same chrome (border, focus ring, chevron).
 // ──────────────────────────────────────────────────────────────────
-
-// Re-exported so the sibling FloatingActionBar / MultiSelectDropdown keep
-// importing the chevron from this module while the glyph itself now comes
-// from the central Phosphor barrel instead of a hand-written SVG.
-export { ChevronDownIcon };
 
 export interface DropdownOption {
   value: string;
