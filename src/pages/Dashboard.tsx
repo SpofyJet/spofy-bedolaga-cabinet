@@ -15,7 +15,6 @@ import SubscriptionCardExpired from '../components/dashboard/SubscriptionCardExp
 import { needsTariff } from '../utils/legacySubscription';
 import { isLifetimeSubscription } from '../utils/lifetime';
 import TrialOfferCard from '../components/dashboard/TrialOfferCard';
-import ReminderCards from '../components/dashboard/ReminderCards';
 import { giftApi } from '../api/gift';
 import PendingGiftCard from '../components/dashboard/PendingGiftCard';
 import { Button, Surface } from '@/components/spofy/ui';
@@ -504,9 +503,6 @@ export default function Dashboard() {
           </div>
         </Link>
       )}
-
-      {/* Напоминания (админка → Напоминания) */}
-      <ReminderCards />
 
       {/* Полезное: то, чего нет в карточках выше */}
       {/* В старой раскладке промокод уже в быстрых действиях — без подписки и у истёкшего пробного периода. */}

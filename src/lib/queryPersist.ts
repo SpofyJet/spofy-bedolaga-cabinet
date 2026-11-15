@@ -14,7 +14,6 @@ const PERSISTED_ROOTS = new Set([
   'devices',
   'pending-gifts',
   'referral-info',
-  'reminders',
   'subscription',
   'subscriptions-list',
   'trial-info',
