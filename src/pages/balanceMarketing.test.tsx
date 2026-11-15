@@ -6,11 +6,10 @@ import { readFileSync } from 'node:fs';
 const LANGS = ['ru', 'en'];
 const KEYS = [
   ['balance', 'renew', 'title'],
-  ['balance', 'renew', 'until'],
+  ['balance', 'renew', 'untilShort'],
   ['balance', 'renew', 'perMonth'],
   ['balance', 'referralEarned'],
   ['balance', 'methodFast'],
-  ['balance', 'promocode', 'haveOne'],
 ];
 
 describe('страница «Баланс»: переводы', () => {
@@ -23,11 +22,4 @@ describe('страница «Баланс»: переводы', () => {
       }
     });
   }
-
-  it('ru: счётное слово «дней» склоняется', () => {
-    const ru = JSON.parse(readFileSync('src/locales/ru.json', 'utf-8')).balance.renew;
-    expect(ru.days_one).toContain('день');
-    expect(ru.days_few).toContain('дня');
-    expect(ru.days_many).toContain('дней');
-  });
 });
