@@ -9,7 +9,6 @@ import { LiteRow, LiteRowGroup } from '@/components/lite/LiteRow';
 import { AutopayToggle } from '@/components/subscription/manage/AutopayToggle';
 import { DailyPausePanel } from '@/components/subscription/manage/DailyPausePanel';
 import { DevicesPanel } from '@/components/subscription/manage/DevicesPanel';
-import { RecurringPanels } from '@/components/subscription/manage/RecurringPanels';
 import {
   canReissueLink,
   ReissueLinkButton,
@@ -307,8 +306,8 @@ export default function SubscriptionLite() {
           )}
 
           {/* Блоки ниже сами решают, показываться ли им: автоплатёж не бывает у
-              пробных и старых подписок, автосписания — у выключенной фичи,
-              перевыпуск — у неактивных, пауза — у непосуточных. Поэтому они
+              пробных и старых подписок, перевыпуск — у неактивных, пауза — у
+              непосуточных. Поэтому они
               стоят прямо в списке, а не за строкой, которая вела бы в пустоту. */}
           <AutopayToggle
             subscription={subscription}
@@ -316,8 +315,6 @@ export default function SubscriptionLite() {
             accentColor="rgb(var(--color-accent-500))"
             offColor="rgba(148, 163, 184, 0.3)"
           />
-
-          <RecurringPanels subscription={subscription} subscriptionId={subscriptionId} />
 
           {panel === 'devicesList' ? (
             <div className="py-4">

@@ -61,8 +61,6 @@ const detail: UserDetailResponse = {
     tariff_id: 3,
     tariff_name: 'Командный',
     autopay_enabled: true,
-    sbp_recurring_status: null,
-    sbp_recurring_id: null,
     is_active: true,
     days_remaining: 90,
     purchased_traffic_gb: 0,

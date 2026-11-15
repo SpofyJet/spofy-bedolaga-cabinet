@@ -126,18 +126,6 @@
       "insufficientTitle": "Insufficient funds",
       "insufficientMessage": "Need {{required}} {{currency}} for renewal, but balance is {{balance}} {{currency}}"
     },
-    "sbpRecurring": {
-      "confirmedTitle": "SBP payment confirmed",
-      "confirmedMessage": "Payment of {{amount}} {{currency}} was charged successfully",
-      "failedTitle": "SBP payment failed",
-      "failedMessage": "Failed to charge your SBP auto-renewal",
-      "pastDueTitle": "SBP payment overdue",
-      "pastDueMessage": "Your SBP auto-renewal is overdue. Please check your banking app.",
-      "cancelledTitle": "SBP auto-renewal disabled",
-      "cancelledMessage": "SBP auto-renewal has been disabled",
-      "activatedTitle": "SBP auto-renewal connected",
-      "activatedMessage": "SBP auto-renewal is connected"
-    },
     "account": {
       "bannedTitle": "Account blocked",
       "bannedMessage": "Your account has been blocked",
@@ -649,29 +637,6 @@
       "codeFound": "Code found"
     },
     "autopay": "Auto-renew",
-    "sbpRecurring": {
-      "title": "SBP auto-renewal",
-      "connect": "Connect",
-      "confirmInBank": "Confirm in your banking app",
-      "cancel": "Disable",
-      "confirmCancel": "Disable SBP auto-renewal? Your subscription will no longer renew automatically via SBP.",
-      "cancelled": "SBP auto-renewal disabled",
-      "enableError": "Failed to connect SBP auto-renewal",
-      "cancelError": "Failed to cancel SBP auto-renewal",
-      "statusPending": "Waiting for confirmation in your banking app",
-      "statusPastDue": "Payment failed — please retry",
-      "nextCharge": "next charge {{date}}",
-      "amountPerInterval": "{{amount}} ₽ {{interval}}",
-      "interval": {
-        "day": "daily",
-        "week": "weekly",
-        "month": "monthly",
-        "year": "yearly"
-      },
-      "autopayHint": "Your subscription will be charged automatically via SBP, no card required",
-      "purchaseButton": "⚡ Subscribe with SBP auto-renewal",
-      "purchaseHint": "First charge confirms the binding in your bank app; renewals are charged automatically per the tariff cadence."
-    },
     "backToList": "Back to subscriptions",
     "confirmDelete": "Delete subscription?",
     "defaultName": "Subscription",
@@ -3175,12 +3140,6 @@
           "deviceLimitUpdated": "Device limit updated",
           "invalidDays": "Please enter a valid number of days (greater than 0)",
           "backToList": "Back to subscriptions",
-          "sbpTitle": "SBP Auto-payment",
-          "sbpCancel": "Disable",
-          "sbpCancelled": "SBP auto-payment disabled",
-          "sbpStatus_PENDING": "Pending",
-          "sbpStatus_ACTIVE": "Active",
-          "sbpStatus_PAST_DUE": "Payment failed",
           "deleteTitle": "Delete subscription",
           "deleteHint": "The subscription and its devices will be removed permanently",
           "deleteButton": "Delete subscription",
@@ -3195,7 +3154,6 @@
           "periodDays": "{{count}}d",
           "noNodeUsage": "No node traffic in this period",
           "deviceSince": "since {{date}}",
-          "sbpShort": "SBP",
           "cancelTitle": "Cancel subscription",
           "cancelButton": "Cancel subscription",
           "dangerZone": {
@@ -3211,8 +3169,7 @@
             "shorten": "Take {{count}} d off the subscription?",
             "removePackage": "Remove the {{gb}} GB package? Its traffic will be gone.",
             "deleteDevice": "Delete device “{{name}}”? It will have to reconnect.",
-            "resetDevices": "Reset all devices? Every client will have to reconnect.",
-            "cancelSbp": "Disable the SBP auto-payment?"
+            "resetDevices": "Reset all devices? Every client will have to reconnect."
           },
           "lastPayment": "Last payment",
           "autopay": "Auto-renewal",

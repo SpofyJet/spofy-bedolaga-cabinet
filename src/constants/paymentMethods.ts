@@ -5,7 +5,6 @@ export const METHOD_LABELS: Record<string, string> = {
   // Старые операции в истории.
   heleket: 'Heleket',
   platega: 'Platega',
-  platega_recurrent: 'Platega СБП',
   wata: 'WATA',
   manual: 'Ручное пополнение',
 };

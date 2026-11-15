@@ -13,8 +13,6 @@ import { useSuccessNotification } from '../../../store/successNotification';
 import { dailyPriceQuote } from './dailyPrice';
 import { customDaysPrice } from './customDaysPrice';
 import { defaultPeriod } from './listPrice';
-import { usePlatform } from '../../../platform';
-import { openPaymentUrl } from '../../../utils/openPaymentUrl';
 import { getMonthlyPriceKopeks } from '../../../utils/pricing';
 import { isLifetimePeriod } from '../../../utils/lifetime';
 import { formatPeriodLabel } from '../../../utils/periodLabel';
@@ -45,8 +43,6 @@ export interface TariffPurchaseFormProps {
   tariff: Tariff;
   subscriptionId: number | undefined;
   balanceKopeks: number | undefined;
-  /** СБП-оформление (Platega recurrent) доступно — показать вторую CTA. */
-  sbpPurchaseEnabled?: boolean;
   /** Срок, с которым человек ушёл пополнять баланс (?period= в адресе): после
    * возврата выбран он, а не «выгодный» по умолчанию — иначе пополнивший ровно
    * на свой срок видел «не хватает» за другой. */
@@ -58,7 +54,6 @@ export function TariffPurchaseForm({
   tariff,
   subscriptionId,
   balanceKopeks,
-  sbpPurchaseEnabled = false,
   initialPeriodDays = null,
   onBack,
 }: TariffPurchaseFormProps) {
@@ -74,7 +69,6 @@ export function TariffPurchaseForm({
   const dailyQuote = dailyPriceQuote(tariff, applyPromoDiscount);
   const customDayUnitPrice =
     tariff.custom_days_pricing?.price_per_day_kopeks ?? tariff.price_per_day_kopeks ?? 0;
-  const { openLink, platform } = usePlatform();
   const ref = useRef<HTMLDivElement>(null);
   const checkoutAttempt = useRef<{ signature: string; id: string } | null>(null);
 
@@ -148,48 +142,6 @@ export function TariffPurchaseForm({
       });
     },
   });
-
-  // СБП-оформление: первое списание = подтверждение привязки в банке; период
-  // на форме не участвует — списания идут по каденс-правилу тарифа.
-  const sbpPurchaseMutation = useMutation({
-    mutationFn: () =>
-      subscriptionApi.purchaseWithSbpRecurring(tariff.id, subscriptionId ?? undefined),
-    onSuccess: (data) => {
-      if (data.redirect_url) {
-        openPaymentUrl(data.redirect_url, platform, openLink);
-      }
-      queryClient.invalidateQueries({ queryKey: ['subscription'] });
-      queryClient.invalidateQueries({ queryKey: ['purchase-options'] });
-      queryClient.invalidateQueries({ queryKey: ['subscriptions-list'] });
-      queryClient.invalidateQueries({ queryKey: ['sbp-recurring', data.subscription_id] });
-      navigate('/subscriptions', { replace: true });
-    },
-  });
-
-  const sbpPurchaseButton = sbpPurchaseEnabled && (
-    <>
-      <button
-        onClick={() => sbpPurchaseMutation.mutate()}
-        disabled={sbpPurchaseMutation.isPending || purchaseMutation.isPending}
-        className="mt-2 flex h-12 w-full items-center justify-center rounded-2xl bg-dark-800/70 text-[15px] font-semibold text-dark-100 transition-colors hover:bg-dark-700/70 disabled:opacity-50"
-      >
-        <span className="flex items-center justify-center gap-2">
-          {sbpPurchaseMutation.isPending && (
-            <span className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
-          )}
-          {t('subscription.sbpRecurring.purchaseButton')}
-        </span>
-      </button>
-      <div className="mt-1.5 text-center text-[13px] text-dark-500">
-        {t('subscription.sbpRecurring.purchaseHint')}
-      </div>
-      {sbpPurchaseMutation.isError && (
-        <div className="mt-2 text-center text-sm text-error-400">
-          {getErrorMessage(sbpPurchaseMutation.error)}
-        </div>
-      )}
-    </>
-  );
 
   // Smooth scroll the form into view when first mounted. К началу формы, а не к её
   // середине: на маленьком экране середина прятала название тарифа за верхним краем,
@@ -384,8 +336,6 @@ export function TariffPurchaseForm({
                     price: formatPrice(dailyPrice),
                   })}
                 </Button>
-
-                {sbpPurchaseButton}
 
                 {purchaseMutation.isError &&
                   !getInsufficientBalanceError(purchaseMutation.error) && (
@@ -652,8 +602,8 @@ export function TariffPurchaseForm({
             </section>
           )}
 
-          {/* Итог: состав суммы, ошибки оплаты и второй способ оплаты */}
-          {quote && (quote.detailed || sbpPurchaseEnabled || purchaseMutation.isError) && (
+          {/* Итог: состав суммы и ошибки оплаты */}
+          {quote && (quote.detailed || purchaseMutation.isError) && (
             <Surface>
               {quote.detailed &&
                 (() => {
@@ -743,8 +693,6 @@ export function TariffPurchaseForm({
                     </>
                   );
                 })()}
-
-              {sbpPurchaseButton}
 
               {purchaseMutation.isError && !getInsufficientBalanceError(purchaseMutation.error) && (
                 <div className="mt-3 text-center text-[13px] text-error-400">

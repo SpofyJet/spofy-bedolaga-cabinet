@@ -33,7 +33,6 @@ import {
   ReissueLinkButton,
 } from '../components/subscription/manage/ReissueLinkButton';
 import { DevicesPanel } from '../components/subscription/manage/DevicesPanel';
-import { RecurringPanels } from '../components/subscription/manage/RecurringPanels';
 import { DeviceTopupSheet } from '../components/subscription/sheets/DeviceTopupSheet';
 import { DeviceReductionSheet } from '../components/subscription/sheets/DeviceReductionSheet';
 import { TrafficTopupSheet } from '../components/subscription/sheets/TrafficTopupSheet';
@@ -589,7 +588,6 @@ export default function Subscription() {
           {showsAutopayToggle(subscription) && (
             <AutopayToggle subscription={subscription} subscriptionId={subscriptionId} />
           )}
-          <RecurringPanels subscription={subscription} subscriptionId={subscriptionId} />
         </OptionalGroup>
       )}
 

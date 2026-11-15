@@ -296,11 +296,6 @@ export default function SubscriptionPurchase() {
                 initialPeriodDays={
                   selectedTariff.id === requestedTariffId ? requestedPeriodDays : null
                 }
-                sbpPurchaseEnabled={
-                  purchaseOptions !== undefined &&
-                  'platega_recurrent_enabled' in purchaseOptions &&
-                  purchaseOptions.platega_recurrent_enabled === true
-                }
                 onBack={() => {
                   setShowTariffPurchase(false);
                   setSelectedTariff(null);

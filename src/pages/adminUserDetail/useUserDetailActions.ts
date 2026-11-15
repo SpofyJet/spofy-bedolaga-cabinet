@@ -102,14 +102,6 @@ export function useUserDetailActions(userId: number, data: UserDetailData) {
           after: refreshCard,
         },
       ),
-    cancelSbp: () =>
-      run(
-        async () => {
-          if (!data.selectedSub?.sbp_recurring_id) return;
-          await adminUsersApi.cancelSbpRecurring(userId, data.selectedSub.id);
-        },
-        { success: t('admin.users.detail.subscription.sbpCancelled'), after: refreshCard },
-      ),
     deleteSubscription: () =>
       run(
         async () => {

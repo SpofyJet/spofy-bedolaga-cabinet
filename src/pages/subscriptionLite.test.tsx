@@ -66,9 +66,6 @@ vi.mock('@/components/subscription/sheets/DeleteSubscriptionSheet', () => ({
 vi.mock('@/components/subscription/manage/AutopayToggle', () => ({
   AutopayToggle: () => <div data-testid="autopay">автоплатёж</div>,
 }));
-vi.mock('@/components/subscription/manage/RecurringPanels', () => ({
-  RecurringPanels: () => <div data-testid="recurring">автосписания</div>,
-}));
 vi.mock('@/components/subscription/manage/DevicesPanel', () => ({
   DevicesPanel: () => <div data-testid="devices-list">список устройств</div>,
 }));
@@ -240,7 +237,6 @@ describe('SubscriptionLite', () => {
     await screen.findByRole('heading');
 
     expect(screen.getByTestId('autopay')).toBeTruthy();
-    expect(screen.getByTestId('recurring')).toBeTruthy();
     expect(screen.getByTestId('reissue')).toBeTruthy();
     expect(screen.getByTestId('pause')).toBeTruthy();
   });

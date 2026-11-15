@@ -290,9 +290,6 @@ export interface TariffsPurchaseOptions {
   // tariff cards must offer the purchase flow instead of the prorated switch
   subscription_on_free_tariff?: boolean;
   has_subscription?: boolean;
-  // СБП-оформление (Platega recurrent): показывать кнопку «Оформить с
-  // автооплатой СБП» рядом с покупкой с баланса
-  platega_recurrent_enabled?: boolean;
 }
 
 export type PurchaseOptions = TariffsPurchaseOptions;
@@ -666,15 +663,6 @@ export interface ManualCheckResponse {
   status_changed: boolean;
   old_status: string | null;
   new_status: string | null;
-}
-
-// Platega SBP recurring auto-payment status for a subscription
-export interface SbpRecurringInfo {
-  status: string; // 'none' | 'PENDING' | 'ACTIVE' | 'PAST_DUE'
-  interval?: number; // 1=day,2=week,3=month,4=year
-  amount_kopeks?: number;
-  next_charge_at?: string | null;
-  redirect_url?: string | null;
 }
 
 // Ticket notifications types

@@ -40,9 +40,6 @@ export function AutopayToggle({ subscription, subscriptionId }: AutopayTogglePro
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['subscription', subscriptionId] });
       queryClient.invalidateQueries({ queryKey: ['subscriptions-list'] });
-      // Enabling balance-autopay cancels SBP auto-pay server-side — refresh so
-      // the SBP block doesn't keep showing a now-stale'active'/'pending' state.
-      queryClient.invalidateQueries({ queryKey: ['sbp-recurring', subscriptionId] });
     },
   });
 

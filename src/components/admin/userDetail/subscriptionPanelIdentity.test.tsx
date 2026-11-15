@@ -28,8 +28,6 @@ const subscription = (id: number, panelId?: number | null): SubscriptionWithIden
   tariff_id: id,
   tariff_name: `Plan ${id}`,
   autopay_enabled: false,
-  sbp_recurring_status: null,
-  sbp_recurring_id: null,
   is_active: true,
   days_remaining: 30,
   purchased_traffic_gb: 0,

@@ -13,14 +13,14 @@ import {
 } from '@/components/admin/users';
 import { SubscriptionIcon, XIcon } from '@/components/icons';
 import { cn } from '@/lib/utils';
-import { useDestructiveConfirm, useNativeDialog } from '@/platform/hooks/useNativeDialog';
+import { useDestructiveConfirm } from '@/platform/hooks/useNativeDialog';
 import { formatShortDate } from '@/utils/format';
 import { formatGb } from '@/utils/formatNumber';
 import { uiLocale } from '@/utils/uiLocale';
 import { usePaymentMethodLabel } from './ActivityRows';
 import { ExtendMenu } from './ExtendMenu';
 import { DaysForm, DeviceLimitForm, TariffForm, TrafficForm } from './SubscriptionForms';
-import { KeyValues, LinkAction, Section } from './sectionParts';
+import { KeyValues, Section } from './sectionParts';
 
 export type SubscriptionPanel = 'extend' | 'shorten' | 'tariff' | 'traffic' | 'devices';
 
@@ -32,7 +32,6 @@ export interface SubscriptionCardActions {
   addTraffic: (gb: number) => Promise<boolean>;
   removeTraffic: (purchaseId: number) => Promise<boolean>;
   setDeviceLimit: (limit: number) => Promise<boolean>;
-  cancelSbp: () => Promise<boolean>;
 }
 
 interface SubscriptionCardProps {
@@ -71,7 +70,6 @@ export function SubscriptionCard({
   actions,
 }: SubscriptionCardProps) {
   const { t } = useTranslation();
-  const dialog = useNativeDialog();
   const confirmDestructive = useDestructiveConfirm();
   const money = useMoney();
   const trafficLabel = useTrafficLabel();
@@ -125,30 +123,6 @@ export function SubscriptionCard({
       label: t(`${ns}.autopay`),
       value: sub.autopay_enabled ? t(`${ns}.autopayOn`) : t(`${ns}.autopayOff`),
     },
-    ...(sub.sbp_recurring_status
-      ? [
-          {
-            key: 'sbp',
-            label: t(`${ns}.sbpTitle`),
-            value: (
-              <span className="inline-flex flex-wrap items-center gap-x-2">
-                {t(`${ns}.sbpStatus_${sub.sbp_recurring_status}`, sub.sbp_recurring_status)}
-                {canManage && (
-                  <LinkAction
-                    disabled={busy}
-                    onClick={async () => {
-                      if (await dialog.confirm(t(`${ns}.confirm.cancelSbp`), t(`${ns}.sbpTitle`)))
-                        await actions.cancelSbp();
-                    }}
-                  >
-                    {t(`${ns}.sbpCancel`)}
-                  </LinkAction>
-                )}
-              </span>
-            ),
-          },
-        ]
-      : []),
   ];
 
   return (

@@ -32,7 +32,7 @@ const KINDS = new Set<string>([
 ]);
 
 /** СБП без карты: WATA принимает оплату только по СБП. */
-const SBP_METHODS = new Set(['wata', 'platega_recurrent']);
+const SBP_METHODS = new Set(['wata']);
 /** Кошелёк xRocket узнают по его знаку; у остальных крипто-способов знак монеты. */
 const XROCKET_METHODS = new Set(['xrocket']);
 const CRYPTO_METHODS = new Set(['cryptobot', 'pay2328', 'heleket', 'platega_m13']);
