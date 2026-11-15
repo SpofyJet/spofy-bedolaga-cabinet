@@ -28,8 +28,6 @@ export interface TariffActionInput {
   tariff: Pick<Tariff, 'id' | 'is_current'>;
   subscription: Subscription | null;
   purchaseOptions: PurchaseOptions | undefined;
-  isMultiTariff: boolean;
-  subscriptionId?: number;
 }
 
 function flag(purchaseOptions: PurchaseOptions | undefined, key: string): boolean {
@@ -42,8 +40,6 @@ export function tariffAction({
   tariff,
   subscription,
   purchaseOptions,
-  isMultiTariff,
-  subscriptionId,
 }: TariffActionInput): TariffActionKind {
   const isCurrent = Boolean(tariff.is_current) || tariff.id === subscription?.tariff_id;
 
@@ -63,7 +59,6 @@ export function tariffAction({
   const onFreeTariff = flag(purchaseOptions, 'subscription_on_free_tariff');
 
   const canSwitch =
-    (!isMultiTariff || (subscriptionId !== undefined && subscriptionId === subscription?.id)) &&
     Boolean(subscription?.tariff_id) &&
     !subscription?.is_trial &&
     !expired &&

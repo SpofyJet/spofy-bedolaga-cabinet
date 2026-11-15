@@ -25,7 +25,6 @@ function ask(over: Partial<TariffActionInput> = {}) {
     tariff: { id: 99, is_current: false } as Pick<Tariff, 'id' | 'is_current'>,
     subscription: activeSub,
     purchaseOptions: {} as unknown as PurchaseOptions,
-    isMultiTariff: false,
     ...over,
   });
 }
@@ -104,15 +103,6 @@ describe('tariffAction', () => {
         } as unknown as PurchaseOptions,
       }),
     ).toBe('purchase');
-  });
-
-  it('в мультитарифе без выбранной подписки покупают ещё одну', () => {
-    expect(ask({ isMultiTariff: true })).toBe('purchase');
-  });
-
-  it('в мультитарифе меняют тариф явно выбранной подписки', () => {
-    expect(ask({ isMultiTariff: true, subscriptionId: 1 })).toBe('switch');
-    expect(ask({ isMultiTariff: true, subscriptionId: 2 })).toBe('purchase');
   });
 
   it('без тарифа у подписки менять нечего', () => {

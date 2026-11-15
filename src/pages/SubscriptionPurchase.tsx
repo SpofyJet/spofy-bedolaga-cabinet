@@ -58,14 +58,6 @@ export default function SubscriptionPurchase() {
 
   const tariffs = purchaseOptions?.tariffs ?? [];
 
-  // Multi-tariff: check via subscriptions list query
-  const { data: multiSubData } = useQuery({
-    queryKey: ['subscriptions-list'],
-    queryFn: () => subscriptionApi.getSubscriptions(),
-    staleTime: 60_000,
-  });
-  const isMultiTariff = multiSubData?.multi_tariff_enabled ?? false;
-
   // (active promo discount + applyPromoDiscount live in usePromoDiscount;
   //  consumed directly by the sub-components, not threaded as props)
 
@@ -93,17 +85,11 @@ export default function SubscriptionPurchase() {
     preselectDone.current = true;
     const tariff = (purchaseOptions.tariffs ?? []).find((item) => item.id === requestedTariffId);
     if (!tariff) return;
-    const action = tariffAction({
-      tariff,
-      subscription,
-      purchaseOptions,
-      isMultiTariff,
-      subscriptionId,
-    });
+    const action = tariffAction({ tariff, subscription, purchaseOptions });
     if (action !== 'purchase') return;
     setSelectedTariff(tariff);
     setShowTariffPurchase(true);
-  }, [requestedTariffId, purchaseOptions, isLoading, subscription, isMultiTariff, subscriptionId]);
+  }, [requestedTariffId, purchaseOptions, isLoading, subscription]);
 
   // Auto-close all modals on success notification
   const handleCloseAllModals = () => {
@@ -184,17 +170,11 @@ export default function SubscriptionPurchase() {
               <p className="mb-3 px-1 text-[13px] text-dark-400">
                 {t('subscription.switchTariff.chooseHint')}
               </p>
-              {tariffs.some(
-                (tariff) => tariff.id !== subscription.tariff_id && !tariff.is_purchased,
-              ) ? (
+              {tariffs.some((tariff) => tariff.id !== subscription.tariff_id) ? (
                 <TariffPicker
-                  tariffs={tariffs.filter(
-                    (tariff) => tariff.id !== subscription.tariff_id && !tariff.is_purchased,
-                  )}
+                  tariffs={tariffs.filter((tariff) => tariff.id !== subscription.tariff_id)}
                   subscription={subscription}
                   purchaseOptions={purchaseOptions}
-                  isMultiTariff={isMultiTariff}
-                  subscriptionId={subscriptionId}
                   switchSelection
                   onSelectTariff={(tariff) => setSwitchTariffId(tariff.id)}
                   onSwitchTariff={setSwitchTariffId}
@@ -231,15 +211,13 @@ export default function SubscriptionPurchase() {
             ? t('subscription.cta.moveToTariff')
             : subscriptionId && canOpenTariffSwitch(subscription)
               ? t('subscription.switchTariff.title')
-              : isMultiTariff && !subscriptionId
-                ? t('subscription.newTariff', 'Новый тариф')
-                : !isMultiTariff && subscription?.is_daily && !subscription?.is_trial
+              : subscription?.is_daily && !subscription?.is_trial
+                ? t('subscription.switchTariff.title')
+                : isLifetimeSubscription(subscription)
                   ? t('subscription.switchTariff.title')
-                  : isLifetimeSubscription(subscription)
-                    ? t('subscription.switchTariff.title')
-                    : subscription && !subscription.is_trial
-                      ? t('subscription.extend')
-                      : t('subscription.getSubscription')
+                  : subscription && !subscription.is_trial
+                    ? t('subscription.extend')
+                    : t('subscription.getSubscription')
         }
       />
 
@@ -301,8 +279,6 @@ export default function SubscriptionPurchase() {
               tariffs={tariffs}
               subscription={subscription}
               purchaseOptions={purchaseOptions}
-              isMultiTariff={isMultiTariff}
-              subscriptionId={subscriptionId}
               onSelectTariff={(tariff) => {
                 setSelectedTariff(tariff);
                 setShowTariffPurchase(true);

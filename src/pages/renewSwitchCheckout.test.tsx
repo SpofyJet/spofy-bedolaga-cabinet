@@ -51,7 +51,6 @@ vi.mock('../api/subscription', () => ({
       { period_days: 30, price_kopeks: 1000, price_rubles: 10, discount_percent: 0 },
     ],
     getSubscriptions: async () => ({
-      multi_tariff_enabled: true,
       subscriptions: [{ id: 11, tariff_id: state.switched ? 2 : 1 }],
     }),
     getPurchaseOptions: async () => ({
@@ -62,7 +61,6 @@ vi.mock('../api/subscription', () => ({
           id: 2,
           name: 'Target',
           is_current: false,
-          is_purchased: false,
           traffic_limit_gb: 100,
           device_limit: 5,
           periods: [{ days: 30, price_kopeks: 3000, price_rubles: 30, discount_percent: 0 }],
@@ -100,8 +98,8 @@ afterEach(cleanup);
 
 function mount(path: string) {
   const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
-  // The real entry starts from the subscriptions dashboard, which already knows the mode.
-  client.setQueryData(['subscriptions-list'], { multi_tariff_enabled: true, subscriptions: [] });
+  // The real entry starts from the dashboard, so the subscriptions list is already cached.
+  client.setQueryData(['subscriptions-list'], { subscriptions: [] });
   client.setQueryData(['balance'], { balance_kopeks: 10000 });
   render(
     <QueryClientProvider client={client}>
@@ -145,12 +143,7 @@ it.each([false, true].flatMap((lite) => [11, 12].map((id) => ({ lite, id }))))(
     await screen.findByText('Subscriptions');
     expect(state.switch).toHaveBeenCalledWith(2, id);
     expect(state.purchase).not.toHaveBeenCalled();
-    await waitFor(() =>
-      expect(
-        client.getQueryData<{ subscriptions: { tariff_id: number }[] }>(['subscriptions-list'])
-          ?.subscriptions[0]?.tariff_id,
-      ).toBe(2),
-    );
+    expect(client.getQueryState(['subscriptions-list'])?.isInvalidated).toBe(true);
     expect(client.getQueryState(['balance'])?.isInvalidated).toBe(true);
     client.clear();
   },
@@ -193,23 +186,5 @@ it('insufficient balance does not allow confirming a switch', async () => {
   fireEvent.click(confirm);
   expect(state.switch).not.toHaveBeenCalled();
   expect(state.purchase).not.toHaveBeenCalled();
-  client.clear();
-});
-
-it.each([false, true])('unscoped multi catalog remains a purchase (lite=%s)', async (lite) => {
-  state.lite = lite;
-  state.limited = false;
-  const client = mount('/subscription/purchase');
-  await screen.findByText('Target');
-  expect(screen.queryByRole('button', { name: 'subscription.switchTariff.switch' })).toBeNull();
-  expect(state.preview).not.toHaveBeenCalled();
-  fireEvent.click(screen.getByRole('button', { name: lite ? /Target/ : 'subscription.choose' }));
-  fireEvent.click(
-    await screen.findByRole('button', { name: /^subscription\.(v10\.buyFor|purchase)$/ }),
-  );
-  await waitFor(() =>
-    expect(state.purchase).toHaveBeenCalledWith(2, 30, undefined, undefined, expect.any(String)),
-  );
-  expect(state.switch).not.toHaveBeenCalled();
   client.clear();
 });

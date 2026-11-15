@@ -109,23 +109,14 @@ export function AppShell({ children }: AppShellProps) {
   const showMobileNav = isMobileNavScreen(location.pathname, navItems);
 
   // Кнопка «Подключить» в шапке ведёт сразу на маршрут подключения активной
-  // подписки. Те же queryKey, что на дашборде — оболочка и главная делят кэш.
-  const { data: navMultiSub } = useQuery({
-    queryKey: ['subscriptions-list'],
-    queryFn: () => subscriptionApi.getSubscriptions(),
-    staleTime: 60_000,
-  });
-  const navIsMultiTariff = navMultiSub?.multi_tariff_enabled ?? false;
+  // подписки. Тот же queryKey, что на дашборде — оболочка и главная делят кэш.
   const { data: navSingleSub } = useQuery({
     queryKey: ['subscription'],
     queryFn: () => subscriptionApi.getSubscription(),
     retry: false,
     staleTime: API.BALANCE_STALE_TIME_MS,
-    enabled: !navIsMultiTariff,
   });
-  const navFirstSubId = navIsMultiTariff
-    ? navMultiSub?.subscriptions?.[0]?.id
-    : navSingleSub?.subscription?.id;
+  const navFirstSubId = navSingleSub?.subscription?.id;
   const connectTo = navFirstSubId != null ? `/connection?sub=${navFirstSubId}` : '/connection';
 
   // Desktop navigation — labels always visible (no hover-reveal gimmick)

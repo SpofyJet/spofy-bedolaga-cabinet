@@ -117,7 +117,7 @@ export interface SubscriptionStatusResponse {
   subscription: Subscription | null;
 }
 
-// Multi-tariff subscription list item (from GET /cabinet/subscriptions)
+// Subscription list item (from GET /cabinet/subscriptions)
 export interface SubscriptionListItem {
   id: number;
   status: string;
@@ -140,10 +140,9 @@ export interface SubscriptionListItem {
   requires_tariff_selection?: boolean;
 }
 
-// Response from GET /cabinet/subscriptions (multi-tariff)
+// Response from GET /cabinet/subscriptions
 export interface SubscriptionsListResponse {
   subscriptions: SubscriptionListItem[];
-  multi_tariff_enabled: boolean;
 }
 
 // Device types
@@ -277,8 +276,6 @@ export interface Tariff {
   };
   // Traffic reset
   traffic_reset_mode?: string;
-  // Multi-tariff: already purchased by user
-  is_purchased?: boolean;
 }
 
 export interface TariffsPurchaseOptions {
@@ -293,8 +290,6 @@ export interface TariffsPurchaseOptions {
   // tariff cards must offer the purchase flow instead of the prorated switch
   subscription_on_free_tariff?: boolean;
   has_subscription?: boolean;
-  // Multi-tariff: all available tariffs already purchased
-  all_tariffs_purchased?: boolean;
   // СБП-оформление (Platega recurrent): показывать кнопку «Оформить с
   // автооплатой СБП» рядом с покупкой с баланса
   platega_recurrent_enabled?: boolean;

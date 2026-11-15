@@ -114,7 +114,7 @@ function renderPage() {
 
 beforeEach(() => {
   getSubscription.mockResolvedValue({ has_subscription: false, subscription: null });
-  getSubscriptions.mockResolvedValue({ subscriptions: [], multi_tariff_enabled: true });
+  getSubscriptions.mockResolvedValue({ subscriptions: [] });
   getPurchaseOptions.mockResolvedValue({
     tariffs: TARIFFS,
     balance_kopeks: 50000,

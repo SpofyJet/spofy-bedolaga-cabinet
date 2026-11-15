@@ -33,7 +33,7 @@ const bodyWithSubId = (
 ];
 
 export const subscriptionApi = {
-  // ── Multi-tariff endpoints ──────────────────────────────────────────
+  // ── Subscriptions list ──────────────────────────────────────────────
 
   getSubscriptions: async (): Promise<SubscriptionsListResponse> => {
     const response = await apiClient.get<SubscriptionsListResponse>('/cabinet/subscriptions');
@@ -259,8 +259,7 @@ export const subscriptionApi = {
    * clear the alias. Returns the final `local_name` after server-side
    * normalization (trimmed + length-capped).
    *
-   * Scope is per-(user, hwid), so the same alias appears across all of
-   * the user's subscriptions in multi-tariff mode.
+   * Scope is per-(user, hwid).
    */
   renameDevice: async (
     hwid: string,

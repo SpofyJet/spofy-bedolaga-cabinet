@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router';
@@ -15,7 +15,6 @@ import { getApiErrorMessage } from '@/utils/api-error';
 import { formatLiteDate } from '@/utils/liteDate';
 import { liteStatus, type LiteAction } from '@/utils/liteStatus';
 import { isLifetimeSubscription } from '@/utils/lifetime';
-import { plainTariffName } from '@/utils/plainTariffName';
 
 /** Единственное главное действие экрана — ссылкой или кнопкой, вид один. */
 const PRIMARY_ACTION_CLASS =
@@ -47,15 +46,8 @@ export default function DashboardLite() {
     staleTime: 60_000,
   });
 
-  const subscriptions = useMemo(() => list?.subscriptions ?? [], [list]);
-  const isMultiTariff = list?.multi_tariff_enabled ?? false;
-  const hasMany = isMultiTariff && subscriptions.length > 1;
-
-  // В мультитарифе запрос без id возвращает пусто, поэтому единственную
-  // подписку приходится спрашивать по её id — иначе на экране не будет ни
-  // трафика, ни срока.
-  const singleId = isMultiTariff && subscriptions.length === 1 ? subscriptions[0].id : undefined;
-  const wantsSingle = Boolean(list) && !hasMany;
+  // Порядок запросов прежний: подписку спрашиваем, когда пришёл список.
+  const listReady = Boolean(list);
 
   const {
     data: subscriptionResponse,
@@ -63,9 +55,9 @@ export default function DashboardLite() {
     isError: subFailed,
     refetch: refetchSubscription,
   } = useQuery({
-    queryKey: singleId ? ['subscription', singleId] : ['subscription'],
-    queryFn: () => subscriptionApi.getSubscription(singleId),
-    enabled: wantsSingle,
+    queryKey: ['subscription'],
+    queryFn: () => subscriptionApi.getSubscription(),
+    enabled: listReady,
     retry: false,
     staleTime: API.BALANCE_STALE_TIME_MS,
   });
@@ -79,8 +71,8 @@ export default function DashboardLite() {
   });
 
   const { data: devices } = useQuery({
-    queryKey: singleId ? ['devices', singleId] : ['devices'],
-    queryFn: () => subscriptionApi.getDevices(singleId),
+    queryKey: ['devices'],
+    queryFn: () => subscriptionApi.getDevices(),
     enabled: Boolean(subscription),
     staleTime: API.BALANCE_STALE_TIME_MS,
   });
@@ -91,7 +83,7 @@ export default function DashboardLite() {
   const { data: trialInfo } = useQuery({
     queryKey: ['trial-info'],
     queryFn: () => subscriptionApi.getTrialInfo(),
-    enabled: wantsSingle && !subLoading && !subscription,
+    enabled: listReady && !subLoading && !subscription,
     retry: false,
   });
 
@@ -143,7 +135,7 @@ export default function DashboardLite() {
               : 'renew'
           : null;
 
-  const isLoading = listLoading || (wantsSingle && subLoading);
+  const isLoading = listLoading || (listReady && subLoading);
 
   // Отказ сети нельзя показывать как «подписки пока нет»: платящий человек
   // увидел бы предложение купить то, что у него уже есть, и решил бы, что
@@ -189,49 +181,37 @@ export default function DashboardLite() {
 
   return (
     <div className="mx-auto w-full max-w-lg">
-      {hasMany ? (
-        <ManySubscriptions
-          items={subscriptions.map((item) => ({
-            id: item.id,
-            name: plainTariffName(item.tariff_name),
-            endDate: item.end_date,
-            lifetime: isLifetimeSubscription(item),
-          }))}
-        />
-      ) : (
-        <section className="pb-7 pt-8">
-          <h1 className="text-[28px] font-bold leading-[1.15] tracking-tight text-dark-50">
-            {t(`lite.status.${status.key}`, {
-              date: formatLiteDate(status.date),
-            })}
-          </h1>
-          {subscription && (
-            <div className="mt-7">
-              <LiteMeter
-                usedGb={subscription.traffic_used_gb}
-                limitGb={subscription.traffic_limit_gb}
-                usedPercent={subscription.traffic_used_percent}
-              />
-            </div>
-          )}
-        </section>
-      )}
+      <section className="pb-7 pt-8">
+        <h1 className="text-[28px] font-bold leading-[1.15] tracking-tight text-dark-50">
+          {t(`lite.status.${status.key}`, {
+            date: formatLiteDate(status.date),
+          })}
+        </h1>
+        {subscription && (
+          <div className="mt-7">
+            <LiteMeter
+              usedGb={subscription.traffic_used_gb}
+              limitGb={subscription.traffic_limit_gb}
+              usedPercent={subscription.traffic_used_percent}
+            />
+          </div>
+        )}
+      </section>
 
-      {!hasMany &&
-        (offersTrial ? (
-          <button
-            type="button"
-            onClick={() => activateTrial.mutate()}
-            disabled={activateTrial.isPending}
-            className={`${PRIMARY_ACTION_CLASS} disabled:opacity-60`}
-          >
-            {t('lite.action.tryFree')}
-          </button>
-        ) : (
-          <Link to={actionPath[status.action]} className={PRIMARY_ACTION_CLASS}>
-            {t(`lite.action.${status.action}`)}
-          </Link>
-        ))}
+      {offersTrial ? (
+        <button
+          type="button"
+          onClick={() => activateTrial.mutate()}
+          disabled={activateTrial.isPending}
+          className={`${PRIMARY_ACTION_CLASS} disabled:opacity-60`}
+        >
+          {t('lite.action.tryFree')}
+        </button>
+      ) : (
+        <Link to={actionPath[status.action]} className={PRIMARY_ACTION_CLASS}>
+          {t(`lite.action.${status.action}`)}
+        </Link>
+      )}
 
       {trialError && (
         <p className="mt-3 text-sm text-error-400" role="alert">
@@ -275,12 +255,6 @@ export default function DashboardLite() {
               label={t('lite.rows.manage', 'Управление подпиской')}
             />
           )}
-          {hasMany && (
-            <LiteRow
-              to="/subscription/purchase"
-              label={t('lite.rows.buyAnother', 'Купить ещё тариф')}
-            />
-          )}
           <LiteRow to="/support" label={t('lite.rows.support', 'Поддержка')} />
         </LiteRowGroup>
       </div>
@@ -289,44 +263,5 @@ export default function DashboardLite() {
         <LitePromoSlot />
       </div>
     </div>
-  );
-}
-
-interface ManySubscriptionsProps {
-  items: { id: number; name: string | null; endDate: string | null; lifetime?: boolean }[];
-}
-
-/**
- * Несколько подписок: один экран начинается уже внутри конкретной подписки,
- * поэтому здесь — только выбор. Шкалы и кнопки действия тут нет намеренно:
- * они относятся к подписке, а не к их списку.
- */
-function ManySubscriptions({ items }: ManySubscriptionsProps) {
-  const { t } = useTranslation();
-
-  return (
-    <section className="pb-2 pt-8">
-      <h1 className="text-[28px] font-bold leading-[1.15] tracking-tight text-dark-50">
-        {t('lite.status.many', 'Ваши подписки')}
-      </h1>
-      <div className="mt-6">
-        <LiteRowGroup>
-          {items.map((item) => (
-            <LiteRow
-              key={item.id}
-              to={`/subscriptions/${item.id}`}
-              label={item.name || t('lite.subscription.untitled', 'Подписка')}
-              value={
-                item.lifetime
-                  ? t('subscription.lifetime.forever')
-                  : item.endDate
-                    ? formatLiteDate(item.endDate)
-                    : undefined
-              }
-            />
-          ))}
-        </LiteRowGroup>
-      </div>
-    </section>
   );
 }

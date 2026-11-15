@@ -1,4 +1,3 @@
-import { isLifetimePeriod } from '@/utils/lifetime';
 import { uiLocale } from '@/utils/uiLocale';
 import { useState, useCallback, useEffect, useRef } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -549,11 +548,6 @@ export default function Wheel() {
   // Stars via Telegram invoice don't require ruble balance, so only check daily limit
   const dailyLimitReached = config.daily_limit > 0 && config.user_spins_today >= config.daily_limit;
   const noSubscription = !config.has_subscription;
-  const needsSubscriptionPick =
-    paymentType === 'subscription_days' &&
-    config.eligible_subscriptions &&
-    config.eligible_subscriptions.length > 1 &&
-    !selectedSubscriptionId;
 
   const spinDisabled = freeAvailable
     ? isSpinning || isPayingStars || !config.can_spin
@@ -562,7 +556,6 @@ export default function Wheel() {
       (freeMode && !paidMethods) ||
       dailyLimitReached ||
       noSubscription ||
-      needsSubscriptionPick ||
       (paymentType === 'telegram_stars' ? !starsEnabled : !config.can_spin);
 
   const segment = (active: boolean) =>
@@ -697,43 +690,6 @@ export default function Wheel() {
           </div>
         )}
 
-        {/* Subscription selector for days payment in multi-tariff */}
-        {paymentType === 'subscription_days' &&
-          config.eligible_subscriptions &&
-          config.eligible_subscriptions.length > 1 && (
-            <div>
-              <p className="mb-2 px-1 text-[13px] font-semibold text-dark-400">
-                {t('wheel.selectSubscription', 'Выберите подписку')}
-              </p>
-              <div className="space-y-1.5">
-                {config.eligible_subscriptions.map((sub) => (
-                  <button
-                    type="button"
-                    key={sub.id}
-                    onClick={() => setSelectedSubscriptionId(sub.id)}
-                    disabled={isSpinning}
-                    aria-pressed={selectedSubscriptionId === sub.id}
-                    className={cn(
-                      'flex min-h-12 w-full items-center justify-between gap-2 rounded-2xl px-4 py-2 text-sm transition-colors',
-                      selectedSubscriptionId === sub.id
-                        ? 'bg-accent-500/10 text-dark-50'
-                        : 'bg-dark-800/40 text-dark-200 hover:bg-dark-800/70',
-                    )}
-                  >
-                    <span className="min-w-0 truncate font-semibold">
-                      {sub.tariff_name || t('subscription.defaultName', 'Подписка')}
-                    </span>
-                    <span className="shrink-0 text-[13px] text-dark-400">
-                      {isLifetimePeriod(sub.days_left)
-                        ? t('subscription.lifetime.forever')
-                        : t('subscription.days', { count: sub.days_left })}
-                    </span>
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
-
         {/* Stars confirmation panel */}
         {showStarsConfirm && !isSpinning && !isPayingStars ? (
           <div className="space-y-3 rounded-2xl bg-accent-500/10 p-4">
@@ -787,12 +743,6 @@ export default function Wheel() {
           !noSubscription &&
           paymentType === 'telegram_stars' &&
           dailyLimitReached && <p className={hintMuted}>{t('wheel.errors.dailyLimitReached')}</p>}
-        {/* Subscription selection required hint */}
-        {!isSpinning && needsSubscriptionPick && (
-          <p className={hintWarning}>
-            {t('wheel.errors.selectSubscription', 'Выберите подписку для списания дней')}
-          </p>
-        )}
 
         {/* Результат спина */}
         {spinResult &&

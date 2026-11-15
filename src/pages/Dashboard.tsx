@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo, useRef } from 'react';
-import { useQueries, useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Link, useNavigate } from 'react-router';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { Link } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import { useAuthStore } from '../store/auth';
 import { displayName } from '../utils/displayName';
@@ -12,15 +12,13 @@ import { wheelApi } from '../api/wheel';
 import PromoOffersSection from '../components/PromoOffersSection';
 import DevicesTrafficCard from '../components/dashboard/DevicesTrafficCard';
 import SubscriptionCardExpired from '../components/dashboard/SubscriptionCardExpired';
-import { hasLegacySubscription, needsTariff } from '../utils/legacySubscription';
+import { needsTariff } from '../utils/legacySubscription';
 import { isLifetimeSubscription } from '../utils/lifetime';
 import TrialOfferCard from '../components/dashboard/TrialOfferCard';
 import ReminderCards from '../components/dashboard/ReminderCards';
 import { giftApi } from '../api/gift';
 import PendingGiftCard from '../components/dashboard/PendingGiftCard';
 import { Button, Surface } from '@/components/spofy/ui';
-import SubscriptionListCard from '../components/subscription/SubscriptionListCard';
-import { DeviceLimitSheet } from '../components/subscription/DeviceLimitSheet';
 import QuickActions from '../components/dashboard/QuickActions';
 import InfoCards from '../components/dashboard/InfoCards';
 import StatusCard from '../components/dashboard/StatusCard';
@@ -39,7 +37,6 @@ import { plainTariffName } from '@/utils/plainTariffName';
 
 export default function Dashboard() {
   const { t } = useTranslation();
-  const navigate = useNavigate();
   const user = useAuthStore((state) => state.user);
   const refreshUser = useAuthStore((state) => state.refreshUser);
   const queryClient = useQueryClient();
@@ -58,19 +55,18 @@ export default function Dashboard() {
     refetchOnMount: 'always',
   });
 
-  // Multi-tariff: check if user has multiple subscriptions
+  // Список подписок: по нему видно, есть ли живой доступ (hasActiveAccess).
   const {
-    data: multiSubData,
-    isPending: multiSubPending,
-    isError: multiSubError,
-    errorUpdatedAt: multiSubErrorAt,
-    refetch: refetchMultiSub,
+    data: subsList,
+    isPending: subsListPending,
+    isError: subsListError,
+    errorUpdatedAt: subsListErrorAt,
+    refetch: refetchSubsList,
   } = useQuery({
     queryKey: ['subscriptions-list'],
     queryFn: () => subscriptionApi.getSubscriptions(),
     staleTime: 60_000,
   });
-  const isMultiTariff = multiSubData?.multi_tariff_enabled ?? false;
 
   const {
     data: subscriptionResponse,
@@ -84,7 +80,6 @@ export default function Dashboard() {
     retry: false,
     staleTime: API.BALANCE_STALE_TIME_MS,
     refetchOnMount: 'always',
-    enabled: !isMultiTariff,
   });
 
   const subscription = subscriptionResponse?.subscription ?? null;
@@ -98,38 +93,20 @@ export default function Dashboard() {
   const { data: devicesData, isLoading: devicesLoading } = useQuery({
     queryKey: ['devices'],
     queryFn: () => subscriptionApi.getDevices(),
-    enabled: !!subscription && !isMultiTariff,
+    enabled: !!subscription,
     staleTime: API.BALANCE_STALE_TIME_MS,
   });
 
-  // Плитка «Подключить устройство» на главной живёт в МУЛЬТИТАРИФНОЙ ветке, а
-  // запрос выше там выключен: он привязан к одиночной подписке (`subscription`
-  // в мультитарифе всегда null). Без отдельного запроса счётчик плитки всегда
-  // показывал бы «0 из N», а лимит устройств не срабатывал бы никогда — то
-  // есть ровно то, ради чего плитку и добавили, не работало бы.
-  // Ключ ['devices', id] — тот же, что на странице подписки, так что кэш общий.
-  // Карточки подписок на главной показывают, сколько устройств подключено, и
-  // дают подключить ещё. Число устройств живёт в панели, поэтому запрос идёт
-  // на каждую показанную подписку; ключ ['devices', id] тот же, что на
-  // странице подписки, так что кэш общий и переход туда не стоит сети.
-  const visibleSubscriptions = useMemo(
-    () => multiSubData?.subscriptions?.slice(0, 3) ?? [],
-    [multiSubData],
-  );
-
-  const deviceQueries = useQueries({
-    queries: visibleSubscriptions.map((sub) => ({
-      queryKey: ['devices', sub.id],
-      queryFn: () => subscriptionApi.getDevices(sub.id),
-      staleTime: API.BALANCE_STALE_TIME_MS,
-    })),
+  // Страница подписки (/subscriptions/:id) читает устройства по ключу
+  // ['devices', id]. Этот запрос греет её кэш: переход туда с главной не стоит
+  // сети, и счётчик устройств там не мигает «0 → N».
+  const listSubId = subsList?.subscriptions?.[0]?.id;
+  useQuery({
+    queryKey: ['devices', listSubId],
+    queryFn: () => subscriptionApi.getDevices(listSubId),
+    enabled: listSubId != null,
+    staleTime: API.BALANCE_STALE_TIME_MS,
   });
-
-  // Подписка, у которой разбираем исчерпанный лимит устройств.
-  const [deviceLimitSubId, setDeviceLimitSubId] = useState<number | null>(null);
-  const deviceLimitSub = visibleSubscriptions.find((s) => s.id === deviceLimitSubId) ?? null;
-  const deviceLimitDevices =
-    deviceQueries[visibleSubscriptions.findIndex((s) => s.id === deviceLimitSubId)]?.data;
 
   const { data: referralInfo } = useQuery({
     queryKey: ['referral-info'],
@@ -241,25 +218,17 @@ export default function Dashboard() {
     refreshTrafficMutation.mutate();
   }, [subscription, refreshTrafficMutation]);
 
-  // В multi-tariff /cabinet/subscription отключён, поэтому subscriptionResponse=undefined.
-  // Используем список из /cabinet/subscriptions/list — пустой массив означает «нет подписок»,
-  // и тогда показываем TrialOfferCard. Без этой ветки multi-tariff юзер никогда не видел триал.
-  const hasNoSubscription = isMultiTariff
-    ? multiSubData !== undefined && (multiSubData.subscriptions?.length ?? 0) === 0
-    : subscriptionResponse?.has_subscription === false && !subLoading;
+  const hasNoSubscription = subscriptionResponse?.has_subscription === false && !subLoading;
 
   // При живом доступе подключение в карточке остаётся главным действием,
   // а покупка любого следующего тарифа — спокойным второстепенным CTA.
   const hasActiveAccess =
-    (multiSubData?.subscriptions ?? []).some(
+    (subsList?.subscriptions ?? []).some(
       (s) => s.status === 'active' || s.status === 'limited',
     ) ||
     (!!subscription &&
       !subscription.is_expired &&
       (subscription.status === 'active' || subscription.status === 'limited'));
-  // Старая подписка (без тарифа при включённых тарифах) в списке: «купить ещё»
-  // не предлагаем, её карточка ведёт на переход на тариф.
-  const hasLegacy = hasLegacySubscription(multiSubData?.subscriptions);
 
   const userName = displayName(user);
   const { appName, logoLetter, brandingReady } = useBranding();
@@ -277,29 +246,29 @@ export default function Dashboard() {
   // сначала мелькала запасная «V», потом «S», потом фото.
   const showAvatarLetter = !avatarPending && brandingReady;
 
-  // Состояние доступа известно только когда пришёл список подписок (и, без
-  // мультитарифа, сама подписка). До этого всё, что от него зависит, — заглушки:
+  // Состояние доступа известно только когда пришли список подписок и сама
+  // подписка. До этого всё, что от него зависит, — заглушки:
   // раньше главная сначала рисовала «Продлить · Тарифы» и «Закончилась», а через
   // мгновение — «Подключить» и «214 дней».
   // Если запросы упали, статус неизвестен. Выводить из пустых данных «Закончилась» нельзя:
   // платящий человек видит красный статус и кнопку продления из-за сбоя сети.
   const statusUnknown =
     !hasActiveAccess &&
-    ((multiSubError && !multiSubData) || (!isMultiTariff && subError && !subscriptionResponse));
-  const statusReady = !multiSubPending && (isMultiTariff || !subLoading) && !statusUnknown;
+    ((subsListError && !subsList) || (subError && !subscriptionResponse));
+  const statusReady = !subsListPending && !subLoading && !statusUnknown;
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: multiSubErrorAt, subErrorAt — намеренный повод перезапуска
+  // biome-ignore lint/correctness/useExhaustiveDependencies: subsListErrorAt, subErrorAt — намеренный повод перезапуска
   useEffect(() => {
     if (!statusUnknown) return;
     const timer = setTimeout(
       () => {
-        void refetchMultiSub();
+        void refetchSubsList();
         void refetchSub();
       },
       15_000 + Math.random() * 5_000,
     );
     return () => clearTimeout(timer);
-  }, [statusUnknown, multiSubErrorAt, subErrorAt, refetchMultiSub, refetchSub]);
+  }, [statusUnknown, subsListErrorAt, subErrorAt, refetchSubsList, refetchSub]);
 
   // Статус доступа одной фразой: главный вопрос главной — «работает ли моя подписка».
   const status: 'active' | 'expired' | 'none' = hasActiveAccess
@@ -307,10 +276,9 @@ export default function Dashboard() {
     : !hasNoSubscription
       ? 'expired'
       : 'none';
-  const firstSubId = isMultiTariff ? visibleSubscriptions[0]?.id : subscription?.id;
-  // Первая активная подписка (multi — первая видимая). Дней до конца считаем
-  // от end_date — это поле есть у обоих типов подписки.
-  const focusSub = isMultiTariff ? visibleSubscriptions[0] : subscription;
+  const firstSubId = subscription?.id;
+  // Дней до конца считаем от end_date.
+  const focusSub = subscription;
   const focusLifetime = isLifetimeSubscription(focusSub);
   const daysLeft = useMemo(() => {
     if (!focusSub?.end_date) return undefined;
@@ -326,9 +294,9 @@ export default function Dashboard() {
       ? `/subscriptions/${firstSubId}/renew`
       : '/subscriptions';
   const connectTo = firstSubId != null ? `/connection?sub=${firstSubId}` : '/connection';
-  // Главная одной карточкой (StatusCard) — для обычной подписки. Несколько подписок сразу
-  // и суточный тариф остаются на прежней раскладке: у них свои карточки и своё «продлить».
-  const legacyLayout = isMultiTariff || Boolean(subscription?.is_daily);
+  // Главная одной карточкой (StatusCard) — для обычной подписки. Суточный тариф
+  // остаётся на прежней раскладке: у него своя карточка и своё «продлить».
+  const legacyLayout = Boolean(subscription?.is_daily);
 
   return (
     <div className="mx-auto w-full max-w-[600px] space-y-5">
@@ -394,7 +362,7 @@ export default function Dashboard() {
             tone="secondary"
             className="h-11 shrink-0"
             onClick={() => {
-              void refetchMultiSub();
+              void refetchSubsList();
               void refetchSub();
             }}
           >
@@ -468,61 +436,8 @@ export default function Dashboard() {
       {/* Pending Gift Activations */}
       {pendingGifts && pendingGifts.length > 0 && <PendingGiftCard gifts={pendingGifts} />}
 
-      {/* Multi-tariff: show subscription cards (max 3) — только когда подписки
-          реально есть. Пустой случай (нет подписок) ведёт блок ниже (триал/покупка),
-          иначе кнопка покупки дублировалась. */}
-      {isMultiTariff && multiSubData?.subscriptions && multiSubData.subscriptions.length > 0 && (
-        <div className="space-y-3">
-          <div className="flex items-center justify-between px-1">
-            <span className="text-sm font-medium text-dark-400">
-              {t('dashboard.subscriptions', 'Подписки')}
-            </span>
-            <Link to="/subscriptions" className="text-xs text-accent-400 hover:underline">
-              {t('dashboard.manageAll', 'Управление')} →
-            </Link>
-          </div>
-          {visibleSubscriptions.map((sub, index) => (
-            <SubscriptionListCard
-              key={sub.id}
-              subscription={sub}
-              onClick={() => navigate(`/subscriptions/${sub.id}`)}
-              connect={{
-                connectedDevices: deviceQueries[index]?.data?.total,
-                onConnect: () => navigate(`/connection?sub=${sub.id}`),
-                onManage: () => setDeviceLimitSubId(sub.id),
-              }}
-            />
-          ))}
-          {multiSubData.subscriptions.length > 3 && (
-            <Link
-              to="/subscriptions"
-              className="flex w-full items-center justify-center rounded-2xl p-3 text-xs opacity-50 transition-opacity hover:opacity-80"
-            >
-              {t('dashboard.showAll', 'Показать все')} ({multiSubData.subscriptions.length})
-            </Link>
-          )}
-          {hasLegacy ? null : hasActiveAccess ? (
-            <Link
-              to="/subscription/purchase"
-              className="flex w-full items-center justify-center gap-2 rounded-2xl bg-accent-500/15 p-3.5 text-sm font-medium text-accent-400 transition-all hover:bg-accent-500/25"
-            >
-              <span className="text-base">+</span>{' '}
-              {t('subscriptions.buyAnother', 'Купить ещё тариф')}
-            </Link>
-          ) : (
-            <Link
-              to="/subscription/purchase"
-              className="flex w-full items-center justify-center gap-2 rounded-2xl bg-cta-500 p-3.5 text-sm font-semibold text-on-cta transition-colors hover:bg-cta-600"
-            >
-              {t('subscriptions.browsePlans', 'Тарифы и цены')}
-            </Link>
-          )}
-        </div>
-      )}
-
       {/* Subscription Status Card — только у суточного тарифа: остальным всё это показывает StatusCard */}
       {legacyLayout &&
-        !isMultiTariff &&
         (subLoading ? (
           <SkeletonGroup className="rounded-3xl bg-dark-900/70 p-4">
             <Skeleton className="mb-4 h-5 w-40" />
@@ -556,28 +471,6 @@ export default function Dashboard() {
             bypassSuspended={subscription.bypass_suspended}
           />
         ) : null)}
-
-      {/* Нет подписок: показываем триал (если доступен) и ВСЕГДА одну явную
-          кнопку покупки. Триал не обязателен, чтобы попасть в витрину — раньше
-          при доступном триале это был единственный экран без кнопки покупки
-          (Telegram-баг #605056/#605063). Единственная кнопка тут (вместо дубля
-          с мульти-тариф блоком). */}
-      {legacyLayout && hasNoSubscription && !trialLoading && (
-        <div className="space-y-3">
-          {/* Одна главная кнопка на экране: при доступном пробном периоде это
-              «Активировать», покупка рядом — вторичная. */}
-          <Link
-            to="/subscription/purchase"
-            className={
-              trialInfo?.is_available
-                ? 'flex w-full items-center justify-center gap-2 rounded-2xl bg-dark-800/70 p-3.5 text-sm font-semibold text-dark-100 transition-colors hover:bg-dark-700/70'
-                : 'flex w-full items-center justify-center gap-2 rounded-2xl bg-cta-500 p-3.5 text-sm font-semibold text-on-cta transition-colors hover:bg-cta-600'
-            }
-          >
-            {t('subscriptions.browsePlans', 'Тарифы и цены')}
-          </Link>
-        </div>
-      )}
 
       {/* Promo Offers */}
       <PromoOffersSection />
@@ -625,24 +518,6 @@ export default function Dashboard() {
           legacyLayout && statusReady && (status === 'none' || (status === 'expired' && focusTrial))
         }
       />
-
-      {deviceLimitSub && (
-        <DeviceLimitSheet
-          isOpen
-          onClose={() => setDeviceLimitSubId(null)}
-          subscriptionId={deviceLimitSub.id}
-          subscriptionName={
-            plainTariffName(deviceLimitSub.tariff_name) || t('subscription.defaultName', 'Подписка')
-          }
-          deviceLimit={deviceLimitSub.device_limit}
-          isTrial={deviceLimitSub.is_trial}
-          devices={deviceLimitDevices?.devices ?? []}
-          onOpenSubscription={() => {
-            setDeviceLimitSubId(null);
-            navigate(`/subscriptions/${deviceLimitSub.id}`);
-          }}
-        />
-      )}
     </div>
   );
 }

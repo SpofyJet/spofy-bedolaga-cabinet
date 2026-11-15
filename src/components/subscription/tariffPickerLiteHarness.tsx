@@ -31,7 +31,6 @@ const base = (overrides: Partial<Tariff> & { id: number; name: string }): Tariff
 export interface LiteRenderOptions {
   subscription?: Partial<Subscription> | null;
   purchaseOptions?: Partial<PurchaseOptions>;
-  isMultiTariff?: boolean;
   onSelectTariff?: (tariff: Tariff) => void;
   onSwitchTariff?: (tariffId: number) => void;
 }
@@ -48,7 +47,6 @@ export function render(
           tariffs={tariffs.map(base)}
           subscription={(options.subscription ?? null) as never}
           purchaseOptions={options.purchaseOptions as never}
-          isMultiTariff={options.isMultiTariff ?? false}
           onSelectTariff={options.onSelectTariff ?? (() => {})}
           onSwitchTariff={options.onSwitchTariff ?? (() => {})}
         />

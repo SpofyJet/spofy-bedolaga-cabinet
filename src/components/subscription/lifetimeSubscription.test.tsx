@@ -2,9 +2,8 @@
 import { cleanup, render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { PlatformProvider } from '@/platform/PlatformProvider';
 import ru from '@/locales/ru.json';
-import type { Subscription, SubscriptionListItem } from '@/types';
+import type { Subscription } from '@/types';
 
 /**
  * Вечная подписка (ULTIMA) на экранах: срок — «Навсегда» (не «2222 дня», не
@@ -61,23 +60,6 @@ const subscription = (overrides: Partial<Subscription> = {}): Subscription => ({
   ...overrides,
 });
 
-const listItem = (overrides: Partial<SubscriptionListItem> = {}): SubscriptionListItem => ({
-  id: 42,
-  status: 'active',
-  tariff_id: 9,
-  tariff_name: 'ULTIMA',
-  traffic_limit_gb: 0,
-  traffic_used_gb: 1,
-  device_limit: 5,
-  end_date: LIFETIME_END,
-  subscription_url: null,
-  subscription_crypto_link: null,
-  is_trial: false,
-  autopay_enabled: true,
-  connected_squads: [],
-  ...overrides,
-});
-
 if (!window.matchMedia) {
   window.matchMedia = ((query: string) => ({
     matches: false,
@@ -95,46 +77,18 @@ afterEach(() => {
   cleanup();
 });
 
-describe('SubscriptionListCard: вечная подписка', () => {
-  async function renderCard(sub: SubscriptionListItem) {
-    const Card = (await import('./SubscriptionListCard')).default;
-    render(
-      <PlatformProvider>
-        <MemoryRouter>
-          <Card subscription={sub} onClick={() => {}} />
-        </MemoryRouter>
-      </PlatformProvider>,
-    );
-  }
-
-  it('вместо даты 31.12.2099 — «Навсегда», автопродления нет (без is_lifetime в списке)', async () => {
-    await renderCard(listItem());
-
-    expect(await screen.findByText('Навсегда')).toBeTruthy();
-    expect(screen.queryByText(/2099/)).toBeNull();
-    expect(screen.queryByText('subscription.autopay')).toBeNull();
-  });
-
-  it('обычная подписка по-прежнему показывает дату и автопродление', async () => {
-    await renderCard(listItem({ end_date: '2026-12-07T00:00:00Z' }));
-
-    expect(screen.queryByText('Навсегда')).toBeNull();
-    expect(await screen.findByText('subscription.autopay')).toBeTruthy();
-  });
-});
-
 describe('PurchaseCTAButton: вечная подписка', () => {
-  async function renderCta(sub: Subscription, isMultiTariff: boolean) {
+  async function renderCta(sub: Subscription) {
     const Cta = (await import('./PurchaseCTAButton')).default;
     render(
       <MemoryRouter>
-        <Cta subscription={sub} isMultiTariff={isMultiTariff} />
+        <Cta subscription={sub} />
       </MemoryRouter>,
     );
   }
 
   it('в тарифах — только смена тарифа, без «Продлить»', async () => {
-    await renderCta(subscription(), true);
+    await renderCta(subscription());
 
     expect(screen.queryByText('subscription.extend')).toBeNull();
     expect(
@@ -145,7 +99,6 @@ describe('PurchaseCTAButton: вечная подписка', () => {
   it('обычная подписка с тарифом по-прежнему предлагает продление', async () => {
     await renderCta(
       subscription({ end_date: '2026-12-07T00:00:00Z', days_left: 34, is_lifetime: false }),
-      true,
     );
     expect(screen.getByRole('link', { name: 'subscription.extend' })).toBeTruthy();
   });

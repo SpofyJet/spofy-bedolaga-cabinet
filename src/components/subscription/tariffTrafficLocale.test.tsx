@@ -54,7 +54,6 @@ it.each(['grid', 'lite', 'form'] as const)(
         tariffs: [tariff],
         subscription: null,
         purchaseOptions: undefined,
-        isMultiTariff: false,
         onSelectTariff: vi.fn(),
         onSwitchTariff: vi.fn(),
       };

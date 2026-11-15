@@ -72,7 +72,6 @@ export const balanceApi = {
   // Activate promo code
   activatePromocode: async (
     code: string,
-    subscriptionId?: number,
   ): Promise<{
     success: boolean;
     message?: string;
@@ -80,13 +79,8 @@ export const balanceApi = {
     balance_after?: number;
     bonus_description?: string | null;
     error?: string;
-    eligible_subscriptions?: Array<{ id: number; tariff_name: string; days_left: number }>;
-    code?: string;
   }> => {
-    const response = await apiClient.post('/cabinet/promocode/activate', {
-      code,
-      ...(subscriptionId ? { subscription_id: subscriptionId } : {}),
-    });
+    const response = await apiClient.post('/cabinet/promocode/activate', { code });
     return response.data;
   },
 

@@ -22,14 +22,9 @@ function linkButton(tone: 'primary' | 'secondary', extra?: string) {
 
 interface PurchaseCTAButtonProps {
   subscription: Subscription | null;
-  /** In multi-tariff mode, link to /subscriptions/:id/renew instead of /subscription/purchase */
-  isMultiTariff?: boolean;
 }
 
-export default function PurchaseCTAButton({
-  subscription,
-  isMultiTariff = false,
-}: PurchaseCTAButtonProps) {
+export default function PurchaseCTAButton({ subscription }: PurchaseCTAButtonProps) {
   const { t } = useTranslation();
 
   const isExpired =
@@ -66,8 +61,6 @@ export default function PurchaseCTAButton({
     );
   }
 
-  // Daily tariffs renew automatically — no manual renewal button needed in multi-tariff
-  if (isMultiTariff && isDaily && !isExpired) return null;
   if (isLifetime && !isExpired) return null;
 
   // Пробной — «Оформить подписку», теми же словами, что на главной: раньше здесь
@@ -82,17 +75,11 @@ export default function PurchaseCTAButton({
   const trialLive = Boolean(isTrial && (subscription?.is_active || subscription?.is_limited));
 
   // Legacy (no tariff) → tariff catalog pinned to this subscription
-  // Trial → purchase page (buy a real tariff, trial can't be renewed)
-  // Multi-tariff active → per-subscription renew page
-  // Otherwise → purchase page
+  // Otherwise (trial included: it can't be renewed) → purchase page
   const linkTo =
     requiresTariff && subscription?.id
       ? tariffSelectionPath(subscription.id)
-      : isTrial
-        ? '/subscription/purchase'
-        : isMultiTariff && subscription?.id
-          ? `/subscriptions/${subscription.id}/renew`
-          : '/subscription/purchase';
+      : '/subscription/purchase';
 
   return (
     <Link to={linkTo} className={linkButton(trialLive ? 'secondary' : 'primary', 'w-full')}>

@@ -151,7 +151,6 @@ it('на витрине тарифов цена «от» — тоже цена �
           tariffs={[tariff]}
           subscription={null}
           purchaseOptions={{ tariffs: [tariff] } as unknown as PurchaseOptions}
-          isMultiTariff={false}
           onSelectTariff={() => {}}
           onSwitchTariff={() => {}}
         />

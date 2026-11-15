@@ -1,6 +1,6 @@
 import { useHeaderHeight } from '@/hooks/useHeaderHeight';
 import { scrollToSection } from '@/utils/scrollToSection';
-import { isLifetimePeriod, isLifetimeSubscription } from '@/utils/lifetime';
+import { isLifetimeSubscription } from '@/utils/lifetime';
 import { uiLocale } from '@/utils/uiLocale';
 import { useState, useEffect, useRef } from 'react';
 import type { ReactNode } from 'react';
@@ -48,7 +48,6 @@ import { Skeleton, SkeletonGroup } from '@/components/ui/skeleton';
 import { isPaidStatus, isFailedStatus } from '../utils/paymentStatus';
 import { transactionTypeLabelKey } from '../utils/transactionType';
 import { formatPeriodLabel } from '@/utils/periodLabel';
-import { plainTariffName } from '@/utils/plainTariffName';
 
 /** Иконка и цвет строки истории — по типу операции (типы бота, см. utils/transactionType). */
 const TX_ICONS: Record<string, { icon: ReactNode; tone: Tone }> = {
@@ -189,12 +188,6 @@ export default function Balance() {
     message: string;
     amount: number;
   } | null>(null);
-  const [promoSelectSubs, setPromoSelectSubs] = useState<Array<{
-    id: number;
-    tariff_name: string;
-    days_left: number;
-  }> | null>(null);
-  const [promoSelectCode, setPromoSelectCode] = useState<string | null>(null);
   // ?section=promo | ?section=history — ссылки «Промокод» и «История платежей»
   // с главной и из профиля: нужный блок сразу раскрыт и подкручен в экран.
   const deepSection = searchParams.get('section');
@@ -225,8 +218,8 @@ export default function Balance() {
     placeholderData: (previousData) => previousData,
   });
 
-  const handlePromocodeActivate = async (subscriptionId?: number) => {
-    const code = subscriptionId ? promoSelectCode || '' : promocode.trim();
+  const handlePromocodeActivate = async () => {
+    const code = promocode.trim();
     if (!code) return;
 
     setPromocodeLoading(true);
@@ -234,13 +227,7 @@ export default function Balance() {
     setPromocodeSuccess(null);
 
     try {
-      const result = await balanceApi.activatePromocode(code, subscriptionId);
-
-      if (result.error === 'select_subscription' && result.eligible_subscriptions) {
-        setPromoSelectSubs(result.eligible_subscriptions);
-        setPromoSelectCode(result.code || code);
-        return;
-      }
+      const result = await balanceApi.activatePromocode(code);
 
       if (result.success) {
         const bonusAmount = (result.balance_after || 0) - (result.balance_before || 0);
@@ -250,8 +237,6 @@ export default function Balance() {
         });
         setTransactionsPage(1);
         setPromocode('');
-        setPromoSelectSubs(null);
-        setPromoSelectCode(null);
         await refetchBalance();
         await refreshUser();
         queryClient.invalidateQueries({ queryKey: ['transactions'] });
@@ -289,16 +274,13 @@ export default function Balance() {
       ];
       const errorKey = code && knownErrorKeys.includes(code) ? code : 'server_error';
       setPromocodeError(t(`balance.promocode.errors.${errorKey}`));
-      setPromoSelectSubs(null);
-      setPromoSelectCode(null);
     } finally {
       setPromocodeLoading(false);
     }
   };
 
   const balanceRubles = balanceData?.balance_rubles || 0;
-  const promoVisible =
-    promoOpen || !!promocode || !!promocodeError || !!promocodeSuccess || !!promoSelectSubs;
+  const promoVisible = promoOpen || !!promocode || !!promocodeError || !!promocodeSuccess;
 
   const openPromo = () => {
     setPromoOpen(true);
@@ -402,46 +384,6 @@ export default function Balance() {
                     </p>
                   )}
                 </div>
-              </div>
-            )}
-
-            {promoSelectSubs && promoSelectSubs.length > 0 && (
-              <div className="mt-4">
-                <p className="px-1 text-[13px] font-semibold text-dark-400">
-                  {t(
-                    'balance.promocode.selectSubscription',
-                    'К какой подписке применить промокод?',
-                  )}
-                </p>
-                <div className="mt-2 divide-y divide-dark-800/70 overflow-hidden rounded-2xl">
-                  {promoSelectSubs.map((sub) => (
-                    <Row
-                      key={sub.id}
-                      icon={<PiShieldCheckDuotone />}
-                      iconTone="plan"
-                      label={plainTariffName(sub.tariff_name)}
-                      hint={
-                        isLifetimePeriod(sub.days_left)
-                          ? t('subscription.lifetime.forever')
-                          : t('balance.promocode.daysLeft', '{{count}} дн.', {
-                              count: sub.days_left,
-                            })
-                      }
-                      onClick={() => handlePromocodeActivate(sub.id)}
-                      disabled={promocodeLoading}
-                    />
-                  ))}
-                </div>
-                <Button
-                  tone="ghost"
-                  className="mt-2 h-10 px-3 text-[13px]"
-                  onClick={() => {
-                    setPromoSelectSubs(null);
-                    setPromoSelectCode(null);
-                  }}
-                >
-                  {t('common.cancel', 'Отмена')}
-                </Button>
               </div>
             )}
           </Surface>

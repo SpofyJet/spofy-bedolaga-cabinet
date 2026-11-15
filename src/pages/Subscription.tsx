@@ -3,7 +3,7 @@ import { uiLocale } from '@/utils/uiLocale';
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
-import { Navigate, useNavigate, useParams, useSearchParams } from 'react-router';
+import { useNavigate, useParams, useSearchParams } from 'react-router';
 import {
   PiArrowsClockwiseBold,
   PiCheckBold,
@@ -37,7 +37,6 @@ import { RecurringPanels } from '../components/subscription/manage/RecurringPane
 import { DeviceTopupSheet } from '../components/subscription/sheets/DeviceTopupSheet';
 import { DeviceReductionSheet } from '../components/subscription/sheets/DeviceReductionSheet';
 import { TrafficTopupSheet } from '../components/subscription/sheets/TrafficTopupSheet';
-import { DeleteSubscriptionSheet } from '../components/subscription/sheets/DeleteSubscriptionSheet';
 import { PageSkeleton, Skeleton } from '@/components/ui/skeleton';
 import { PageHeader } from '@/components/layout/PageHeader';
 import {
@@ -95,7 +94,6 @@ export default function Subscription() {
   const { isDark } = useTheme();
   const haptic = useHaptic();
   const [copied, setCopied] = useState(false);
-  const [showDeleteSheet, setShowDeleteSheet] = useState(false);
 
   // Device/traffic topup state
   const [searchParams] = useSearchParams();
@@ -120,14 +118,6 @@ export default function Subscription() {
     traffic_used_percent: number;
     is_unlimited: boolean;
   } | null>(null);
-
-  // Detect multi-tariff mode from cached subscriptions-list
-  const { data: multiSubData } = useQuery({
-    queryKey: ['subscriptions-list'],
-    queryFn: () => subscriptionApi.getSubscriptions(),
-    staleTime: 60_000,
-  });
-  const isMultiTariff = multiSubData?.multi_tariff_enabled ?? false;
 
   const { data: subscriptionResponse, isLoading } = useQuery({
     queryKey: ['subscription', subscriptionId],
@@ -271,12 +261,7 @@ export default function Subscription() {
   // ?section=devices («Мои устройства»): на экране только устройства и управление ими.
   const openDevices = searchParams.get('section') === 'devices';
 
-  // In multi-tariff mode without a specific subscription ID, redirect to list
-  if (isMultiTariff && !subscriptionId && !isLoading) {
-    return <Navigate to={`/subscriptions?${searchParams.toString()}`} replace />;
-  }
-
-  const backTo = isMultiTariff ? '/subscriptions' : '/';
+  const backTo = '/';
 
   if (isLoading) {
     return (
@@ -310,7 +295,7 @@ export default function Subscription() {
       <Page>
         <PageHeader title={t('subscription.title')} backTo={backTo} />
         <EmptyState icon={<PiHourglassDuotone />} title={t('subscription.noSubscription')} />
-        <PurchaseCTAButton subscription={null} isMultiTariff={isMultiTariff} />
+        <PurchaseCTAButton subscription={null} />
       </Page>
     );
   }
@@ -537,13 +522,7 @@ export default function Subscription() {
         <BypassSuspendedBanner
           isTrial={subscription.is_trial}
           onBuyTraffic={() => setShowTrafficTopup(true)}
-          renewTo={
-            isLifetime
-              ? undefined
-              : isMultiTariff
-                ? `/subscriptions/${subscription.id}/renew`
-                : '/subscription/purchase'
-          }
+          renewTo={isLifetime ? undefined : '/subscription/purchase'}
         />
       )}
 
@@ -565,7 +544,7 @@ export default function Subscription() {
       )}
 
       {/* ─── Продлить / сменить тариф ─── */}
-      <PurchaseCTAButton subscription={subscription} isMultiTariff={isMultiTariff} />
+      <PurchaseCTAButton subscription={subscription} />
 
       {/* ─── Ссылка подписки ─── */}
       {((displayedConnectionUrl && !shouldHideConnectionLink) || canReissueLink(subscription)) && (
@@ -680,24 +659,6 @@ export default function Subscription() {
         subscriptionId={subscriptionId}
         footer={devicesFooter}
       />
-
-      {/* ─── Удалить истёкшую (мультитариф) ─── */}
-      {isMultiTariff &&
-        !subscription.is_active &&
-        !subscription.is_trial &&
-        !subscription.is_limited && (
-          <DeleteSubscriptionSheet
-            subscriptionId={subscription.id}
-            open={showDeleteSheet}
-            onOpen={() => setShowDeleteSheet(true)}
-            onClose={() => setShowDeleteSheet(false)}
-            textSecondary="rgb(var(--color-dark-400))"
-            onDeleted={() => {
-              queryClient.invalidateQueries({ queryKey: ['subscriptions-list'] });
-              navigate('/subscriptions', { replace: true });
-            }}
-          />
-        )}
     </Page>
   );
 }

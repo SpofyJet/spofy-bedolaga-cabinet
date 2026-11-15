@@ -26,8 +26,6 @@ export function TariffPickerLite({
   tariffs,
   subscription,
   purchaseOptions,
-  isMultiTariff,
-  subscriptionId,
   onSelectTariff,
   onSwitchTariff,
 }: TariffPickerGridProps) {
@@ -72,13 +70,7 @@ export function TariffPickerLite({
   return (
     <div className="divide-y divide-dark-700/40">
       {tariffs.map((tariff) => {
-        const action = tariffAction({
-          tariff,
-          subscription,
-          purchaseOptions,
-          isMultiTariff,
-          subscriptionId,
-        });
+        const action = tariffAction({ tariff, subscription, purchaseOptions });
         const price = priceOf(tariff);
         const isCurrent = action === 'extend' || action === 'current-daily';
 

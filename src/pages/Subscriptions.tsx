@@ -1,15 +1,13 @@
 import { useState } from 'react';
-import { hasLegacySubscription } from '../utils/legacySubscription';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Navigate, useLocation, useNavigate } from 'react-router';
 import { useTranslation } from 'react-i18next';
-import { PiPlusBold, PiStackDuotone } from 'react-icons/pi';
+import { PiStackDuotone } from 'react-icons/pi';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { Button, EmptyState, Page } from '@/components/spofy/ui';
 import { subscriptionApi } from '../api/subscription';
 import { useAuthStore } from '../store/auth';
 import { getApiErrorMessage } from '../utils/api-error';
-import SubscriptionListCard from '../components/subscription/SubscriptionListCard';
 import TrialOfferCard from '../components/dashboard/TrialOfferCard';
 import { Skeleton, SkeletonGroup } from '@/components/ui/skeleton';
 
@@ -29,19 +27,9 @@ export default function Subscriptions() {
   });
 
   const subscriptions = data?.subscriptions ?? [];
-  const isMultiTariff = data?.multi_tariff_enabled ?? false;
   const hasNoSubscriptions = !isLoading && subscriptions.length === 0;
-  // Активный триал — тоже работающий доступ: покупку сохраняем, но не делаем
-  // её заметнее подключения. Для истёкших подписок покупка остаётся основной.
-  const hasActiveAccess = subscriptions.some(
-    (s) => s.status === 'active' || s.status === 'limited',
-  );
-  // Старая подписка (без тарифа при включённых тарифах) в списке: «купить ещё»
-  // не предлагаем, её карточка ведёт на переход на тариф.
-  const hasLegacy = hasLegacySubscription(subscriptions);
 
-  // Если у юзера нет подписок — проверяем доступность триала, иначе
-  // (в multi-tariff) ему вообще негде увидеть оффер.
+  // Если у юзера нет подписок — проверяем доступность триала.
   const { data: trialInfo, isLoading: trialLoading } = useQuery({
     queryKey: ['trial-info'],
     queryFn: () => subscriptionApi.getTrialInfo(),
@@ -65,37 +53,15 @@ export default function Subscriptions() {
     },
   });
 
-  // Single-tariff mode with one subscription: skip list, go directly to detail
-  if (data && !isMultiTariff && subscriptions.length === 1) {
+  // Подписка одна (у бота нет мультитарифа): списка нет — сразу её экран.
+  // Ссылка /subscriptions живёт ради нижней панели, закладок и старых ссылок.
+  if (data && subscriptions.length > 0) {
     return <Navigate to={`/subscriptions/${subscriptions[0].id}${search}`} replace />;
   }
 
   return (
     <Page>
-      <PageHeader
-        title={t('subscriptions.title', 'Мои подписки')}
-        backTo="/"
-        right={
-          // При живом доступе покупка остаётся компактным второстепенным действием.
-          !isLoading && !hasLegacy && hasActiveAccess ? (
-            <Button
-              tone="secondary"
-              className="h-10 px-3.5 text-sm"
-              onClick={() => navigate('/subscription/purchase')}
-            >
-              <PiPlusBold className="h-4 w-4" />
-              {t('subscriptions.buyAnother', 'Новый тариф')}
-            </Button>
-          ) : undefined
-        }
-      />
-
-      {/* Живого доступа нет: покупка или продление остаётся явным следующим шагом. */}
-      {!isLoading && subscriptions.length > 0 && !hasActiveAccess && !hasLegacy && (
-        <Button className="w-full" onClick={() => navigate('/subscription/purchase')}>
-          {t('subscriptions.browsePlans', 'Тарифы и цены')}
-        </Button>
-      )}
+      <PageHeader title={t('subscriptions.title', 'Мои подписки')} backTo="/" />
 
       {isLoading && (
         <SkeletonGroup className="space-y-4">
@@ -134,18 +100,6 @@ export default function Subscriptions() {
             </Button>
           }
         />
-      )}
-
-      {subscriptions.length > 0 && (
-        <div className="space-y-3">
-          {subscriptions.map((sub) => (
-            <SubscriptionListCard
-              key={sub.id}
-              subscription={sub}
-              onClick={() => navigate(`/subscriptions/${sub.id}`)}
-            />
-          ))}
-        </div>
       )}
     </Page>
   );

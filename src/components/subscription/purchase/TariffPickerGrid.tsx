@@ -1,13 +1,11 @@
 import { tariffTrafficLabel } from '../../../utils/tariffTrafficLabel';
 import { useTranslation } from 'react-i18next';
 import { BestValueBadge, bestValueFrame } from '../BestValueBadge';
-import { useNavigate } from 'react-router';
 import { useCurrency } from '../../../hooks/useCurrency';
 import { usePromoDiscount } from '../../../hooks/usePromoDiscount';
 import { dailyPriceQuote } from './dailyPrice';
 import { listPricePeriod } from './listPrice';
-import { PiCheckCircleDuotone } from 'react-icons/pi';
-import { Button, Chip, EmptyState } from '@/components/spofy/ui';
+import { Button, Chip } from '@/components/spofy/ui';
 import { cn } from '@/lib/utils';
 import type { Tariff, Subscription, PurchaseOptions } from '../../../types';
 import { tariffAction, type TariffActionKind } from './tariffAction';
@@ -29,7 +27,6 @@ const TARIFF_ACTION_LABEL: Record<Exclude<TariffActionKind, 'current-daily' | 's
 // The tariff selection surface inside SubscriptionPurchase. Renders:
 //   (no promo-group banner: Spofy owner removed «Ваша группа: …»; group
 //    discounts already show up in the prices)
-//   - the "all tariffs purchased" empty state (multi-tariff mode)
 //   - the list itself (12.11, compact cards): name and price in one line,
 //     description under it, per-tariff CTAs differentiated by user state
 //     (extend / switch / purchase / legacy renewal). Only one card carries the
@@ -45,8 +42,6 @@ export interface TariffPickerGridProps {
   tariffs: Tariff[];
   subscription: Subscription | null;
   purchaseOptions: PurchaseOptions | undefined;
-  isMultiTariff: boolean;
-  subscriptionId?: number;
   switchSelection?: boolean;
   onSelectTariff: (tariff: Tariff) => void;
   onSwitchTariff: (tariffId: number) => void;
@@ -56,14 +51,11 @@ export function TariffPickerGrid({
   tariffs,
   subscription,
   purchaseOptions,
-  isMultiTariff,
-  subscriptionId,
   switchSelection = false,
   onSelectTariff,
   onSwitchTariff,
 }: TariffPickerGridProps) {
   const { t } = useTranslation();
-  const navigate = useNavigate();
   const { formatMoney } = useCurrency();
   const { applyPromoDiscount, periodQuote } = usePromoDiscount();
 
@@ -73,8 +65,6 @@ export function TariffPickerGrid({
 
   const visible = [...tariffs]
     .filter((tariff) => {
-      // In multi-tariff mode: hide already purchased tariffs
-      if (isMultiTariff && tariff.is_purchased) return false;
       if (subscription?.is_trial && tariff.name.toLowerCase().includes('trial')) {
         return false;
       }
@@ -92,13 +82,7 @@ export function TariffPickerGrid({
       isCurrentTariff: Boolean(tariff.is_current || tariff.id === subscription?.tariff_id),
       // Ветвление кнопки живёт в tariffAction(): витрин стало две (обычная и
       // простая), и расхождение в этом условии списало бы с части людей не ту сумму.
-      action: tariffAction({
-        tariff,
-        subscription,
-        purchaseOptions,
-        isMultiTariff,
-        subscriptionId,
-      }),
+      action: tariffAction({ tariff, subscription, purchaseOptions }),
     }));
   // Владельцу вечной подписки советовать нечего: любой другой тариф для него шаг назад.
   const recommendedId = isLifetimeSubscription(subscription)
@@ -118,27 +102,7 @@ export function TariffPickerGrid({
   const tintedId = primaryId ?? current?.tariff.id;
 
   return (
-    <>
-      {/* Tariff Grid */}
-      {isMultiTariff &&
-        purchaseOptions &&
-        'all_tariffs_purchased' in purchaseOptions &&
-        purchaseOptions.all_tariffs_purchased && (
-          <EmptyState
-            icon={<PiCheckCircleDuotone />}
-            title={t('subscription.allTariffsPurchased', 'Все тарифы подключены')}
-            text={t(
-              'subscription.allTariffsPurchasedDesc',
-              'Вы уже приобрели все доступные тарифы. Продлить подписку можно на странице тарифа.',
-            )}
-            action={
-              <Button onClick={() => navigate('/subscriptions')}>
-                {t('subscription.backToList', 'Мои подписки')}
-              </Button>
-            }
-          />
-        )}
-      <div className="space-y-3">
+    <div className="space-y-3">
         {visible.map(({ tariff, isCurrentTariff, action }) => {
           // У своего тарифа отметки нет: «Текущий» уже говорит о нём главное.
           const recommended = tariff.id === recommendedId && !isCurrentTariff;
@@ -309,8 +273,7 @@ export function TariffPickerGrid({
               )}
             </div>
           );
-        })}
-      </div>
-    </>
+      })}
+    </div>
   );
 }

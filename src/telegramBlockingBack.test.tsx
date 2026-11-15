@@ -25,9 +25,7 @@ vi.mock('./hooks/useTelegramSDK', () => ({
   isInTelegramWebApp: () => true,
   closeTelegramApp: bridge.close,
 }));
-vi.mock('@tanstack/react-query', () => ({ useQuery: () => ({ data: undefined }) }));
 vi.mock('./App', () => ({ default: () => <div>Cabinet</div> }));
-vi.mock('./api/subscription', () => ({ subscriptionApi: {} }));
 vi.mock('./components/DocumentBranding', () => ({ DocumentBranding: () => null }));
 vi.mock('./platform/PlatformProvider', () => ({
   PlatformProvider: ({ children }: { children: ReactNode }) => children,

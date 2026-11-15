@@ -89,7 +89,7 @@ async function primaryAction() {
 }
 
 beforeEach(() => {
-  getSubscriptions.mockResolvedValue({ subscriptions: [], multi_tariff_enabled: false });
+  getSubscriptions.mockResolvedValue({ subscriptions: [] });
   getSubscription.mockResolvedValue({ has_subscription: true, subscription: baseSubscription });
   getDevices.mockResolvedValue({ total: 2, devices: [] });
   getTrialInfo.mockResolvedValue({ is_available: false, price_rubles: 0 });
@@ -317,42 +317,6 @@ describe('DashboardLite', () => {
     expect(screen.getByText('Трафик без ограничений')).toBeTruthy();
   });
 
-  it('несколько подписок: экран становится выбором, без единственного действия', async () => {
-    getSubscriptions.mockResolvedValue({
-      multi_tariff_enabled: true,
-      subscriptions: [
-        { id: 7, tariff_name: 'Базовый', end_date: '2026-10-15T00:00:00Z' },
-        { id: 9, tariff_name: 'Премиум', end_date: '2026-11-01T00:00:00Z' },
-      ],
-    });
-    renderScreen();
-
-    // У этого заголовка в коде есть инлайн-дефолт, поэтому мок t отдаёт текст,
-    // а не ключ — в отличие от состояний, где ключ собирается динамически.
-    expect((await screen.findByRole('heading')).textContent).toContain('Ваши подписки');
-    expect(screen.queryByRole('link', { name: /^lite\.action\./ })).toBeNull();
-
-    const basic = screen.getByText('Базовый').closest('a');
-    expect(basic?.getAttribute('href')).toBe('/subscriptions/7');
-    expect(screen.getByText('Премиум').closest('a')?.getAttribute('href')).toBe('/subscriptions/9');
-  });
-
-  it('единственная подписка в мультитарифе спрашивается по id — иначе экран пустой', async () => {
-    getSubscriptions.mockResolvedValue({
-      multi_tariff_enabled: true,
-      subscriptions: [{ id: 42, tariff_name: 'Базовый', end_date: '2026-10-15T00:00:00Z' }],
-    });
-    getSubscription.mockResolvedValue({
-      has_subscription: true,
-      subscription: { ...baseSubscription, id: 42 },
-    });
-    renderScreen();
-
-    await primaryAction();
-    await waitFor(() => expect(getSubscription).toHaveBeenCalledWith(42));
-    expect(await screen.findByRole('progressbar')).toBeTruthy();
-  });
-
   it('баланс показан строкой и ведёт на пополнение', async () => {
     renderScreen();
     await primaryAction();
@@ -385,7 +349,7 @@ describe('DashboardLite: отказ сети', () => {
     renderScreen();
 
     const retry = await screen.findByRole('button', { name: 'Повторить' });
-    getSubscriptions.mockResolvedValue({ subscriptions: [], multi_tariff_enabled: false });
+    getSubscriptions.mockResolvedValue({ subscriptions: [] });
     retry.click();
 
     const action = await primaryAction();

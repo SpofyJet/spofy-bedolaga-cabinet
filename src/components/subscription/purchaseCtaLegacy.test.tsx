@@ -8,7 +8,7 @@ import type { Subscription } from '@/types';
  * Главная кнопка на странице подписки для старой подписки.
  *
  * Старая подписка куплена в классике; оператор потом включил тарифы. Продлить
- * её нельзя: в мультитарифе кнопка «Продлить» открывала пустой список
+ * её нельзя: кнопка «Продлить» открывала пустой список
  * «Нет доступных вариантов продления». Теперь у такой подписки кнопка
  * «Перейти на тариф», и ведёт она на витрину тарифов с этой подпиской —
  * выбранный тариф надевается на неё же.
@@ -66,11 +66,11 @@ afterEach(() => {
   cleanup();
 });
 
-async function renderCta(sub: Subscription, isMultiTariff: boolean) {
+async function renderCta(sub: Subscription) {
   const Cta = (await import('./PurchaseCTAButton')).default;
   render(
     <MemoryRouter>
-      <Cta subscription={sub} isMultiTariff={isMultiTariff} />
+      <Cta subscription={sub} />
     </MemoryRouter>,
   );
 }
@@ -80,26 +80,17 @@ function href(): string | null {
 }
 
 describe('старая подписка (нужен тариф)', () => {
-  it('в мультитарифе ведёт на витрину тарифов с этой подпиской, а не на продление', async () => {
-    await renderCta(subscription({ requires_tariff_selection: true }), true);
+  it('ведёт на витрину тарифов с этой подпиской, а не на продление', async () => {
+    await renderCta(subscription({ requires_tariff_selection: true }));
 
     expect(href()).toBe('/subscription/purchase?subscriptionId=42');
     expect(screen.getByText('subscription.cta.moveToTariff')).toBeTruthy();
     expect(screen.queryByText('subscription.extend')).toBeNull();
   });
 
-  it('в одиночном режиме тоже называется «перейти на тариф»', async () => {
-    await renderCta(subscription({ requires_tariff_selection: true }), false);
-
-    expect(href()).toBe('/subscription/purchase?subscriptionId=42');
-    expect(screen.getByText('subscription.cta.moveToTariff')).toBeTruthy();
-  });
-
   it('истёкшая старая подписка тоже ведёт на витрину с этой подпиской', async () => {
     await renderCta(
-      subscription({ requires_tariff_selection: true, is_active: false, is_expired: true }),
-      true,
-    );
+      subscription({ requires_tariff_selection: true, is_active: false, is_expired: true }));
 
     expect(href()).toBe('/subscription/purchase?subscriptionId=42');
     expect(screen.getByText('subscription.cta.moveToTariff')).toBeTruthy();
@@ -108,7 +99,7 @@ describe('старая подписка (нужен тариф)', () => {
 
 describe('пробная подписка', () => {
   it('зовёт теми же словами, что главная: «Оформить подписку»', async () => {
-    await renderCta(subscription({ is_trial: true }), false);
+    await renderCta(subscription({ is_trial: true }));
 
     expect(href()).toBe('/subscription/purchase');
     expect(screen.getByText('subscription.getSubscription')).toBeTruthy();
@@ -116,22 +107,20 @@ describe('пробная подписка', () => {
   });
 
   it('пока пробная работает, кнопка спокойная; закончилась — залитая (действие одно)', async () => {
-    await renderCta(subscription({ is_trial: true }), false);
+    await renderCta(subscription({ is_trial: true }));
     expect(screen.getByRole('link').className).not.toContain('bg-cta-500');
     cleanup();
 
     await renderCta(
-      subscription({ is_trial: true, is_active: false, is_expired: true, status: 'expired' }),
-      false,
-    );
+      subscription({ is_trial: true, is_active: false, is_expired: true, status: 'expired' }));
     expect(screen.getByRole('link').className).toContain('bg-cta-500');
     expect(screen.getByText('subscription.getSubscription')).toBeTruthy();
   });
 });
 
 describe('подписка с тарифом', () => {
-  it('в мультитарифе по-прежнему ведёт на продление', async () => {
-    await renderCta(subscription({ tariff_id: 7, requires_tariff_selection: false }), true);
+  it('ведёт на продление и на смену тарифа', async () => {
+    await renderCta(subscription({ tariff_id: 7, requires_tariff_selection: false }));
 
     expect(screen.getByRole('link', { name: 'subscription.extend' }).getAttribute('href')).toBe(
       '/subscriptions/42/renew',
@@ -143,7 +132,7 @@ describe('подписка с тарифом', () => {
   });
 
   it('суточный тариф можно сменить без экрана ручного продления', async () => {
-    await renderCta(subscription({ tariff_id: 7, is_daily: true }), true);
+    await renderCta(subscription({ tariff_id: 7, is_daily: true }));
     expect(href()).toBe('/subscription/purchase?subscriptionId=42');
     expect(screen.getByText('subscription.switchTariff.title')).toBeTruthy();
     expect(screen.queryByText('subscription.extend')).toBeNull();
@@ -154,7 +143,7 @@ describe('подписка с тарифом', () => {
     { is_active: false, is_expired: true },
     { is_active: false, is_limited: true },
   ])('не предлагает прямую смену неподдерживаемого состояния %j', async (flags) => {
-    await renderCta(subscription({ tariff_id: 7, ...flags }), true);
+    await renderCta(subscription({ tariff_id: 7, ...flags }));
     expect(screen.queryByRole('link', { name: 'subscription.switchTariff.title' })).toBeNull();
   });
 });

@@ -5,7 +5,6 @@ import { MemoryRouter } from 'react-router';
 import { afterEach, expect, it, vi } from 'vitest';
 import Subscriptions from './Subscriptions';
 
-const state = vi.hoisted(() => ({ multi: true }));
 vi.mock('react-i18next', () => ({
   useTranslation: () => ({
     t: (key: string, fallback?: unknown) => (typeof fallback === 'string' ? fallback : key),
@@ -28,7 +27,7 @@ vi.mock('../hooks/useCurrency', () => ({
 }));
 vi.mock('../api/subscription', () => ({
   subscriptionApi: {
-    getSubscriptions: async () => ({ subscriptions: [], multi_tariff_enabled: state.multi }),
+    getSubscriptions: async () => ({ subscriptions: [] }),
     getTrialInfo: async () => ({
       is_available: true,
       duration_days: 3,
@@ -40,10 +39,7 @@ vi.mock('../api/subscription', () => ({
 
 afterEach(cleanup);
 
-it.each([false, true])(
-  'shows the trial offer when there is no subscription (multi=%s)',
-  async (multi) => {
-    state.multi = multi;
+it('shows the trial offer when there is no subscription', async () => {
     const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
     render(
       <QueryClientProvider client={client}>
@@ -59,5 +55,4 @@ it.each([false, true])(
     expect(screen.queryByText('Тестовая')).toBeNull();
     expect(screen.queryByRole('link', { name: /Подключиться/ })).toBeNull();
     client.clear();
-  },
-);
+});

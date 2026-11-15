@@ -78,7 +78,6 @@ vi.mock('@/api/subscription', () => ({
     getSubscriptions: () =>
       Promise.resolve({
         subscriptions: [subscription(1), subscription(2)],
-        multi_tariff_enabled: false,
       }),
     getSubscription: () =>
       Promise.resolve({ has_subscription: true, subscription: subscription(1) }),
