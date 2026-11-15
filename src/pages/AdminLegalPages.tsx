@@ -295,10 +295,7 @@ function DocumentEditor({
           className="input min-h-[320px] w-full font-mono text-sm"
           placeholder={t('admin.legalPages.contentPlaceholder')}
         />
-        <ContentLengthMeta
-          text={contents[activeLang] ?? ''}
-          botVisible={displayMode !== 'web'}
-        />
+        <ContentLengthMeta text={contents[activeLang] ?? ''} botVisible={displayMode !== 'web'} />
       </div>
       {saveError && <p className="text-sm text-error-400">{saveError}</p>}
       <button

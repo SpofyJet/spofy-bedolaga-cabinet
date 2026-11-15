@@ -80,7 +80,13 @@ export const SETTINGS_TREE: SettingsTreeConfig = {
       children: [
         {
           id: 'iface_general',
-          categories: ['INTERFACE', 'INTERFACE_BRANDING', 'INTERFACE_SUBSCRIPTION', 'SERVICE', 'MEDIA'],
+          categories: [
+            'INTERFACE',
+            'INTERFACE_BRANDING',
+            'INTERFACE_SUBSCRIPTION',
+            'SERVICE',
+            'MEDIA',
+          ],
         },
         { id: 'iface_connect', categories: ['CONNECT_BUTTON', 'INCY'] },
         { id: 'iface_miniapp', categories: ['MINIAPP'] },
