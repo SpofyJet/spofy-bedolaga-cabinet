@@ -257,12 +257,6 @@ const sections: AdminSection[] = [
         to: '/admin/legal-pages',
         permission: 'info_pages:read',
       },
-    ],
-  },
-  {
-    id: 'security',
-    titleKey: 'admin.groups.security',
-    items: [
       {
         name: 'admin.nav.systemErrors',
         icon: 'shield',
