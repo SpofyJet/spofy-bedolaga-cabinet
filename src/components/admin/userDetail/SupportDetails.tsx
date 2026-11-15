@@ -10,7 +10,7 @@ import { uiLocale } from '@/utils/uiLocale';
 
 interface SupportDetailsProps {
   userId: number;
-  /** История запросов и ключи — по выбранной подписке (мультитариф). */
+  /** История запросов и ключи — по выбранной подписке. */
   subscriptionId: number | null;
   panelInfo: UserPanelInfo | null;
   remnawaveId: number | null;

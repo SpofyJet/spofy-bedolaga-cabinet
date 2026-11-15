@@ -345,35 +345,6 @@ describe('AdminUserDetail', () => {
     expect(extendButtons()).toHaveLength(1);
   });
 
-  it('мультитариф: плитка «Подписки» вместо срока, трафика и устройств одной из них', async () => {
-    const second = {
-      ...(detail.subscription as NonNullable<typeof detail.subscription>),
-      id: 2425,
-      tariff_name: 'Семейный',
-      end_date: '2026-10-01T00:00:00Z',
-    };
-    getUser.mockResolvedValue({
-      ...detail,
-      multi_tariff_enabled: true,
-      subscriptions: [detail.subscription, second],
-    });
-    await renderDetail();
-    expect(await screen.findByText('admin.users.detail.facts.subscriptions')).toBeTruthy();
-    expect(screen.getByText('admin.users.detail.facts.subscriptionsLive')).toBeTruthy();
-    expect(screen.queryByText('admin.users.detail.facts.until')).toBeNull();
-    expect(screen.queryByText('admin.users.detail.facts.traffic')).toBeNull();
-    expect(screen.queryByText('admin.users.detail.facts.devices')).toBeNull();
-  });
-
-  it('мультитариф с одной подпиской: карточка сразу и можно выдать ещё одну', async () => {
-    getUser.mockResolvedValue({ ...detail, multi_tariff_enabled: true });
-    await renderDetail('/admin/users/42?tab=subscription');
-    await screen.findByText('admin.users.detail.panel.title');
-    expect(screen.getByText('admin.users.detail.subscription.createNew')).toBeTruthy();
-    const headings = screen.getAllByRole('heading', { level: 2 }).map((h) => h.textContent ?? '');
-    expect(headings[headings.length - 1]).toBe('admin.users.detail.subscription.dangerZone.title');
-  });
-
   it('в «⋯» только действия с аккаунтом: промогруппа, ограничения и подписка — на своих местах', async () => {
     await renderDetail();
     fireEvent.click(screen.getByRole('button', { name: 'admin.users.detail.menu.more' }));
@@ -389,7 +360,7 @@ describe('AdminUserDetail', () => {
     await screen.findByText('admin.users.detail.panel.title');
     const headings = screen.getAllByRole('heading', { level: 2 }).map((h) => h.textContent ?? '');
     expect(headings[headings.length - 1]).toBe('admin.users.detail.subscription.dangerZone.title');
-    expect(screen.queryByText('admin.users.detail.subscription.createNew')).toBeNull();
+    expect(screen.queryByText('admin.users.detail.subscription.noActive')).toBeNull();
     expect(screen.queryByText('admin.users.detail.tabs.sync')).toBeNull();
   });
 

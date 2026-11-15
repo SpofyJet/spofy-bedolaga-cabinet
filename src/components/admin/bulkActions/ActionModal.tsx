@@ -1,11 +1,10 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
 import { CheckIcon, ChevronDownIcon, XCloseIcon, XIcon } from '@/components/icons';
 import { useFocusTrap } from '@/hooks/useFocusTrap';
 import { DropdownSelect } from './DropdownSelect';
-import type { UserListItem } from '../../../api/adminUsers';
 import type { TariffListItem } from '../../../api/tariffs';
 import type { PromoGroup } from '../../../api/promocodes';
 import type {
@@ -26,7 +25,7 @@ import type {
 //     promo-group / grant / set-devices / delete-* confirmations)
 //
 // Self-contained: the parent feeds modal state + reference data
-// (tariffs, promo groups, users for active-paid counting) and
+// (tariffs, promo groups) and
 // receives onExecute(params) when the operator confirms. No queries
 // or mutations here — execution flow lives in the parent's
 // handleExecuteAction (which streams progress back into the modal
@@ -177,8 +176,6 @@ export interface ActionModalProps {
   selectedCount: number;
   tariffs: TariffListItem[];
   promoGroups: PromoGroup[];
-  users: UserListItem[];
-  selectedSubscriptionIds: number[];
   onClose: () => void;
   onExecute: (params: BulkActionParams) => void;
 }
@@ -188,8 +185,6 @@ export function ActionModal({
   selectedCount,
   tariffs,
   promoGroups,
-  users,
-  selectedSubscriptionIds,
   onClose,
   onExecute,
 }: ActionModalProps) {
@@ -203,7 +198,6 @@ export function ActionModal({
   const [grantDays, setGrantDays] = useState(30);
   const [deviceLimit, setDeviceLimit] = useState(1);
   const [deleteFromPanel, setDeleteFromPanel] = useState(true);
-  const [forceDeleteActivePaid, setForceDeleteActivePaid] = useState(false);
 
   useEffect(() => {
     if (tariffs.length > 0 && tariffId === 0) {
@@ -225,9 +219,6 @@ export function ActionModal({
       if (modal.action === 'delete_user') {
         setDeleteFromPanel(true);
       }
-      if (modal.action === 'delete_subscription') {
-        setForceDeleteActivePaid(false);
-      }
     }
   }, [modal.open, modal.action]);
 
@@ -236,24 +227,7 @@ export function ActionModal({
     onEscape: modal.loading ? undefined : onClose,
   });
 
-  // Count active paid subscriptions among selected ones
-  const activePaidCount = useMemo(() => {
-    if (modal.action !== 'delete_subscription') return 0;
-    const selectedSubIdSet = new Set(selectedSubscriptionIds);
-    let count = 0;
-    for (const user of users) {
-      for (const sub of user.subscriptions ?? []) {
-        if (selectedSubIdSet.has(sub.id) && sub.status === 'active' && !sub.is_trial) {
-          count++;
-        }
-      }
-    }
-    return count;
-  }, [modal.action, selectedSubscriptionIds, users]);
-
-  const isConfirmDisabled =
-    modal.loading ||
-    (modal.action === 'delete_subscription' && activePaidCount > 0 && !forceDeleteActivePaid);
+  const isConfirmDisabled = modal.loading;
 
   if (!modal.open || !modal.action) return null;
 
@@ -296,9 +270,6 @@ export function ActionModal({
         break;
       case 'set_devices':
         params.device_limit = deviceLimit;
-        break;
-      case 'delete_subscription':
-        params.force_delete_active_paid = forceDeleteActivePaid;
         break;
       case 'delete_user':
         params.delete_from_panel = deleteFromPanel;
@@ -441,8 +412,7 @@ export function ActionModal({
             </div>
           </div>
         );
-      case 'delete_subscription': {
-        const totalSelected = selectedSubscriptionIds.length;
+      case 'delete_subscription':
         return (
           <div className="space-y-4">
             <div className="rounded-xl border border-error-500/20 bg-error-500/5 px-3 py-2.5">
@@ -453,43 +423,8 @@ export function ActionModal({
                 {t('admin.bulkActions.deleteSubscription.hint')}
               </p>
             </div>
-            {activePaidCount > 0 && (
-              <>
-                <div className="rounded-xl border border-warning-500/20 bg-warning-500/5 px-3 py-2.5">
-                  <p className="text-sm font-medium text-warning-400">
-                    {t('admin.bulkActions.deleteSubscription.activePaidWarning', {
-                      count: activePaidCount,
-                      total: totalSelected,
-                    })}
-                  </p>
-                </div>
-                <label className="inline-flex min-h-[44px] cursor-pointer items-center gap-2">
-                  <button
-                    onClick={() => setForceDeleteActivePaid((prev) => !prev)}
-                    className={cn(
-                      'flex h-6 w-6 items-center justify-center rounded-md border-2 transition-all duration-150',
-                      forceDeleteActivePaid
-                        ? 'border-error-500 bg-error-500 shadow-[0_0_8px_rgba(239,68,68,0.4)]'
-                        : 'border-dark-500 bg-dark-700/60 hover:border-error-500/50 hover:bg-dark-600/60',
-                    )}
-                    aria-pressed={forceDeleteActivePaid}
-                  >
-                    {forceDeleteActivePaid && <CheckIcon className="h-3 w-3" />}
-                  </button>
-                  <span
-                    className={cn(
-                      'text-sm',
-                      forceDeleteActivePaid ? 'font-medium text-error-400' : 'text-dark-400',
-                    )}
-                  >
-                    {t('admin.bulkActions.deleteSubscription.forceDeleteConfirm')}
-                  </span>
-                </label>
-              </>
-            )}
           </div>
         );
-      }
       case 'delete_user':
         return (
           <div className="space-y-4">

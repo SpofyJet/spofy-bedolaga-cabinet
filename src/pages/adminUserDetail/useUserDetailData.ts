@@ -16,7 +16,7 @@ const PANEL_REFRESH_MS = 60_000;
 const FRESH = { refetchOnWindowFocus: true } as const;
 
 /**
- * Все запросы карточки пользователя. Выбранная подписка (мультитариф) вычисляется: выбор админа или
+ * Все запросы карточки пользователя. Выбранная подписка вычисляется: выбор админа или
  * первая живая.
  */
 export function useUserDetailData(userId: number | null, activeTab: DetailTab) {

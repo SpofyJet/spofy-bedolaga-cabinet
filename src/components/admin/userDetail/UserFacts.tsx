@@ -16,12 +16,10 @@ import {
 } from '@/components/icons';
 import { StatCard } from '@/components/stats';
 import { cn } from '@/lib/utils';
-import { type SalesMode, isLiveSubscription } from '@/pages/adminUserDetail/salesMode';
 import { formatShortDate } from '@/utils/format';
 
 interface UserFactsProps {
   user: UserDetailResponse;
-  mode: SalesMode;
   subscription: UserSubscriptionInfo | null;
   devicesTotal: number | null;
 }
@@ -35,8 +33,6 @@ interface Tile {
   tone: ChipTone;
   /** На телефоне — во всю ширину: нечётная плитка в сетке по две. */
   wide?: boolean;
-  /** На телефоне — последней строкой (классы порядка): длинной подписи нужна вся ширина. */
-  lastOnPhone?: boolean;
 }
 
 type Translate = (key: string, options?: Record<string, unknown>) => string;
@@ -78,46 +74,11 @@ function untilTile(subscription: UserSubscriptionInfo | null, t: Translate): Til
 }
 
 /**
- * «Подписки» в мультитарифе: сколько живых и когда кончается ближайшая. Срок, трафик и
- * устройства одной из подписок здесь вводили бы в заблуждение — они у каждой подписки
- * свои, во вкладке «Подписка».
- */
-function subscriptionsTile(subscriptions: UserSubscriptionInfo[], t: Translate): Tile {
-  const live = subscriptions.filter(isLiveSubscription);
-  const nearest = live
-    .filter((sub) => sub.end_date)
-    .sort((a, b) => Date.parse(a.end_date ?? '') - Date.parse(b.end_date ?? ''))[0];
-  let subValue: string | undefined;
-  if (live.length === 1 && nearest?.end_date) {
-    subValue = t(`${ns}.tariffUntil`, {
-      tariff: nearest.tariff_name ?? t('admin.users.detail.subscription.notSpecified'),
-      date: formatShortDate(nearest.end_date),
-    });
-  } else if (nearest?.end_date) {
-    subValue = t(`${ns}.nearest`, { date: formatShortDate(nearest.end_date) });
-  }
-  return {
-    key: 'subscriptions',
-    label: t(`${ns}.subscriptions`),
-    value:
-      live.length > 0
-        ? t(`${ns}.subscriptionsLive`, { count: live.length })
-        : subscriptions.length > 0
-          ? t(`${ns}.noLive`)
-          : t(`${ns}.noSubscription`),
-    subValue,
-    icon: <CalendarIcon />,
-    tone: live.length > 0 ? 'success' : subscriptions.length > 0 ? 'error' : 'neutral',
-  };
-}
-
-/**
  * Плитки под шапкой — тот же `StatCard` с иконкой, что на остальных страницах админки.
- * Набор зависит от режима продаж: в классике и тарифах — баланс, срок, трафик,
- * устройства, потрачено; в мультитарифе — баланс, сводка по подпискам, потрачено.
+ * Баланс, срок, трафик, устройства, потрачено.
  * Цветом говорит только иконка; числа — обычным текстом, чтобы не пестрило.
  */
-export function UserFacts({ user, mode, subscription, devicesTotal }: UserFactsProps) {
+export function UserFacts({ user, subscription, devicesTotal }: UserFactsProps) {
   const { t } = useTranslation();
   const money = useMoney();
   const trafficLabel = useTrafficLabel();
@@ -141,16 +102,7 @@ export function UserFacts({ user, mode, subscription, devicesTotal }: UserFactsP
 
   const devicesFull =
     subscription !== null && devicesTotal !== null && devicesTotal >= subscription.device_limit;
-  const tiles: Tile[] =
-    mode === 'multi'
-      ? // Телефон: «Баланс» и «Потрачено» рядом, «Подписки» во всю ширину ниже —
-        // «ближайшая до …» в узкой плитке обрезалась. На широком экране порядок обычный.
-        [
-          balance,
-          { ...subscriptionsTile(user.subscriptions, t), wide: true, lastOnPhone: true },
-          { ...spent, wide: false },
-        ]
-      : [
+  const tiles: Tile[] = [
           balance,
           untilTile(subscription, t),
           {
@@ -175,22 +127,16 @@ export function UserFacts({ user, mode, subscription, devicesTotal }: UserFactsP
             tone: devicesFull ? 'warning' : 'neutral',
           },
           spent,
-        ];
+  ];
 
   return (
-    <div
-      className={cn(
-        'grid grid-cols-2 gap-3',
-        mode === 'multi' ? 'lg:grid-cols-3' : 'lg:grid-cols-5',
-      )}
-    >
+    <div className="grid grid-cols-2 gap-3 lg:grid-cols-5">
       {tiles.map((tile) => (
         <div
           key={tile.key}
           className={cn(
             'min-w-0',
             tile.wide && 'col-span-2 lg:col-span-1',
-            tile.lastOnPhone && 'order-last lg:order-none',
           )}
         >
           <StatCard

@@ -12,7 +12,6 @@ import type {
 import { SubscriptionStateChip, useTrafficLabel } from '@/components/admin/users';
 import { BackIcon, ChevronRightIcon } from '@/components/icons';
 import { formatShortDate } from '@/utils/format';
-import type { SalesMode } from '@/pages/adminUserDetail/salesMode';
 import { CreateSubscriptionForm } from './CreateSubscriptionForm';
 import { DangerZone } from './DangerZone';
 import { type DeviceRow, DevicesCard } from './DevicesCard';
@@ -62,36 +61,27 @@ export interface SubscriptionTabProps {
   can: { manage: boolean; sync: boolean; devices: boolean };
   busy: boolean;
   actions: SubscriptionTabActions;
-  mode: SalesMode;
 }
 
 /**
  * Вкладка «Подписка»: сверху то, что делают каждый день (продлить, сменить тариф,
  * трафик, устройства), ниже — ноды, панель, техданные и в самом конце опасная зона.
- * Мультитариф: список подписок → карточка выбранной.
+ * Несколько подписок: список → карточка выбранной.
  */
 export function SubscriptionTab(props: SubscriptionTabProps) {
   const { t } = useTranslation();
   const [params, setParams] = useSearchParams();
   const [openPanel, setOpenPanel] = useState<SubscriptionPanel | null>(null);
   const [detailView, setDetailView] = useState(false);
-  const { user, subscriptions, selectedSub, can, busy, actions, mode } = props;
+  const { user, subscriptions, selectedSub, can, busy, actions } = props;
 
-  // Список — когда подписок несколько; одна открывается сразу. «Создать» в мультитарифе
-  // есть всегда (кроме карточки одной из многих — там оно в списке): раньше с одной
-  // подпиской вторую было не выдать.
+  // Список — когда подписок несколько; одна открывается сразу. «Создать» — только
+  // человеку без подписки: вторую бот не выдаст.
   const multi = subscriptions.length > 1;
   const showDetail = (detailView || !multi) && selectedSub !== null;
   const showList = multi && !detailView;
-  const showCreate =
-    can.manage && (subscriptions.length === 0 || (mode === 'multi' && (showList || !multi)));
-  const liveTariffIds = new Set(
-    subscriptions
-      .filter((sub) => sub.is_active || sub.status === 'trial' || sub.status === 'limited')
-      .map((sub) => sub.tariff_id)
-      .filter((id): id is number => id !== null),
-  );
-  // В мультитарифе операции общие на человека — чья это оплата, не понять; не показываем.
+  const showCreate = can.manage && subscriptions.length === 0;
+  // При нескольких подписках операции общие на человека — чья это оплата, не понять; не показываем.
   const lastPayment = multi
     ? null
     : (user.recent_transactions.find(
@@ -184,7 +174,7 @@ export function SubscriptionTab(props: SubscriptionTabProps) {
             userId={props.userId}
             subscriptionId={selectedSub.id}
             panelInfo={props.panelInfo}
-            remnawaveId={selectedSub.remnawave_id ?? (mode === 'multi' ? null : user.remnawave_id)}
+            remnawaveId={selectedSub.remnawave_id ?? user.remnawave_id}
           />
         </>
       )}
@@ -203,9 +193,7 @@ export function SubscriptionTab(props: SubscriptionTabProps) {
       {showCreate && (
         <CreateSubscriptionForm
           tariffs={props.tariffs}
-          excludeTariffIds={liveTariffIds}
           busy={busy}
-          noSubscriptions={subscriptions.length === 0}
           onCreate={actions.createSubscription}
         />
       )}

@@ -7,25 +7,15 @@ import { Section } from './sectionParts';
 
 interface CreateSubscriptionFormProps {
   tariffs: UserAvailableTariff[];
-  /** Тарифы, по которым уже есть живая подписка — их второй раз не создают. */
-  excludeTariffIds: ReadonlySet<number>;
   busy: boolean;
-  /** Подписок нет вовсе — сказать об этом. */
-  noSubscriptions?: boolean;
   onCreate: (tariffId: number | null, days: number) => Promise<boolean>;
 }
 
 const DEFAULT_DAYS = 30;
 const MAX_DAYS = 3650;
 
-/** «Создать подписку»: только когда подписки нет или в списке мультитарифа. */
-export function CreateSubscriptionForm({
-  tariffs,
-  excludeTariffIds,
-  busy,
-  noSubscriptions,
-  onCreate,
-}: CreateSubscriptionFormProps) {
+/** «Создать подписку»: только когда подписки нет. */
+export function CreateSubscriptionForm({ tariffs, busy, onCreate }: CreateSubscriptionFormProps) {
   const { t } = useTranslation();
   const tariffId = useId();
   const daysId = useId();
@@ -39,7 +29,7 @@ export function CreateSubscriptionForm({
     <Section
       id="subscription-create"
       icon={<PlusIcon className="h-5 w-5" />}
-      title={noSubscriptions ? t(`${ns}.noActive`) : t(`${ns}.createNew`)}
+      title={t(`${ns}.noActive`)}
     >
       <div className="grid gap-3 sm:grid-cols-[minmax(0,1fr)_8rem_auto] sm:items-end">
         <label className="flex flex-col gap-1 text-[13px] text-dark-500" htmlFor={tariffId}>
@@ -51,9 +41,7 @@ export function CreateSubscriptionForm({
             disabled={busy}
             options={[
               { value: '', label: t(`${ns}.selectTariff`) },
-              ...tariffs
-                .filter((item) => !excludeTariffIds.has(item.id))
-                .map((item) => ({ value: String(item.id), label: item.name })),
+              ...tariffs.map((item) => ({ value: String(item.id), label: item.name })),
             ]}
           />
         </label>

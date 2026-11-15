@@ -21,7 +21,6 @@ import { cn } from '@/lib/utils';
 import { usePermissionStore } from '@/store/permissions';
 import { getApiErrorMessage } from '@/utils/api-error';
 import { useUserDetailActions } from './adminUserDetail/useUserDetailActions';
-import { salesModeOf } from './adminUserDetail/salesMode';
 import { useUserDetailData } from './adminUserDetail/useUserDetailData';
 
 // ──────────────────────────────────────────────────────────────────
@@ -120,7 +119,6 @@ export default function AdminUserDetail() {
     );
   }
 
-  const mode = salesModeOf(user);
   const can = {
     message: hasPermission('users:send_message'),
     subscription: hasPermission('users:subscription'),
@@ -200,7 +198,6 @@ export default function AdminUserDetail() {
 
       <UserFacts
         user={user}
-        mode={mode}
         subscription={selectedSub}
         devicesTotal={devices ? devices.length : null}
       />
@@ -255,7 +252,6 @@ export default function AdminUserDetail() {
 
       {activeTab === 'subscription' && (
         <SubscriptionTab
-          mode={mode}
           userId={userId}
           user={user}
           subscriptions={data.subscriptions}

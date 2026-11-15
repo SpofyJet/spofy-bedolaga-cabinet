@@ -14,7 +14,7 @@ import {
   type ColumnDef,
   type RowSelectionState,
 } from '@tanstack/react-table';
-import { adminUsersApi, type UserListItem, type UserListItemSubscription } from '../api/adminUsers';
+import { adminUsersApi, type UserListItem } from '../api/adminUsers';
 import { tariffsApi, type TariffListItem } from '../api/tariffs';
 import { promocodesApi, type PromoGroup } from '../api/promocodes';
 import { campaignsApi, type CampaignListItem } from '../api/campaigns';
@@ -24,7 +24,6 @@ import {
   type BulkActionType,
   type BulkActionParams,
 } from '../api/adminBulkActions';
-import { PiCaretDown } from 'react-icons/pi';
 import { usePlatform } from '../platform/hooks/usePlatform';
 import { useCurrency } from '../hooks/useCurrency';
 import { cn } from '@/lib/utils';
@@ -39,12 +38,11 @@ import {
 import { ActionModal, type ModalState } from '@/components/admin/bulkActions/ActionModal';
 import { DropdownSelect, type DropdownOption } from '@/components/admin/bulkActions/DropdownSelect';
 import { FloatingActionBar } from '@/components/admin/bulkActions/FloatingActionBar';
-import { isSubscriptionLevelAction } from '@/components/admin/bulkActions/actionTargets';
 import {
   MultiSelectDropdown,
   type MultiSelectOption,
 } from '@/components/admin/bulkActions/MultiSelectDropdown';
-import { SubscriptionSubRow, StatusBadge } from '@/components/admin/bulkActions/SubscriptionSubRow';
+import { StatusBadge } from '@/components/admin/bulkActions/StatusBadge';
 
 // ============ Types ============
 
@@ -54,20 +52,7 @@ type SubscriptionStatusFilter = '' | 'active' | 'expired' | 'trial' | 'limited' 
 
 // (ProgressState + ModalState moved into <ActionModal>; ModalState is re-exported.)
 
-// ============ Icons ============
-
-// ChevronExpandIcon keeps a custom `expanded` prop (not the barrel's
-// className-only API), so it stays local as a thin wrapper over the panel's
-// Phosphor caret, preserving the rotate-on-expand behavior.
-const ChevronExpandIcon = ({ expanded }: { expanded: boolean }) => (
-  <PiCaretDown
-    className={cn('h-4 w-4 text-white transition-transform duration-200', expanded && 'rotate-180')}
-  />
-);
-
-// (SUBSCRIPTION_LEVEL_ACTIONS + isSubscriptionLevelAction moved into ./bulkActions/actionTargets.ts)
-
-// (SubscriptionSubRow + StatusBadge moved into ./bulkActions/SubscriptionSubRow.tsx)
+// (StatusBadge moved into ./bulkActions/StatusBadge.tsx)
 
 // ============ Progress Bar ============
 
@@ -168,8 +153,6 @@ export default function AdminBulkActions() {
 
   // Selection
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
-  const [subscriptionSelection, setSubscriptionSelection] = useState<Record<number, boolean>>({});
-  const [expandedRows, setExpandedRows] = useState<Record<number, boolean>>({});
 
   // Modal
   const [modal, setModal] = useState<ModalState>({
@@ -182,12 +165,6 @@ export default function AdminBulkActions() {
 
   // Debounce timer ref
   const searchTimerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
-
-  // ---- Multi-tariff detection ----
-  const isMultiTariff = useMemo(
-    () => users.some((u) => (u.subscriptions?.length ?? 0) > 1),
-    [users],
-  );
 
   // ---- Data loading ----
 
@@ -221,14 +198,6 @@ export default function AdminBulkActions() {
     if (!usersQuery.data) return;
     setUsers(usersQuery.data.users);
     setTotal(usersQuery.data.total);
-    // Auto-expand all users who have subscriptions
-    const autoExpand: Record<number, boolean> = {};
-    for (const u of usersQuery.data.users) {
-      if ((u.subscriptions?.length ?? 0) > 0) {
-        autoExpand[u.id] = true;
-      }
-    }
-    setExpandedRows(autoExpand);
   }, [usersQuery.data]);
 
   useEffect(() => {
@@ -278,8 +247,6 @@ export default function AdminBulkActions() {
 
   const clearAllSelections = useCallback(() => {
     setRowSelection({});
-    setSubscriptionSelection({});
-    setExpandedRows({});
   }, []);
 
   const handleSearchChange = (value: string) => {
@@ -339,40 +306,6 @@ export default function AdminBulkActions() {
       .filter((id) => id > 0);
   }, [rowSelection]);
 
-  const selectedSubscriptionIds = useMemo(() => {
-    return Object.keys(subscriptionSelection)
-      .filter((k) => subscriptionSelection[Number(k)])
-      .map(Number);
-  }, [subscriptionSelection]);
-
-  const toggleExpandRow = useCallback((userId: number) => {
-    setExpandedRows((prev) => ({
-      ...prev,
-      [userId]: !prev[userId],
-    }));
-  }, []);
-
-  const toggleSubscriptionSelection = useCallback((subscriptionId: number) => {
-    setSubscriptionSelection((prev) => ({
-      ...prev,
-      [subscriptionId]: !prev[subscriptionId],
-    }));
-  }, []);
-
-  const getFilteredSubs = useCallback(
-    (subs: UserListItemSubscription[]): UserListItemSubscription[] => {
-      let result = subs;
-      if (tariffFilter.length > 0) {
-        result = result.filter((s) => s.tariff_id !== null && tariffFilter.includes(s.tariff_id));
-      }
-      if (trialOnly) {
-        result = result.filter((s) => s.is_trial);
-      }
-      return result;
-    },
-    [tariffFilter, trialOnly],
-  );
-
   // Selection-related derivations live here so the columns useMemo (below)
   // can list them as deps without forward-reference warnings.
   // When multiple tariffs are selected, filter users client-side
@@ -387,52 +320,6 @@ export default function AdminBulkActions() {
     return result;
   }, [users, trialOnly]);
 
-  const allVisibleSubscriptionIds = useMemo(() => {
-    const ids: number[] = [];
-    for (const user of filteredUsers) {
-      const subs = user.subscriptions ?? [];
-      const filtered = getFilteredSubs(subs);
-      for (const sub of filtered) {
-        ids.push(sub.id);
-      }
-    }
-    return ids;
-  }, [filteredUsers, getFilteredSubs]);
-
-  const toggleAllSubscriptions = useCallback(() => {
-    const allSelected =
-      allVisibleSubscriptionIds.length > 0 &&
-      allVisibleSubscriptionIds.every((id) => subscriptionSelection[id]);
-
-    if (allSelected) {
-      const next: Record<number, boolean> = {};
-      for (const key of Object.keys(subscriptionSelection)) {
-        const id = Number(key);
-        if (!allVisibleSubscriptionIds.includes(id)) {
-          next[id] = subscriptionSelection[id];
-        }
-      }
-      setSubscriptionSelection(next);
-    } else {
-      const next = { ...subscriptionSelection };
-      for (const id of allVisibleSubscriptionIds) {
-        next[id] = true;
-      }
-      setSubscriptionSelection(next);
-    }
-
-    // Auto-expand rows that have filtered subs
-    const expanded: Record<number, boolean> = { ...expandedRows };
-    for (const user of users) {
-      const subs = user.subscriptions ?? [];
-      const filtered = getFilteredSubs(subs);
-      if (filtered.length > 1) {
-        expanded[user.id] = true;
-      }
-    }
-    setExpandedRows(expanded);
-  }, [allVisibleSubscriptionIds, subscriptionSelection, expandedRows, users, getFilteredSubs]);
-
   const handleOpenAction = (type: BulkActionType) => {
     setModal({ open: true, action: type, loading: false, result: null, progress: null });
   };
@@ -440,8 +327,7 @@ export default function AdminBulkActions() {
   const handleExecuteAction = async (params: BulkActionParams) => {
     if (!modal.action) return;
 
-    const isSubAction = isMultiTariff && isSubscriptionLevelAction(modal.action);
-    const targetIds = isSubAction ? selectedSubscriptionIds : selectedUserIds;
+    const targetIds = selectedUserIds;
     if (targetIds.length === 0) return;
 
     const totalCount = targetIds.length;
@@ -457,9 +343,7 @@ export default function AdminBulkActions() {
       },
     }));
 
-    const requestPayload = isSubAction
-      ? { action: modal.action, subscription_ids: targetIds, params }
-      : { action: modal.action, user_ids: targetIds, params };
+    const requestPayload = { action: modal.action, user_ids: targetIds, params };
 
     try {
       await adminBulkActionsApi.executeWithStream(requestPayload, (event) => {
@@ -563,13 +447,7 @@ export default function AdminBulkActions() {
       {
         id: 'select',
         size: 56,
-        header: ({ table }) => {
-          const allSubsSelected =
-            allVisibleSubscriptionIds.length > 0 &&
-            allVisibleSubscriptionIds.every((id) => subscriptionSelection[id]);
-          const someSubsSelected =
-            !allSubsSelected && allVisibleSubscriptionIds.some((id) => subscriptionSelection[id]);
-          return (
+        header: ({ table }) => (
             <div className="flex items-center justify-center gap-1.5">
               {/* Select all users */}
               <button
@@ -590,28 +468,8 @@ export default function AdminBulkActions() {
                   <div className="h-0.5 w-2 rounded-full bg-white" />
                 )}
               </button>
-              {/* Select all subscriptions */}
-              {isMultiTariff && allVisibleSubscriptionIds.length > 0 && (
-                <button
-                  onClick={toggleAllSubscriptions}
-                  className={cn(
-                    'flex h-5 w-5 shrink-0 items-center justify-center rounded-md border-2 transition-all duration-150',
-                    allSubsSelected
-                      ? 'border-success-500 bg-success-500 shadow-[0_0_8px_rgba(34,197,94,0.4)]'
-                      : someSubsSelected
-                        ? 'border-success-500 bg-success-500/30'
-                        : 'border-dark-500 bg-dark-700/60 hover:border-success-500/50 hover:bg-dark-600/60',
-                  )}
-                  aria-label={t('admin.bulkActions.selectAllSubs')}
-                  title={t('admin.bulkActions.selectAllSubs')}
-                >
-                  {allSubsSelected && <CheckIcon className="h-3 w-3" />}
-                  {someSubsSelected && <div className="h-0.5 w-2 rounded-full bg-white" />}
-                </button>
-              )}
             </div>
-          );
-        },
+        ),
         cell: ({ row }) => {
           const userName =
             row.original.full_name || row.original.username || String(row.original.telegram_id);
@@ -645,43 +503,16 @@ export default function AdminBulkActions() {
         size: 200,
         cell: ({ row }) => {
           const user = row.original;
-          const filteredSubs = getFilteredSubs(user.subscriptions ?? []);
-          const subCount = filteredSubs.length;
-          const canExpand = isMultiTariff && subCount > 0;
-          const isExpanded = expandedRows[user.id] ?? false;
           return (
             <div className="flex items-center gap-2.5">
-              {canExpand ? (
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    toggleExpandRow(user.id);
-                  }}
-                  className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-accent-500 to-accent-700 transition-transform"
-                  aria-label={
-                    isExpanded
-                      ? t('admin.bulkActions.collapseSubscriptions')
-                      : t('admin.bulkActions.expandSubscriptions')
-                  }
-                  aria-expanded={isExpanded}
-                >
-                  <ChevronExpandIcon expanded={isExpanded} />
-                </button>
-              ) : (
-                <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-accent-500 to-accent-700 text-[10px] font-medium text-white">
-                  {user.first_name?.[0] || user.username?.[0] || '?'}
-                </div>
-              )}
+              <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-accent-500 to-accent-700 text-[10px] font-medium text-white">
+                {user.first_name?.[0] || user.username?.[0] || '?'}
+              </div>
               <div className="min-w-0">
                 <div className="flex items-center gap-1.5">
                   <span className="truncate text-[13px] font-medium text-dark-100">
                     {user.full_name}
                   </span>
-                  {canExpand && (
-                    <span className="shrink-0 rounded-md bg-dark-700/60 px-1.5 py-0.5 text-[9px] font-medium tabular-nums text-dark-400">
-                      {subCount}
-                    </span>
-                  )}
                 </div>
                 <div className="truncate text-[10px] leading-tight text-dark-500">
                   {user.username ? `@${user.username}` : `ID: ${user.telegram_id}`}
@@ -780,17 +611,7 @@ export default function AdminBulkActions() {
         },
       },
     ],
-    [
-      t,
-      formatWithCurrency,
-      expandedRows,
-      toggleExpandRow,
-      getFilteredSubs,
-      allVisibleSubscriptionIds,
-      isMultiTariff,
-      subscriptionSelection,
-      toggleAllSubscriptions,
-    ],
+    [t, formatWithCurrency],
   );
 
   const table = useTable({
@@ -993,50 +814,25 @@ export default function AdminBulkActions() {
                 ))}
               </thead>
               <tbody>
-                {table.getRowModel().rows.map((row) => {
-                  const user = row.original;
-                  const filteredSubs = getFilteredSubs(user.subscriptions ?? []);
-                  const canExpand = isMultiTariff && filteredSubs.length > 0;
-                  const isExpanded = expandedRows[user.id] ?? false;
-
-                  return (
-                    <React.Fragment key={row.id}>
-                      {/* User row */}
-                      <tr
-                        className={cn(
-                          'border-b transition-colors',
-                          canExpand && isExpanded ? 'border-dark-700/30' : 'border-dark-700/50',
-                          row.getIsSelected() ? 'bg-accent-500/5' : 'hover:bg-dark-800/50',
-                        )}
+                {table.getRowModel().rows.map((row) => (
+                  <tr
+                    key={row.id}
+                    className={cn(
+                      'border-b transition-colors border-dark-700/50',
+                      row.getIsSelected() ? 'bg-accent-500/5' : 'hover:bg-dark-800/50',
+                    )}
+                  >
+                    {row.getVisibleCells().map((cell) => (
+                      <td
+                        key={cell.id}
+                        className="px-3 py-2.5"
+                        style={{ width: cell.column.getSize() }}
                       >
-                        {row.getVisibleCells().map((cell) => (
-                          <td
-                            key={cell.id}
-                            className="px-3 py-2.5"
-                            style={{ width: cell.column.getSize() }}
-                          >
-                            {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                          </td>
-                        ))}
-                      </tr>
-
-                      {/* Subscription sub-rows (only when expanded and multi-sub) */}
-                      {canExpand &&
-                        isExpanded &&
-                        filteredSubs.map((sub) => (
-                          <SubscriptionSubRow
-                            key={`sub-${sub.id}`}
-                            subscription={sub}
-                            isSelected={subscriptionSelection[sub.id] ?? false}
-                            onToggleSelect={() => toggleSubscriptionSelection(sub.id)}
-                            isMultiTariff={isMultiTariff}
-                          />
-                        ))}
-
-                      {/* Single subscription — auto-select with user (no separate sub-row) */}
-                    </React.Fragment>
-                  );
-                })}
+                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>
@@ -1097,35 +893,20 @@ export default function AdminBulkActions() {
       </div>
 
       {/* Bottom spacer to prevent floating bar from covering pagination */}
-      {(selectedUserIds.length > 0 || selectedSubscriptionIds.length > 0) && (
-        <div className="h-24" />
-      )}
+      {selectedUserIds.length > 0 && <div className="h-24" />}
 
       {/* Floating action bar — portal to body for correct fixed positioning */}
       {createPortal(
-        <FloatingActionBar
-          selectedUserCount={selectedUserIds.length}
-          selectedSubscriptionCount={selectedSubscriptionIds.length}
-          isMultiTariff={isMultiTariff}
-          totalVisibleSubscriptionCount={allVisibleSubscriptionIds.length}
-          onAction={handleOpenAction}
-          onToggleAllSubscriptions={toggleAllSubscriptions}
-        />,
+        <FloatingActionBar selectedUserCount={selectedUserIds.length} onAction={handleOpenAction} />,
         document.body,
       )}
 
       {/* Action modal */}
       <ActionModal
         modal={modal}
-        selectedCount={
-          modal.action && isMultiTariff && isSubscriptionLevelAction(modal.action)
-            ? selectedSubscriptionIds.length
-            : selectedUserIds.length
-        }
+        selectedCount={selectedUserIds.length}
         tariffs={tariffs}
         promoGroups={promoGroups}
-        users={users}
-        selectedSubscriptionIds={selectedSubscriptionIds}
         onClose={handleCloseModal}
         onExecute={handleExecuteAction}
       />

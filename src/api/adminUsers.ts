@@ -149,7 +149,6 @@ export interface UserDetailResponse {
   promo_offer_discount_expires_at: string | null;
   recent_transactions: UserTransactionItem[];
   remnawave_id: number | null;
-  multi_tariff_enabled?: boolean;
 }
 
 export interface UserPanelInfo {
@@ -536,7 +535,7 @@ export const adminUsersApi = {
     return response.data;
   },
 
-  // Delete one of the user's subscriptions (multi-tariff: trials pile up)
+  // Delete one of the user's subscriptions
   deleteSubscription: async (
     userId: number,
     subId: number,

@@ -490,12 +490,6 @@ export interface ReferralRewardLevels {
   levels_mode: ReferralLevelsMode;
   /** Pinned in .env: the switch would not apply and would lose on restart. */
   levels_mode_locked_by_env: boolean;
-  /**
-   * With multi-tariff off, subscriptions carry no tariff and days aimed at one
-   * are never granted. The tariff dropdown is still full, so without this flag
-   * the setting looks valid and silently does nothing.
-   */
-  multi_tariff_enabled: boolean;
   /** Pinned in .env: the depth field would be refused with 409 and revert on restart. */
   max_level_depth_locked_by_env: boolean;
   /** The chain is not walked deeper than this, so deeper levels never pay. */

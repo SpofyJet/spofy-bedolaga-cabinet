@@ -18,7 +18,6 @@ export type BulkActionType =
 export interface BulkActionRequest {
   action: BulkActionType;
   user_ids?: number[];
-  subscription_ids?: number[];
   params: BulkActionParams;
   dry_run?: boolean;
 }
@@ -32,7 +31,6 @@ export interface BulkActionParams {
   promo_group_id?: number | null;
   device_limit?: number;
   delete_from_panel?: boolean;
-  force_delete_active_paid?: boolean;
 }
 
 export interface BulkActionErrorItem {

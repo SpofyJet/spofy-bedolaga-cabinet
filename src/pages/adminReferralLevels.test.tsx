@@ -91,7 +91,6 @@ const state: {
     scheme_locked_by_env: false,
     levels_mode: 'chain',
     levels_mode_locked_by_env: false,
-    multi_tariff_enabled: true,
     max_level_depth_locked_by_env: false,
     max_level_depth: 3,
     max_supported_level: 10,
@@ -149,7 +148,6 @@ const basePayload = (): ReferralRewardLevels => ({
   scheme_locked_by_env: false,
   levels_mode: 'chain',
   levels_mode_locked_by_env: false,
-  multi_tariff_enabled: true,
   max_level_depth_locked_by_env: false,
   max_level_depth: 3,
   max_supported_level: 10,
@@ -624,13 +622,12 @@ describe('переключатель режима: направление и к�
   });
 });
 
-describe('выключенный мультитариф', () => {
+describe('тариф в наградах уровня', () => {
   it('предупреждает, что дни с выбранным тарифом не начислятся', async () => {
     // Список тарифов остаётся полным, поэтому без оговорки настройка выглядит
     // рабочей и молча ничего не даёт. Бот предупреждает — кабинет обязан тоже.
     state.payload = {
       ...basePayload(),
-      multi_tariff_enabled: false,
       levels: [level({ reward_mode: 'days', referrer_days: 14, referrer_tariff_id: 1 })],
     };
     await renderEditor();
@@ -641,20 +638,7 @@ describe('выключенный мультитариф', () => {
   it('молчит, когда тариф уровню не задан', async () => {
     state.payload = {
       ...basePayload(),
-      multi_tariff_enabled: false,
       levels: [level({ reward_mode: 'days', referrer_days: 14, referrer_tariff_id: null })],
-    };
-    await renderEditor();
-
-    expect(screen.queryByText(/Мультитариф выключен/)).toBeNull();
-  });
-
-  it('молчит при включённом мультитарифе', async () => {
-    state.payload = {
-      ...basePayload(),
-      multi_tariff_enabled: true,
-      max_level_depth_locked_by_env: false,
-      levels: [level({ reward_mode: 'days', referrer_days: 14, referrer_tariff_id: 1 })],
     };
     await renderEditor();
 
