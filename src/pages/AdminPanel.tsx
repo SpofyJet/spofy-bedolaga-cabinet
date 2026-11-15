@@ -15,7 +15,6 @@ import {
   CreditCardIcon,
   FileTextIcon,
   GiftIcon,
-  HistoryIcon,
   MailIcon,
   MegaphoneIcon,
   PartnerIcon,
@@ -73,7 +72,6 @@ const icons = {
   mail: <MailIcon />,
   refresh: <SyncIcon />,
   shield: <ShieldIcon />,
-  scroll: <HistoryIcon />,
   'list-checks': <ClipboardIcon />,
   search: <SearchIcon />,
   'file-text': <FileTextIcon />,
@@ -289,12 +287,6 @@ const sections: AdminSection[] = [
     id: 'security',
     titleKey: 'admin.groups.security',
     items: [
-      {
-        name: 'admin.nav.auditLog',
-        icon: 'scroll',
-        to: '/admin/audit-log',
-        permission: 'audit_log:read',
-      },
       {
         name: 'admin.nav.systemErrors',
         icon: 'shield',

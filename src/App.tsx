@@ -157,7 +157,6 @@ const AdminPinnedMessageCreate = lazyWithRetry(() => import('./pages/AdminPinned
 const AdminReminders = lazyWithRetry(() => import('./pages/AdminReminders'));
 const AdminReminderEdit = lazyWithRetry(() => import('./pages/AdminReminderEdit'));
 const AdminChannelSubscriptions = lazyWithRetry(() => import('./pages/AdminChannelSubscriptions'));
-const AdminAuditLog = lazyWithRetry(() => import('./pages/AdminAuditLog'));
 const AdminSystemErrors = lazyWithRetry(() => import('./pages/AdminSystemErrors'));
 const AdminReferralNetwork = lazyWithRetry(() => import('./pages/ReferralNetwork'));
 
@@ -1276,17 +1275,6 @@ function App() {
             <PermissionRoute permission="info_pages:read">
               <LazyPage>
                 <AdminLegalPages />
-              </LazyPage>
-            </PermissionRoute>
-          }
-        />
-
-        <Route
-          path="/admin/audit-log"
-          element={
-            <PermissionRoute permission="audit_log:read">
-              <LazyPage>
-                <AdminAuditLog />
               </LazyPage>
             </PermissionRoute>
           }
