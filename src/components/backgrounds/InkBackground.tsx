@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { cn } from '@/lib/utils';
 import './ink.css';
 
@@ -41,6 +41,17 @@ function paint(canvas: HTMLCanvasElement, [r, g, b, a]: Ink) {
   ctx.fillRect(0, 0, SIZE, SIZE);
 }
 
+/**
+ * Слабое устройство (≤4 ГБ памяти или ≤4 ядер): пятна стоят. Замер 15.11.2026 на стенде
+ * (процессор ×4 медленнее, 8 с): кабинет без фона — 407 мс главного потока, с плывущими
+ * «чернилами» — 1032 мс (кабинет будит главный поток при любой анимации, ~17 раз в
+ * секунду), с неподвижными — как без фона. Safari не сообщает память — считаем сильным.
+ */
+export function isLowEndDevice(nav: Navigator = navigator): boolean {
+  const { deviceMemory } = nav as Navigator & { deviceMemory?: number };
+  return (deviceMemory ?? 8) <= 4 || (nav.hardwareConcurrency || 8) <= 4;
+}
+
 interface InkBackgroundProps {
   /** Яркость разводов 0.1–1 (настройка в админке). */
   opacity?: number;
@@ -50,11 +61,13 @@ interface InkBackgroundProps {
 }
 
 /**
- * Фон «чернила»: три синих пятна медленно дрейфуют под содержимым (см. ink.css).
- * Пятна рисуются один раз и перерисовываются только при смене темы.
+ * Фон «чернила»: три синих пятна медленно дрейфуют под содержимым (см. ink.css), на
+ * слабых устройствах и при «уменьшить движение» — стоят. Пятна рисуются один раз и
+ * перерисовываются только при смене темы.
  */
 export function InkBackground({ opacity = 1, contained = false, className }: InkBackgroundProps) {
   const canvases = useRef<(HTMLCanvasElement | null)[]>([]);
+  const [still] = useState(isLowEndDevice);
 
   useEffect(() => {
     const root = document.documentElement;
@@ -72,7 +85,7 @@ export function InkBackground({ opacity = 1, contained = false, className }: Ink
 
   return (
     <div
-      className={cn('ink-field', contained && 'ink-contained', className)}
+      className={cn('ink-field', contained && 'ink-contained', still && 'ink-still', className)}
       style={{ opacity }}
       aria-hidden="true"
     >

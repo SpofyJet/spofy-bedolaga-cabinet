@@ -53,3 +53,15 @@ describe('BackgroundRenderer', () => {
     expect(document.querySelector('.ink-field')).toBeNull();
   });
 });
+
+describe('isLowEndDevice', () => {
+  it('≤4 ГБ памяти или ≤4 ядер — слабое; Safari без deviceMemory — по ядрам', async () => {
+    const { isLowEndDevice } = await import('./InkBackground');
+    const nav = (v: { deviceMemory?: number; hardwareConcurrency?: number }) =>
+      v as unknown as Navigator;
+    expect(isLowEndDevice(nav({ deviceMemory: 4, hardwareConcurrency: 8 }))).toBe(true);
+    expect(isLowEndDevice(nav({ deviceMemory: 8, hardwareConcurrency: 4 }))).toBe(true);
+    expect(isLowEndDevice(nav({ deviceMemory: 8, hardwareConcurrency: 8 }))).toBe(false);
+    expect(isLowEndDevice(nav({ hardwareConcurrency: 6 }))).toBe(false);
+  });
+});
