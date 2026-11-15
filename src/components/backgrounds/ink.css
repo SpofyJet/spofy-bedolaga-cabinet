@@ -1,0 +1,103 @@
+/*
+ * «Чернила» (15.11.2026) — единственный анимированный фон кабинета.
+ *
+ * Три мягких синих пятна медленно дрейфуют под содержимым, как чернила в воде.
+ * Каждое пятно — холст 96×96 с радиальным градиентом, растянутый CSS-ом: видеокарта
+ * держит текстуру ~36 КБ на пятно, а не слой во весь экран (десятки МБ на телефоне
+ * с плотностью 3x). Двигается только transform — без перерисовки и без JS, весь
+ * сдвиг делает композитор. При «уменьшить движение» пятна стоят на месте.
+ *
+ * Размеры — в cqmax: во весь экран контейнера нет, и это размер экрана, в превью
+ * админки (.ink-contained) — размер карточки; браузер без container-единиц берёт vmax
+ * из строки выше. container-type только у превью: вместе с contain: strict он
+ * заставлял Chrome обслуживать анимацию из главного потока (~17 кадров в секунду
+ * пересчёта стилей на кабинете), без него главный поток стоит.
+ */
+.ink-field {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  contain: strict;
+}
+
+.ink-contained {
+  container-type: size;
+}
+
+.ink-blob {
+  position: absolute;
+  display: block;
+  will-change: transform;
+  animation: ink-drift-1 58s ease-in-out infinite alternate;
+}
+
+.ink-blob-1 {
+  width: 95vmax;
+  width: 95cqmax;
+  height: 95vmax;
+  height: 95cqmax;
+  left: -38vmax;
+  left: -38cqmax;
+  top: -34vmax;
+  top: -34cqmax;
+}
+
+.ink-blob-2 {
+  width: 105vmax;
+  width: 105cqmax;
+  height: 105vmax;
+  height: 105cqmax;
+  right: -48vmax;
+  right: -48cqmax;
+  bottom: -46vmax;
+  bottom: -46cqmax;
+  animation-name: ink-drift-2;
+  animation-duration: 71s;
+}
+
+.ink-blob-3 {
+  width: 62vmax;
+  width: 62cqmax;
+  height: 62vmax;
+  height: 62cqmax;
+  left: -6vmax;
+  left: -6cqmax;
+  top: 38%;
+  animation-name: ink-drift-3;
+  animation-duration: 83s;
+}
+
+/* Сдвиги — в % от самого пятна, чтобы не зависеть от единиц размера. */
+@keyframes ink-drift-1 {
+  from {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  to {
+    transform: translate3d(24%, 20%, 0) scale(1.14);
+  }
+}
+
+@keyframes ink-drift-2 {
+  from {
+    transform: translate3d(0, 0, 0) scale(1.08);
+  }
+  to {
+    transform: translate3d(-22%, -18%, 0) scale(0.94);
+  }
+}
+
+@keyframes ink-drift-3 {
+  from {
+    transform: translate3d(0, 0, 0) scale(0.92);
+  }
+  to {
+    transform: translate3d(38%, -26%, 0) scale(1.18);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ink-blob {
+    animation: none;
+  }
+}

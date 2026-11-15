@@ -3,8 +3,8 @@ import { useTranslation } from 'react-i18next';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { brandingApi } from '@/api/branding';
 import { setCachedAnimationConfig } from '@/utils/backgroundConfig';
-import type { AnimationConfig } from '@/components/ui/backgrounds/types';
-import { DEFAULT_ANIMATION_CONFIG } from '@/components/ui/backgrounds/types';
+import type { AnimationConfig } from '@/components/backgrounds/types';
+import { DEFAULT_ANIMATION_CONFIG } from '@/components/backgrounds/types';
 import { BackgroundConfigEditor } from './BackgroundConfigEditor';
 import { cn } from '@/lib/utils';
 
@@ -49,7 +49,7 @@ export function BackgroundEditor() {
   }, []);
 
   const handleSave = () => {
-    saveMutation.mutate(config);
+    saveMutation.mutate({ enabled: config.enabled, type: config.type, opacity: config.opacity });
   };
 
   const isDirty = localConfig !== null;

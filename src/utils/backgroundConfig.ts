@@ -1,49 +1,25 @@
-import type { AnimationConfig, BackgroundType } from '@/components/ui/backgrounds/types';
+import type { AnimationConfig } from '@/components/backgrounds/types';
 
 const ANIMATION_CACHE_KEY = 'cabinet_animation_config';
 const MAX_CONFIG_JSON_LENGTH = 10_000;
 
-const VALID_TYPES: ReadonlySet<string> = new Set<BackgroundType>([
-  'aurora',
-  'sparkles',
-  'vortex',
-  'shooting-stars',
-  'background-beams',
-  'background-beams-collision',
-  'gradient-animation',
-  'wavy',
-  'background-lines',
-  'boxes',
-  'meteors',
-  'grid',
-  'dots',
-  'spotlight',
-  'ripple',
-  'fireflies',
-  'snowfall',
-  'starfield',
-  'matrix-rain',
-  'liquid-gradient',
-  'constellation',
-  'none',
-]);
-
+/**
+ * Настройка фона из API или кэша → AnimationConfig. null — если это не настройка фона.
+ *
+ * До 15.11.2026 эффектов было 20 (aurora, boxes…): любой из них теперь читается как
+ * «чернила», а его opacity не берётся — она подбиралась под другой эффект (у boxes 0.1,
+ * при ней «чернил» не видно). Яркость «чернил» — своя, по умолчанию 1.
+ */
 export function validateConfig(parsed: unknown): AnimationConfig | null {
   if (typeof parsed !== 'object' || parsed === null || Array.isArray(parsed)) return null;
   const obj = parsed as Record<string, unknown>;
-  if (typeof obj.enabled !== 'boolean') return null;
-  if (typeof obj.type !== 'string' || !VALID_TYPES.has(obj.type)) return null;
-  if (typeof obj.opacity !== 'number') return null;
-  if (typeof obj.blur !== 'number') return null;
-  if (obj.settings != null && (typeof obj.settings !== 'object' || Array.isArray(obj.settings)))
-    return null;
+  if (typeof obj.enabled !== 'boolean' || typeof obj.type !== 'string') return null;
+  if (obj.type === 'none') return { enabled: obj.enabled, type: 'none', opacity: 1 };
+  const own = obj.type === 'ink' && typeof obj.opacity === 'number' && Number.isFinite(obj.opacity);
   return {
     enabled: obj.enabled,
-    type: obj.type as BackgroundType,
-    opacity: Math.max(0, Math.min(1, obj.opacity)),
-    blur: Math.max(0, Math.min(50, obj.blur)),
-    settings: (obj.settings as Record<string, unknown>) ?? {},
-    reducedOnMobile: typeof obj.reducedOnMobile === 'boolean' ? obj.reducedOnMobile : true,
+    type: 'ink',
+    opacity: own ? Math.max(0.1, Math.min(1, obj.opacity as number)) : 1,
   };
 }
 

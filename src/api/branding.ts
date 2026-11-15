@@ -1,8 +1,9 @@
 import { useSyncExternalStore } from 'react';
 import apiClient from './client';
 import { isEndpointMissingError } from '../utils/api-error';
-import type { AnimationConfig } from '@/components/ui/backgrounds/types';
-import { DEFAULT_ANIMATION_CONFIG } from '@/components/ui/backgrounds/types';
+import type { AnimationConfig } from '@/components/backgrounds/types';
+import { DEFAULT_ANIMATION_CONFIG } from '@/components/backgrounds/types';
+import { validateConfig } from '@/utils/backgroundConfig';
 import { safeSession } from '../utils/safeStorage';
 
 export type { AnimationConfig };
@@ -275,8 +276,8 @@ export const brandingApi = {
   // Get animation config (public, no auth required)
   getAnimationConfig: async (): Promise<AnimationConfig> => {
     try {
-      const response = await apiClient.get<AnimationConfig>('/cabinet/branding/animation-config');
-      return response.data;
+      const response = await apiClient.get<unknown>('/cabinet/branding/animation-config');
+      return validateConfig(response.data) ?? DEFAULT_ANIMATION_CONFIG;
     } catch {
       return DEFAULT_ANIMATION_CONFIG;
     }
@@ -284,11 +285,8 @@ export const brandingApi = {
 
   // Update animation config (admin only, partial update)
   updateAnimationConfig: async (config: Partial<AnimationConfig>): Promise<AnimationConfig> => {
-    const response = await apiClient.patch<AnimationConfig>(
-      '/cabinet/branding/animation-config',
-      config,
-    );
-    return response.data;
+    const response = await apiClient.patch<unknown>('/cabinet/branding/animation-config', config);
+    return validateConfig(response.data) ?? { ...DEFAULT_ANIMATION_CONFIG, ...config };
   },
 
   // Get fullscreen enabled (public, no auth required)
