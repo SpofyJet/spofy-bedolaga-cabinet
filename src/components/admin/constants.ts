@@ -97,7 +97,7 @@ export const SETTINGS_TREE: SettingsTreeConfig = {
         { id: 'users_referral', categories: ['REFERRAL'] },
         { id: 'users_channel', categories: ['CHANNEL'] },
         { id: 'users_localization', categories: ['LOCALIZATION', 'TIMEZONE'] },
-        { id: 'users_moderation', categories: ['MODERATION', 'BAN_NOTIFICATIONS'] },
+        { id: 'users_moderation', categories: ['MODERATION'] },
       ],
     },
     {
@@ -125,10 +125,9 @@ export const SETTINGS_TREE: SettingsTreeConfig = {
       children: [
         { id: 'sys_core', categories: ['CORE', 'DEBUG'] },
         { id: 'sys_remnawave', categories: ['REMNAWAVE'] },
-        { id: 'sys_webapi', categories: ['WEB_API', 'EXTERNAL_ADMIN'] },
+        { id: 'sys_webapi', categories: ['WEB_API'] },
         { id: 'sys_cabinet', categories: ['CABINET'] },
         { id: 'sys_webhook', categories: ['WEBHOOK'] },
-        { id: 'sys_server', categories: ['SERVER_STATUS'] },
         { id: 'sys_monitoring', categories: ['MONITORING'] },
         { id: 'sys_maintenance', categories: ['MAINTENANCE'] },
         { id: 'sys_backup', categories: ['BACKUP'] },
