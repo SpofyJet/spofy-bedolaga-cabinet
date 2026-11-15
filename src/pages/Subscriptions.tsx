@@ -1,13 +1,11 @@
-import { useState } from 'react';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { Navigate, useLocation, useNavigate } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import { PiStackDuotone } from 'react-icons/pi';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { Button, EmptyState, Page } from '@/components/spofy/ui';
 import { subscriptionApi } from '../api/subscription';
-import { useAuthStore } from '../store/auth';
-import { getApiErrorMessage } from '../utils/api-error';
+import { useActivateTrial } from '../hooks/useActivateTrial';
 import TrialOfferCard from '../components/dashboard/TrialOfferCard';
 import { Skeleton, SkeletonGroup } from '@/components/ui/skeleton';
 
@@ -15,9 +13,7 @@ export default function Subscriptions() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { search } = useLocation();
-  const queryClient = useQueryClient();
-  const refreshUser = useAuthStore((state) => state.refreshUser);
-  const [trialError, setTrialError] = useState<string | null>(null);
+  const { activateTrialMutation, trialError } = useActivateTrial();
 
   const { data, isLoading } = useQuery({
     queryKey: ['subscriptions-list'],
@@ -35,22 +31,6 @@ export default function Subscriptions() {
     queryFn: () => subscriptionApi.getTrialInfo(),
     enabled: hasNoSubscriptions,
     staleTime: 30_000,
-  });
-
-  const activateTrialMutation = useMutation({
-    mutationFn: () => subscriptionApi.activateTrial(),
-    onSuccess: () => {
-      setTrialError(null);
-      queryClient.invalidateQueries({ queryKey: ['subscription'] });
-      queryClient.invalidateQueries({ queryKey: ['subscriptions-list'] });
-      queryClient.invalidateQueries({ queryKey: ['trial-info'] });
-      queryClient.invalidateQueries({ queryKey: ['balance'] });
-      queryClient.invalidateQueries({ queryKey: ['purchase-options'] });
-      refreshUser();
-    },
-    onError: (error: unknown) => {
-      setTrialError(getApiErrorMessage(error, t('common.error')));
-    },
   });
 
   // Подписка одна (у бота нет мультитарифа): списка нет — сразу её экран.

@@ -92,11 +92,14 @@ export default function DashboardLite() {
 
   const activateTrial = useMutation({
     mutationFn: () => subscriptionApi.activateTrial(),
+    // Ждём перезапроса: до него карточка пробного видна, и кнопка не должна оживать.
     onSuccess: () => {
       setTrialError(null);
-      for (const key of ['subscription', 'subscriptions-list', 'trial-info', 'balance']) {
-        queryClient.invalidateQueries({ queryKey: [key] });
-      }
+      return Promise.all(
+        ['subscription', 'subscriptions-list', 'trial-info', 'balance'].map((key) =>
+          queryClient.invalidateQueries({ queryKey: [key] }),
+        ),
+      );
     },
     onError: (error: unknown) => {
       setTrialError(getApiErrorMessage(error, t('common.error')));

@@ -30,7 +30,7 @@ import { ChevronRightIcon, GiftIcon } from '@/components/icons';
 import { WheelIcon } from '@/components/layout/AppShell/icons';
 import { Skeleton, SkeletonGroup } from '@/components/ui/skeleton';
 import { safeLocal } from '../utils/safeStorage';
-import { getApiErrorMessage } from '../utils/api-error';
+import { useActivateTrial } from '../hooks/useActivateTrial';
 import { formatPriceShort } from '../utils/format';
 import { plainTariffName } from '@/utils/plainTariffName';
 
@@ -39,7 +39,7 @@ export default function Dashboard() {
   const user = useAuthStore((state) => state.user);
   const refreshUser = useAuthStore((state) => state.refreshUser);
   const queryClient = useQueryClient();
-  const [trialError, setTrialError] = useState<string | null>(null);
+  const { activateTrialMutation, trialError } = useActivateTrial();
 
   // Refresh user data on mount
   useEffect(() => {
@@ -124,22 +124,6 @@ export default function Dashboard() {
     queryFn: giftApi.getPendingGifts,
     staleTime: 30_000,
     retry: false,
-  });
-
-  const activateTrialMutation = useMutation({
-    mutationFn: () => subscriptionApi.activateTrial(),
-    onSuccess: () => {
-      setTrialError(null);
-      queryClient.invalidateQueries({ queryKey: ['subscription'] });
-      queryClient.invalidateQueries({ queryKey: ['subscriptions-list'] });
-      queryClient.invalidateQueries({ queryKey: ['trial-info'] });
-      queryClient.invalidateQueries({ queryKey: ['balance'] });
-      queryClient.invalidateQueries({ queryKey: ['purchase-options'] });
-      refreshUser();
-    },
-    onError: (error: unknown) => {
-      setTrialError(getApiErrorMessage(error, t('common.error')));
-    },
   });
 
   // Traffic refresh state and mutation
