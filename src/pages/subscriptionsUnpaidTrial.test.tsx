@@ -40,19 +40,19 @@ vi.mock('../api/subscription', () => ({
 afterEach(cleanup);
 
 it('shows the trial offer when there is no subscription', async () => {
-    const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
-    render(
-      <QueryClientProvider client={client}>
-        <MemoryRouter>
-          <Subscriptions />
-        </MemoryRouter>
-      </QueryClientProvider>,
-    );
-    expect(
-      await screen.findByRole('heading', { name: 'dashboard.trialOffer.freeTitle' }),
-    ).toBeTruthy();
-    expect(await screen.findByRole('button', { name: 'subscription.trial.activate' })).toBeTruthy();
-    expect(screen.queryByText('Тестовая')).toBeNull();
-    expect(screen.queryByRole('link', { name: /Подключиться/ })).toBeNull();
-    client.clear();
+  const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+  render(
+    <QueryClientProvider client={client}>
+      <MemoryRouter>
+        <Subscriptions />
+      </MemoryRouter>
+    </QueryClientProvider>,
+  );
+  expect(
+    await screen.findByRole('heading', { name: 'dashboard.trialOffer.freeTitle' }),
+  ).toBeTruthy();
+  expect(await screen.findByRole('button', { name: 'subscription.trial.activate' })).toBeTruthy();
+  expect(screen.queryByText('Тестовая')).toBeNull();
+  expect(screen.queryByRole('link', { name: /Подключиться/ })).toBeNull();
+  client.clear();
 });

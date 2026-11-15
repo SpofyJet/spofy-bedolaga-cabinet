@@ -103,176 +103,175 @@ export function TariffPickerGrid({
 
   return (
     <div className="space-y-3">
-        {visible.map(({ tariff, isCurrentTariff, action }) => {
-          // У своего тарифа отметки нет: «Текущий» уже говорит о нём главное.
-          const recommended = tariff.id === recommendedId && !isCurrentTariff;
-          const primary = tariff.id === primaryId;
+      {visible.map(({ tariff, isCurrentTariff, action }) => {
+        // У своего тарифа отметки нет: «Текущий» уже говорит о нём главное.
+        const recommended = tariff.id === recommendedId && !isCurrentTariff;
+        const primary = tariff.id === primaryId;
 
-          const price = (() => {
-            const promoDaily = dailyPriceQuote(tariff, applyPromoDiscount);
-            if (promoDaily) {
-              return {
-                prefix: null,
-                value: formatPrice(promoDaily.price),
-                suffix: t('subscription.tariff.perDay'),
-                original:
-                  promoDaily.original && promoDaily.original > promoDaily.price
-                    ? formatPrice(promoDaily.original)
-                    : null,
-                percent: promoDaily.percent,
-                isPromoGroup: promoDaily.isPromoGroup,
-              };
-            }
-            const listed = listPricePeriod(tariff);
-            if (listed) {
-              // Цена срока уже со всеми скидками человека — столько и спишет покупка.
-              const promoPeriod = periodQuote(listed.period);
-              return {
-                // «от» — только когда сроков несколько и месячного среди них нет: у
-                // единственного срока это и есть цена, у месячного пишем «за 30 дней».
-                prefix:
-                  !listed.isMonth && tariff.periods.length > 1 ? t('subscription.from') : null,
-                value: formatPrice(promoPeriod.price),
-                suffix: listed.isMonth ? t('subscription.tariff.per30Days') : null,
-                original:
-                  promoPeriod.original && promoPeriod.original > promoPeriod.price
-                    ? formatPrice(promoPeriod.original)
-                    : null,
-                percent: promoPeriod.percent,
-                isPromoGroup: promoPeriod.isPromoGroup,
-              };
-            }
-            return null;
-          })();
+        const price = (() => {
+          const promoDaily = dailyPriceQuote(tariff, applyPromoDiscount);
+          if (promoDaily) {
+            return {
+              prefix: null,
+              value: formatPrice(promoDaily.price),
+              suffix: t('subscription.tariff.perDay'),
+              original:
+                promoDaily.original && promoDaily.original > promoDaily.price
+                  ? formatPrice(promoDaily.original)
+                  : null,
+              percent: promoDaily.percent,
+              isPromoGroup: promoDaily.isPromoGroup,
+            };
+          }
+          const listed = listPricePeriod(tariff);
+          if (listed) {
+            // Цена срока уже со всеми скидками человека — столько и спишет покупка.
+            const promoPeriod = periodQuote(listed.period);
+            return {
+              // «от» — только когда сроков несколько и месячного среди них нет: у
+              // единственного срока это и есть цена, у месячного пишем «за 30 дней».
+              prefix: !listed.isMonth && tariff.periods.length > 1 ? t('subscription.from') : null,
+              value: formatPrice(promoPeriod.price),
+              suffix: listed.isMonth ? t('subscription.tariff.per30Days') : null,
+              original:
+                promoPeriod.original && promoPeriod.original > promoPeriod.price
+                  ? formatPrice(promoPeriod.original)
+                  : null,
+              percent: promoPeriod.percent,
+              isPromoGroup: promoPeriod.isPromoGroup,
+            };
+          }
+          return null;
+        })();
 
-          // Описание тарифа: первая строка — главное, остальные спокойнее. Без описания
-          // говорим то, что знаем из самого тарифа: трафик и число устройств.
-          const lines = (tariff.description ?? '')
-            .split('\n')
-            .map((line) => line.trim())
-            .filter(Boolean);
-          const facts = [
-            tariffTrafficLabel(tariff.traffic_limit_gb, t, tariff.bypass_quota),
-            tariff.device_limit === 0
-              ? null
-              : t('subscription.devices', { count: tariff.device_limit }),
-          ]
-            .filter(Boolean)
-            .join(' · ');
+        // Описание тарифа: первая строка — главное, остальные спокойнее. Без описания
+        // говорим то, что знаем из самого тарифа: трафик и число устройств.
+        const lines = (tariff.description ?? '')
+          .split('\n')
+          .map((line) => line.trim())
+          .filter(Boolean);
+        const facts = [
+          tariffTrafficLabel(tariff.traffic_limit_gb, t, tariff.bypass_quota),
+          tariff.device_limit === 0
+            ? null
+            : t('subscription.devices', { count: tariff.device_limit }),
+        ]
+          .filter(Boolean)
+          .join(' · ');
 
-          const label =
-            action === 'current-daily'
-              ? null
-              : action === 'switch'
-                ? t(
-                    switchSelection
-                      ? 'subscription.switchTariff.choose'
-                      : 'subscription.switchTariff.switch',
-                  )
-                : t(TARIFF_ACTION_LABEL[action]);
-          const onAction = () =>
-            action === 'switch' ? onSwitchTariff(tariff.id) : onSelectTariff(tariff);
-          const ariaLabel =
-            action === 'switch' && switchSelection
-              ? `${plainTariffName(tariff.name)}: ${t('subscription.switchTariff.choose')}`
-              : undefined;
+        const label =
+          action === 'current-daily'
+            ? null
+            : action === 'switch'
+              ? t(
+                  switchSelection
+                    ? 'subscription.switchTariff.choose'
+                    : 'subscription.switchTariff.switch',
+                )
+              : t(TARIFF_ACTION_LABEL[action]);
+        const onAction = () =>
+          action === 'switch' ? onSwitchTariff(tariff.id) : onSelectTariff(tariff);
+        const ariaLabel =
+          action === 'switch' && switchSelection
+            ? `${plainTariffName(tariff.name)}: ${t('subscription.switchTariff.choose')}`
+            : undefined;
 
-          return (
-            <div
-              key={tariff.id}
-              data-tariff-card
-              data-tariff-primary={primary || undefined}
-              className={cn(
-                'rounded-3xl p-[18px]',
-                // Выделение на экране одно — там же, где залитая кнопка: два
-                // подсвеченных тарифа не дают понять, какой из них сейчас куплен.
-                tariff.id === tintedId ? bestValueFrame(true) : 'bg-dark-900/70',
-              )}
-            >
-              <div className="flex items-baseline gap-2.5">
-                {/* Название и отметка — отдельные элементы строки с переносом: на
+        return (
+          <div
+            key={tariff.id}
+            data-tariff-card
+            data-tariff-primary={primary || undefined}
+            className={cn(
+              'rounded-3xl p-[18px]',
+              // Выделение на экране одно — там же, где залитая кнопка: два
+              // подсвеченных тарифа не дают понять, какой из них сейчас куплен.
+              tariff.id === tintedId ? bestValueFrame(true) : 'bg-dark-900/70',
+            )}
+          >
+            <div className="flex items-baseline gap-2.5">
+              {/* Название и отметка — отдельные элементы строки с переносом: на
                     экране 360 px отметка уходит под название целиком, а не сжимает
                     его до разрыва посреди слова («Стандартны / й»). */}
-                <div
-                  data-tariff-title
-                  className="flex min-w-0 flex-1 flex-wrap items-center gap-x-2.5 gap-y-1.5"
-                >
-                  <h3 className="font-display text-[19px] font-bold leading-tight tracking-tight text-dark-50">
-                    {plainTariffName(tariff.name)}
-                  </h3>
-                  {recommended && (
-                    <BestValueBadge label={t('subscription.recommended', 'Советуем')} />
-                  )}
-                  {isCurrentTariff && <Chip tone="success">{t('subscription.currentTariff')}</Chip>}
-                </div>
-                {price && (
-                  <span className="shrink-0 whitespace-nowrap font-display text-lg font-bold text-dark-50">
-                    {price.prefix ? `${price.prefix} ` : ''}
-                    {price.value}
-                    {price.suffix && (
-                      <span className="ml-1 text-[13px] font-medium text-dark-400">
-                        {price.suffix}
-                      </span>
-                    )}
-                  </span>
+              <div
+                data-tariff-title
+                className="flex min-w-0 flex-1 flex-wrap items-center gap-x-2.5 gap-y-1.5"
+              >
+                <h3 className="font-display text-[19px] font-bold leading-tight tracking-tight text-dark-50">
+                  {plainTariffName(tariff.name)}
+                </h3>
+                {recommended && (
+                  <BestValueBadge label={t('subscription.recommended', 'Советуем')} />
                 )}
+                {isCurrentTariff && <Chip tone="success">{t('subscription.currentTariff')}</Chip>}
               </div>
-
-              {price && (price.original || (price.percent != null && price.percent > 0)) && (
-                <div className="mt-1 flex items-center justify-end gap-2">
-                  {price.original && (
-                    <span className="text-[13px] text-dark-500 line-through">{price.original}</span>
+              {price && (
+                <span className="shrink-0 whitespace-nowrap font-display text-lg font-bold text-dark-50">
+                  {price.prefix ? `${price.prefix} ` : ''}
+                  {price.value}
+                  {price.suffix && (
+                    <span className="ml-1 text-[13px] font-medium text-dark-400">
+                      {price.suffix}
+                    </span>
                   )}
-                  {price.percent != null && price.percent > 0 && (
-                    <Chip tone={price.isPromoGroup ? 'success' : 'warning'}>-{price.percent}%</Chip>
-                  )}
-                </div>
-              )}
-
-              <div className="mt-2">
-                {lines.length > 0 ? (
-                  lines.map((line, index) => (
-                    <p
-                      key={index}
-                      className={cn(
-                        'text-sm leading-[1.45]',
-                        index === 0 ? 'font-medium text-dark-50' : 'text-dark-400',
-                      )}
-                    >
-                      {line}
-                    </p>
-                  ))
-                ) : (
-                  <p className="text-sm leading-[1.45] text-dark-400">{facts}</p>
-                )}
-                {!price && (
-                  <p className="text-sm leading-[1.45] text-dark-400">
-                    {t('subscription.tariff.flexiblePayment')}
-                  </p>
-                )}
-              </div>
-
-              {/* текущий суточный тариф уже помечен чипом «Текущий» — кнопки нет */}
-              {label === null ? null : primary ? (
-                <Button
-                  className="mt-3.5 h-[50px] w-full text-base"
-                  onClick={onAction}
-                  aria-label={ariaLabel}
-                >
-                  {label}
-                </Button>
-              ) : (
-                <button
-                  type="button"
-                  onClick={onAction}
-                  aria-label={ariaLabel}
-                  className="-mb-2 mt-1 inline-flex h-11 items-center text-[15px] font-semibold text-accent-400 transition-opacity hover:opacity-80 active:opacity-70"
-                >
-                  {label}
-                </button>
+                </span>
               )}
             </div>
-          );
+
+            {price && (price.original || (price.percent != null && price.percent > 0)) && (
+              <div className="mt-1 flex items-center justify-end gap-2">
+                {price.original && (
+                  <span className="text-[13px] text-dark-500 line-through">{price.original}</span>
+                )}
+                {price.percent != null && price.percent > 0 && (
+                  <Chip tone={price.isPromoGroup ? 'success' : 'warning'}>-{price.percent}%</Chip>
+                )}
+              </div>
+            )}
+
+            <div className="mt-2">
+              {lines.length > 0 ? (
+                lines.map((line, index) => (
+                  <p
+                    key={index}
+                    className={cn(
+                      'text-sm leading-[1.45]',
+                      index === 0 ? 'font-medium text-dark-50' : 'text-dark-400',
+                    )}
+                  >
+                    {line}
+                  </p>
+                ))
+              ) : (
+                <p className="text-sm leading-[1.45] text-dark-400">{facts}</p>
+              )}
+              {!price && (
+                <p className="text-sm leading-[1.45] text-dark-400">
+                  {t('subscription.tariff.flexiblePayment')}
+                </p>
+              )}
+            </div>
+
+            {/* текущий суточный тариф уже помечен чипом «Текущий» — кнопки нет */}
+            {label === null ? null : primary ? (
+              <Button
+                className="mt-3.5 h-[50px] w-full text-base"
+                onClick={onAction}
+                aria-label={ariaLabel}
+              >
+                {label}
+              </Button>
+            ) : (
+              <button
+                type="button"
+                onClick={onAction}
+                aria-label={ariaLabel}
+                className="-mb-2 mt-1 inline-flex h-11 items-center text-[15px] font-semibold text-accent-400 transition-opacity hover:opacity-80 active:opacity-70"
+              >
+                {label}
+              </button>
+            )}
+          </div>
+        );
       })}
     </div>
   );

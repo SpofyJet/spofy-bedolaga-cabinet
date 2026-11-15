@@ -223,9 +223,7 @@ export default function Dashboard() {
   // При живом доступе подключение в карточке остаётся главным действием,
   // а покупка любого следующего тарифа — спокойным второстепенным CTA.
   const hasActiveAccess =
-    (subsList?.subscriptions ?? []).some(
-      (s) => s.status === 'active' || s.status === 'limited',
-    ) ||
+    (subsList?.subscriptions ?? []).some((s) => s.status === 'active' || s.status === 'limited') ||
     (!!subscription &&
       !subscription.is_expired &&
       (subscription.status === 'active' || subscription.status === 'limited'));
@@ -253,8 +251,7 @@ export default function Dashboard() {
   // Если запросы упали, статус неизвестен. Выводить из пустых данных «Закончилась» нельзя:
   // платящий человек видит красный статус и кнопку продления из-за сбоя сети.
   const statusUnknown =
-    !hasActiveAccess &&
-    ((subsListError && !subsList) || (subError && !subscriptionResponse));
+    !hasActiveAccess && ((subsListError && !subsList) || (subError && !subscriptionResponse));
   const statusReady = !subsListPending && !subLoading && !statusUnknown;
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: subsListErrorAt, subErrorAt — намеренный повод перезапуска

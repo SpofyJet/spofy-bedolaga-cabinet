@@ -113,9 +113,7 @@ function TelegramBackButton() {
     // straight back to a detail page (Subscriptions.tsx), so falling back there
     // loops silently and the back button looks dead (issue #436). Escape to root.
     const pathname = pathnameRef.current;
-    const fallback = SUBSCRIPTION_DETAIL_RE.test(pathname)
-      ? '/'
-      : getFallbackParentPath(pathname);
+    const fallback = SUBSCRIPTION_DETAIL_RE.test(pathname) ? '/' : getFallbackParentPath(pathname);
     navigateRef.current(fallback, { replace: true });
   }, []);
 

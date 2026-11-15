@@ -90,7 +90,8 @@ describe('старая подписка (нужен тариф)', () => {
 
   it('истёкшая старая подписка тоже ведёт на витрину с этой подпиской', async () => {
     await renderCta(
-      subscription({ requires_tariff_selection: true, is_active: false, is_expired: true }));
+      subscription({ requires_tariff_selection: true, is_active: false, is_expired: true }),
+    );
 
     expect(href()).toBe('/subscription/purchase?subscriptionId=42');
     expect(screen.getByText('subscription.cta.moveToTariff')).toBeTruthy();
@@ -112,7 +113,8 @@ describe('пробная подписка', () => {
     cleanup();
 
     await renderCta(
-      subscription({ is_trial: true, is_active: false, is_expired: true, status: 'expired' }));
+      subscription({ is_trial: true, is_active: false, is_expired: true, status: 'expired' }),
+    );
     expect(screen.getByRole('link').className).toContain('bg-cta-500');
     expect(screen.getByText('subscription.getSubscription')).toBeTruthy();
   });

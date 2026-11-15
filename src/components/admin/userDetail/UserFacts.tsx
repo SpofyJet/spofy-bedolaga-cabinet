@@ -103,42 +103,36 @@ export function UserFacts({ user, subscription, devicesTotal }: UserFactsProps) 
   const devicesFull =
     subscription !== null && devicesTotal !== null && devicesTotal >= subscription.device_limit;
   const tiles: Tile[] = [
-          balance,
-          untilTile(subscription, t),
-          {
-            key: 'traffic',
-            label: t(`${ns}.traffic`),
-            value: subscription
-              ? trafficLabel(subscription.traffic_used_gb, subscription.traffic_limit_gb)
-              : '—',
-            icon: <TrafficIcon />,
-            tone: subscription
-              ? trafficTone(subscription.traffic_used_gb, subscription.traffic_limit_gb)
-              : 'neutral',
-          },
-          {
-            key: 'devices',
-            label: t(`${ns}.devices`),
-            value:
-              subscription && devicesTotal !== null
-                ? t(`${ns}.devicesValue`, { used: devicesTotal, limit: subscription.device_limit })
-                : '—',
-            icon: <DevicesIcon />,
-            tone: devicesFull ? 'warning' : 'neutral',
-          },
-          spent,
+    balance,
+    untilTile(subscription, t),
+    {
+      key: 'traffic',
+      label: t(`${ns}.traffic`),
+      value: subscription
+        ? trafficLabel(subscription.traffic_used_gb, subscription.traffic_limit_gb)
+        : '—',
+      icon: <TrafficIcon />,
+      tone: subscription
+        ? trafficTone(subscription.traffic_used_gb, subscription.traffic_limit_gb)
+        : 'neutral',
+    },
+    {
+      key: 'devices',
+      label: t(`${ns}.devices`),
+      value:
+        subscription && devicesTotal !== null
+          ? t(`${ns}.devicesValue`, { used: devicesTotal, limit: subscription.device_limit })
+          : '—',
+      icon: <DevicesIcon />,
+      tone: devicesFull ? 'warning' : 'neutral',
+    },
+    spent,
   ];
 
   return (
     <div className="grid grid-cols-2 gap-3 lg:grid-cols-5">
       {tiles.map((tile) => (
-        <div
-          key={tile.key}
-          className={cn(
-            'min-w-0',
-            tile.wide && 'col-span-2 lg:col-span-1',
-          )}
-        >
+        <div key={tile.key} className={cn('min-w-0', tile.wide && 'col-span-2 lg:col-span-1')}>
           <StatCard
             label={tile.label}
             value={tile.value}

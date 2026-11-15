@@ -35,13 +35,7 @@ const subscription = (id: number, panelId?: number | null): SubscriptionWithIden
   purchased_traffic_gb: 0,
   traffic_purchases: [],
 });
-function Harness({
-  subs,
-  mode,
-}: {
-  subs: SubscriptionWithIdentity[];
-  mode: SubscriptionTabProps['mode'];
-}) {
+function Harness({ subs }: { subs: SubscriptionWithIdentity[] }) {
   const [selected, select] = useState(subs[0].id);
   return (
     <SubscriptionTab
@@ -61,14 +55,11 @@ function Harness({
       can={{ manage: false, sync: false, devices: false }}
       busy={false}
       actions={{} as SubscriptionTabProps['actions']}
-      mode={mode}
     />
   );
 }
 it('shows the selected subscription panel ID when moving between two subscriptions', () => {
-  renderWithProviders(
-    <Harness mode="multi" subs={[subscription(101, 501), subscription(102, 502)]} />,
-  );
+  renderWithProviders(<Harness subs={[subscription(101, 501), subscription(102, 502)]} />);
   fireEvent.click(screen.getByText('Plan 101'));
   expect(screen.getByText('501')).toBeTruthy();
   expect(screen.queryByText('999')).toBeNull();
@@ -77,14 +68,7 @@ it('shows the selected subscription panel ID when moving between two subscriptio
   expect(screen.getByText('502')).toBeTruthy();
   expect(screen.queryByText('501')).toBeNull();
 });
-it.each([null, undefined])(
-  'never substitutes another panel identity for a multi subscription with %s ID',
-  (panelId) => {
-    renderWithProviders(<Harness mode="multi" subs={[subscription(101, panelId)]} />);
-    expect(screen.queryByText('999')).toBeNull();
-  },
-);
-it('keeps the legacy user identity fallback in tariffs mode', () => {
-  renderWithProviders(<Harness mode="tariffs" subs={[subscription(101)]} />);
+it('keeps the legacy user identity fallback when the subscription has no panel ID', () => {
+  renderWithProviders(<Harness subs={[subscription(101)]} />);
   expect(screen.getByText('999')).toBeTruthy();
 });
