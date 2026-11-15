@@ -7,13 +7,11 @@ import {
   PiChartBar,
   PiChatCircle,
   PiCheck,
-  PiClipboardText,
   PiClock,
   PiCopy,
   PiCreditCard,
   PiDiceFive,
   PiDownloadSimple,
-  PiGameController,
   PiGearSix,
   PiGift,
   PiGlobe,
@@ -25,7 +23,6 @@ import {
   PiMagnifyingGlass,
   PiMegaphone,
   PiMoon,
-  PiPalette,
   PiPencil,
   PiPencilSimple,
   PiPlay,
@@ -172,10 +169,6 @@ export const MoonIcon = ({ className }: IconProps) => (
   <PiMoon className={cn('h-5 w-5', className)} />
 );
 
-export const PaletteIcon = ({ className }: IconProps) => (
-  <PiPalette className={cn('h-5 w-5', className)} />
-);
-
 // Features & Content
 export const SubscriptionIcon = ({ className }: IconProps) => (
   <PiSparkle className={cn('h-5 w-5', className)} />
@@ -203,14 +196,6 @@ export const StarIcon = ({ className, filled }: IconProps & { filled?: boolean }
   ) : (
     <PiStar className={cn('h-5 w-5', className)} />
   );
-
-export const GamepadIcon = ({ className }: IconProps) => (
-  <PiGameController className={cn('h-5 w-5', className)} />
-);
-
-export const ClipboardIcon = ({ className }: IconProps) => (
-  <PiClipboardText className={cn('h-5 w-5', className)} />
-);
 
 export const CogIcon = ({ className }: IconProps) => (
   <PiGearSix className={cn('h-5 w-5', className)} />

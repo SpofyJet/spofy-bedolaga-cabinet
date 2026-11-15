@@ -24,7 +24,7 @@ export type {
 } from './types';
 
 // Hooks
-export { usePlatform, useIsTelegram, useCapability } from './hooks/usePlatform';
+export { usePlatform, useIsTelegram } from './hooks/usePlatform';
 export { useHaptic, useHapticClick, useHapticFeedback } from './hooks/useHaptic';
 export { useNativeDialog, useDestructiveConfirm, PopupButtons } from './hooks/useNativeDialog';
 export { useNotify } from './hooks/useNotify';

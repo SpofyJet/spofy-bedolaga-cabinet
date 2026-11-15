@@ -147,5 +147,3 @@ export const adminPinnedMessagesApi = {
     return response.data;
   },
 };
-
-export default adminPinnedMessagesApi;

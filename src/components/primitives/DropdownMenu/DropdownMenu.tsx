@@ -9,17 +9,12 @@ import {
   useState,
   type ComponentPropsWithoutRef,
 } from 'react';
-import { CheckIcon, ChevronRightIcon, DotIcon } from '@/components/icons';
+import { DotIcon } from '@/components/icons';
 import { cn } from '@/lib/utils';
 import { usePlatform } from '@/platform';
 import { dropdown, dropdownTransition } from '../../motion/transitions';
 
-export {
-  Group as DropdownMenuGroup,
-  Portal as DropdownMenuPortal,
-  Sub as DropdownMenuSub,
-  RadioGroup as DropdownMenuRadioGroup,
-} from '@radix-ui/react-dropdown-menu';
+export { RadioGroup as DropdownMenuRadioGroup } from '@radix-ui/react-dropdown-menu';
 
 // Root + Trigger
 //
@@ -94,67 +89,6 @@ export const DropdownMenuTrigger = forwardRef<HTMLButtonElement, DropdownMenuTri
 );
 
 DropdownMenuTrigger.displayName = 'DropdownMenuTrigger';
-
-// SubTrigger
-export interface DropdownMenuSubTriggerProps
-  extends ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.SubTrigger> {
-  inset?: boolean;
-}
-
-export const DropdownMenuSubTrigger = forwardRef<HTMLDivElement, DropdownMenuSubTriggerProps>(
-  ({ className, inset, children, ...props }, ref) => (
-    <DropdownMenuPrimitive.SubTrigger
-      ref={ref}
-      className={cn(
-        'flex cursor-pointer select-none items-center gap-2 rounded-linear px-2 py-2',
-        'text-sm text-dark-200 outline-none',
-        'focus:bg-dark-800/80 focus:text-dark-100',
-        'data-[state=open]:bg-dark-800/80',
-        inset && 'pl-8',
-        className,
-      )}
-      {...props}
-    >
-      {children}
-      <ChevronRightIcon />
-    </DropdownMenuPrimitive.SubTrigger>
-  ),
-);
-
-DropdownMenuSubTrigger.displayName = 'DropdownMenuSubTrigger';
-
-// SubContent
-export type DropdownMenuSubContentProps = ComponentPropsWithoutRef<
-  typeof DropdownMenuPrimitive.SubContent
->;
-
-export const DropdownMenuSubContent = forwardRef<HTMLDivElement, DropdownMenuSubContentProps>(
-  ({ className, children, ...props }, ref) => (
-    <DropdownMenuPrimitive.SubContent
-      ref={ref}
-      className={cn(
-        'z-50 min-w-[8rem] overflow-hidden',
-        'rounded-xl bg-dark-900',
-        'p-1 text-dark-100',
-        className,
-      )}
-      asChild
-      {...props}
-    >
-      <motion.div
-        variants={dropdown}
-        initial="initial"
-        animate="animate"
-        exit="exit"
-        transition={dropdownTransition}
-      >
-        {children}
-      </motion.div>
-    </DropdownMenuPrimitive.SubContent>
-  ),
-);
-
-DropdownMenuSubContent.displayName = 'DropdownMenuSubContent';
 
 // Content
 export type DropdownMenuContentProps = ComponentPropsWithoutRef<
@@ -234,37 +168,6 @@ export const DropdownMenuItem = forwardRef<HTMLDivElement, DropdownMenuItemProps
 
 DropdownMenuItem.displayName = 'DropdownMenuItem';
 
-// CheckboxItem
-export type DropdownMenuCheckboxItemProps = ComponentPropsWithoutRef<
-  typeof DropdownMenuPrimitive.CheckboxItem
->;
-
-export const DropdownMenuCheckboxItem = forwardRef<HTMLDivElement, DropdownMenuCheckboxItemProps>(
-  ({ className, children, checked, ...props }, ref) => (
-    <DropdownMenuPrimitive.CheckboxItem
-      ref={ref}
-      className={cn(
-        'relative flex cursor-pointer select-none items-center rounded-linear py-2 pl-8 pr-2',
-        'text-sm text-dark-200 outline-none transition-colors duration-150',
-        'focus:bg-dark-800/80 focus:text-dark-100',
-        'data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
-        className,
-      )}
-      checked={checked}
-      {...props}
-    >
-      <span className="absolute left-2 flex h-4 w-4 items-center justify-center">
-        <DropdownMenuPrimitive.ItemIndicator>
-          <CheckIcon />
-        </DropdownMenuPrimitive.ItemIndicator>
-      </span>
-      {children}
-    </DropdownMenuPrimitive.CheckboxItem>
-  ),
-);
-
-DropdownMenuCheckboxItem.displayName = 'DropdownMenuCheckboxItem';
-
 // RadioItem
 export type DropdownMenuRadioItemProps = ComponentPropsWithoutRef<
   typeof DropdownMenuPrimitive.RadioItem
@@ -329,12 +232,3 @@ export const DropdownMenuSeparator = forwardRef<HTMLDivElement, DropdownMenuSepa
 );
 
 DropdownMenuSeparator.displayName = 'DropdownMenuSeparator';
-
-// Shortcut
-export type DropdownMenuShortcutProps = React.HTMLAttributes<HTMLSpanElement>;
-
-export const DropdownMenuShortcut = ({ className, ...props }: DropdownMenuShortcutProps) => (
-  <span className={cn('ml-auto text-xs tracking-widest text-dark-400', className)} {...props} />
-);
-
-DropdownMenuShortcut.displayName = 'DropdownMenuShortcut';

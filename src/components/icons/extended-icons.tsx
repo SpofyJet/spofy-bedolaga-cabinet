@@ -1,9 +1,6 @@
 import {
-  PiDeviceMobile,
   PiTrendUp,
   PiTranslate,
-  PiArchive,
-  PiUserMinus,
   PiArrowsLeftRight,
   PiPaperclip,
   PiArrowsInSimple,
@@ -22,15 +19,12 @@ import {
   PiMoney,
   PiBell,
   PiLightning,
-  PiRobot,
   PiBroadcast,
   PiAppWindow,
   PiCalendarDots,
   PiCreditCard,
   PiChartBar,
   PiCheckCircle,
-  PiCaretUpDown,
-  PiCaretDown,
   PiCaretLeft,
   PiCaretUp,
   PiDevices,
@@ -182,10 +176,6 @@ export const BoltIcon = ({ className }: IconProps) => (
   <PiLightning className={cn('h-5 w-5', className)} />
 );
 
-export const BotIcon = ({ className }: IconProps) => (
-  <PiRobot className={cn('h-5 w-5', className)} />
-);
-
 export const BroadcastIcon = ({ className }: IconProps) => (
   <PiBroadcast className={cn('h-5 w-5', className)} />
 );
@@ -212,14 +202,6 @@ export const ChartBarIcon = ({ className }: IconProps) => (
 
 export const CheckCircleIcon = ({ className }: IconProps) => (
   <PiCheckCircle className={cn('h-5 w-5', className)} />
-);
-
-export const ChevronExpandIcon = ({ className }: IconProps) => (
-  <PiCaretUpDown className={cn('h-5 w-5', className)} />
-);
-
-export const ChevronIcon = ({ className }: IconProps) => (
-  <PiCaretDown className={cn('h-5 w-5', className)} />
 );
 
 export const ChevronLeftIcon = ({ className }: IconProps) => (
@@ -476,11 +458,6 @@ export const ReceiptIcon = ({ className }: IconProps) => (
   <PiReceipt className={cn('h-5 w-5', className)} />
 );
 
-/** Телефон — устройство пользователя. */
-export const PhoneIcon = ({ className }: IconProps) => (
-  <PiDeviceMobile className={cn('h-5 w-5', className)} />
-);
-
 /** Рост показателя. */
 export const TrendUpIcon = ({ className }: IconProps) => (
   <PiTrendUp className={cn('h-5 w-5', className)} />
@@ -489,16 +466,6 @@ export const TrendUpIcon = ({ className }: IconProps) => (
 /** Язык / перевод. */
 export const TranslateIcon = ({ className }: IconProps) => (
   <PiTranslate className={cn('h-5 w-5', className)} />
-);
-
-/** Архив. */
-export const ArchiveIcon = ({ className }: IconProps) => (
-  <PiArchive className={cn('h-5 w-5', className)} />
-);
-
-/** Убрать пользователя. */
-export const UserMinusIcon = ({ className }: IconProps) => (
-  <PiUserMinus className={cn('h-5 w-5', className)} />
 );
 
 /** Обмен / связи в обе стороны. */

@@ -144,5 +144,3 @@ export function ReissueLinkButton({ subscription, subscriptionId }: ReissueLinkB
     </>
   );
 }
-
-export default ReissueLinkButton;

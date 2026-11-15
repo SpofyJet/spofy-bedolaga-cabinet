@@ -23,13 +23,3 @@ export function useIsTelegram(): boolean {
   const { platform } = usePlatform();
   return platform === 'telegram';
 }
-
-/**
- * Check if a specific capability is available
- */
-export function useCapability(capability: keyof PlatformContextType['capabilities']): boolean {
-  const { capabilities } = usePlatform();
-  const value = capabilities[capability];
-  // version is the only string capability, all others are boolean
-  return typeof value === 'boolean' ? value : !!value;
-}

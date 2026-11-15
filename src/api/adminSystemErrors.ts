@@ -93,5 +93,3 @@ export const adminSystemErrorsApi = {
     return data;
   },
 };
-
-export default adminSystemErrorsApi;

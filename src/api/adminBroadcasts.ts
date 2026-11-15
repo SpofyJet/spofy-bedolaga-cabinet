@@ -273,5 +273,3 @@ export const adminBroadcastsApi = {
     return response.data;
   },
 };
-
-export default adminBroadcastsApi;

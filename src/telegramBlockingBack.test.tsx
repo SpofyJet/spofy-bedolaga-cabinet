@@ -39,9 +39,6 @@ vi.mock('./providers/WebSocketProvider', () => ({
 vi.mock('./components/Toast', () => ({
   ToastProvider: ({ children }: { children: ReactNode }) => children,
 }));
-vi.mock('./components/primitives/Tooltip', () => ({
-  TooltipProvider: ({ children }: { children: ReactNode }) => children,
-}));
 vi.mock('@/lib/twemoji', () => ({ default: ({ children }: { children: ReactNode }) => children }));
 
 afterEach(() => {

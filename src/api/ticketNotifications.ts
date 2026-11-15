@@ -76,5 +76,3 @@ export const ticketNotificationsApi = {
     return response.data;
   },
 };
-
-export default ticketNotificationsApi;

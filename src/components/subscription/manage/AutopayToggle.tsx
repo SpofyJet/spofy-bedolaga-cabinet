@@ -84,5 +84,3 @@ export function AutopayToggle({ subscription, subscriptionId }: AutopayTogglePro
     </div>
   );
 }
-
-export default AutopayToggle;

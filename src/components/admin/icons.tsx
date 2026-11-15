@@ -13,6 +13,5 @@ export {
   CloseIcon,
   SunIcon,
   MoonIcon,
-  MenuIcon,
   EditIcon,
 } from '../icons';

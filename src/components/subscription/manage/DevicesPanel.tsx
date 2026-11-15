@@ -246,5 +246,3 @@ export function DevicesPanel({
     </section>
   );
 }
-
-export default DevicesPanel;

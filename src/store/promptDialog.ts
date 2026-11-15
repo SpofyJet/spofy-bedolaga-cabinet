@@ -53,8 +53,3 @@ export const usePromptStore = create<PromptState>((set, get) => ({
     set({ request: null });
   },
 }));
-
-/** Returns a stable function that opens a prompt dialog and resolves with the value (or null). */
-export function usePrompt() {
-  return usePromptStore((s) => s.prompt);
-}

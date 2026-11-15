@@ -15,7 +15,6 @@ import { ThemeColorsProvider } from './providers/ThemeColorsProvider';
 import { DocumentBranding } from './components/DocumentBranding';
 import { WebSocketProvider } from './providers/WebSocketProvider';
 import { ToastProvider } from './components/Toast';
-import { TooltipProvider } from './components/primitives/Tooltip';
 import { isInTelegramWebApp, closeTelegramApp } from './hooks/useTelegramSDK';
 import { getFallbackParentPath } from './utils/navigation';
 import { useBlockingStore } from './store/blocking';
@@ -188,15 +187,13 @@ export function AppWithNavigator() {
         <PlatformProvider>
           <ThemeColorsProvider>
             <DocumentBranding />
-            <TooltipProvider>
-              <ToastProvider>
-                <WebSocketProvider>
-                  <Twemoji options={TWEMOJI_OPTIONS}>
-                    <App />
-                  </Twemoji>
-                </WebSocketProvider>
-              </ToastProvider>
-            </TooltipProvider>
+            <ToastProvider>
+              <WebSocketProvider>
+                <Twemoji options={TWEMOJI_OPTIONS}>
+                  <App />
+                </Twemoji>
+              </WebSocketProvider>
+            </ToastProvider>
           </ThemeColorsProvider>
         </PlatformProvider>
       </ErrorBoundary>

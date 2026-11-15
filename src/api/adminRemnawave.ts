@@ -435,5 +435,3 @@ export const adminRemnawaveApi = {
     return response.data;
   },
 };
-
-export default adminRemnawaveApi;

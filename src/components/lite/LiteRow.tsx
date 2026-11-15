@@ -68,5 +68,3 @@ export function LiteRow({ label, value, ...rest }: LiteRowProps) {
 export function LiteRowGroup({ children }: { children: ReactNode }) {
   return <div className="divide-y divide-dark-700/40">{children}</div>;
 }
-
-export default LiteRow;

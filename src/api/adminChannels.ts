@@ -70,5 +70,3 @@ export const adminChannelsApi = {
     await apiClient.delete(`/cabinet/admin/channel-subscriptions/${id}`);
   },
 };
-
-export default adminChannelsApi;

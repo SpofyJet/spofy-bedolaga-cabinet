@@ -55,5 +55,3 @@ export function LiteMeter({ usedGb, limitGb, usedPercent }: LiteMeterProps) {
     </div>
   );
 }
-
-export default LiteMeter;

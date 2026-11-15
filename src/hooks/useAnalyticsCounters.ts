@@ -156,4 +156,3 @@ function syncYandexCid(counterId: string) {
 // Re-export the canonical CID accessor from utils for back-compat with
 // existing imports inside this hook file. New code should import from
 // '../utils/yandexCid' directly to avoid pulling React into api/.
-export { getYandexCid } from '../utils/yandexCid';

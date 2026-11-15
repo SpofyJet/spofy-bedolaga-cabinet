@@ -8,8 +8,6 @@ import { dropdown, dropdownTransition } from '../../motion/transitions';
 export {
   Root as Popover,
   Trigger as PopoverTrigger,
-  Anchor as PopoverAnchor,
-  Close as PopoverClose,
 } from '@radix-ui/react-popover';
 
 // Content
@@ -65,14 +63,3 @@ export const PopoverContent = forwardRef<HTMLDivElement, PopoverContentProps>(
 );
 
 PopoverContent.displayName = 'PopoverContent';
-
-// Arrow
-export type PopoverArrowProps = ComponentPropsWithoutRef<typeof PopoverPrimitive.Arrow>;
-
-export const PopoverArrow = forwardRef<SVGSVGElement, PopoverArrowProps>(
-  ({ className, ...props }, ref) => (
-    <PopoverPrimitive.Arrow ref={ref} className={cn('fill-dark-800', className)} {...props} />
-  ),
-);
-
-PopoverArrow.displayName = 'PopoverArrow';

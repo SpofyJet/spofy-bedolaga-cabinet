@@ -1,4 +1,4 @@
-import { forwardRef, type HTMLAttributes, type ReactNode } from 'react';
+import { forwardRef, type ReactNode } from 'react';
 import { motion, type HTMLMotionProps } from 'framer-motion';
 import { Slot } from '@radix-ui/react-slot';
 import { cva, type VariantProps } from 'class-variance-authority';
@@ -113,56 +113,3 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(
 );
 
 Card.displayName = 'Card';
-
-// Card Header
-export type CardHeaderProps = HTMLAttributes<HTMLDivElement>;
-
-export const CardHeader = forwardRef<HTMLDivElement, CardHeaderProps>(
-  ({ className, ...props }, ref) => (
-    <div ref={ref} className={cn('flex flex-col space-y-1.5', className)} {...props} />
-  ),
-);
-
-CardHeader.displayName = 'CardHeader';
-
-// Card Title
-export type CardTitleProps = HTMLAttributes<HTMLHeadingElement>;
-
-export const CardTitle = forwardRef<HTMLHeadingElement, CardTitleProps>(
-  ({ className, ...props }, ref) => (
-    <h3 ref={ref} className={cn('text-lg font-semibold text-dark-100', className)} {...props} />
-  ),
-);
-
-CardTitle.displayName = 'CardTitle';
-
-// Card Description
-export type CardDescriptionProps = HTMLAttributes<HTMLParagraphElement>;
-
-export const CardDescription = forwardRef<HTMLParagraphElement, CardDescriptionProps>(
-  ({ className, ...props }, ref) => (
-    <p ref={ref} className={cn('text-sm text-dark-400', className)} {...props} />
-  ),
-);
-
-CardDescription.displayName = 'CardDescription';
-
-// Card Content
-export type CardContentProps = HTMLAttributes<HTMLDivElement>;
-
-export const CardContent = forwardRef<HTMLDivElement, CardContentProps>(
-  ({ className, ...props }, ref) => <div ref={ref} className={cn('pt-4', className)} {...props} />,
-);
-
-CardContent.displayName = 'CardContent';
-
-// Card Footer
-export type CardFooterProps = HTMLAttributes<HTMLDivElement>;
-
-export const CardFooter = forwardRef<HTMLDivElement, CardFooterProps>(
-  ({ className, ...props }, ref) => (
-    <div ref={ref} className={cn('flex items-center pt-4', className)} {...props} />
-  ),
-);
-
-CardFooter.displayName = 'CardFooter';

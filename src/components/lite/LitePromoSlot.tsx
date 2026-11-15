@@ -66,5 +66,3 @@ export function LitePromoSlot() {
     </button>
   );
 }
-
-export default LitePromoSlot;
