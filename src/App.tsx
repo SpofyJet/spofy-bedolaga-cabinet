@@ -157,11 +157,6 @@ const AdminPinnedMessageCreate = lazyWithRetry(() => import('./pages/AdminPinned
 const AdminReminders = lazyWithRetry(() => import('./pages/AdminReminders'));
 const AdminReminderEdit = lazyWithRetry(() => import('./pages/AdminReminderEdit'));
 const AdminChannelSubscriptions = lazyWithRetry(() => import('./pages/AdminChannelSubscriptions'));
-const AdminRoles = lazyWithRetry(() => import('./pages/AdminRoles'));
-const AdminRoleEdit = lazyWithRetry(() => import('./pages/AdminRoleEdit'));
-const AdminRoleAssign = lazyWithRetry(() => import('./pages/AdminRoleAssign'));
-const AdminPolicies = lazyWithRetry(() => import('./pages/AdminPolicies'));
-const AdminPolicyEdit = lazyWithRetry(() => import('./pages/AdminPolicyEdit'));
 const AdminAuditLog = lazyWithRetry(() => import('./pages/AdminAuditLog'));
 const AdminSystemErrors = lazyWithRetry(() => import('./pages/AdminSystemErrors'));
 const AdminReferralNetwork = lazyWithRetry(() => import('./pages/ReferralNetwork'));
@@ -1270,77 +1265,6 @@ function App() {
             <PermissionRoute permission="channels:read">
               <LazyPage>
                 <AdminChannelSubscriptions />
-              </LazyPage>
-            </PermissionRoute>
-          }
-        />
-        {/* RBAC routes */}
-        <Route
-          path="/admin/roles"
-          element={
-            <PermissionRoute permission="roles:read">
-              <LazyPage>
-                <AdminRoles />
-              </LazyPage>
-            </PermissionRoute>
-          }
-        />
-        <Route
-          path="/admin/roles/create"
-          element={
-            <PermissionRoute permission="roles:create">
-              <LazyPage>
-                <AdminRoleEdit />
-              </LazyPage>
-            </PermissionRoute>
-          }
-        />
-        <Route
-          path="/admin/roles/:id/edit"
-          element={
-            <PermissionRoute permission="roles:edit">
-              <LazyPage>
-                <AdminRoleEdit />
-              </LazyPage>
-            </PermissionRoute>
-          }
-        />
-        <Route
-          path="/admin/roles/assign"
-          element={
-            <PermissionRoute permission="roles:assign">
-              <LazyPage>
-                <AdminRoleAssign />
-              </LazyPage>
-            </PermissionRoute>
-          }
-        />
-        <Route
-          path="/admin/policies"
-          element={
-            <PermissionRoute permission="roles:read">
-              <LazyPage>
-                <AdminPolicies />
-              </LazyPage>
-            </PermissionRoute>
-          }
-        />
-        <Route
-          path="/admin/policies/create"
-          element={
-            <PermissionRoute permission="roles:create">
-              <LazyPage>
-                <AdminPolicyEdit />
-              </LazyPage>
-            </PermissionRoute>
-          }
-        />
-        <Route
-          path="/admin/policies/:id/edit"
-          element={
-            <PermissionRoute permission="roles:edit">
-              <LazyPage>
-                <AdminPolicyEdit />
               </LazyPage>
             </PermissionRoute>
           }

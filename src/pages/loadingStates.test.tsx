@@ -164,13 +164,6 @@ const PAGES: PageCase[] = [
     entry: '/cs/1',
   },
   {
-    name: 'AdminPolicyEdit',
-    load: () => import('./AdminPolicyEdit'),
-    path: '/pe/:id',
-    entry: '/pe/1',
-  },
-  { name: 'AdminRoleEdit', load: () => import('./AdminRoleEdit'), path: '/re/:id', entry: '/re/1' },
-  {
     name: 'AdminServerEdit',
     load: () => import('./AdminServerEdit'),
     path: '/se/:id',
