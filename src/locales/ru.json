@@ -386,9 +386,6 @@
       "referrals": "Друзья",
       "earnings": "Заработок"
     },
-    "manageAll": "Управлять всеми",
-    "showAll": "Показать все",
-    "subscriptions": "Подписки",
     "bypassQuotaTitle": "Трафик на обходы",
     "regularUnlimited": "Обычные серверы — без лимита",
     "info": {
@@ -890,7 +887,6 @@
       "noCamera": "Нет доступа к камере",
       "codeFound": "Код найден"
     },
-    "allTariffsPurchased": "Все тарифы уже куплены",
     "autopay": "Автопродление",
     "sbpRecurring": {
       "title": "Автопродление по СБП",
@@ -918,36 +914,17 @@
     },
     "backToList": "К списку подписок",
     "confirmDelete": "Удалить подписку?",
-    "dailyAutoCharge": "Ежедневное списание",
     "defaultName": "Подписка",
-    "connectFooter": {
-      "connect": "Подключить устройство",
-      "full": "Все слоты заняты",
-      "connectedDevices": "Подключённые устройства",
-      "disconnect": "Отключить",
-      "addSlots": "Добавить слоты",
-      "limitExplained_one": "Тариф «{{name}}» даёт {{count}} слот, и он занят. Освободите его или добавьте ещё.",
-      "limitExplained_few": "Тариф «{{name}}» даёт {{count}} слота, и все заняты. Освободите слот или добавьте ещё.",
-      "limitExplained_many": "Тариф «{{name}}» даёт {{count}} слотов, и все заняты. Освободите слот или добавьте ещё.",
-      "limitExplainedNoTopup_one": "Тариф «{{name}}» даёт {{count}} слот, и он занят. Освободите его.",
-      "limitExplainedNoTopup_few": "Тариф «{{name}}» даёт {{count}} слота, и все заняты. Освободите занятый слот.",
-      "limitExplainedNoTopup_many": "Тариф «{{name}}» даёт {{count}} слотов, и все заняты. Освободите занятый слот.",
-      "noTopupHint": "На тестовой подписке слоты докупить нельзя — освободите занятый или оформите платный тариф."
-    },
     "delete": "Удалить",
     "deleteTitle": "Удаление подписки",
     "get_config": "Получить конфиг",
     "loadError": "Не удалось загрузить подписку",
-    "newTariff": "Новый тариф",
     "noOptionsAvailable": "Доступных опций нет",
     "noRenewalOptions": "Нет вариантов продления",
     "notFound": "Подписка не найдена",
     "notFoundDesc": "Возможно, она была удалена или ещё не активирована",
     "servers": "Серверы",
-    "statusActive": "Активна",
     "statusExpired": "Истекла",
-    "statusLimited": "Ограничена",
-    "statusTrial": "Пробная",
     "bypassSuspended": {
       "title": "Обходы отключены — трафик на них закончился",
       "description": "Обычные серверы работают, VPN не отключён. Серверы с пометкой «Обход» вернутся после докупки трафика или продления подписки.",
@@ -988,7 +965,6 @@
     },
     "noRenewalChooseTariff": "Выберите тариф — доступ продолжится.",
     "chooseTariff": "Выбрать тариф",
-    "trafficUsedOf": "{{used}} из {{limit}} ГБ",
     "choose": "Выбрать",
     "recommended": "Советуем"
   },
@@ -1063,8 +1039,6 @@
         "user_not_found": "Пользователь не найден",
         "server_error": "Ошибка сервера"
       },
-      "daysLeft": "Осталось дней: {{count}}",
-      "selectSubscription": "Выберите подписку",
       "haveOne": "Есть промокод?"
     },
     "minAmountError": "Минимальная сумма: {{amount}} ₽",
@@ -1470,8 +1444,7 @@
       "insufficientBalance": "Недостаточно средств на балансе",
       "topUpRequired": "Пополните баланс для оплаты спина",
       "starsNotAvailable": "Оплата Stars недоступна. Откройте приложение через Telegram.",
-      "noSubscription": "Для вращения колеса необходима активная подписка. Активируйте подписку в разделе «Подписка».",
-      "selectSubscription": "Сначала выберите подписку"
+      "noSubscription": "Для вращения колеса необходима активная подписка. Активируйте подписку в разделе «Подписка»."
     },
     "payWithStars": "Оплатить Stars",
     "payWithDays": "Оплатить днями",
@@ -1495,7 +1468,6 @@
       "freeTitle_few": "🎁 Вас ждут {{count}} бесплатных спина",
       "freeTitle_many": "🎁 Вас ждут {{count}} бесплатных спинов"
     },
-    "selectSubscription": "Выберите подписку",
     "starsCost": "{{count}} ⭐",
     "free": {
       "available_one": "{{count}} бесплатный спин",
@@ -4364,7 +4336,6 @@
           "deviceLimitUpdated": "Лимит устройств обновлён",
           "invalidDays": "Введите корректное количество дней (больше 0)",
           "backToList": "К списку подписок",
-          "createNew": "Создать новую",
           "sbpTitle": "Автоплатёж по СБП",
           "sbpCancel": "Отключить",
           "sbpCancelled": "Автоплатёж по СБП отключён",
@@ -4689,14 +4660,7 @@
           "devices": "Устройства",
           "devicesValue": "{{used}} из {{limit}}",
           "spent": "Потрачено",
-          "noSubscription": "нет",
-          "subscriptions": "Подписки",
-          "subscriptionsLive_one": "{{count}} активная",
-          "subscriptionsLive_few": "{{count}} активные",
-          "subscriptionsLive_many": "{{count}} активных",
-          "noLive": "нет активных",
-          "nearest": "ближайшая до {{date}}",
-          "tariffUntil": "{{tariff}} · до {{date}}"
+          "noSubscription": "нет"
         },
         "menu": {
           "more": "Ещё действия"
@@ -5153,9 +5117,7 @@
       },
       "deleteSubscription": {
         "warning": "Выбранные подписки будут безвозвратно удалены из бота и панели Remnawave!",
-        "hint": "Пользователи потеряют доступ к VPN по удалённым подпискам. Это действие нельзя отменить.",
-        "activePaidWarning": "{{count}} из {{total}} выбранных подписок: активные платные",
-        "forceDeleteConfirm": "Подтверждаю удаление активных платных подписок"
+        "hint": "Пользователи потеряют доступ к VPN по удалённым подпискам. Это действие нельзя отменить."
       },
       "deleteUser": {
         "warning": "Выбранные пользователи будут безвозвратно удалены из бота! Все их подписки, баланс и данные будут потеряны!",
@@ -5224,18 +5186,8 @@
         "promoGroup": "Группа",
         "spent": "Потрачено"
       },
-      "subscriptionsSelected": "{{count}} подписок выбрано",
       "usersSelected": "{{count}} пользователей выбрано",
-      "expandSubscriptions": "Показать подписки",
-      "collapseSubscriptions": "Скрыть подписки",
-      "noSubscriptions": "Нет подписок",
-      "subscriptionTarget": "Цель: подписки",
-      "userTarget": "Цель: пользователи",
-      "daysUnit": "дн.",
-      "trafficOf": "из",
-      "trafficGbUnit": "ГБ",
-      "selectAllSubs": "Выбрать все подписки",
-      "deselectAllSubs": "Снять все подписки"
+      "noSubscriptions": "Нет подписок"
     },
     "theme": {
       "accentColor": "Акцентный цвет",
@@ -6430,7 +6382,6 @@
   },
   "subscriptions": {
     "buy": "Купить подписку",
-    "buyAnother": "Купить ещё",
     "browsePlans": "Тарифы и цены",
     "empty": "У вас пока нет подписок",
     "emptyDesc": "Выберите тариф, чтобы начать пользоваться сервисом",
@@ -6472,7 +6423,6 @@
       "devicesValue": "{{used}} из {{total}}",
       "balance": "Баланс",
       "manage": "Управление подпиской",
-      "buyAnother": "Купить ещё тариф",
       "buyTraffic": "Докупить трафик",
       "buyDevices": "Добавить устройство",
       "reduceDevices": "Уменьшить число устройств",

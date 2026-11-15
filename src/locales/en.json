@@ -378,9 +378,6 @@
       "referrals": "Referrals",
       "earnings": "Earnings"
     },
-    "manageAll": "Manage all",
-    "showAll": "Show all",
-    "subscriptions": "Subscriptions",
     "bypassQuotaTitle": "Bypass traffic",
     "regularUnlimited": "Regular servers — unlimited",
     "info": {
@@ -856,7 +853,6 @@
       "noCamera": "Camera access denied",
       "codeFound": "Code found"
     },
-    "allTariffsPurchased": "All tariffs already purchased",
     "autopay": "Auto-renew",
     "sbpRecurring": {
       "title": "SBP auto-renewal",
@@ -884,34 +880,17 @@
     },
     "backToList": "Back to subscriptions",
     "confirmDelete": "Delete subscription?",
-    "dailyAutoCharge": "Daily auto-charge",
     "defaultName": "Subscription",
-    "connectFooter": {
-      "connect": "Connect a device",
-      "full": "All slots are in use",
-      "connectedDevices": "Connected devices",
-      "disconnect": "Disconnect",
-      "addSlots": "Add slots",
-      "limitExplained_one": "The «{{name}}» plan gives {{count}} slot and it is in use. Free it up or add more.",
-      "limitExplained_other": "The «{{name}}» plan gives {{count}} slots and all are in use. Free one up or add more.",
-      "limitExplainedNoTopup_one": "The «{{name}}» plan gives {{count}} slot and it is in use. Free it up to continue.",
-      "limitExplainedNoTopup_other": "The «{{name}}» plan gives {{count}} slots and all are in use. Free up a slot to continue.",
-      "noTopupHint": "Slots cannot be bought on a trial subscription — free one up or switch to a paid plan."
-    },
     "delete": "Delete",
     "deleteTitle": "Delete subscription",
     "get_config": "Get config",
     "loadError": "Failed to load subscription",
-    "newTariff": "New tariff",
     "noOptionsAvailable": "No options available",
     "noRenewalOptions": "No renewal options",
     "notFound": "Subscription not found",
     "notFoundDesc": "It may have been deleted or not yet activated",
     "servers": "Servers",
-    "statusActive": "Active",
     "statusExpired": "Expired",
-    "statusLimited": "Limited",
-    "statusTrial": "Trial",
     "bypassSuspended": {
       "title": "Bypass servers are off — their traffic is used up",
       "description": "Regular servers keep working, your VPN is still on. Bypass servers come back once you buy more traffic or renew your subscription.",
@@ -952,7 +931,6 @@
     },
     "noRenewalChooseTariff": "Choose a plan to keep your access.",
     "chooseTariff": "Choose a plan",
-    "trafficUsedOf": "{{used}} of {{limit}} GB",
     "choose": "Choose",
     "recommended": "Our pick"
   },
@@ -1027,8 +1005,6 @@
         "user_not_found": "User not found",
         "server_error": "Server error"
       },
-      "daysLeft": "Days left: {{count}}",
-      "selectSubscription": "Select a subscription",
       "haveOne": "Have a promo code?"
     },
     "minAmountError": "Minimum amount: {{amount}} ₽",
@@ -1431,8 +1407,7 @@
       "insufficientBalance": "Insufficient balance",
       "topUpRequired": "Top up your balance to pay for spin",
       "starsNotAvailable": "Stars payment not available. Open the app via Telegram.",
-      "noSubscription": "An active subscription is required to spin the wheel. Activate your subscription first.",
-      "selectSubscription": "Select a subscription first"
+      "noSubscription": "An active subscription is required to spin the wheel. Activate your subscription first."
     },
     "payWithStars": "Pay with Stars",
     "payWithDays": "Pay with days",
@@ -1455,7 +1430,6 @@
       "freeTitle_one": "🎁 {{count}} free spin is waiting",
       "freeTitle_other": "🎁 {{count}} free spins are waiting"
     },
-    "selectSubscription": "Select subscription",
     "starsCost": "{{count}} ⭐",
     "free": {
       "available_one": "{{count}} free spin",
@@ -2783,9 +2757,7 @@
       },
       "deleteSubscription": {
         "warning": "Selected subscriptions will be permanently deleted from the bot and Remnawave panel!",
-        "hint": "Users will lose VPN access for deleted subscriptions. This action cannot be undone.",
-        "activePaidWarning": "{{count}} of {{total}} selected subscriptions are active paid",
-        "forceDeleteConfirm": "I confirm deletion of active paid subscriptions"
+        "hint": "Users will lose VPN access for deleted subscriptions. This action cannot be undone."
       },
       "deleteUser": {
         "warning": "Selected users will be permanently deleted from the bot! All their subscriptions, balance, and data will be lost!",
@@ -2854,18 +2826,8 @@
         "promoGroup": "Group",
         "spent": "Spent"
       },
-      "subscriptionsSelected": "{{count}} subscriptions selected",
       "usersSelected": "{{count}} users selected",
-      "expandSubscriptions": "Show subscriptions",
-      "collapseSubscriptions": "Hide subscriptions",
-      "noSubscriptions": "No subscriptions",
-      "subscriptionTarget": "Target: subscriptions",
-      "userTarget": "Target: users",
-      "daysUnit": "d",
-      "trafficOf": "of",
-      "trafficGbUnit": "GB",
-      "selectAllSubs": "Select all subscriptions",
-      "deselectAllSubs": "Deselect all subscriptions"
+      "noSubscriptions": "No subscriptions"
     },
     "theme": {
       "accentColor": "Accent color",
@@ -3998,7 +3960,6 @@
           "deviceLimitUpdated": "Device limit updated",
           "invalidDays": "Please enter a valid number of days (greater than 0)",
           "backToList": "Back to subscriptions",
-          "createNew": "Create new",
           "sbpTitle": "SBP Auto-payment",
           "sbpCancel": "Disable",
           "sbpCancelled": "SBP auto-payment disabled",
@@ -4321,13 +4282,7 @@
           "devices": "Devices",
           "devicesValue": "{{used}} of {{limit}}",
           "spent": "Spent",
-          "noSubscription": "none",
-          "subscriptions": "Subscriptions",
-          "subscriptionsLive_one": "{{count}} active",
-          "subscriptionsLive_other": "{{count}} active",
-          "noLive": "none active",
-          "nearest": "next ends {{date}}",
-          "tariffUntil": "{{tariff}} · until {{date}}"
+          "noSubscription": "none"
         },
         "menu": {
           "more": "More actions"
@@ -5892,7 +5847,6 @@
   },
   "subscriptions": {
     "buy": "Buy subscription",
-    "buyAnother": "Buy another",
     "browsePlans": "Plans and prices",
     "empty": "You have no subscriptions yet",
     "emptyDesc": "Choose a tariff to get started",
@@ -5934,7 +5888,6 @@
       "devicesValue": "{{used}} of {{total}}",
       "balance": "Balance",
       "manage": "Manage subscription",
-      "buyAnother": "Buy another plan",
       "buyTraffic": "Buy more traffic",
       "buyDevices": "Add a device",
       "reduceDevices": "Reduce device count",
