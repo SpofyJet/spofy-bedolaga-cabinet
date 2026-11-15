@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router';
 import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 import { adminBroadcastsApi } from '../api/adminBroadcasts';
+import { BROADCAST_STATUS_STYLES } from '../components/broadcasts/BroadcastDeliveryStats';
 import { usePlatform } from '../platform/hooks/usePlatform';
 import {
   BackIcon,
@@ -16,43 +17,7 @@ import {
 } from '@/components/icons';
 
 // Status badge component
-const statusConfig: Record<string, { bg: string; text: string; labelKey: string }> = {
-  queued: {
-    bg: 'bg-warning-500/20',
-    text: 'text-warning-400',
-    labelKey: 'admin.broadcasts.status.queued',
-  },
-  in_progress: {
-    bg: 'bg-accent-500/20',
-    text: 'text-accent-400',
-    labelKey: 'admin.broadcasts.status.inProgress',
-  },
-  completed: {
-    bg: 'bg-success-500/20',
-    text: 'text-success-400',
-    labelKey: 'admin.broadcasts.status.completed',
-  },
-  partial: {
-    bg: 'bg-warning-500/20',
-    text: 'text-warning-400',
-    labelKey: 'admin.broadcasts.status.partial',
-  },
-  failed: {
-    bg: 'bg-error-500/20',
-    text: 'text-error-400',
-    labelKey: 'admin.broadcasts.status.failed',
-  },
-  cancelled: {
-    bg: 'bg-dark-500/20',
-    text: 'text-dark-400',
-    labelKey: 'admin.broadcasts.status.cancelled',
-  },
-  cancelling: {
-    bg: 'bg-warning-500/20',
-    text: 'text-warning-400',
-    labelKey: 'admin.broadcasts.status.cancelling',
-  },
-};
+const statusConfig = BROADCAST_STATUS_STYLES;
 
 function StatusBadge({ status }: { status: string }) {
   const { t } = useTranslation();

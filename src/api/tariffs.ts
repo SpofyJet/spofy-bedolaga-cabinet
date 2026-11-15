@@ -154,50 +154,9 @@ export interface ExternalSquadInfo {
   members_count: number;
 }
 
-export interface TariffUpdateRequest {
-  name?: string;
-  description?: string;
-  is_active?: boolean;
-  show_in_gift?: boolean;
-  traffic_limit_gb?: number;
-  device_limit?: number;
-  device_price_kopeks?: number;
-  max_device_limit?: number;
-  tier_level?: number;
+/** Правка тарифа: те же поля, что при создании, все необязательные, плюс порядок в списке. */
+export interface TariffUpdateRequest extends Partial<TariffCreateRequest> {
   display_order?: number;
-  period_prices?: PeriodPrice[];
-  /** Дни выделенного периода; 0 снимает выделение. */
-  highlight_period_days?: number | null;
-  /** Тариф отмечен как выгодный — выделяется в списке. */
-  is_highlighted?: boolean;
-  allowed_squads?: string[];
-  server_traffic_limits?: Record<string, ServerTrafficLimit>;
-  promo_group_ids?: number[];
-  // Произвольное количество дней
-  custom_days_enabled?: boolean;
-  price_per_day_kopeks?: number;
-  min_days?: number;
-  max_days?: number;
-  // Произвольный трафик при покупке
-  custom_traffic_enabled?: boolean;
-  traffic_price_per_gb_kopeks?: number;
-  min_traffic_gb?: number;
-  max_traffic_gb?: number;
-  // Докупка трафика
-  traffic_topup_enabled?: boolean;
-  traffic_topup_packages?: Record<string, number>;
-  max_topup_traffic_gb?: number;
-  // Дневной тариф
-  is_daily?: boolean;
-  daily_price_kopeks?: number;
-  /** Свой тег панельного пользователя Remnawave; null — общий тег из настроек */
-  panel_tag?: string | null;
-  // Режим сброса трафика
-  traffic_reset_mode?: string | null;
-  // Внешний сквад Remnawave
-  external_squad_uuid?: string | null;
-  /** Дни триала на этом тарифе; null — глобальная настройка */
-  trial_duration_days?: number | null;
 }
 
 export interface TariffToggleResponse {

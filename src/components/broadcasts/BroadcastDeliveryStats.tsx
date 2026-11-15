@@ -3,7 +3,11 @@ import { StatCard } from '@/components/stats';
 import { BanIcon, SendIcon, UsersIcon, XCircleIcon } from '@/components/icons';
 import { isBroadcastInFlight } from '../../utils/broadcastStatus';
 
-const statusConfig: Record<string, { bg: string; text: string; labelKey: string }> = {
+/** Цвета и подписи статусов рассылки — общие для списка и карточки рассылки. */
+export const BROADCAST_STATUS_STYLES: Record<
+  string,
+  { bg: string; text: string; labelKey: string }
+> = {
   queued: {
     bg: 'bg-warning-500/20',
     text: 'text-warning-400',
@@ -43,7 +47,7 @@ const statusConfig: Record<string, { bg: string; text: string; labelKey: string 
 
 export function BroadcastStatusBadge({ status }: { status: string }) {
   const { t } = useTranslation();
-  const config = statusConfig[status] || statusConfig.queued;
+  const config = BROADCAST_STATUS_STYLES[status] || BROADCAST_STATUS_STYLES.queued;
   return (
     <span className={`rounded-full px-3 py-1 text-sm font-medium ${config.bg} ${config.text}`}>
       {t(config.labelKey)}
@@ -120,5 +124,3 @@ export function BroadcastDeliveryStats({
     </div>
   );
 }
-
-export default BroadcastDeliveryStats;
