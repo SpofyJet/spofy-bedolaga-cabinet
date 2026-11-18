@@ -97,6 +97,7 @@ export interface Subscription {
   bypass_suspended?: boolean;
   /** Spofy: the traffic limit is a bypass-only quota; regular servers are unlimited. */
   bypass_quota?: boolean;
+  bypass_included?: boolean | null;
   traffic_purchases?: TrafficPurchase[];
   // Daily tariff fields
   is_daily?: boolean;
@@ -338,6 +339,7 @@ export interface ReferralInfo {
   referral_code: string;
   referral_link: string;
   bot_referral_link?: string;
+  share_text?: string;
   total_referrals: number;
   active_referrals: number;
   total_earnings_kopeks: number;

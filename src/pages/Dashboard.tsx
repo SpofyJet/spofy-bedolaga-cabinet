@@ -13,6 +13,7 @@ import PromoOffersSection from '../components/PromoOffersSection';
 import DevicesTrafficCard from '../components/dashboard/DevicesTrafficCard';
 import SubscriptionCardExpired from '../components/dashboard/SubscriptionCardExpired';
 import { needsTariff } from '../utils/legacySubscription';
+import { RECOMMENDED_TARIFF_ID } from '../utils/recommendedTariff';
 import { isLifetimeSubscription } from '../utils/lifetime';
 import TrialOfferCard from '../components/dashboard/TrialOfferCard';
 import { giftApi } from '../api/gift';
@@ -406,6 +407,15 @@ export default function Dashboard() {
             trafficUsedGb={trafficData?.traffic_used_gb ?? subscription?.traffic_used_gb}
             bypassQuota={subscription?.bypass_quota}
             bypassSuspended={subscription?.bypass_suspended}
+            bypassUpgradeTo={
+              subscription?.bypass_included === false &&
+              !focusTrial &&
+              !focusLifetime &&
+              !subscription.is_daily &&
+              !needsTariff(subscription)
+                ? `/subscription/purchase?subscriptionId=${subscription.id}&tariff=${RECOMMENDED_TARIFF_ID}`
+                : undefined
+            }
             balanceRubles={balanceData?.balance_rubles}
             fromFriendsRubles={referralInfo?.available_balance_rubles ?? null}
             quietAction={status === 'none' && Boolean(trialInfo?.is_available)}

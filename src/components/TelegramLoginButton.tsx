@@ -27,7 +27,8 @@ const QRCodeSVG = lazy(() => loadQrCode().then((m) => ({ default: m.QRCodeSVG })
 const DEEPLINK_POLL_INTERVAL_MS = 2500;
 
 export default function TelegramLoginButton({ referralCode }: TelegramLoginButtonProps) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const widgetLang = (i18n.language || 'ru').slice(0, 2);
   const navigate = useNavigate();
   const containerRef = useRef<HTMLDivElement>(null);
   const [oidcLoading, setOidcLoading] = useState(false);
@@ -241,6 +242,7 @@ export default function TelegramLoginButton({ referralCode }: TelegramLoginButto
     script.src = 'https://telegram.org/js/telegram-widget.js?23';
     script.setAttribute('data-telegram-login', botUsername);
     script.setAttribute('data-size', widgetConfig.size);
+    script.setAttribute('data-lang', widgetLang);
     script.setAttribute('data-radius', String(widgetConfig.radius));
     script.setAttribute('data-userpic', String(widgetConfig.userpic));
     script.setAttribute('data-onauth', `${callbackName}(user)`);
@@ -278,6 +280,7 @@ export default function TelegramLoginButton({ referralCode }: TelegramLoginButto
     isOIDC,
     botUsername,
     widgetConfig,
+    widgetLang,
     loginWithTelegramWidget,
     navigate,
     handleScriptFailed,
@@ -509,7 +512,7 @@ export default function TelegramLoginButton({ referralCode }: TelegramLoginButto
         {deepLinkToken && deepLinkUrl ? (
           <>
             {/* QR Code */}
-            <div className="flex flex-col items-center space-y-2">
+            <div className="hidden flex-col items-center space-y-2 sm:flex">
               <div className="rounded-2xl bg-white p-4">
                 <Suspense fallback={<div style={{ width: QR_SIZE, height: QR_SIZE }} />}>
                   <QRCodeSVG value={deepLinkUrl} size={QR_SIZE} level="M" includeMargin={false} />

@@ -500,6 +500,8 @@ export default function Referral() {
     ? `${window.location.origin}/login?ref=${info.referral_code}`
     : '';
   const botReferralLink = info?.bot_referral_link || '';
+  const primaryLink = botReferralLink || referralLink;
+  const primaryKind = botReferralLink ? 'bot' : 'cabinet';
 
   const rewardChoiceMutation = useMutation({
     mutationFn: referralApi.updateRewardChoice,
@@ -701,31 +703,33 @@ export default function Referral() {
   const { openTelegramLink } = usePlatform();
 
   const shareLink = () => {
-    if (!referralLink) return;
+    if (!primaryLink) return;
     // Under the levels scheme commission_percent governs nothing — payouts come
     // from the level table — so the invite must not name a rate. This text is what
     // the user forwards to a friend; a wrong number here is a promise made in their
     // name. The bot's own invite was fixed the same way.
     const botName = branding?.name || import.meta.env.VITE_APP_NAME || 'Cabinet';
-    const shareText = isLevelsScheme
-      ? terms?.referee_bonus_description
-        ? t('referral.shareMessageBonus', { bonus: terms.referee_bonus_description, botName })
-        : t('referral.shareMessagePlain', { botName })
-      : t('referral.shareMessage', { percent: info?.commission_percent || 0, botName });
+    const shareText =
+      info?.share_text ||
+      (isLevelsScheme
+        ? terms?.referee_bonus_description
+          ? t('referral.shareMessageBonus', { bonus: terms.referee_bonus_description, botName })
+          : t('referral.shareMessagePlain', { botName })
+        : t('referral.shareMessage', { percent: info?.commission_percent || 0, botName }));
 
     if (navigator.share) {
       navigator
         .share({
           title: t('referral.title'),
           text: shareText,
-          url: referralLink,
+          url: primaryLink,
         })
         .catch(() => {});
       return;
     }
 
     const telegramUrl = `https://t.me/share/url?url=${encodeURIComponent(
-      referralLink,
+      primaryLink,
     )}&text=${encodeURIComponent(shareText)}`;
     openTelegramLink(telegramUrl);
   };
@@ -831,13 +835,6 @@ export default function Referral() {
           </div>
         </div>
 
-        <LinkField
-          icon={<PiShareNetworkDuotone />}
-          label={t('referral.cabinetLink')}
-          value={referralLink}
-          copied={copiedLink === 'cabinet'}
-          onCopy={() => copyLink(referralLink, 'cabinet')}
-        />
         {botReferralLink && (
           <LinkField
             icon={<PiTelegramLogoDuotone />}
@@ -847,24 +844,31 @@ export default function Referral() {
             onCopy={() => copyLink(botReferralLink, 'bot')}
           />
         )}
+        <LinkField
+          icon={<PiShareNetworkDuotone />}
+          label={t('referral.cabinetLink')}
+          value={referralLink}
+          copied={copiedLink === 'cabinet'}
+          onCopy={() => copyLink(referralLink, 'cabinet')}
+        />
 
         <div className="grid grid-cols-2 gap-2">
           <Button
             tone="secondary"
-            onClick={() => copyLink(referralLink, 'cabinet')}
-            disabled={!referralLink}
+            onClick={() => copyLink(primaryLink, primaryKind)}
+            disabled={!primaryLink}
             className="min-w-0 px-3"
           >
-            {copiedLink === 'cabinet' ? (
+            {copiedLink === primaryKind ? (
               <PiCheckBold className="h-4 w-4 shrink-0 text-success-400" />
             ) : (
               <PiCopyDuotone className="h-5 w-5 shrink-0" />
             )}
             <span className="truncate">
-              {copiedLink === 'cabinet' ? t('referral.copied') : t('referral.copyLink')}
+              {copiedLink === primaryKind ? t('referral.copied') : t('referral.copyLink')}
             </span>
           </Button>
-          <Button onClick={shareLink} disabled={!referralLink} className="min-w-0 px-3">
+          <Button onClick={shareLink} disabled={!primaryLink} className="min-w-0 px-3">
             <PiShareNetworkDuotone className="h-5 w-5 shrink-0" />
             <span className="truncate">{t('referral.shareButton')}</span>
           </Button>

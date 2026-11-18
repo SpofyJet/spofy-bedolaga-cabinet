@@ -15,5 +15,6 @@ export function getMonthlyPriceKopeks(priceKopeks: number, days: number): number
   if (days <= DAYS_IN_MONTH) return null;
   // Вечный период «за месяц» не считается: «Навсегда» — не 74 месяца.
   if (isLifetimePeriod(days)) return null;
-  return Math.round((priceKopeks * DAYS_IN_MONTH) / days);
+  const months = Math.max(1, Math.round(days / DAYS_IN_MONTH));
+  return Math.ceil(priceKopeks / (months * 100)) * 100;
 }

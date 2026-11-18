@@ -78,7 +78,7 @@ describe('isLifetimeSubscription', () => {
 describe('вечная подписка в соседних помощниках', () => {
   it('цену «в месяц» для вечного периода не считаем', () => {
     expect(getMonthlyPriceKopeks(500_000, 2222)).toBeNull();
-    expect(getMonthlyPriceKopeks(120_000, 365)).toBe(Math.round((120_000 * 30) / 365));
+    expect(getMonthlyPriceKopeks(120_000, 365)).toBe(10_000);
   });
 
   it('тумблера автопродления у вечной подписки нет', () => {

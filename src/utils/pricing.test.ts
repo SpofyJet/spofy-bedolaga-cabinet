@@ -13,9 +13,11 @@ describe('getMonthlyPriceKopeks', () => {
     expect(getMonthlyPriceKopeks(60000, 180)).toBe(10000);
   });
 
-  it('prorates periods that are not whole months', () => {
-    expect(getMonthlyPriceKopeks(15000, 45)).toBe(10000);
-    expect(getMonthlyPriceKopeks(100000, 365)).toBe(8219);
+  it('counts a year as twelve months and rounds up to whole rubles, as the bot does', () => {
+    expect(getMonthlyPriceKopeks(40900, 90)).toBe(13700);
+    expect(getMonthlyPriceKopeks(149000, 365)).toBe(12500);
+    expect(getMonthlyPriceKopeks(207000, 365)).toBe(17300);
+    expect(getMonthlyPriceKopeks(100000, 365)).toBe(8400);
   });
 
   it('returns null for non-finite input', () => {

@@ -76,7 +76,7 @@ export default function SubscriptionPurchase() {
 
   // Возврат после пополнения баланса: ?tariff=…&period=… — открываем форму с тем же
   // тарифом и сроком, с которыми человек ушёл платить. Один раз, и только когда
-  // нажатие на этот тариф означает обычную покупку (ветвление — в tariffAction()).
+  // нажатие на этот тариф означает обычную покупку или смену тарифа (ветвление — в tariffAction()).
   const requestedTariffId = Number(searchParams.get('tariff')) || null;
   const requestedPeriodDays = Number(searchParams.get('period')) || null;
   const preselectDone = useRef(false);
@@ -86,6 +86,10 @@ export default function SubscriptionPurchase() {
     const tariff = (purchaseOptions.tariffs ?? []).find((item) => item.id === requestedTariffId);
     if (!tariff) return;
     const action = tariffAction({ tariff, subscription, purchaseOptions });
+    if (action === 'switch') {
+      setSwitchTariffId(tariff.id);
+      return;
+    }
     if (action !== 'purchase') return;
     setSelectedTariff(tariff);
     setShowTariffPurchase(true);

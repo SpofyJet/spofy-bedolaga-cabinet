@@ -455,6 +455,7 @@ export default function Login() {
             )}
           </div>
           {appName && <h1 className="text-2xl font-bold text-dark-50">{appName}</h1>}
+          <p className="mt-1.5 text-sm text-dark-400">{t('auth.offerLine')}</p>
 
           {/* Referral Banner */}
           {referralCode && isEmailAuthEnabled && (

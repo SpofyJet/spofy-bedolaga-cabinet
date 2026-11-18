@@ -58,6 +58,7 @@ export interface StatusCardProps {
   bypassQuota?: boolean;
   /** Квота обходов исчерпана: обходы выключены, обычные серверы работают. */
   bypassSuspended?: boolean;
+  bypassUpgradeTo?: string;
   /** undefined — баланс ещё грузится. */
   balanceRubles?: number;
   /** Часть баланса, заработанная на друзьях, ₽. */
@@ -191,6 +192,7 @@ export default function StatusCard({
   trafficUsedGb = 0,
   bypassQuota = false,
   bypassSuspended = false,
+  bypassUpgradeTo,
   balanceRubles,
   fromFriendsRubles,
   quietAction = false,
@@ -414,6 +416,20 @@ export default function StatusCard({
                 )}
               </span>
             )}
+          </Row>
+        )}
+
+        {hasAccess && bypassUpgradeTo && (
+          <Row
+            testId="bypass"
+            label={t('dashboard.vpn.bypass', 'Обходы')}
+            value={t('dashboard.vpn.bypassMissing', 'нет в тарифе')}
+            action={t('dashboard.vpn.bypassAdd', 'Добавить')}
+            to={bypassUpgradeTo}
+          >
+            <span className="mt-0.5 block text-[13px] leading-snug text-dark-400">
+              {t('dashboard.vpn.bypassHint', 'Нужны, если VPN не работает через мобильную сеть')}
+            </span>
           </Row>
         )}
 
