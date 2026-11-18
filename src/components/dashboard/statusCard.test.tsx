@@ -163,6 +163,21 @@ describe('StatusCard: главная кнопка по состоянию', () =
     renderCard({ connectedDevices: 0 });
     expect(rowNames()).toContain('devices');
     expect(screen.queryByText('dashboard.vpn.manage')).toBeNull();
+    expect(rowHrefs('devices')).toContain('/subscription?topup=devices');
+  });
+
+  it('место добавляют с главной при любом числе занятых; пробному и без лимита — «Управлять»', () => {
+    renderCard({ connectedDevices: 1, deviceLimit: 3 });
+    expect(screen.getByText('+ dashboard.devicesTraffic.addSlotShort')).toBeTruthy();
+    cleanup();
+    renderCard({ connectedDevices: 3, deviceLimit: 3 });
+    expect(rowHrefs('devices')).toContain('/subscription?topup=devices');
+    cleanup();
+    renderCard({ trial: true, connectedDevices: 1 });
+    expect(rowHrefs('devices')).toEqual(['/subscription?section=devices']);
+    cleanup();
+    renderCard({ connectedDevices: 2, deviceLimit: 0 });
+    expect(rowHrefs('devices')).toEqual(['/subscription?section=devices']);
   });
 
   it('пробный, число устройств неизвестно: зовём подключить, строки устройств нет', () => {
@@ -215,7 +230,10 @@ describe('StatusCard: главная кнопка по состоянию', () =
 describe('StatusCard: строки', () => {
   it('строка ведёт к подробностям, надпись справа — к действию', () => {
     renderCard();
-    expect(rowHrefs('devices')).toEqual(['/subscription?section=devices']);
+    expect(rowHrefs('devices')).toEqual([
+      '/subscription?section=devices',
+      '/subscription?topup=devices',
+    ]);
     expect(rowHrefs('traffic')).toEqual(['/subscriptions/7?topup=traffic']);
     expect(rowHrefs('subscription')).toEqual(['/subscription', '/subscriptions/7/renew']);
     expect(rowHrefs('balance')).toEqual(['/balance', '/balance/top-up']);

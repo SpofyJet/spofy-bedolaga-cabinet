@@ -102,12 +102,12 @@ function Row({ label, value, hint, hintWarn, action, to, detailsTo, children, te
   const main = (
     <span className="min-w-0 flex-1">
       <span className="block text-[13px] font-medium text-dark-400">{label}</span>
-      <span className="mt-0.5 block text-base font-semibold text-dark-50">
-        {value}
+      <span className="mt-0.5 flex flex-wrap items-baseline gap-x-1.5 text-base font-semibold text-dark-50">
+        <span>{value}</span>
         {hint ? (
           <span
             className={cn(
-              'ml-1.5 text-sm font-medium',
+              'whitespace-nowrap text-sm font-medium',
               hintWarn ? 'text-warning-400' : 'text-dark-400',
             )}
           >
@@ -315,6 +315,7 @@ export default function StatusCard({
     devicesKnown && !unlimitedDevices && (connectedDevices as number) >= deviceLimit;
   // У пробного без устройств об этом уже сказано в подписи под заголовком.
   const showDevices = hasAccess && devicesKnown && !trialNoDevice;
+  const canAddSlot = !trial && !unlimitedDevices;
   const showTraffic = hasAccess && trafficLimitGb > 0;
   const trafficPercent = showTraffic
     ? Math.min(100, Math.max(0, (trafficUsedGb / trafficLimitGb) * 100))
@@ -375,9 +376,13 @@ export default function StatusCard({
             }
             hintWarn={atDeviceLimit}
             action={
-              (connectedDevices as number) > 0 ? t('dashboard.vpn.manage', 'Управлять') : undefined
+              canAddSlot
+                ? `+ ${t('dashboard.devicesTraffic.addSlotShort', 'Устройство')}`
+                : (connectedDevices as number) > 0
+                  ? t('dashboard.vpn.manage', 'Управлять')
+                  : undefined
             }
-            to="/subscription?section=devices"
+            to={canAddSlot ? '/subscription?topup=devices' : '/subscription?section=devices'}
             detailsTo="/subscription?section=devices"
           />
         )}
