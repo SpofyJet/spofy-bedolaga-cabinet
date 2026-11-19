@@ -214,6 +214,14 @@ export interface TariffPeriod {
   base_tariff_price_label?: string;
   /** Период, отмеченный оператором как самый выгодный. */
   is_highlighted?: boolean;
+  device_options?: TariffDeviceOption[];
+}
+
+export interface TariffDeviceOption {
+  devices: number;
+  included: boolean;
+  price_kopeks: number;
+  original_price_kopeks?: number | null;
 }
 
 export interface TariffServer {

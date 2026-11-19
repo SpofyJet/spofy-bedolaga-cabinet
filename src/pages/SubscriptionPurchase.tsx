@@ -79,6 +79,7 @@ export default function SubscriptionPurchase() {
   // нажатие на этот тариф означает обычную покупку или смену тарифа (ветвление — в tariffAction()).
   const requestedTariffId = Number(searchParams.get('tariff')) || null;
   const requestedPeriodDays = Number(searchParams.get('period')) || null;
+  const requestedDevices = Number(searchParams.get('devices')) || null;
   const preselectDone = useRef(false);
   useEffect(() => {
     if (preselectDone.current || !requestedTariffId || !purchaseOptions || isLoading) return;
@@ -300,6 +301,7 @@ export default function SubscriptionPurchase() {
                 initialPeriodDays={
                   selectedTariff.id === requestedTariffId ? requestedPeriodDays : null
                 }
+                initialDevices={selectedTariff.id === requestedTariffId ? requestedDevices : null}
                 onBack={() => {
                   setShowTariffPurchase(false);
                   setSelectedTariff(null);

@@ -669,6 +669,9 @@
       "term": "Term"
     },
     "v10": {
+      "devicesTitle": "How many devices",
+      "devicesHint": "Each phone, computer or TV takes one slot.",
+      "chooseDevices": "Choose the number of devices",
       "autopayHint": "From balance {{count}} d. before the end",
       "pickPackage": "Choose a package",
       "ended": "Ended",

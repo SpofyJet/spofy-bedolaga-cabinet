@@ -19,6 +19,7 @@ import { formatPeriodLabel } from '../../../utils/periodLabel';
 import InsufficientBalancePrompt from '../../InsufficientBalancePrompt';
 import type { Tariff, TariffPeriod } from '../../../types';
 import { PeriodList } from '../PeriodList';
+import { DeviceChoiceList } from './DeviceChoiceList';
 import { plainTariffName } from '@/utils/plainTariffName';
 
 // ──────────────────────────────────────────────────────────────────
@@ -47,6 +48,7 @@ export interface TariffPurchaseFormProps {
    * возврата выбран он, а не «выгодный» по умолчанию — иначе пополнивший ровно
    * на свой срок видел «не хватает» за другой. */
   initialPeriodDays?: number | null;
+  initialDevices?: number | null;
   onBack: () => void;
 }
 
@@ -55,6 +57,7 @@ export function TariffPurchaseForm({
   subscriptionId,
   balanceKopeks,
   initialPeriodDays = null,
+  initialDevices = null,
   onBack,
 }: TariffPurchaseFormProps) {
   const { t } = useTranslation();
@@ -90,6 +93,19 @@ export function TariffPurchaseForm({
   const [customTrafficGb, setCustomTrafficGb] = useState<number>(50);
   const [useCustomDays, setUseCustomDays] = useState(false);
   const [useCustomTraffic, setUseCustomTraffic] = useState(false);
+  const [chosenDevices, setChosenDevices] = useState<number | null>(initialDevices);
+  const deviceOptionFor = (period: TariffPeriod | null | undefined) =>
+    period?.device_options?.find((option) => option.devices === chosenDevices) ?? null;
+  const pricedPeriod = (period: TariffPeriod) => {
+    const option = deviceOptionFor(period);
+    return option
+      ? {
+          ...period,
+          price_kopeks: option.price_kopeks,
+          original_price_kopeks: option.original_price_kopeks ?? undefined,
+        }
+      : period;
+  };
 
   const purchaseMutation = useMutation({
     mutationFn: () => {
@@ -110,7 +126,8 @@ export function TariffPurchaseForm({
       if (isDailyTariff) {
         return subscriptionApi.purchaseTariff(tariff.id, days, trafficGb, subscriptionId);
       }
-      const signature = JSON.stringify([tariff.id, days, trafficGb, subscriptionId]);
+      const devices = useCustomDays ? undefined : deviceOptionFor(selectedTariffPeriod)?.devices;
+      const signature = JSON.stringify([tariff.id, days, trafficGb, subscriptionId, devices]);
       if (checkoutAttempt.current?.signature !== signature) {
         // A retry keeps its identity even if the balance or quote was refreshed.
         const bytes = crypto.getRandomValues(new Uint8Array(16));
@@ -126,6 +143,7 @@ export function TariffPurchaseForm({
         trafficGb,
         subscriptionId,
         checkoutAttempt.current.id,
+        devices,
       );
     },
     onSuccess: (data) => {
@@ -158,6 +176,11 @@ export function TariffPurchaseForm({
   const isDailyTariff = Boolean(
     tariff.is_daily || (tariff.daily_price_kopeks && tariff.daily_price_kopeks > 0),
   );
+  const deviceOptions =
+    isDailyTariff || useCustomDays ? [] : (selectedTariffPeriod?.device_options ?? []);
+  const chosenOption = deviceOptions.length ? deviceOptionFor(selectedTariffPeriod) : null;
+  const includedOption = deviceOptions.find((option) => option.included) ?? null;
+  const needsDeviceChoice = deviceOptions.length > 0 && !chosenOption;
   // Куда вернуть после пополнения: эта же витрина с выбранным тарифом и сроком.
   // Без этого после оплаты тариф приходилось выбирать заново, а срок сбрасывался
   // на «выгодный» — и пополнивший ровно на 1 месяц видел «не хватает» за 3.
@@ -168,6 +191,11 @@ export function TariffPurchaseForm({
       params.set('period', String(selectedTariffPeriod.days));
     } else {
       params.delete('period');
+    }
+    if (chosenOption) {
+      params.set('devices', String(chosenOption.devices));
+    } else {
+      params.delete('devices');
     }
     return `${location.pathname}?${params.toString()}`;
   })();
@@ -201,7 +229,7 @@ export function TariffPurchaseForm({
     const promoPeriod =
       useCustomDays || !selectedTariffPeriod
         ? applyPromoDiscount(customQuote.price, customQuote.original)
-        : periodQuote(selectedTariffPeriod);
+        : periodQuote(pricedPeriod(selectedTariffPeriod));
     const customTraffic = useCustomTraffic && Boolean(tariff.custom_traffic_enabled);
     const trafficPrice = customTraffic
       ? customTrafficGb * (tariff.traffic_price_per_gb_kopeks ?? 0)
@@ -213,8 +241,17 @@ export function TariffPurchaseForm({
     const shortKopeks =
       balanceKopeks !== undefined && totalPrice > 0 ? Math.max(0, totalPrice - balanceKopeks) : 0;
     const shortRubles = Math.ceil(shortKopeks / 100);
+    const chosenExtra =
+      chosenOption && includedOption && !chosenOption.included
+        ? {
+            count: chosenOption.devices - includedOption.devices,
+            price: chosenOption.price_kopeks - includedOption.price_kopeks,
+            base: includedOption.price_kopeks,
+          }
+        : null;
     const extraDevices =
       !useCustomDays &&
+      !chosenOption &&
       (selectedTariffPeriod?.extra_devices_count ?? 0) > 0 &&
       Boolean(selectedTariffPeriod?.base_tariff_price_kopeks);
     const discounted =
@@ -229,9 +266,11 @@ export function TariffPurchaseForm({
       shortRubles,
       originalTotal: promoPeriod.original ? promoPeriod.original + trafficPrice : null,
       extraDevices,
+      chosenExtra,
       // Состав суммы показываем, когда она из чего-то складывается или есть скидка.
       // Один срок без добавок уже стоит в списке, а сумма — на кнопке.
-      detailed: useCustomDays || extraDevices || customTraffic || discounted,
+      detailed:
+        useCustomDays || extraDevices || Boolean(chosenExtra) || customTraffic || discounted,
       // Если на балансе есть деньги, говорим, сколько из них уйдёт: на кнопке — только доплата.
       balanceNote:
         balanceKopeks === undefined || totalPrice === 0 || balanceKopeks < 100
@@ -376,7 +415,7 @@ export function TariffPurchaseForm({
                   setUseCustomDays(false);
                 }}
                 items={tariff.periods.map((period) => {
-                  const promoPeriod = periodQuote(period);
+                  const promoPeriod = periodQuote(pricedPeriod(period));
                   const displayOriginal = promoPeriod.original;
                   const displayPrice = promoPeriod.price;
                   // За месяц и короче «в месяц» повторяло бы саму цену.
@@ -523,6 +562,21 @@ export function TariffPurchaseForm({
             )}
           </section>
 
+          {deviceOptions.length > 0 && (
+            <section data-device-step>
+              <SectionTitle>{t('subscription.v10.devicesTitle')}</SectionTitle>
+              <p className="-mt-1 mb-3 px-1 text-[13px] text-dark-400">
+                {t('subscription.v10.devicesHint')}
+              </p>
+              <DeviceChoiceList
+                options={deviceOptions}
+                selected={chosenOption?.devices ?? null}
+                onSelect={setChosenDevices}
+                formatPrice={formatPrice}
+              />
+            </section>
+          )}
+
           {/* Свой объём трафика */}
           {tariff.custom_traffic_enabled && (tariff.traffic_price_per_gb_kopeks ?? 0) > 0 && (
             <section>
@@ -638,7 +692,20 @@ export function TariffPurchaseForm({
                               </>,
                             )
                           : selectedTariffPeriod &&
-                            (quote.extraDevices ? (
+                            (quote.chosenExtra ? (
+                              <>
+                                {line(
+                                  t('subscription.summary.period', {
+                                    label: periodLabel(selectedTariffPeriod),
+                                  }),
+                                  formatPrice(quote.chosenExtra.base),
+                                )}
+                                {line(
+                                  `${t('subscription.extraDevices')} (${quote.chosenExtra.count})`,
+                                  `+${formatPrice(quote.chosenExtra.price)}`,
+                                )}
+                              </>
+                            ) : quote.extraDevices ? (
                               <>
                                 {line(
                                   `${t('subscription.baseTariff')}: ${periodLabel(selectedTariffPeriod)}`,
@@ -731,20 +798,22 @@ export function TariffPurchaseForm({
                   <Button
                     className="h-[54px] w-full text-[16.5px]"
                     onClick={() => (quote.shortKopeks > 0 ? goTopUp() : purchaseMutation.mutate())}
-                    disabled={purchaseMutation.isPending}
+                    disabled={purchaseMutation.isPending || needsDeviceChoice}
                   >
                     {purchaseMutation.isPending && (
                       <span className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
                     )}
-                    {quote.shortKopeks > 0
-                      ? t('subscription.v10.payShort', 'Оплатить {{amount}}', {
-                          amount: formatMoney(quote.shortRubles, { round: true }),
-                        })
-                      : quote.totalPrice > 0
-                        ? t('subscription.v10.buyFor', 'Купить за {{amount}}', {
-                            amount: formatPrice(quote.totalPrice),
+                    {needsDeviceChoice
+                      ? t('subscription.v10.chooseDevices')
+                      : quote.shortKopeks > 0
+                        ? t('subscription.v10.payShort', 'Оплатить {{amount}}', {
+                            amount: formatMoney(quote.shortRubles, { round: true }),
                           })
-                        : t('subscription.purchase')}
+                        : quote.totalPrice > 0
+                          ? t('subscription.v10.buyFor', 'Купить за {{amount}}', {
+                              amount: formatPrice(quote.totalPrice),
+                            })
+                          : t('subscription.purchase')}
                   </Button>
                 </div>
               </div>

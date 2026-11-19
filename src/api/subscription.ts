@@ -358,6 +358,7 @@ export const subscriptionApi = {
      */
     subscriptionId?: number,
     checkoutId?: string,
+    deviceLimit?: number,
   ): Promise<{
     success: boolean;
     message: string;
@@ -373,6 +374,7 @@ export const subscriptionApi = {
       traffic_gb: trafficGb,
       subscription_id: subscriptionId,
       checkout_id: checkoutId,
+      device_limit: deviceLimit,
       yandex_cid: getYandexCid() || undefined,
     });
     return response.data;
