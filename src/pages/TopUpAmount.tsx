@@ -79,7 +79,7 @@ export default function TopUpAmount() {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const returnTo = searchParams.get('returnTo');
-  const initialAmountRubles = searchParams.get('amount')
+  const requestedAmountRubles = searchParams.get('amount')
     ? parseFloat(searchParams.get('amount') ?? '')
     : undefined;
 
@@ -90,6 +90,10 @@ export default function TopUpAmount() {
     queryFn: balanceApi.getPaymentMethods,
   });
   const method = methods?.find((m) => m.id === methodId);
+  const initialAmountRubles =
+    requestedAmountRubles && requestedAmountRubles > 0 && method
+      ? Math.max(requestedAmountRubles, method.min_amount_kopeks / 100)
+      : requestedAmountRubles;
 
   // Назад — к выбору способа: история браузера, а если страницу открыли
   // по прямой ссылке — на баланс (иначе navigate(-1) уводил бы из кабинета).
@@ -143,7 +147,8 @@ export default function TopUpAmount() {
 
   const initialDisplayAmount = getInitialAmount();
   const userBalanceRubles = useAuthStore((state) => state.user?.balance_rubles ?? null);
-  const [amount, setAmount] = useState(initialDisplayAmount);
+  const [editedAmount, setAmount] = useState<string | null>(null);
+  const amount = editedAmount ?? initialDisplayAmount;
   const [error, setError] = useState<string | null>(null);
   const [selectedOption, setSelectedOption] = useState<string | null>(
     getPreferredOptionId(method?.options),
